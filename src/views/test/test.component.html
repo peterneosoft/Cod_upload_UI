@@ -1,0 +1,112 @@
+
+<section class="test">
+
+    
+        <div class="container">
+          <div class="col-md-offset-4 col-md-4">
+            <h1 class="title text-center">
+              {{title}}
+            </h1>
+            
+            <form v-on:submit.prevent="onSubmit">
+              <div class="form-group">
+                <label for="formName">Full Name:</label>
+                <input type="text" name="name" id="formName" v-model="model.name" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('name') }"> 
+                {{model.name}}
+                          <span v-show="errors.has('name')" class="text-danger">{{ errors.first('name') }}</span>
+              </div>
+              
+              <div class="form-group">
+                <label for="formEmail">Email:</label>
+                <input type="email" name="email"  id="formEmail" v-model="model.email" v-validate="'required|email'" v-bind:class="{'form-control': true, 'error': errors.has('email') }"> 
+                <span v-show="errors.has('email')" class="text-danger">{{ errors.first('email') }}</span>
+              </div>
+              
+              <div class="form-group">
+                <label for="formBio">Bio:</label>
+                <textarea name="bio" id="formBio" class="form-control" rows="3" v-model="model.bio" v-validate="'required|max:50'"></textarea>
+                <span v-show="errors.has('bio')" class="text-danger">{{ errors.first('bio') }}</span>
+              </div>
+              
+              <div class="form-group">
+                <label for="formCoupon">Coupon:</label>
+                <input type="text" name="coupon"  id="formCoupon" v-model="model.coupon" v-validate="'required|verify_coupon'" v-bind:class="{'form-control': true, 'error': errors.has('coupon') }"> 
+                <span v-show="errors.has('coupon')" class="text-danger">{{ errors.first('coupon') }}</span>
+              </div>
+              
+              <div class="form-group">
+                <label for="formGender">Gender:</label>
+                <select v-model="model.gender" name="gender" v-validate="'required'" :class="{'form-control': true, 'error': errors.has('gender')}">
+                  <option>Female</option>
+                  <option>Male</option>
+                </select>
+                <span v-show="errors.has('gender')" class="text-danger">{{ errors.first('gender') }}</span>
+              </div>
+              
+              <div class="form-group">
+                <label for="formGender">Frameworks:</label>
+                <select v-model="model.frameworks" name="frameworks" v-validate="'required'" :class="{'form-control': true, 'error': errors.has('frameworks')}" multiple>
+                  <option>Vue</option>
+                  <option>Aurelia</option>
+                  <option>Preact</option>
+                  <option>Inferno</option>
+                </select>
+                {{model.frameworks}}
+                <span v-show="errors.has('frameworks')" class="text-danger">{{ errors.first('frameworks') }}</span>
+              </div>
+              
+              <div class="form-group">
+                <label>
+                  <input type="checkbox" name="subscribe" v-validate="'required'"> Subscribe me, please!
+                  {{model.subscribe}}
+                </label>
+                <span v-show="errors.has('subscribe')" class="text-danger">{{ errors.first('subscribe') }}</span>
+              </div>
+              
+              <div class="form-group">
+                <label>Languages</label>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" name="languages" value="English" v-model="model.languages"> English
+                  </label>
+                  <label>
+                    <input type="checkbox" name="languages" value="French" v-model="model.languages"> French
+                  </label>
+                  <label>
+                    <input type="checkbox" name="languages" value="Ibo"v-model="model.languages"> Ibo
+                  </label>
+                  <label>
+                    <input type="checkbox" name="languages" value="Hausa" v-model="model.languages"> Hausa
+                  </label>
+                  <label>
+                    <input type="checkbox" name="languages" value="Yoruba" v-model="model.languages"> Yoruba
+                  </label>
+                </div>
+                {{model.languages}}
+                <span v-show="errors.has('languages')" class="text-danger">{{ errors.first('languages') }}</span>
+              </div>
+              
+              <div class="form-group">
+                <label>Happy</label>
+                <div class="checkbox">
+                  <label>
+                    <input type="radio" name="subscribe" v-validate="'required'" value="Yes" v-model="model.happy"> Yes
+                  </label>
+                  <label>
+                    <input type="radio" name="happy" v-validate="'required'" value="No" v-model="model.happy"> No
+                  </label>
+                </div>
+                {{model.happy}}
+                          <span v-show="errors.has('happy')" class="text-danger">{{ errors.first('happy') }}</span>
+              </div>
+              
+              <div class="form-group">
+                <button class="btn btn-success" :disabled="errors.any()" >Submit {{errors.any()}}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+  
+    
+  </section>
+

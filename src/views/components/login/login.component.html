@@ -1,0 +1,63 @@
+<body background="static/img/Heavy-Duty-Warehouse-Trucks-in-Miami.jpg">
+  <section class="login">
+    <div class="app2 flex-row align-items-center">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+            <div class="card-group mb-0">
+              <div class="card p-4">
+                <div class="card-body">
+                  <img src="static/img/logo.png" alt="homepage" class="dark-logo">
+                  <br>
+                  <br>
+                  <br>
+                  <!-- <h4>Login</h4> -->
+                  <!-- <p class="text-muted">Sign In to your account</p> -->
+                  <form v-on:submit.prevent="onSubmit">
+                    <div class="form-group row">
+                      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <b-form-fieldset>
+                          <b-input-group left="<i class='icon-user'></i>">
+                            <b-form-input type="text" v-model="username" class="form-control" placeholder="Username" name="username" v-validate="'required|username'" v-bind:class="{'form-control': true, 'error': errors.has('username') }"></b-form-input>
+                          </b-input-group>
+                          <span v-show="errors.has('username')" class="text-danger">{{ errors.first('email') }}</span>
+                        </b-form-fieldset>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <b-form-fieldset>
+                          <b-input-group left="<i class='fa fa-map-pin'></i>">
+                            <b-form-input type="password" v-model="password" class="form-control" placeholder="Password" name="password" v-validate="'required'"></b-form-input>
+                          </b-input-group>
+                          <span v-show="errors.has('password')" class="text-danger">{{ errors.first('password') }}</span>
+                        </b-form-fieldset>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-6">
+                        <button type="submit" class="btn btn-primary px-4" @click="checklogin">Login</button>
+                      </div>
+                      <div class="col-6 text-right">
+
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="card text-white py-5 d-md-down-none" style="width:44%;background-color: #f58220 !important;">
+                <h4 class="login_title">Fulfilling Happiness</h4>
+                <div class="card-body text-center">
+                  <div>
+                    <p class="xb_text">Instantly grow your e-commerce business through our extensive network and create happy customers through value added services and on time delivery</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>

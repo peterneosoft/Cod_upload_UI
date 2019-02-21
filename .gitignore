@@ -1,0 +1,7 @@
+node_modules/
+npm-debug.log*
+public/bundle*
+public/style*
+coverage
+package-lock.json
+package.json
