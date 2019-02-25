@@ -9,7 +9,7 @@ import Full from '@/containers/Full'
 import dashboard from '@/views/components/dashboard'
 import Charts from '@/views/Charts'
 import Widgets from '@/views/Widgets'
- 
+
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -164,43 +164,43 @@ router.beforeEach((to, from, next) => {
 	} else {
 		isLoggedIn = true;
 	}
-
-	if (to.matched.some(record => record.meta.requiresAuth) && !isLoggedIn) {
-		next({
-			path: "/login",
-
-		});
-	} else {
-		//console.log(to.matched.some(record => record.meta.adminAuth));
-		if (to.matched.some(record => record.meta.requiresAuth)) {
-
-			const permissionEncrypt = window.localStorage.getItem('permissiondata')
-			const bytes = CryptoJS.AES.decrypt(permissionEncrypt.toString(), 'Key');
-			const plaintext = bytes.toString(CryptoJS.enc.Utf8);
-			const permissiondata = JSON.parse(plaintext);
-
-			function isBigEnough(findURL) {
-				if(findURL.submenu.length>0){
-					return findURL.submenu.some(isBigChildEnough);
-				}
-				return findURL.url == to.name;
-			}
-			function isBigChildEnough(findURL) {
-				return findURL.url == to.name;
-			}
-			//console.log(permissiondata);
-			const setroles = permissiondata.some(isBigEnough)
-			if (setroles) {
-				next();
-			} else {
-				next({
-					path: "/dashboard",
-				});
-			}
-		} else {
-			next();
-		}
-	}
+  next();
+	// if (to.matched.some(record => record.meta.requiresAuth) && !isLoggedIn) {
+	// 	next({
+	// 		path: "/login",
+  //
+	// 	});
+	// } else {
+	// 	//console.log(to.matched.some(record => record.meta.adminAuth));
+	// 	if (to.matched.some(record => record.meta.requiresAuth)) {
+  //
+	// 		const permissionEncrypt = window.localStorage.getItem('permissiondata')
+	// 		const bytes = CryptoJS.AES.decrypt(permissionEncrypt.toString(), 'Key');
+	// 		const plaintext = bytes.toString(CryptoJS.enc.Utf8);
+	// 		const permissiondata = JSON.parse(plaintext);
+  //
+	// 		function isBigEnough(findURL) {
+	// 			if(findURL.submenu.length>0){
+	// 				return findURL.submenu.some(isBigChildEnough);
+	// 			}
+	// 			return findURL.url == to.name;
+	// 		}
+	// 		function isBigChildEnough(findURL) {
+	// 			return findURL.url == to.name;
+	// 		}
+	// 		//console.log(permissiondata);
+	// 		const setroles = permissiondata.some(isBigEnough)
+	// 		if (setroles) {
+	// 			next();
+	// 		} else {
+	// 			next({
+	// 				path: "/dashboard",
+	// 			});
+	// 		}
+	// 	} else {
+	// 		next();
+	// 	}
+	// }
 
 });
 export default router;
