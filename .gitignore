@@ -4,4 +4,3 @@ public/bundle*
 public/style*
 coverage
 package-lock.json
-package.json
