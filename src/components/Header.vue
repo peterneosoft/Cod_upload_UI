@@ -68,7 +68,7 @@
   top: 42px;
 }
 .app-header.navbar .navbar-brand,.app-header.navbar{
-  background-color: #4b8cbb;
+  background-color: #FFFFFF;
 }
 .navbar-nav .nav-link.active,.navbar .navbar-nav .active.dropdown-toggle:hover,{
   color: #fff!important;
@@ -77,174 +77,7 @@
 <template>
 <header class="app-header navbar">
   <b-link class="navbar-brand" to="Dashboard"></b-link>
-  <div class="menu_options_mn">
-    <p class="menu_item">Actions &nbsp;<i class="fa fa-angle-down"></i></p>
-  </div>
-  <div class="menu_options_sub">
-    <table class="table table-responsive">
-        <tbody>
-          <tr>
-            <!--<td style="margin-left:20px" class="menu_data" >
-              <div v-if="data.submenu.length==0" v-for="data in navItem">
-              <div class="mlink " v-if="data.ismenu==true">
-                  <a @click="itemlink" v-bind:href="'#'+data.url"><i v-bind:class="data.purl"></i> {{data.mainmenu}}</a>
-              </div>
-            </div>
-            </td>-->
-            <td class="menu_data" v-for="data in navItem">
-              <div v-if="data.submenu.length>0 && data.ismenu==true">
-              <div  class="topheadv1" ><b><i v-bind:class="data.purl"></i> {{data.mainmenu}}</b></div>
-              <div class="mlink"  v-for="submenu in data.submenu">
-                  <a @click="itemlink"  v-bind:href="'#'+submenu.url"><i v-bind:class="submenu.purl"></i> {{submenu.childname}}</a>
-              </div>
-            </div>
-            </td>
-
-            <!-- <td class="menu_data" >
-
-                <div class="topheadv1" ><b>Report</b></div>
-                <div class="mlink">
-                    <a href="">Stock Enquiry</a>
-                </div>
-                <div class="mlink">
-                    <a href="">Putaway Pending</a>
-                </div>
-                <div class="mlink">
-                    <a href="">Stock</a>
-                </div>
-                <div class="mlink">
-                    <a href="">Order Report</a>
-                </div>
-                <div class="mlink">
-                    <a href="">Shipment Handover</a>
-                </div>
-                <div class="mlink">
-                    <a href="">Goods Receipt</a>
-                </div>
-                <div class="mlink">
-                    <a href="">GRC Lot Report</a>
-                </div>
-                <div class="mlink">
-                    <a href="">Stock Report Client</a>
-                </div>
-                <div class="mlink">
-                    <a href="">Sales Report</a>
-                </div>
-                <div class="mlink">
-                    <a href="">GR Report</a>
-                </div>
-                <div class="mlink">
-                    <a href="">Back Order List</a>
-                </div>
-
-
-            </td>
-            <td class="menu_data" >
-                <div class="topheadv1" ><b>Masters</b></div>
-                <div class="mlink">
-                    <a href="">Client</a>
-                </div>
-                <div class="mlink">
-                    <a href="">Supplier</a>
-                </div>
-                <div class="mlink">
-                    <a href="">Supplier</a>
-                </div>
-                <div class="mlink">
-                    <a href="">Products</a>
-                </div>
-                <div class="topheadv1" style="margin-top: 25px;"><b>Purchase Order</b></div>
-                <div class="topheadv1"><b>Packing</b></div>
-                <div class="topheadv1"><b>Box Type</b></div>
-                <div class="topheadv1"><b>Source STN Report</b></div>
-                <div class="topheadv1"><b>Stock Transfer</b></div>
-                <div class="topheadv1"><b>STN Boxtype</b></div>
-                <div class="topheadv1"><b>RTO</b></div>
-            </td>
-            <td class="menu_data">
-              <div class="topheadv1" ><b>Access Management</b></div>
-              <div class="mlink">
-                  <a href="">Users</a>
-              </div>
-              <div class="mlink">
-                  <a href="">Rolls</a>
-              </div>
-
-                <div class="topheadv1" style="margin-top: 25px;" ><b>Inward</b></div>
-                <div class="mlink">
-                  <a href="">Goods Receipt</a>
-                </div>
-                <div class="mlink">
-                  <a href="">Dock Receipt</a>
-                </div>
-                <div class="mlink">
-                  <a href="">GR Correction</a>
-                </div>
-              </td>
-              <td class="menu_data">
-              <div class="topheadv1" ><b>Access Management</b></div>
-              <div class="mlink">
-                  <a href="">Users</a>
-              </div>
-              <div class="mlink">
-                  <a href="">Rolls</a>
-              </div>
-
-                <div class="topheadv1" style="margin-top: 25px;" ><b>Inward</b></div>
-                <div class="mlink">
-                  <a href="">Goods Receipt</a>
-                </div>
-                <div class="mlink">
-                  <a href="">Dock Receipt</a>
-                </div>
-                <div class="mlink">
-                  <a href="">GR Correction</a>
-                </div>
-</td>
-             <td class="menu_data">
-              <div class="topheadv1" ><b>Access Management</b></div>
-              <div class="mlink">
-                  <a href="">Users</a>
-              </div>
-              <div class="mlink">
-                  <a href="">Rolls</a>
-              </div>
-
-                <div class="topheadv1" style="margin-top: 25px;" ><b>Inward</b></div>
-                <div class="mlink">
-                  <a href="">Goods Receipt</a>
-                </div>
-                <div class="mlink">
-                  <a href="">Dock Receipt</a>
-                </div>
-                <div class="mlink">
-                  <a href="">GR Correction</a>
-                </div>
-</td>
-             <td class="menu_data">
-              <div class="topheadv1" ><b>Access Management</b></div>
-              <div class="mlink">
-                  <a href="">Users</a>
-              </div>
-              <div class="mlink">
-                  <a href="">Rolls</a>
-              </div>
-
-                <div class="topheadv1" style="margin-top: 25px;" ><b>Inward</b></div>
-                <div class="mlink">
-                  <a href="">Goods Receipt</a>
-                </div>
-                <div class="mlink">
-                  <a href="">Dock Receipt</a>
-                </div>
-                <div class="mlink">
-                  <a href="">GR Correction</a>
-                </div>
-</td> -->
-          </tr>
-        </tbody>
-      </table>
-  </div>
+  <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" @click="sidebarToggle">&#9776;</button>
  <!--  <b-nav is-nav-bar class="d-md-down-none">
     <b-nav-item class="px-3">Dashboard</b-nav-item>
     <b-nav-item class="px-3">Users</b-nav-item>
@@ -263,14 +96,14 @@
     <b-nav-item-dropdown right>
       <template slot="button-content">
           <img src="static/img/avatars/default-img.png" class="img-avatar" alt="admin@bootstrapmaster.com">
-          <span class="d-md-down-none" style="color: #fff !important">{{username}}</span>
+          <span class="d-md-down-none" style="color: #000 !important">{{username}}</span>
         </template>
       <b-dropdown-item @click="editProfile()"><i class="fa fa-user"></i> Profile</b-dropdown-item>
       <b-dropdown-item @click="changepassword"><i class="fa fa-sign-out"></i> Change Password</b-dropdown-item>
       <b-dropdown-item @click="logout"><i class="fa fa-lock"></i> Logout</b-dropdown-item>
     </b-nav-item-dropdown>
   </b-nav>
- <!--  <button class="navbar-toggler aside-menu-toggler d-md-down-none" type="button" @click="asideToggle">&#9776;</button> -->
+
 </header>
 </template>
 <script>

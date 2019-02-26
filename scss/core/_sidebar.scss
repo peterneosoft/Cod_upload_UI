@@ -100,7 +100,7 @@
       .nav-link {
         display: block;
         padding: $sidebar-nav-link-padding-y $sidebar-nav-link-padding-x;
-        color: black;
+        color: white;
         text-decoration: none;
         background: $sidebar-nav-link-bg;
         @include borders($sidebar-nav-link-borders);
@@ -110,7 +110,7 @@
 
         &:hover {
           color: white;
-          background: #3ba9f3;
+          background: #2f353a;
           @include borders($sidebar-nav-link-hover-borders);
 
           i {
@@ -120,7 +120,7 @@
 
         &.active {
           color: $sidebar-nav-link-active-color;
-          background: #3ba9f3;
+          background: #2f353a;
           @include borders($sidebar-nav-link-active-borders);
 
           i {
@@ -180,7 +180,7 @@
           }
 
           .nav-link {
-            color: black;
+            color: white;
             border-left: 0 !important;
           }
 

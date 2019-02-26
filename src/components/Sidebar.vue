@@ -4,17 +4,17 @@
   }
 </style>
 <template>
-  <div class="sidebar" style="display:none;">
+  <div class="sidebar">
     <nav class="sidebar-nav">
       <div slot="header"></div>
-     <!--  <ul class="nav">
+     <ul class="nav">
 
-          <li class="nav-item" v-for="item in navItem">
+          <li class="nav-item">
             <template>
-              <SidebarNavLink :name="item.mainmenu" :url="'../../'+item.mainmenu" :icon="item.purl"/>
+              <SidebarNavLink :name="'test'" :url="'test'" :icon="'test'"/>
             </template>
         </li>
-      </ul> -->
+      </ul>
       <ul class="nav">
         <li class="nav-item" v-for="(item, index) in navItem">
 
@@ -86,5 +86,15 @@ export default {
 <style lang="css">
   .nav-link {
     cursor:pointer;
+    background:#2f353a;
   }
+  .sidebar{
+    z-index:99;
+    top:89px;
+    background:#2f353a;
+  }
+  .app-header.navbar .navbar-toggler{
+    color:#23282c;
+  }
+
 </style>
