@@ -29,13 +29,15 @@ export default {
           'password': this.password
         })
         .then((response) => {
-          console.log(response);
+          //console.log(response);
           // response.data.accessurl=[{
           //   'name':'Dashboard',
           //   'url':'/dashboard'
           // }];
           let permissionEncrypt = CryptoJS.AES.encrypt(JSON.stringify(response.data.urlDetails), "Key");
+          let usersEncrupt = CryptoJS.AES.encrypt(JSON.stringify(response.data.userinfo), "Key");
           window.localStorage.setItem('accesspermissiondata', permissionEncrypt);
+          window.localStorage.setItem('accessuserdata', usersEncrupt);
           permissionEncrypt = window.localStorage.getItem('accesspermissiondata')
           let permissiondatabytes = CryptoJS.AES.decrypt(permissionEncrypt.toString(), 'Key');
           let permissiondataplaintext = permissiondatabytes.toString(CryptoJS.enc.Utf8);

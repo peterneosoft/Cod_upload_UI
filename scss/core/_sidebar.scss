@@ -119,8 +119,8 @@
         }
 
         &.active {
-          color: $sidebar-nav-link-active-color;
-          background: #2f353a;
+          color: white !important;
+          background: blue;
           @include borders($sidebar-nav-link-active-borders);
 
           i {

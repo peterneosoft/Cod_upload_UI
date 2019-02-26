@@ -120,18 +120,14 @@ export default {
     }
   },
   mounted() {
-    var userdetailEncrypt = window.localStorage.getItem('userdetail')
+    var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
     var bytes  = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
     var plaintext = bytes.toString(CryptoJS.enc.Utf8);
-    var userdetail =JSON.parse(plaintext);
-    this.uasertype = userdetail[0].utype;
-    //console.log(userdetail[0])
-    this.username = userdetail[0].FirstName;
 
-    var permissionEncrypt = window.localStorage.getItem('permissiondata')
-    var bytes1  = CryptoJS.AES.decrypt(permissionEncrypt.toString(), 'Key');
-    var plaintext1 = bytes1.toString(CryptoJS.enc.Utf8);
-    this.navItem=JSON.parse(plaintext1);
+    var userdetail =JSON.parse(plaintext);
+    this.username = userdetail.username;
+
+
 
 
     this.$nextTick(() => {
