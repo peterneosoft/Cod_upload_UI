@@ -1,8 +1,3 @@
-<style type="text/css">
-  .sidebar-fixed .main, .sidebar-fixed .app-footer{
-    margin-left:0px;
-  }
-</style>
 <template>
   <div class="sidebar">
     <nav class="sidebar-nav">
@@ -90,7 +85,6 @@ export default {
   }
   .sidebar{
     z-index:99;
-    top:89px;
     background:#2f353a;
   }
   .app-header.navbar .navbar-toggler{
