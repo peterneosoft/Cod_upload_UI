@@ -1,0 +1,226 @@
+<section>
+  <div class="animated fadeIn">
+    <div class="row">
+      <div class="col-sm-5">
+        <div class="card">
+          <div class="card-header"><i class="fa fa-align-justify"></i> Closure</div>
+          <div class="card-body">
+            <form action="" method="post">
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Delivery Date</span>
+                  </div>
+                  <input class="form-control" id="date-input" type="date" name="date-input">
+                  <div class="input-group-append">
+                    <span class="input-group-text">
+                      <i class="fa fa-calendar"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Deposit Date</span>
+                  </div>
+                  <input class="form-control" id="date-input" type="date" name="date-input">
+                  <div class="input-group-append">
+                    <span class="input-group-text">
+                      <i class="fa fa-calendar"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Deposit Amt</span>
+                  </div>
+                  <input class="form-control" id="dep_amount" type="text" name="dep_amount">
+                  <div class="input-group-append">
+                    <span class="input-group-text">
+                      <i class="fa fa-rupee"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Deposit Type</span>
+                  </div>
+                  <select class="form-control" id="select1" name="select1">
+                    <option value="">--Select--</option>
+                    <option value="1">Bank Deposit</option>
+                    <option value="2">CMS Deposit</option>
+                    <option value="3">NEFT/ Other Deposit</option>
+                  </select>
+                  <div class="input-group-append">
+                    <span class="input-group-text">
+                      <i class="fa fa-angle-down"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Bank Name</span>
+                  </div>
+                  <select class="form-control" id="select1" name="select1">
+                    <option value="0">--Select--</option>
+                    <option value="1">Option #1</option>
+                    <option value="2">Option #2</option>
+                    <option value="3">Option #3</option>
+                  </select>
+                  <div class="input-group-append">
+                    <span class="input-group-text">
+                      <i class="fa fa-bank"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Transaction ID</span>
+                  </div>
+                  <input class="form-control" id="password3" type="text" name="password3">
+                  <div class="input-group-append">
+                    <span class="input-group-text">
+                      <i class="fa fa-exchange"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Comments</span>
+                  </div>
+                  <textarea class="form-control" id="textarea-input" name="textarea-input" rows="3" placeholder="Content.."></textarea>
+                  <div class="input-group-append">
+                    <span class="input-group-text">
+                      <i class="fa fa-info"></i>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button class="btn btn-sm btn-primary" type="submit">
+                  <i class="fa fa-dot-circle-o"></i> Submit</button>
+                <button class="btn btn-sm btn-danger" type="reset">
+                  <i class="fa fa-ban"></i> Clear</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> Currency</div>
+          <div class="card-body" style="height: 500px;">
+            <table class="table table-responsive-sm" height="10">
+              <thead>
+                <tr>
+                  <th>Notes</th>
+                  <th>Count</th>
+                  <th>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="notes">2000</td>
+                  <td class="notes"><input class="form-control" id="2000" type="text" name="2000" @change="notesCount"></td>
+                  <td class="notes"><input class="form-control" id="mo2000" type="text" name="note_amt" value="0" disabled></td>
+                </tr>
+                <tr>
+                  <td class="notes">500</td>
+                  <td class="notes"><input class="form-control" id="500" type="text" name="500" @change="notesCount"></td>
+                  <td class="notes"><input class="form-control" id="mo500" type="text" name="note_amt" value="0" disabled></td>
+                </tr>
+                <tr>
+                  <td class="notes">200</td>
+                  <td class="notes"><input class="form-control" id="200" type="text" name="200" @change="notesCount"></td>
+                  <td class="notes"><input class="form-control" id="mo200" type="text" name="note_amt" value="0" disabled></td>
+                </tr>
+                <tr>
+                  <td class="notes">100</td>
+                  <td class="notes"><input class="form-control" id="100" type="text" name="100" @change="notesCount"></td>
+                  <td class="notes"><input class="form-control" id="mo100" type="text" name="note_amt" value="0" disabled></td>
+                </tr>
+                <tr>
+                  <td class="notes">50</td>
+                  <td class="notes"><input class="form-control" id="50" type="text" name="50" @change="notesCount"></td>
+                  <td class="notes"><input class="form-control" id="mo50" type="text" name="note_amt" value="0" disabled></td>
+                </tr>
+                <tr>
+                  <td class="notes">20</td>
+                  <td class="notes"><input class="form-control" id="20" type="text" name="20" @change="notesCount"></td>
+                  <td class="notes"><input class="form-control" id="mo20" type="text" name="note_amt" value="0" disabled></td>
+                </tr>
+                <tr>
+                  <td class="notes">10</td>
+                  <td class="notes"><input class="form-control" id="10" type="text" name="10" @change="notesCount"></td>
+                  <td class="notes"><input class="form-control" id="mo10" type="text" name="note_amt" value="0" disabled></td>
+                </tr>
+                <tr>
+                  <td class="notes">5</td>
+                  <td class="notes"><input class="form-control" id="5" type="text" name="5" @change="notesCount"></td>
+                  <td class="notes"><input class="form-control" id="mo5" type="text" name="note_amt" value="0" disabled></td>
+                </tr>
+                <tr>
+                  <td class="notes">2</td>
+                  <td class="notes"><input class="form-control" id="2" type="text" name="2" @change="notesCount"></td>
+                  <td class="notes"><input class="form-control" id="mo2" type="text" name="note_amt" value="0" disabled></td>
+                </tr>
+                <tr>
+                  <td class="notes">1</td>
+                  <td class="notes"><input class="form-control" id="1" type="text" name="1" @change="notesCount"></td>
+                  <td class="notes"><input class="form-control" id="mo1" type="text" name="note_amt" value="0" disabled></td>
+                </tr>
+                <tr>
+                  <td class="notes"></td>
+                  <td class="notes"><strong>Total</strong></td>
+                  <td class="notes"><input class="form-control" id="tot_amt" type="text" name="tot_amt" value="0" disabled></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3">
+        <div class="card">
+          <div class="card-header">
+            <i class="fa fa-align-justify"></i> Amount</div>
+          <div class="card-body">
+            <table class="table table-responsive-sm">
+              <tbody>
+                <tr>
+                  <td>Yesterday's COD Amt</td>
+                  <td>0.00</td>
+                </tr>
+                <tr>
+                  <td>Pending COD Amt</td>
+                  <td>0.00</td>
+                </tr>
+                <tr>
+                  <td>Total Amt</td>
+                  <td>0.00</td>
+                </tr>
+                <tr>
+                  <td>Total P2P Amt</td>
+                  <td>0.00</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

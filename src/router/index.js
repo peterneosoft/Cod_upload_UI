@@ -10,6 +10,8 @@ import dashboard from '@/views/components/dashboard'
 import srclosure from '@/views/components/srclosure'
 import Charts from '@/views/Charts'
 import Widgets from '@/views/Widgets'
+import SVCClosureP2P from '@/views/components/svcclosurep2p'
+import SVCClosureSearch from '@/views/components/svcclosuresearch'
 
 // Views - Components
 import Buttons from '@/views/components/Buttons'
@@ -26,12 +28,10 @@ import FontAwesome from '@/views/icons/FontAwesome'
 import SimpleLineIcons from '@/views/icons/SimpleLineIcons'
 import CryptoJS from 'crypto-js';
 
-
 // Views - Pages
 import Page404 from '@/views/pages/Page404'
 import Page500 from '@/views/pages/Page500'
 import Login from '@/views/components/login'
-
 
 Vue.use(Router)
 const router = new Router({
@@ -63,24 +63,56 @@ const router = new Router({
 					},
 				},
 				{
-						path: 'srclosure',
-						name: 'srclosure',
-						component: srclosure,
-						meta: {
-							requiresAuth: true,
-							adminAuth: true,
-							breadcrumb: [{
-									name: 'Home',
-									link: '/srclosure'
-								},
-								{
-									name: 'srclosure'
-								}
-							]
-						},
+					path: 'svcclosurep2p',
+					name: 'svcclosurep2p',
+					component: SVCClosureP2P,
+					meta: {
+						requiresAuth: true,
+						adminAuth: true,
+						breadcrumb: [{
+								name: 'Home',
+								link: '/dashboard'
+							},
+							{
+								name: 'COD day Closure'
+							}
+						]
 					},
-
-
+				},
+				{
+					path: 'srclosure',
+					name: 'srclosure',
+					component: srclosure,
+					meta: {
+						requiresAuth: true,
+						adminAuth: true,
+						breadcrumb: [{
+								name: 'Home',
+								link: '/srclosure'
+							},
+							{
+								name: 'srclosure'
+							}
+						]
+					},
+				},
+				{
+					path: 'svcclosuresearch',
+					name: 'svcclosuresearch',
+					component: SVCClosureSearch,
+					meta: {
+						requiresAuth: true,
+						adminAuth: true,
+						breadcrumb: [{
+								name: 'Home',
+								link: '/dashboard'
+							},
+							{
+								name: 'SVC Search'
+							}
+						]
+					},
+				},
 				{
 					path: 'pagination',
 					name: 'Pagination',
