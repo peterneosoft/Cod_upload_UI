@@ -7,6 +7,7 @@ import Full from '@/containers/Full'
 
 // Views
 import dashboard from '@/views/components/dashboard'
+import srclosure from '@/views/components/srclosure'
 import Charts from '@/views/Charts'
 import Widgets from '@/views/Widgets'
 
@@ -18,12 +19,6 @@ import Forms from '@/views/components/Forms'
 import Modals from '@/views/components/Modals'
 import Switches from '@/views/components/Switches'
 import Tables from '@/views/components/Tables'
-
-
-
-
-
-
 import Pagination from '@/views/components/pagination'
 
 // Views - Icons
@@ -67,6 +62,25 @@ const router = new Router({
 						]
 					},
 				},
+				{
+						path: 'srclosure',
+						name: 'srclosure',
+						component: srclosure,
+						meta: {
+							requiresAuth: true,
+							adminAuth: true,
+							breadcrumb: [{
+									name: 'Home',
+									link: '/srclosure'
+								},
+								{
+									name: 'srclosure'
+								}
+							]
+						},
+					},
+
+
 				{
 					path: 'pagination',
 					name: 'Pagination',
