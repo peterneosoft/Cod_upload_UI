@@ -1,0 +1,49 @@
+<div class="row">
+  <div class="col-lg-12">
+    <b-card>
+      <div slot="header">
+        COD SR Day Closure Search
+      </div>
+      <div class="card-body1">
+        <form action="" method="post" class="form-horizontal">
+          <div class="col-md-6">
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">SR Name</span>
+                </div>
+                <select class="form-control" id="select1" name="select1">
+                  <option value="0">--Select--</option>
+                  <option value="1">Option #1</option>
+                  <option value="2">Option #2</option>
+                  <option value="3">Option #3</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+           <div class="input-group">
+            <div class="col-md-4">
+              <label>From Date</label>
+              <b-input-group left="<i class='fa fa-user'></i>">
+                <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="usertypename"></b-form-input>
+              </b-input-group>
+            </div>
+
+            <div class="col-md-4">
+              <label>To Date</label>
+              <b-input-group left="<i class='fa fa-user'></i>">
+                <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="usertypename"></b-form-input>
+              </b-input-group>
+            </div>
+           </div>
+          </div>
+          <div >
+            <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+            <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> Clear</button>
+          </div>
+        </form>
+      </div>
+    </b-card>
+  </div><!--/.col-->
+</div><!--/.row-->

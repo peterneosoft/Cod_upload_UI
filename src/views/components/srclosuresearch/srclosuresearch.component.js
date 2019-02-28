@@ -25,7 +25,8 @@ export default {
 
     //function is used for calculate notes amount
     notesCount(event){
-      if(event){
+
+      if(event.srcElement.value){
         document.getElementById("mo"+event.srcElement.id).value = event.srcElement.id * event.srcElement.value;
 
         var arr = document.getElementsByName('note_amt');

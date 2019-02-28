@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-lg-12">
+    <b-card>
+      <div slot="header">
+        Remittance Closed Details
+      </div>
+      <div class="card-body1">
+        <form action="" method="post" class="form-horizontal">
+        <b-form-fieldset>
+          <b-form-radio
+            name="radioInline"
+            :plain="true"
+            :options="options"
+            v-model="selected"
+            ></b-form-radio>
+        </b-form-fieldset>
+          <div class="form-group row">
+           <div class="input-group">
+            <div class="col-md-4">
+              <label>From Date</label>
+              <b-input-group left="<i class='fa fa-user'></i>">
+                <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="usertypename"></b-form-input>
+              </b-input-group>
+            </div>
+            <div class="col-md-4">
+              <label>To Date</label>
+              <b-input-group left="<i class='fa fa-user'></i>">
+                <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="usertypename"></b-form-input>
+              </b-input-group>
+            </div>
+           </div>
+          </div>
+          <div >
+            <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+            <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> Clear</button>
+          </div>
+        </form>
+      </div>
+    </b-card>
+  </div><!--/.col-->
+</div><!--/.row-->

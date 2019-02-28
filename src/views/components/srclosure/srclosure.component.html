@@ -6,23 +6,35 @@
           <div slot="header">
             <strong>COD SR day Closure</strong>
           </div>
-              <b-form-fieldset
-              label="SR Name"
-              :label-cols="3"
-              :horizontal="true">
-              <b-form-select
-              :plain="true"
-              :options="['Please select','Option 1', 'Option 2', 'Option 3']"
-              value="Please select">
-            </b-form-select>
-          </b-form-fieldset>
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">SR Name</span>
+              </div>
+              <select class="form-control" id="select1" name="select1">
+                <option value="0">--Select--</option>
+                <option value="1">Option #1</option>
+                <option value="2">Option #2</option>
+                <option value="3">Option #3</option>
+              </select>
+              <div class="input-group-append">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Deposit Amount</span>
+              </div>
+              <input class="form-control" id="dep_amount" type="text" name="dep_amount">
+              <div class="input-group-append">
+                <span class="input-group-text">
+                  <i class="fa fa-rupee"></i>
+                </span>
+              </div>
+            </div>
+          </div>
 
-          <b-form-fieldset
-            label="Deposit Amount"
-            :label-cols="3"
-            :horizontal="true">
-            <b-form-input type="text"></b-form-input>
-          </b-form-fieldset>
           <div slot="footer">
             <b-button type="submit" size="sm" variant="primary"><i class="fa fa-dot-circle-o"></i> Submit</b-button>
             <b-button type="reset" size="sm" variant="danger"><i class="fa fa-ban"></i> Reset</b-button>
@@ -33,8 +45,8 @@
        </div>
       </div>
       <div class="col-sm-4">
-        <b-card>
-          <table class="table table-bordered table-striped table-sm">
+        <b-card >
+          <table class="table table-bordered table-striped table-sm" >
             <thead>
               <tr>
                 <th>Notes</th>
@@ -44,151 +56,117 @@
             </thead>
             <tbody>
               <tr>
-                <td>2000</td>
-                <td><b-form-fieldset
-                  :label-cols="5"
-                  :horizontal="true">
-                  <b-form-input type="text"></b-form-input>
-                </b-form-fieldset></td>
-                <td><b-form-fieldset
+                <td class="notes">2000</td>
+                <td class="notes">
+                  <b-col sm="10">
+                    <b-form-input class="form-control" size="sm" id="2000" type="text" name="2000" @change="notesCount" />
+                  </b-col>
+                </td>
+                <td class="notes">
+                  <b-col sm="10">
+                    <b-form-input class="form-control" size="sm" id="mo2000" type="text" name="note_amt" value="0" disabled />
+                  </b-col></td>
+              </tr>
+              <tr>
+                <td class="notes">500</td>
+                <td class="notes">
+                  <b-col sm="10">
+                    <b-form-input class="form-control" size="sm" id="500" type="text" name="500" @change="notesCount" />
+                  </b-col></td>
+                <td class="notes">
+                  <b-col sm="10">
+                    <b-form-input class="form-control" size="sm" id="mo500" type="text" name="note_amt" value="0" disabled />
+                  </b-col></td>
+              </tr>
+              <tr>
+                <td class="notes">200</td>
+                <td class="notes">
+                  <b-col sm="10">
+                    <b-form-input class="form-control" size="sm" id="200" type="text" name="200" @change="notesCount" />
+                  </b-col></td>
+                <td class="notes">
+                  <b-col sm="10">
+                    <b-form-input class="form-control" size="sm" id="mo200" type="text" name="note_amt" value="0" disabled />
+                  </b-col></td>
+              </tr>
+              <tr>
+                <td class="notes">100</td>
+                <td class="notes">
+                  <b-col sm="10">
+                    <b-form-input class="form-control" size="sm" id="100" type="text" name="100" @change="notesCount" />
+                  </b-col></td>
+                <td class="notes">
+                  <b-col sm="10">
+                    <b-form-input class="form-control" size="sm" id="mo100" type="text" name="note_amt" value="0" disabled />
+                  </b-col></td>
+              </tr>
+              <tr>
+                <td class="notes">50</td>
+                <td class="notes">
+                  <b-col sm="10">
+                    <b-form-input class="form-control" size="sm" id="50" type="text" name="50" @change="notesCount" />
+                  </b-col></td>
+                <td class="notes">
+                  <b-col sm="10">
+                    <b-form-input class="form-control" size="sm" id="mo50" type="text" name="note_amt" value="0" disabled /></b-col></td>
+              </tr>
+              <tr>
+                <td class="notes">20</td>
+                <td class="notes">
+                  <b-col sm="10">
+                    <b-form-input class="form-control" size="sm" id="20" type="text" name="20" @change="notesCount" />
+                  </b-col></td>
+                <td class="notes">
+                  <b-col sm="10">
+                    <b-form-input class="form-control" size="sm" id="mo20" type="text" name="note_amt" value="0" disabled />
+                  </b-col></td>
+              </tr>
+              <tr>
+                <td class="notes">10</td>
+                <td class="notes">
+                  <b-col sm="10">
+                    <b-form-input class="form-control" size="sm" id="10" type="text" name="10" @change="notesCount" />
+                  </b-col></td>
+                <td class="notes">
+                  <b-col sm="10">
+                    <b-form-input class="form-control" size="sm" id="mo10" type="text" name="note_amt" value="0" disabled />
+                  </b-col></td>
+              </tr>
+              <tr>
+                <td class="notes">5</td>
+                <td class="notes">
+                  <b-col sm="10">
+                    <b-form-input class="form-control" size="sm" id="5" type="text" name="5" @change="notesCount" />
+                  </b-col></td>
+                <td class="notes">
+                  <b-col sm="10"> <b-form-input class="form-control" size="sm" id="mo5" type="text" name="note_amt" value="0" disabled />
+                  </b-col></td>
+              </tr>
+              <tr>
+                <td class="notes">2</td>
+                <td class="notes">
+                  <b-col sm="10">
+                    <b-form-input class="form-control" size="sm" id="2" type="text" name="2" @change="notesCount" /></b-col></td>
+                <td class="notes">
+                  <b-col sm="10">
+                    <b-form-input class="form-control" size="sm" id="mo2" type="text" name="note_amt" value="0" disabled /></b-col></td>
+              </tr>
+              <tr>
+                <td class="notes">1</td>
+                <td class="notes">
+                  <b-col sm="10">
+                    <b-form-input class="form-control" size="sm" id="1" type="text" name="1" @change="notesCount" /></b-col></td>
+                <td class="notes">
+                  <b-col sm="10">
+                    <b-form-input class="form-control" size="sm" id="mo1" type="text" name="note_amt" value="0" disabled /></b-col></td>
+              </tr>
+              <tr>
+                <td class="notes"></td>
+                <td class="notes">Total</td>
 
-                    :label-cols="3"
-                    :horizontal="true">
-                    <b-form-input type="text" :disabled="true" placeholder="0"></b-form-input>
-                  </b-form-fieldset></td>
-              </tr>
-              <tr>
-                <td>500</td>
-                <td><b-form-fieldset
-                  :label-cols="5"
-                  :horizontal="true">
-                  <b-form-input type="text"></b-form-input>
-                </b-form-fieldset></td>
-                <td><b-form-fieldset
-
-                    :label-cols="3"
-                    :horizontal="true">
-                    <b-form-input type="text" :disabled="true" placeholder="0"></b-form-input>
-                  </b-form-fieldset></td>
-              </tr>
-              <tr>
-                <td>200</td>
-                <td><b-form-fieldset
-                  :label-cols="5"
-                  :horizontal="true">
-                  <b-form-input type="text"></b-form-input>
-                </b-form-fieldset></td>
-                <td><b-form-fieldset
-
-                    :label-cols="3"
-                    :horizontal="true">
-                    <b-form-input type="text" :disabled="true" placeholder="0"></b-form-input>
-                  </b-form-fieldset></td>
-              </tr>
-              <tr>
-                <td>100</td>
-                <td><b-form-fieldset
-                  :label-cols="5"
-                  :horizontal="true">
-                  <b-form-input type="text"></b-form-input>
-                </b-form-fieldset></td>
-                <td><b-form-fieldset
-
-                    :label-cols="3"
-                    :horizontal="true">
-                    <b-form-input type="text" :disabled="true" placeholder="0"></b-form-input>
-                  </b-form-fieldset></td>
-              </tr>
-              <tr>
-                <td>50</td>
-                <td><b-form-fieldset
-                  :label-cols="5"
-                  :horizontal="true">
-                  <b-form-input type="text"></b-form-input>
-                </b-form-fieldset></td>
-                <td><b-form-fieldset
-
-                    :label-cols="3"
-                    :horizontal="true">
-                    <b-form-input type="text" :disabled="true" placeholder="0"></b-form-input>
-                  </b-form-fieldset></td>
-              </tr>
-              <tr>
-                <td>20</td>
-                <td><b-form-fieldset
-                  :label-cols="5"
-                  :horizontal="true">
-                  <b-form-input type="text"></b-form-input>
-                </b-form-fieldset></td>
-                <td>  <b-form-fieldset
-
-                    :label-cols="3"
-                    :horizontal="true">
-                    <b-form-input type="text" :disabled="true" placeholder="0"></b-form-input>
-                  </b-form-fieldset></td>
-              </tr>
-              <tr>
-                <td>10</td>
-                <td><b-form-fieldset
-                  :label-cols="5"
-                  :horizontal="true">
-                  <b-form-input type="text"></b-form-input>
-                </b-form-fieldset></td>
-                <td>  <b-form-fieldset
-
-                    :label-cols="3"
-                    :horizontal="true">
-                    <b-form-input type="text" :disabled="true" placeholder="0"></b-form-input>
-                  </b-form-fieldset></td>
-              </tr>
-              <tr>
-                <td>5</td>
-                <td><b-form-fieldset
-                  :label-cols="5"
-                  :horizontal="true">
-                  <b-form-input type="text"></b-form-input>
-                </b-form-fieldset></td>
-                <td>  <b-form-fieldset
-
-                    :label-cols="3"
-                    :horizontal="true">
-                    <b-form-input type="text" :disabled="true" placeholder="0"></b-form-input>
-                  </b-form-fieldset></td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td><b-form-fieldset
-                  :label-cols="5"
-                  :horizontal="true">
-                  <b-form-input type="text"></b-form-input>
-                </b-form-fieldset></td>
-                <td>  <b-form-fieldset
-                    :label-cols="3"
-                    :horizontal="true">
-                    <b-form-input type="text" :disabled="true" placeholder="0"></b-form-input>
-                  </b-form-fieldset></td>
-              </tr>
-              <tr>
-                <td>1</td>
-                <td><b-form-fieldset
-                  :label-cols="5"
-                  :horizontal="true">
-                  <b-form-input type="text"></b-form-input>
-                </b-form-fieldset></td>
-                <td>  <b-form-fieldset
-                    :label-cols="3"
-                    :horizontal="true">
-                    <b-form-input type="text" :disabled="true" placeholder="0"></b-form-input>
-                  </b-form-fieldset></td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>Total</td>
-                <td><b-form-fieldset
-                    :label-cols="3"
-                    :horizontal="true">
-                    <b-form-input type="text" :disabled="true" placeholder="0"></b-form-input>
-                  </b-form-fieldset></td>
+                <td class="notes">
+                  <b-col sm="10">
+                    <b-form-input class="form-control" size="sm" id="tot_amt" type="text" name="tot_amt" value="0" disabled /></b-col></td>
               </tr>
             </tbody>
           </table>

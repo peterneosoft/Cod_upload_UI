@@ -7,6 +7,8 @@ import Full from '@/containers/Full'
 // Views
 import dashboard from '@/views/components/dashboard'
 import srclosure from '@/views/components/srclosure'
+import srclosuresearch from '@/views/components/srclosuresearch'
+import CODRemitanceClose from '@/views/components/CODRemitanceClose'
 import Charts from '@/views/Charts'
 import Widgets from '@/views/Widgets'
 import SVCClosureP2P from '@/views/components/svcclosurep2p'
@@ -97,6 +99,57 @@ const router = new Router({
           },
         },
         {
+          path: 'srclosuresearch',
+          name: 'srclosuresearch',
+          component: srclosuresearch,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/srclosuresearch'
+              },
+              {
+                name: 'srclosuresearch'
+              }
+            ]
+          },
+        },
+        {
+          path: 'svcclosuresearch',
+          name: 'svcclosuresearch',
+          component: SVCClosureSearch,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/svcclosuresearch'
+              },
+              {
+                name: 'svcclosuresearch'
+              }
+            ]
+          },
+        },
+        {
+          path: 'CODRemitanceClose',
+          name: 'CODRemitanceClose',
+          component: CODRemitanceClose,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/CODRemitanceClose'
+              },
+              {
+                name: 'CODRemitanceClose'
+              }
+            ]
+          },
+        },
+        {
           path: 'svcclosuresearch',
           name: 'svcclosuresearch',
           component: SVCClosureSearch,
@@ -124,47 +177,17 @@ const router = new Router({
                 link: '/dashboard'
               },
               {
-                name: 'Pagination'
-              }
-            ]
-          }
-
-        },
-        {
-          path: 'hubwisecodreport',
-          name: 'hubwisecodreport',
-          component: HubWiseCODReport,
-          meta: {
-            requiresAuth: true,
-            breadcrumb: [{
-                name: 'Home',
-                link: '/hubwisecodreport'
+                name: 'Pagination',
+                link: '/pagination'
               },
               {
-                name: 'HubWiseCODReport'
-              }
-            ]
-          }
-
-        },
-        {
-          path: 'misp2preport',
-          name: 'misp2preport',
-          component: MISP2PCODReport,
-          meta: {
-            requiresAuth: true,
-            breadcrumb: [{
-                name: 'Home',
+                name: 'MIS-P2P-Report',
                 link: '/misp2preport'
-              },
-              {
-                name: 'MIS-P2P-Report'
               }
             ]
           }
 
         },
-
         {
           path: 'charts',
           name: 'Charts',
