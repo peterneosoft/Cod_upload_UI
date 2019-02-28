@@ -2,21 +2,94 @@
   <div class="sidebar">
     <nav class="sidebar-nav">
       <div slot="header"></div>
-        <ul class="nav">
-        <li class="nav-item" v-for="(item, index) in navItem">
-
-           <template v-if="item.children.length>0">
-              <SidebarNavDropdown :name="item.name" :url="item.url" :icon="item.name">
-                <template v-for="child in item.children">
-                  <SidebarNavLink :name="child.name"  :url="item.url" :icon="child.name"/>
-                </template>
-              </SidebarNavDropdown>
-           </template>
-            <template v-else>
-            <SidebarNavLink :name="item.name" :icon="item.name" :url="+item.url"/>
-          </template>
+        <!--<ul class="nav">
+         <li class="nav-item">
+           <a class="nav-link" href="/#/dashboard">
+             <i class="nav-icon icon-speedometer"></i> COD Dashboard
+           </a>
          </li>
-      </ul>
+          <li class="nav-item">
+            <template>
+               <SidebarNavDropdown :name="'SR Closure'" :url="'srclosure'" :icon="'srclosure'">
+                 <template>
+                   <li class="nav-item">
+                     <SidebarNavLink :name="'SR Closure'"  :url="'srclosure'" :icon="'srclosure'"/>
+                   </li>
+                   <li class="nav-item">
+                     <SidebarNavLink :name="'SR Closure Search'"  :url="'srclosuresearch'" :icon="'srclosuresearch'"/>
+                   </li>
+                 </template>
+               </SidebarNavDropdown>
+            </template>
+          </li>
+         <li class="nav-item">
+            <template>
+               <SidebarNavDropdown :name="'SVC Closure'" :url="'svcclosure'" :icon="'svcclosure'">
+                 <template>
+                   <li class="nav-item">
+                     <SidebarNavLink :name="'SVC Closure P2P'"  :url="'svcclosurep2p'" :icon="'svcclosurep2p'"/>
+                   </li>
+                   <li class="nav-item">
+                     <SidebarNavLink :name="'SVC Closure Search'"  :url="'svcclosuresearch'" :icon="'svcclosuresearch'"/>
+                   </li>
+                 </template>
+               </SidebarNavDropdown>
+            </template>
+          </li>
+          <li class="nav-item">
+             <template>
+                <SidebarNavDropdown :name="'Finance Closure'" :url="'financeclosure'" :icon="'financeclosure'">
+                  <template>
+                    <li class="nav-item">
+                      <SidebarNavLink :name="'Bank Hub Mapping'"  :url="'mapbankhub'" :icon="'mapbankhub'"/>
+                    </li>
+                    <li class="nav-item">
+                      <SidebarNavLink :name="'Bulk Upload To Close'"  :url="'bankfiletoclosebulkaccount'" :icon="'bankfiletoclosebulkaccount'"/>
+                    </li>
+                    <li class="nav-item">
+                      <SidebarNavLink :name="'Finance Closure'"  :url="'financeclosure'" :icon="'financeclosure'"/>
+                    </li>
+                    <li class="nav-item">
+                      <SidebarNavLink :name="'Finance Re-Open Closure'"  :url="'csvreopenday'" :icon="'csvreopenday'"/>
+                    </li>
+                    <li class="nav-item">
+                      <SidebarNavLink :name="'SVC Deposit Exceptions'"  :url="'svcdepositexceptions'" :icon="'svcdepositexceptions'"/>
+                    </li>
+                  </template>
+                </SidebarNavDropdown>
+             </template>
+           </li>
+           <li class="nav-item">
+            <template>
+               <SidebarNavDropdown :name="'COD Reports'" :url="'hubwisecodreport'" :icon="'hubwisecodreport'">
+                 <template>
+                   <li class="nav-item">
+                     <SidebarNavLink :name="'Hub Wise COD Report'"  :url="'hubwisecodreport'" :icon="'hubwisecodreport'"/>
+                   </li>
+                   <li class="nav-item">
+                     <SidebarNavLink :name="'MIS P2P COD Report'"  :url="'misp2preport'" :icon="'misp2preport'"/>
+                   </li>
+                 </template>
+               </SidebarNavDropdown>
+            </template>
+          </li>
+        </ul>-->
+
+        <ul class="nav">
+          <li class="nav-item" v-for="(item, index) in navItem">
+
+             <template v-if="item.children.length>0">
+                <SidebarNavDropdown :name="item.name" :url="item.url" :icon="item.name">
+                  <template v-for="child in item.children">
+                    <SidebarNavLink :name="child.name"  :url="item.url" :icon="child.name"/>
+                  </template>
+                </SidebarNavDropdown>
+             </template>
+              <template v-else>
+              <SidebarNavLink :name="item.name" :icon="item.name" :url="+item.url"/>
+            </template>
+           </li>
+        </ul>
        <slot></slot>
       <div slot="footer"></div>
     </nav>

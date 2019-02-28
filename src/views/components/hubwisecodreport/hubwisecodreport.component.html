@@ -1,0 +1,77 @@
+<section class="user">
+  <div class="animated fadeIn">
+    <div class="col-md-12 mb-2">
+      <div class="card-header filter_main">
+        <i class=" fa fa-filter filter"></i> <strong> Hub Wise COD Closure Report </strong>
+      </div>
+
+        <b-card>
+          <div class="card-body1">
+            <form action="" method="post" class="form-horizontal">
+              <div class="form-group row">
+
+                <div class="col-md-4">
+                  <b-form-fieldset
+                  label="Zone"
+                  :label-cols="3"
+                  :horizontal="true">
+                  <b-form-select
+                  :plain="true"
+                  :options="['Please select','Option 1', 'Option 2', 'Option 3']"
+                  value="Please select">
+                </b-form-select>
+              </b-form-fieldset>
+                </div>
+                <div class="col-md-4">
+                  <b-form-fieldset
+                  label="Hub/Svc"
+                  :label-cols="3"
+                  :horizontal="true">
+                  <b-form-select
+                  :plain="true"
+                  :options="['Please select','Option 1', 'Option 2', 'Option 3']"
+                  value="Please select">
+                </b-form-select>
+              </b-form-fieldset>
+                </div>
+                <div class="col-md-4">
+                  <b-form-fieldset
+                  label="Status"
+                  :label-cols="3"
+                  :horizontal="true">
+                  <b-form-select
+                  :plain="true"
+                  :options="['Please select','Option 1', 'Option 2', 'Option 3']"
+                  value="Please select">
+                </b-form-select>
+              </b-form-fieldset>
+                </div>
+              </div>
+              <div class="form-group row">
+                  <div class="col-md-4">
+                      <b-form-fieldset
+                        label="From Date:"
+                        :label-cols="3"
+                        :horizontal="true">
+                        <b-form-input id="date-input" type="date" placeholder="Select from Date" v-model="usertypename"></b-form-input>
+                     </b-form-fieldset>
+                    </div>
+                <div class="col-md-4">
+                    <b-form-fieldset
+                    label="To Date:"
+                    :label-cols="3"
+                    :horizontal="true">
+                    <b-form-input id="date-input" type="date" placeholder="Select to Date" v-model="usertypename"></b-form-input>
+                 </b-form-fieldset>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+                <button class="btn btn-sm btn-primary" type="submit"><i class="fa"></i> Export </button>
+              </div>
+            </form>
+          </div>
+        </b-card>
+    </div>
+  </div>
+</section>

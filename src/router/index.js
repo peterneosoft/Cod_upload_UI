@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-
 // Containers
 import Full from '@/containers/Full'
 
@@ -12,7 +11,8 @@ import Charts from '@/views/Charts'
 import Widgets from '@/views/Widgets'
 import SVCClosureP2P from '@/views/components/svcclosurep2p'
 import SVCClosureSearch from '@/views/components/svcclosuresearch'
-
+import HubWiseCODReport from '@/views/components/hubwisecodreport'
+import MISP2PCODReport from '@/views/components/misp2preport'
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -35,218 +35,253 @@ import Login from '@/views/components/login'
 
 Vue.use(Router)
 const router = new Router({
-	mode: 'hash', // Demo is living in GitHub.io, so required!
-	linkActiveClass: 'open active',
-	scrollBehavior: () => ({
-		y: 0
-	}),
-	routes: [{
-			path: '/',
-			redirect: '/dashboard',
-			name: 'Home',
-			component: Full,
-			children: [{
-					path: 'dashboard',
-					name: 'dashboard',
-					component: dashboard,
-					meta: {
-						requiresAuth: true,
-						adminAuth: true,
-						breadcrumb: [{
-								name: 'Home',
-								link: '/dashboard'
-							},
-							{
-								name: 'Dashboard'
-							}
-						]
-					},
-				},
-				{
-					path: 'svcclosurep2p',
-					name: 'svcclosurep2p',
-					component: SVCClosureP2P,
-					meta: {
-						requiresAuth: true,
-						adminAuth: true,
-						breadcrumb: [{
-								name: 'Home',
-								link: '/dashboard'
-							},
-							{
-								name: 'COD day Closure'
-							}
-						]
-					},
-				},
-				{
-					path: 'srclosure',
-					name: 'srclosure',
-					component: srclosure,
-					meta: {
-						requiresAuth: true,
-						adminAuth: true,
-						breadcrumb: [{
-								name: 'Home',
-								link: '/srclosure'
-							},
-							{
-								name: 'srclosure'
-							}
-						]
-					},
-				},
-				{
-					path: 'svcclosuresearch',
-					name: 'svcclosuresearch',
-					component: SVCClosureSearch,
-					meta: {
-						requiresAuth: true,
-						adminAuth: true,
-						breadcrumb: [{
-								name: 'Home',
-								link: '/dashboard'
-							},
-							{
-								name: 'SVC Search'
-							}
-						]
-					},
-				},
-				{
-					path: 'pagination',
-					name: 'Pagination',
-					component: Pagination,
-					meta: {
-						requiresAuth: true,
-						breadcrumb: [{
-								name: 'Home',
-								link: '/dashboard'
-							},
-							{
-								name: 'Pagination'
-							}
-						]
-					}
+  mode: 'hash', // Demo is living in GitHub.io, so required!
+  linkActiveClass: 'open active',
+  scrollBehavior: () => ({
+    y: 0
+  }),
+  routes: [{
+      path: '/',
+      redirect: '/dashboard',
+      name: 'Home',
+      component: Full,
+      children: [{
+          path: 'dashboard',
+          name: 'dashboard',
+          component: dashboard,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'Dashboard'
+              }
+            ]
+          },
+        },
+        {
+          path: 'svcclosurep2p',
+          name: 'svcclosurep2p',
+          component: SVCClosureP2P,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'COD day Closure'
+              }
+            ]
+          },
+        },
+        {
+          path: 'srclosure',
+          name: 'srclosure',
+          component: srclosure,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/srclosure'
+              },
+              {
+                name: 'srclosure'
+              }
+            ]
+          },
+        },
+        {
+          path: 'svcclosuresearch',
+          name: 'svcclosuresearch',
+          component: SVCClosureSearch,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'SVC Search'
+              }
+            ]
+          },
+        },
+        {
+          path: 'pagination',
+          name: 'Pagination',
+          component: Pagination,
+          meta: {
+            requiresAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'Pagination'
+              }
+            ]
+          }
 
-				},
-				{
-					path: 'charts',
-					name: 'Charts',
-					component: Charts
-				},
-				{
-					path: 'widgets',
-					name: 'Widgets',
-					component: Widgets
-				},
+        },
+        {
+          path: 'hubwisecodreport',
+          name: 'hubwisecodreport',
+          component: HubWiseCODReport,
+          meta: {
+            requiresAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/hubwisecodreport'
+              },
+              {
+                name: 'HubWiseCODReport'
+              }
+            ]
+          }
 
-				{
-					path: 'icons',
-					redirect: '/icons/font-awesome',
-					name: 'Icons',
-					component: {
-						render(c) {
-							return c('router-view')
-						}
-					},
-					children: [{
-							path: 'font-awesome',
-							name: 'Font Awesome',
-							component: FontAwesome
-						},
-						{
-							path: 'simple-line-icons',
-							name: 'Simple Line Icons',
-							component: SimpleLineIcons
-						}
-					]
-				}
-			]
-		},
+        },
+        {
+          path: 'misp2preport',
+          name: 'misp2preport',
+          component: MISP2PCODReport,
+          meta: {
+            requiresAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/misp2preport'
+              },
+              {
+                name: 'MIS-P2P-Report'
+              }
+            ]
+          }
 
-		{
-			path: '/login',
-			name: 'login',
-			component: Login
-		},
+        },
 
-		{
-			path: '/pages',
-			redirect: '/pages/p404',
-			name: 'Pages',
-			component: {
-				render(c) {
-					return c('router-view')
-				}
-			},
-			children: [{
-					path: '404',
-					name: 'Page404',
-					component: Page404
-				},
-				{
-					path: '500',
-					name: 'Page500',
-					component: Page500
-				},
-				{
-					path: 'login',
-					name: 'Login',
-					component: Login
-				}
-			]
-		},
+        {
+          path: 'charts',
+          name: 'Charts',
+          component: Charts
+        },
+        {
+          path: 'widgets',
+          name: 'Widgets',
+          component: Widgets
+        },
 
-	]
+        {
+          path: 'icons',
+          redirect: '/icons/font-awesome',
+          name: 'Icons',
+          component: {
+            render(c) {
+              return c('router-view')
+            }
+          },
+          children: [{
+              path: 'font-awesome',
+              name: 'Font Awesome',
+              component: FontAwesome
+            },
+            {
+              path: 'simple-line-icons',
+              name: 'Simple Line Icons',
+              component: SimpleLineIcons
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+
+    {
+      path: '/pages',
+      redirect: '/pages/p404',
+      name: 'Pages',
+      component: {
+        render(c) {
+          return c('router-view')
+        }
+      },
+      children: [{
+          path: '404',
+          name: 'Page404',
+          component: Page404
+        },
+        {
+          path: '500',
+          name: 'Page500',
+          component: Page500
+        },
+        {
+          path: 'login',
+          name: 'Login',
+          component: Login
+        }
+      ]
+    },
+
+  ]
 });
 
 router.beforeEach((to, from, next) => {
 
 
-	var isLoggedIn = window.localStorage.getItem('isLoggedIn');
-	if (isLoggedIn == null) {
-		isLoggedIn = false;
-	} else {
-		isLoggedIn = true;
-	}
+  var isLoggedIn = window.localStorage.getItem('isLoggedIn');
+  if (isLoggedIn == null) {
+    isLoggedIn = false;
+  } else {
+    isLoggedIn = true;
+  }
   next();
-	// if (to.matched.some(record => record.meta.requiresAuth) && !isLoggedIn) {
-	// 	next({
-	// 		path: "/login",
+  // if (to.matched.some(record => record.meta.requiresAuth) && !isLoggedIn) {
+  //   next({
+  //     path: "/login",
   //
-	// 	});
-	// } else {
-	// 	//console.log(to.matched.some(record => record.meta.adminAuth));
-	// 	if (to.matched.some(record => record.meta.requiresAuth)) {
+  //   });
+  // } else {
+  //   //console.log(to.matched.some(record => record.meta.adminAuth));
+  //   if (to.matched.some(record => record.meta.requiresAuth)) {
   //
-	// 		const permissionEncrypt = window.localStorage.getItem('permissiondata')
-	// 		const bytes = CryptoJS.AES.decrypt(permissionEncrypt.toString(), 'Key');
-	// 		const plaintext = bytes.toString(CryptoJS.enc.Utf8);
-	// 		const permissiondata = JSON.parse(plaintext);
+  //     const permissionEncrypt = window.localStorage.getItem('permissiondata')
+  //     const bytes = CryptoJS.AES.decrypt(permissionEncrypt.toString(), 'Key');
+  //     const plaintext = bytes.toString(CryptoJS.enc.Utf8);
+  //     const permissiondata = JSON.parse(plaintext);
   //
-	// 		function isBigEnough(findURL) {
-	// 			if(findURL.submenu.length>0){
-	// 				return findURL.submenu.some(isBigChildEnough);
-	// 			}
-	// 			return findURL.url == to.name;
-	// 		}
-	// 		function isBigChildEnough(findURL) {
-	// 			return findURL.url == to.name;
-	// 		}
-	// 		//console.log(permissiondata);
-	// 		const setroles = permissiondata.some(isBigEnough)
-	// 		if (setroles) {
-	// 			next();
-	// 		} else {
-	// 			next({
-	// 				path: "/dashboard",
-	// 			});
-	// 		}
-	// 	} else {
-	// 		next();
-	// 	}
-	// }
+  //     function isBigEnough(findURL) {
+  //       if(findURL.submenu.length>0){
+  //         return findURL.submenu.some(isBigChildEnough);
+  //       }
+  //       return findURL.url == to.name;
+  //     }
+  //     function isBigChildEnough(findURL) {
+  //       return findURL.url == to.name;
+  //     }
+  //     //console.log(permissiondata);
+  //     const setroles = permissiondata.some(isBigEnough)
+  //     if (setroles) {
+  //       next();
+  //     } else {
+  //       next({
+  //         path: "/dashboard",
+  //       });
+  //     }
+  //   } else {
+  //     next();
+  //   }
+  // }
 
 });
 export default router;
