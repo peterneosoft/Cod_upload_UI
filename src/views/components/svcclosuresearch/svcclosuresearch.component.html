@@ -1,35 +1,34 @@
 <section class="user">
   <div class="animated fadeIn">
     <div class="col-md-12 mb-2">
-      <div class="card-header filter_main">
-        <i class=" fa fa-filter filter"></i>  SVC Search
+      <div class="card">
+        <div class="card-header filter_main">
+          <i class=" fa fa-filter filter"></i>  SVC Search
+        </div>
+        <div class="card-body">
+          <form action="" method="post" class="form-horizontal">
+            <div class="form-group row">
+              <div class="col-md-4">
+                <label>From Date</label>
+                <b-input-group left="<i class='fa fa-user'></i>">
+                  <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="usertypename"></b-form-input>
+                </b-input-group>
+              </div>
+
+              <div class="col-md-4">
+                <label>To Date</label>
+                <b-input-group left="<i class='fa fa-user'></i>">
+                  <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="usertypename"></b-form-input>
+                </b-input-group>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+              <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> Clear</button>
+            </div>
+          </form>
+        </div>
       </div>
-
-        <b-card>
-          <div class="card-body1">
-            <form action="" method="post" class="form-horizontal">
-              <div class="form-group row">
-                <div class="col-md-4">
-                  <label>From Date</label>
-                  <b-input-group left="<i class='fa fa-user'></i>">
-                    <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="usertypename"></b-form-input>
-                  </b-input-group>
-                </div>
-
-                <div class="col-md-4">
-                  <label>To Date</label>
-                  <b-input-group left="<i class='fa fa-user'></i>">
-                    <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="usertypename"></b-form-input>
-                  </b-input-group>
-                </div>
-              </div>
-              <div class="card-footer">
-                <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
-                <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> Clear</button>
-              </div>
-            </form>
-          </div>
-        </b-card>
     </div>
   </div>
 </section>

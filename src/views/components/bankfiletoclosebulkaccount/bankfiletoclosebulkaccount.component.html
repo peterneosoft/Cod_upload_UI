@@ -1,0 +1,47 @@
+<section class="user">
+  <div class="animated fadeIn">
+    <div class="col-md-12 mb-2">
+      <div class="card">
+        <div class="card-header filter_main">
+          <i class=" fa fa-bars barcolor"></i>  E-Payment MIS [COD] Upload
+        </div>
+        <div class="card-body">
+          <form action="" method="post" class="form-horizontal">
+            <div class="form-group row">
+              <div class="col-md-4">
+                <label>Deposit Type</label>
+                <b-input-group style="height: 46px;" left="<i class='fa fa-list'></i>">
+                  <select name="hub" id="hub" class="form-control" v-model="hub" style="height: 46px;">
+                    <option value="">--Select--</option>
+                </select>
+                </b-input-group>
+              </div>
+
+              <div class="col-md-4">
+                <label>Upload File</label>
+                <b-input-group left="<i class='fa fa-file'></i>">
+                  <input type="file" placeholder="Upload File" name="Xb_DeliveryUser_PhotoFileUpload" id="Xb_DeliveryUser_PhotoFileUpload" v-bind:class="{'form-control': true }">
+                </b-input-group>
+                <small class="text-muted"><font color="red">Note: * Only .csv files allowed to upload.</font></small>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-md-8">
+                <label>Comment</label>
+                <b-input-group left="<i class='fa fa-user'></i>">
+                  <textarea placeholder="Enter Comment.."  name="Comment" id="Comment" :rows="3" v-model="Comment" v-bind:class="{'form-control': true, 'error': errors.has('Comment') }"></textarea>
+                </b-input-group>
+                <small class="text-muted"><font color="red">Note: please remove any , (comma) traces before uploading to the system.</font></small>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-upload"></i> Upload</button>
+              <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> Clear</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

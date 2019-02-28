@@ -1,0 +1,51 @@
+<section class="user">
+  <div class="animated fadeIn">
+    <div class="row">
+      <div class="col-md-12 mb-2">
+        <div class="card">
+          <div class="card-header">
+            <i class=" fa fa-filter filter"></i>  SVC Bank Deposit Exceptions
+          </div>
+            <div class="card-body">
+              <form action="" method="post" class="form-horizontal">
+                <div class="form-group row">
+
+                  <div class="col-md-4">
+                    <label>Deposit Date</label>
+                    <b-input-group left="<i class='fa fa-list'></i>">
+                      <b-form-input id="date-input" type="date" name="date-input"></b-form-input>
+                    </b-input-group>
+                  </div>
+                  <div class="col-md-4">
+                    <label>Hub</label>
+                    <b-input-group left="<i class='fa fa-list'></i>">
+                      <select name="hub" id="hub" class="form-control" v-model="hub">
+                        <option value="">--Select--</option>
+                    </select>
+                    </b-input-group>
+                  </div>
+                </div>
+
+                <div class="col-md-4" style="display:none;">
+                  <label>Status</label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                    <select name="hub" id="hub" class="form-control" v-model="hub">
+                      <option value="">--Select--</option>
+                      <option value="">Pending</option>
+                      <option value="">Approved</option>
+                  </select>
+                  </b-input-group>
+                </div>
+
+                <div class="card-footer">
+                  <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+                  <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> Clear</button>
+                  <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-file"></i> Export</button>
+                </div>
+              </form>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

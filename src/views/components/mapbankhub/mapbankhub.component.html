@@ -1,0 +1,104 @@
+<section class="user">
+  <div class="animated fadeIn">
+    <div class="col-md-12 mb-2">
+      <div class="card">
+        <div class="card-header filter_main">
+          <i class=" fa fa-filter filter"></i>  Bank & Hub Search
+        </div>
+        <div class="card-body">
+          <form action="" method="post" class="form-horizontal">
+            <div class="form-group row">
+              <div class="col-md-4">
+                <label>Hub Name</label>
+                <b-input-group left="<i class='fa fa-list'></i>">
+                  <select name="hub" id="hub" class="form-control" v-model="hub">
+                    <option value="">--Select--</option>
+                </select>
+                </b-input-group>
+              </div>
+
+              <div class="col-md-4">
+                <label>Bank Name</label>
+                <b-input-group left="<i class='fa fa-list'></i>">
+                  <select name="bank" id="bank" class="form-control" v-model="bank">
+                    <option value="">--Select--</option>
+                </select>
+                </b-input-group>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-md-4">
+                <label>Code Name</label>
+                <b-input-group left="<i class='fa fa-user'></i>">
+                  <b-form-input id="code" type="text" placeholder=" Enter Code Name" v-model="usertypename"></b-form-input>
+                </b-input-group>
+              </div>
+
+              <div class="col-md-4">
+                <label>Comment</label>
+                <b-input-group left="<i class='fa fa-user'></i>">
+                  <textarea placeholder="Enter Comment.."  name="Comment" id="Comment" :rows="3" v-model="Comment" v-bind:class="{'form-control': true, 'error': errors.has('Comment') }"></textarea>
+                </b-input-group>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+              <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> Clear</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="card-headerfrm" style="margin-bottom: 15px;">
+        <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Mapping Result</h4>
+        <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+        <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+          <thead>
+            <tr class="text-primary">
+              <th class="text-center tableheader"><b>#</b></th>
+              <th class="text-center tableheader"><b>Hub Name</b></th>
+              <th class="text-center tableheader"><b>Bank Name</b></th>
+              <th class="text-center tableheader"><b>Code</b></th>
+              <th class="text-center tableheader"><b>Comment</b></th>
+              <th class="text-center tableheader"><b>Action</b></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="resultCount==0">
+              <td colspan="7" align="center">No record found</td>
+            </tr>
+            <tr>
+              <td scope="row" class="text-center"><strong>1</strong></td>
+              <td>PNQ/CHK</td>
+              <td>ICICI</td>
+              <td>ICICICHK22432</td>
+              <td>code for chakan and ICICI bank</td>
+              <td class="text-center"><i @click.prevent="getRoleRowData(data, resultCount)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3"></i></td>
+            </tr>
+            <tr>
+              <td scope="row" class="text-center"><strong>2</strong></td>
+              <td>PNQ/CAM</td>
+              <td>ICICI_BB</td>
+              <td>AIX</td>
+              <td>code for chakan and ICICI bank</td>
+              <td class="text-center"><i @click.prevent="getRoleRowData(data, resultCount)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3"></i></td>
+            </tr>
+            <tr>
+              <td scope="row" class="text-center"><strong>3</strong></td>
+              <td>PNQ/CAM</td>
+              <td>ICICI_BB1</td>
+              <td>AX5856</td>
+              <td>code for chakan and ICICI bank</td>
+              <td class="text-center"><i @click.prevent="getRoleRowData(data, resultCount)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3"></i></td>
+            </tr>
+          </tbody>
+        </table><br>
+        <paginate :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+        </paginate>
+      </div>
+    </div>
+  </div>
+</section>
