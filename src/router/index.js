@@ -95,10 +95,27 @@ const router = new Router({
 						adminAuth: true,
 						breadcrumb: [{
 								name: 'Home',
-								link: '/srclosure'
+								link: '/dashboard'
 							},
 							{
-								name: 'srclosure'
+								name: 'SR Closure'
+							}
+						]
+					},
+				},
+				{
+					path: 'srclosuresearch',
+					name: 'srclosuresearch',
+					component: srclosuresearch,
+					meta: {
+						requiresAuth: true,
+						adminAuth: true,
+						breadcrumb: [{
+								name: 'Home',
+								link: '/dashboard'
+							},
+							{
+								name: 'SR Closure Search'
 							}
 						]
 					},

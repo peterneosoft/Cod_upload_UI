@@ -81,12 +81,12 @@
              <template v-if="item.children.length>0">
                 <SidebarNavDropdown :name="item.name" :url="item.url" :icon="item.name">
                   <template v-for="child in item.children">
-                    <SidebarNavLink :name="child.name"  :url="item.url" :icon="child.name"/>
+                    <SidebarNavLink :name="child.name"  :url="child.url" :icon="child.name"/>
                   </template>
                 </SidebarNavDropdown>
              </template>
               <template v-else>
-              <SidebarNavLink :name="item.name" :icon="item.name" :url="+item.url"/>
+              <SidebarNavLink :name="item.name" :icon="item.name" :url="item.url"/>
             </template>
            </li>
         </ul>
