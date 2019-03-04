@@ -13,6 +13,8 @@ import Charts from '@/views/Charts'
 import Widgets from '@/views/Widgets'
 import SVCClosureP2P from '@/views/components/svcclosurep2p'
 import SVCClosureSearch from '@/views/components/svcclosuresearch'
+import AddEditClientTAT from '@/views/components/AddEditClientTAT'
+import CODRemittance from '@/views/components/CODRemittance'
 import MapBankHub from '@/views/components/mapbankhub'
 import BankFileToCloseBulkAccount from '@/views/components/bankfiletoclosebulkaccount'
 import FinanceClosure from '@/views/components/financeclosure'
@@ -42,101 +44,118 @@ import Login from '@/views/components/login'
 
 Vue.use(Router)
 const router = new Router({
-	mode: 'hash', // Demo is living in GitHub.io, so required!
-	linkActiveClass: 'open active',
-	scrollBehavior: () => ({
-		y: 0
-	}),
-	routes: [{
-			path: '/',
-			redirect: '/dashboard',
-			name: 'Home',
-			component: Full,
-			children: [{
-					path: 'dashboard',
-					name: 'dashboard',
-					component: dashboard,
-					meta: {
-						requiresAuth: true,
-						adminAuth: true,
-						breadcrumb: [{
-								name: 'Home',
-								link: '/dashboard'
-							},
-							{
-								name: 'Dashboard'
-							}
-						]
-					},
-				},
-				{
-					path: 'svcclosurep2p',
-					name: 'svcclosurep2p',
-					component: SVCClosureP2P,
-					meta: {
-						requiresAuth: true,
-						adminAuth: true,
-						breadcrumb: [{
-								name: 'Home',
-								link: '/dashboard'
-							},
-							{
-								name: 'COD day Closure'
-							}
-						]
-					},
-				},
-				{
-					path: 'srclosure',
-					name: 'srclosure',
-					component: srclosure,
-					meta: {
-						requiresAuth: true,
-						adminAuth: true,
-						breadcrumb: [{
-								name: 'Home',
-								link: '/dashboard'
-							},
-							{
-								name: 'SR Closure'
-							}
-						]
-					},
-				},
-				{
-					path: 'srclosuresearch',
-					name: 'srclosuresearch',
-					component: srclosuresearch,
-					meta: {
-						requiresAuth: true,
-						adminAuth: true,
-						breadcrumb: [{
-								name: 'Home',
-								link: '/dashboard'
-							},
-							{
-								name: 'SR Closure Search'
-							}
-						]
-					},
-				},
-				{
-					path: 'svcclosuresearch',
-					name: 'svcclosuresearch',
-					component: SVCClosureSearch,
-					meta: {
-						requiresAuth: true,
-						adminAuth: true,
-						breadcrumb: [{
-								name: 'Home',
-								link: '/dashboard'
-							},
-							{
-								name: 'SVC Search'
-							}
-						]
-					},
-				},
+  mode: 'hash', // Demo is living in GitHub.io, so required!
+  linkActiveClass: 'open active',
+  scrollBehavior: () => ({
+    y: 0
+  }),
+  routes: [{
+      path: '/',
+      redirect: '/dashboard',
+      name: 'Home',
+      component: Full,
+      children: [{
+          path: 'dashboard',
+          name: 'dashboard',
+          component: dashboard,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'Dashboard'
+              }
+            ]
+          },
+        },
+        {
+          path: 'svcclosurep2p',
+          name: 'svcclosurep2p',
+          component: SVCClosureP2P,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'COD day Closure'
+              }
+            ]
+          },
+        },
+        {
+          path: 'srclosure',
+          name: 'srclosure',
+          component: srclosure,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/srclosure'
+              },
+              {
+                name: 'srclosure'
+              }
+            ]
+          },
+        },
+        {
+          path: 'CODRemittance',
+          name: 'CODRemittance',
+          component: CODRemittance,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/CODRemittance'
+              },
+              {
+                name: 'CODRemittance'
+              }
+            ]
+          },
+        },
+        {
+          path: 'AddEditClientTAT',
+          name: 'AddEditClientTAT',
+          component: AddEditClientTAT,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/AddEditClientTAT'
+              },
+              {
+                name: 'AddEditClientTAT'
+              }
+            ]
+          },
+        },
+        {
+          path: 'svcclosuresearch',
+          name: 'svcclosuresearch',
+          component: SVCClosureSearch,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'SVC Search'
+              }
+            ]
+          },
+        },
         {
           path: 'CODRemitanceClose',
           name: 'CODRemitanceClose',
@@ -154,106 +173,106 @@ const router = new Router({
             ]
           },
         },
-				{
-					path: 'mapbankhub',
-					name: 'mapbankhub',
-					component: MapBankHub,
-					meta: {
-						requiresAuth: true,
-						adminAuth: true,
-						breadcrumb: [{
-								name: 'Home',
-								link: '/dashboard'
-							},
-							{
-								name: 'Bank and Hub mapping'
-							}
-						]
-					},
-				},
-				{
-					path: 'bankfiletoclosebulkaccount',
-					name: 'bankfiletoclosebulkaccount',
-					component: BankFileToCloseBulkAccount,
-					meta: {
-						requiresAuth: true,
-						adminAuth: true,
-						breadcrumb: [{
-								name: 'Home',
-								link: '/dashboard'
-							},
-							{
-								name: 'E-Payment MIS Upload'
-							}
-						]
-					},
-				},
-				{
-					path: 'financeclosure',
-					name: 'financeclosure',
-					component: FinanceClosure,
-					meta: {
-						requiresAuth: true,
-						adminAuth: true,
-						breadcrumb: [{
-								name: 'Home',
-								link: '/dashboard'
-							},
-							{
-								name: 'Finance Closure'
-							}
-						]
-					},
-				},
-				{
-					path: 'csvreopenday',
-					name: 'csvreopenday',
-					component: CSVReOpenDay,
-					meta: {
-						requiresAuth: true,
-						adminAuth: true,
-						breadcrumb: [{
-								name: 'Home',
-								link: '/dashboard'
-							},
-							{
-								name: 'SVC Re - Open Day'
-							}
-						]
-					},
-				},
-				{
-					path: 'svcdepositexceptions',
-					name: 'svcdepositexceptions',
-					component: SVCDepositExceptions,
-					meta: {
-						requiresAuth: true,
-						adminAuth: true,
-						breadcrumb: [{
-								name: 'Home',
-								link: '/dashboard'
-							},
-							{
-								name: 'SVC Bank Deposit Exceptions'
-							}
-						]
-					},
-				},
-				{
-					path: 'pagination',
-					name: 'Pagination',
-					component: Pagination,
-					meta: {
-						requiresAuth: true,
-						breadcrumb: [{
-								name: 'Home',
-								link: '/dashboard'
-							},
-							{
-								name: 'Pagination'
-							}
-						]
-					}
+        {
+          path: 'mapbankhub',
+          name: 'mapbankhub',
+          component: MapBankHub,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'Bank and Hub mapping'
+              }
+            ]
+          },
+        },
+        {
+          path: 'bankfiletoclosebulkaccount',
+          name: 'bankfiletoclosebulkaccount',
+          component: BankFileToCloseBulkAccount,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'E-Payment MIS Upload'
+              }
+            ]
+          },
+        },
+        {
+          path: 'financeclosure',
+          name: 'financeclosure',
+          component: FinanceClosure,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'Finance Closure'
+              }
+            ]
+          },
+        },
+        {
+          path: 'csvreopenday',
+          name: 'csvreopenday',
+          component: CSVReOpenDay,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'SVC Re - Open Day'
+              }
+            ]
+          },
+        },
+        {
+          path: 'svcdepositexceptions',
+          name: 'svcdepositexceptions',
+          component: SVCDepositExceptions,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'SVC Bank Deposit Exceptions'
+              }
+            ]
+          },
+        },
+        {
+          path: 'pagination',
+          name: 'Pagination',
+          component: Pagination,
+          meta: {
+            requiresAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'Pagination'
+              }
+            ]
+          }
 
         },
         {

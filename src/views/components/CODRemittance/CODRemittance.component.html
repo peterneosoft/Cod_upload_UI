@@ -1,0 +1,45 @@
+<section class="user">
+  <div class="animated fadeIn">
+    <div class="col-md-12 mb-2">
+      <div class="card">
+        <div class="card-header filter_main">
+          <i class=" fa fa-filter filter"></i> COD Remittance
+        </div>
+        <div class="card-body">
+          <form action="" method="post" class="form-horizontal">
+
+            <div class="form-group row">
+              <div class="col-md-5">
+                <label>Remittance Day:</label>
+                <b-input-group left="<i class='fa fa-list'></i>">
+                  <select name="hub" id="hub" class="form-control" v-model="hub">
+                    <option value="">--Select--</option>
+                    <option value="">Sunday</option>
+                    <option value="">Monday</option>
+                    <option value="">Tuesday-</option>
+                    <option value="">Wensday</option>
+                    <option value="">Friday</option>
+                </select>
+                </b-input-group>
+              </div>
+
+              <div class="col-md-5">
+                <label>Client Name</label>
+                <b-input-group left="<i class='fa fa-list'></i>">
+                  <select name="bank" id="bank" class="form-control" v-model="bank">
+                    <option value="">--Select--</option>
+                </select>
+                </b-input-group>
+              </div>
+            </div>
+              <div class="card-footer">
+              <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+              <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> Clear</button>
+              <button class="btn btn-sm btn-danger" type="Export"> Export</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,173 @@
+<section class="user">
+  <div class="animated fadeIn">
+    <div class="col-md-12 mb-2">
+      <div class="card">
+        <div class="card-header filter_main">
+          <i class=" fa fa-filter filter"></i> Add Edit Client TAT
+        </div>
+        <div class="card-body">
+          <form action="" method="post" class="form-horizontal">
+            <div class="form-group row">
+              <div class="col-md-4">
+                <label>Client Name</label>
+                <b-input-group left="<i class='fa fa-user'></i>">
+                  <b-form-input id="code" type="text" placeholder=" Enter Client Name" v-model="usertypename"></b-form-input>
+                </b-input-group>
+              </div>
+
+              <div class="col-md-4">
+                <label>Type</label>
+                <b-input-group left="<i class='fa fa-list'></i>">
+                  <select name="bank" id="bank" class="form-control" v-model="bank">
+                    <option value="">--Select--</option>
+                    <option value="">Hybrid</option>
+                    <option value="">Non-Hybrid</option>
+                </select>
+                </b-input-group>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-4">
+                <label>Remittance Day</label>
+                <b-input-group left="<i class='fa fa-list'></i>">
+                  <select name="bank" id="bank" class="form-control" v-model="bank">
+                    <option value="">--Select--</option>
+                </select>
+                </b-input-group>
+              </div>
+
+              <div class="col-md-4">
+                <label>TAT</label>
+                <b-input-group left="<i class='fa fa-list'></i>">
+                  <select name="TAT" id="TAT" class="form-control" v-model="TAT">
+                    <option value="">--Select--</option>
+                    <option value="">T+2</option>
+                    <option value="">T+3</option>
+                </select>
+                </b-input-group>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-4">
+                <label>Beneficiary Name</label>
+                <b-input-group left="<i class='fa fa-user'></i>">
+                  <b-form-input id="Beneficiary" type="text" placeholder=" Enter Beneficiary Name" v-model="Beneficiary"></b-form-input>
+                </b-input-group>
+              </div>
+
+              <div class="col-md-4">
+                <label>Bank Name</label>
+                <b-input-group left="<i class='fa fa-bank'></i>">
+                  <b-form-input id="Bank" type="text" placeholder=" Enter Bank Name" v-model="Bank"></b-form-input>
+                </b-input-group>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-4">
+                <label>Bank Account No</label>
+                <b-input-group left="<i class='fa fa-user'></i>">
+                  <b-form-input id="BankAccount" type="text" placeholder=" Enter BankAccount Name" v-model="BankAccount"></b-form-input>
+                </b-input-group>
+              </div>
+
+              <div class="col-md-4">
+                <label>RTGS/IFSC:</label>
+                <b-input-group >
+                  <b-form-input id="RTGS" type="text"  v-model="RTGS"></b-form-input>
+                </b-input-group>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Submit</button>
+              <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> Clear</button>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-4">
+                <label>Client</label>
+                <b-input-group left="<i class='fa fa-list'></i>">
+                  <select name="Client" id="Client" class="form-control" v-model="Client">
+                    <option value="">--Select--</option>
+                    <option value="">Select</option>
+                    <option value="">Select</option>
+                    <option value="">Select</option>
+                </select>
+                </b-input-group>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="card-headerfrm" style="margin-bottom: 15px;">
+        <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Mapping Result</h4>
+        <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+        <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+          <thead>
+            <tr class="text-primary">
+              <th class="text-center tableheader"></th>
+              <th class="text-center tableheader"><b>Company Name</b></th>
+              <th class="text-center tableheader"><b>TAT</b></th>
+              <th class="text-center tableheader"><b>Remittance Day</b></th>
+              <th class="text-center tableheader"><b>Remittance Type</b></th>
+              <th class="text-center tableheader"><b>Beneficiary Name</b></th>
+              <th class="text-center tableheader"><b>Client Bank Name</b></th>
+              <th class="text-center tableheader"><b>Client Account No</b></th>
+              <th class="text-center tableheader"><b>NEFT No</b></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="resultCount==0">
+              <td colspan="7" align="center">No record found</td>
+            </tr>
+            <tr>
+              <td class="text-center">
+                   <b-link href="#foo">
+               <i @click.prevent="getRoleRowData(data, resultCount)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3"></i>
+             </b-link></td>
+              <td>FirstCry BussyBees</td>
+              <td></td>
+              <td></td>
+              <td>Hybrid</td>
+              <td>tertrt</td>
+              <td>KOTAK MAHINDRA BANK</td>
+              <td>123321232</td>
+              <td>SBINO12121</td>
+            </tr>
+            <tr>
+              <td class="text-center"><i @click.prevent="getRoleRowData(data, resultCount)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3"></i></td>
+              <td>FirstCry BussyBees</td>
+              <td></td>
+              <td></td>
+              <td>Hybrid</td>
+              <td>tertrt</td>
+              <td>KOTAK MAHINDRA BANK</td>
+              <td>123321232</td>
+              <td>SBINO12121</td>
+              </tr>
+            </tr>
+            <tr>
+              <td class="text-center"><i @click.prevent="getRoleRowData(data, resultCount)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3"></i></td>
+              <td>FirstCry BussyBees</td>
+              <td></td>
+              <td></td>
+              <td>Hybrid</td>
+              <td>tertrt</td>
+              <td>KOTAK MAHINDRA BANK</td>
+              <td>123321232</td>
+              <td>SBINO12121</td>
+            </tr>
+            </tr>
+          </tbody>
+        </table><br>
+        <paginate :page-count="pagecount" :page-range="2" :margin-pages="2"
+        :click-handler="getPaginationData"  :container-class="'pagination'">
+        </paginate>
+      </div>
+    </div>
+  </div>
+</section>
