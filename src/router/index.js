@@ -106,6 +106,23 @@ const router = new Router({
           },
         },
         {
+          path: 'hubwisecodreport',
+          name: 'hubwisecodreport',
+          component: CODRemittance,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'hubwisecodreport',
+                link: '/hubwisecodreport'
+              },
+              {
+                name: 'hubwisecodreport'
+              }
+            ]
+          },
+        },
+        {
           path: 'CODRemittance',
           name: 'CODRemittance',
           component: CODRemittance,
@@ -274,6 +291,40 @@ const router = new Router({
             ]
           }
 
+        },
+        {
+          path: 'hubwisecodreport',
+          name: 'hubwisecodreport',
+          component: HubWiseCODReport,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/hubwisecodreport'
+              },
+              {
+                name: 'Hub Wise COD Report'
+              }
+            ]
+          },
+        },
+        {
+          path: 'misp2preport',
+          name: 'misp2preport',
+          component: MISP2PCODReport,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/misp2preport'
+              },
+              {
+                name: 'MIS P2P COD Report'
+              }
+            ]
+          },
         },
         {
           path: 'charts',
