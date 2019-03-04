@@ -11,7 +11,7 @@
 
       </li>
 
-      <li style="margin-left:61%">Logged In Hub : {{hub}}</li>
+      <li style="margin-left:50%">Logged In Hub : {{hub}}</li>
     </ul>
   </div>
 </template>

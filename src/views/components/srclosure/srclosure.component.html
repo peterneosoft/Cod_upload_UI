@@ -14,10 +14,8 @@
                   </div>
                   <select class="form-control" id="SR_Name" v-model="SR_Name"name="SR_Name" v-validate="{required: true}"
                   v-bind:class="{'form-control': true, 'error': errors.has('SR_Name') }">
-                    <option value="0">--Select--</option>
-                    <option value="1">Option #1</option>
-                    <option value="2">Option #2</option>
-                    <option value="3">Option #3</option>
+                    <option value="" disabled>--Select--</option>
+                    <option v-for="SR_obj in SRList" v-bind:value="SR_obj.SRID" >{{SR_obj.SRName}}</option>
                   </select>
                 </div>
                 <span v-show="errors.has('SR_Name')" class="text-danger">{{ errors.first('SR_Name') }}</span>
