@@ -5,7 +5,8 @@
         <div class="card">
           <div class="card-header"><i class="fa fa-align-justify"></i> Closure</div>
           <div class="card-body">
-            <form action="" method="post">
+            <form  v-on:submit.prevent="onSubmit" >
+
               <div class="form-group">
                 <div class="input-group">
                   <div class="input-group-prepend">
@@ -19,38 +20,44 @@
                   </div>
                 </div>
               </div>
+
               <div class="form-group">
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text">Deposit Date</span>
                   </div>
-                  <input class="form-control" id="date-input" type="date" name="date-input">
+                  <input class="form-control" id="DepositDate" type="date" name="DepositDate" v-validate="{required: true}" v-model="DepositDate"
+                       v-bind:class="{'form-control': true, 'error': errors.has('DepositDate') }">
                   <div class="input-group-append">
                     <span class="input-group-text">
                       <i class="fa fa-calendar"></i>
                     </span>
                   </div>
                 </div>
+                <span  v-show="errors.has('DepositDate')" class="text-danger">Select Deposit Date </span>
               </div>
               <div class="form-group">
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text">Deposit Amt</span>
                   </div>
-                  <input class="form-control" id="dep_amount" type="text" name="dep_amount">
+                  <input class="form-control" id="dep_amount" type="text" name="dep_amount"
+                    v-validate="{required: true}" v-model="dep_amount"v-bind:class="{'form-control': true, 'error': errors.has('dep_amount') }">
                   <div class="input-group-append">
                     <span class="input-group-text">
                       <i class="fa fa-rupee"></i>
                     </span>
                   </div>
                 </div>
+                <span  v-show="errors.has('dep_amount')" class="text-danger">Enter Deposit Amount </span>
               </div>
               <div class="form-group">
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text">Deposit Type</span>
                   </div>
-                  <select class="form-control" id="select1" name="select1">
+                  <select class="form-control" id="DepositType" name="DepositType"
+                  v-validate="{required: true}" v-model="DepositType"v-bind:class="{'form-control': true, 'error': errors.has('DepositType') }">
                     <option value="">--Select--</option>
                     <option value="1">Bank Deposit</option>
                     <option value="2">CMS Deposit</option>
@@ -62,13 +69,15 @@
                     </span>
                   </div>
                 </div>
+                  <span  v-show="errors.has('DepositType')" class="text-danger">Select Deposit Type  </span>
               </div>
               <div class="form-group">
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text">Bank Name</span>
                   </div>
-                  <select class="form-control" id="select1" name="select1">
+                  <select class="form-control" id="BankName" name="BankName"
+                  v-validate="{required: true}" v-model="BankName"v-bind:class="{'form-control': true, 'error': errors.has('BankName') }">
                     <option value="0">--Select--</option>
                     <option value="1">Option #1</option>
                     <option value="2">Option #2</option>
@@ -80,19 +89,22 @@
                     </span>
                   </div>
                 </div>
+                <span  v-show="errors.has('DepositType')" class="text-danger">Select Bank Name  </span>
               </div>
               <div class="form-group">
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text">Transaction ID</span>
                   </div>
-                  <input class="form-control" id="password3" type="text" name="password3">
+                  <input class="form-control" id="TransactionID" type="text" name="TransactionID"
+                  v-validate="{required: true}" v-model="TransactionID"v-bind:class="{'form-control': true, 'error': errors.has('TransactionID') }">
                   <div class="input-group-append">
                     <span class="input-group-text">
                       <i class="fa fa-exchange"></i>
                     </span>
                   </div>
                 </div>
+                <span  v-show="errors.has('TransactionID')" class="text-danger">Enter Transaction ID </span>
               </div>
               <div class="form-group">
                 <div class="input-group">
