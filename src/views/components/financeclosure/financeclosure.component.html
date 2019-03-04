@@ -9,23 +9,24 @@
               <div class="form-group">
                 <label>Zone</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                  <select name="hub" id="hub" class="form-control" v-model="hub">
-                    <option value="">--Select--</option>
+                  <select name="zone" id="zone" class="form-control" v-model="zone" v-on:change="getHubData" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('zone') }">
+                    <option value="" disabled>--Select--</option>
+                    <option v-for="zone_obj in zoneList" v-bind:value="zone_obj.hubzoneid" >{{zone_obj.hubzonename}}</option>
                   </select>
                 </b-input-group>
+                <span v-show="errors.has('zone')" class="text-danger">The Zone field is required.</span>
               </div>
               <div class="form-group">
                 <label>Hub</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                  <select name="hub" id="hub" class="form-control" v-model="hub">
-                    <option value="">--Select--</option>
-                  </select>
+                  <treeselect name="HubId" id="HubId" :multiple="multiple" placeholder="Select Hub." :clearable="clearable" :searchable="searchable" :open-on-click="openOnClick" :clear-on-select="clearOnSelect" :options="hubList" :limit="5" :max-height="300"/>
                 </b-input-group>
+                <span v-show="errors.has('HubId')" class="text-danger">The Hub field is required.</span>
               </div>
               <div class="form-group">
                 <label>Status</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                  <select name="hub" id="hub" class="form-control" v-model="hub">
+                  <select name="status" id="status" class="form-control" v-model="status">
                     <option value="open">Open</option>
                     <option value="close">Close</option>
                   </select>
@@ -147,7 +148,7 @@
                 <td>0.00</td>
                 <td>Open</td>
                 <td>
-                  <select name="hub" id="hub" class="form-control" v-model="hub">
+                  <select name="reason" id="reason" class="form-control" v-model="reason">
                     <option value="">--Select--</option>
                     <option value="">Amount Matched</option>
                     <option value="">Bank Amount Not Matched</option>
@@ -174,7 +175,7 @@
                 <td>0.00</td>
                 <td>Open</td>
                 <td>
-                  <select name="hub" id="hub" class="form-control" v-model="hub">
+                  <select name="reason" id="reason" class="form-control" v-model="reason">
                     <option value="">--Select--</option>
                     <option value="">Amount Matched</option>
                     <option value="">Bank Amount Not Matched</option>

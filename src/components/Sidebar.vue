@@ -121,7 +121,6 @@ export default {
           var bytes  = CryptoJS.AES.decrypt(permissionEncrypt.toString(), 'Key');
           var plaintext = bytes.toString(CryptoJS.enc.Utf8);
           this.navItem=JSON.parse(plaintext);
-          console.log(plaintext);
       },
 
   methods: {

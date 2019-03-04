@@ -48,6 +48,9 @@ export default {
             }else{
               this.$alertify.success("Logging Failed");
             }
+
+            let hubEncrypt = CryptoJS.AES.encrypt(JSON.stringify(response.data.hubData), "Key");
+            window.localStorage.setItem('accesshubdata', hubEncrypt);
           })
         .catch((httpException) => {
           this.$alertify.success("Logging Failed");

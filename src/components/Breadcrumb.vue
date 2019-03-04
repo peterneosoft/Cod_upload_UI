@@ -11,20 +11,31 @@
 
       </li>
 
-      <li style="margin-left:61%">Logged In Hub : DEL/HUB (22)</li>
+      <li style="margin-left:61%">Logged In Hub : {{hub}}</li>
     </ul>
   </div>
 </template>
 
 <script>
+import CryptoJS from 'crypto-js';
+
 export default {
   name: 'Breadcrumb',
   data () {
     return {
-      breadcrumbList: []
+      breadcrumbList: [],
+      hub:''
     }
   },
-  mounted () { this.updateList() },
+  mounted () {
+    this.updateList();
+
+    var hubEncrypt = window.localStorage.getItem('accesshubdata')
+    var hubbytes  = CryptoJS.AES.decrypt(hubEncrypt.toString(), 'Key');
+    var hubtext = hubbytes.toString(CryptoJS.enc.Utf8);
+    var hubArr=JSON.parse(hubtext);
+    this.hub = hubArr[0].HubName;
+  },
   watch: { '$route' () { this.updateList() } },
   methods: {
     routeTo (pRouteTo) {
