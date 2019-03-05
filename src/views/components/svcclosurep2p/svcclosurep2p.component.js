@@ -15,18 +15,36 @@ export default {
       dep_amount:"",
       DepositType:"",
       BankName:"",
-      TransactionID:""
+      TransactionID:"",
+      DenominationList:[]
     }
   },
 
   computed: {
 
   },
-
+  created() {
+  this.GetDenominationData();
+  },
   mounted() {
   },
 
   methods: {
+    GetDenominationData(){
+      axios({
+          method: 'GET',
+          url: apiUrl.api_url + 'getAllDenomination',
+          headers: {
+            'Authorization': 'Bearer '
+          }
+        })
+        .then(result => {
+          this.DenominationList = result.data.data;
+        }, error => {
+          console.error(error)
+        })
+
+    },
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
          if(result){

@@ -133,7 +133,7 @@
       <div class="col-lg-4">
         <div class="card">
           <div class="card-header">
-            <i class="fa fa-align-justify"></i> Currency</div>
+          <i class="fa fa-align-justify"></i> Currency</div>
           <div class="card-body" style="height: 500px;">
             <table class="table table-responsive-sm" height="10">
               <thead>
@@ -144,60 +144,15 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td class="notes">2000</td>
-                  <td class="notes"><input class="form-control" id="2000" type="text" name="2000" @change="notesCount"></td>
-                  <td class="notes"><input class="form-control" id="mo2000" type="text" name="note_amt" value="0" disabled></td>
-                </tr>
-                <tr>
-                  <td class="notes">500</td>
-                  <td class="notes"><input class="form-control" id="500" type="text" name="500" @change="notesCount"></td>
-                  <td class="notes"><input class="form-control" id="mo500" type="text" name="note_amt" value="0" disabled></td>
-                </tr>
-                <tr>
-                  <td class="notes">200</td>
-                  <td class="notes"><input class="form-control" id="200" type="text" name="200" @change="notesCount"></td>
-                  <td class="notes"><input class="form-control" id="mo200" type="text" name="note_amt" value="0" disabled></td>
-                </tr>
-                <tr>
-                  <td class="notes">100</td>
-                  <td class="notes"><input class="form-control" id="100" type="text" name="100" @change="notesCount"></td>
-                  <td class="notes"><input class="form-control" id="mo100" type="text" name="note_amt" value="0" disabled></td>
-                </tr>
-                <tr>
-                  <td class="notes">50</td>
-                  <td class="notes"><input class="form-control" id="50" type="text" name="50" @change="notesCount"></td>
-                  <td class="notes"><input class="form-control" id="mo50" type="text" name="note_amt" value="0" disabled></td>
-                </tr>
-                <tr>
-                  <td class="notes">20</td>
-                  <td class="notes"><input class="form-control" id="20" type="text" name="20" @change="notesCount"></td>
-                  <td class="notes"><input class="form-control" id="mo20" type="text" name="note_amt" value="0" disabled></td>
-                </tr>
-                <tr>
-                  <td class="notes">10</td>
-                  <td class="notes"><input class="form-control" id="10" type="text" name="10" @change="notesCount"></td>
-                  <td class="notes"><input class="form-control" id="mo10" type="text" name="note_amt" value="0" disabled></td>
-                </tr>
-                <tr>
-                  <td class="notes">5</td>
-                  <td class="notes"><input class="form-control" id="5" type="text" name="5" @change="notesCount"></td>
-                  <td class="notes"><input class="form-control" id="mo5" type="text" name="note_amt" value="0" disabled></td>
-                </tr>
-                <tr>
-                  <td class="notes">2</td>
-                  <td class="notes"><input class="form-control" id="2" type="text" name="2" @change="notesCount"></td>
-                  <td class="notes"><input class="form-control" id="mo2" type="text" name="note_amt" value="0" disabled></td>
-                </tr>
-                <tr>
-                  <td class="notes">1</td>
-                  <td class="notes"><input class="form-control" id="1" type="text" name="1" @change="notesCount"></td>
-                  <td class="notes"><input class="form-control" id="mo1" type="text" name="note_amt" value="0" disabled></td>
+                <tr v-for="data in DenominationList ">
+                  <td class="notes">{{data.Denomination}}</td>
+                  <td class="notes"><b-col sm="10"><input class="form-control" size="sm" :id="`${data.Denomination}`" type="text"  @change="notesCount"></b-col></td>
+                  <td class="notes"><b-col sm="10"><input class="form-control" size="sm" :id="`mo${data.Denomination}`"type="text" name="note_amt" value="0" disabled></b-col></td>
                 </tr>
                 <tr>
                   <td class="notes"></td>
                   <td class="notes"><strong>Total</strong></td>
-                  <td class="notes"><input class="form-control" id="tot_amt" type="text" name="tot_amt" value="0" disabled></td>
+                  <td class="notes"><input class="form-control" id="tot_amt" type="text" name="tot_amt"  v-model="tot_amt" value="0" disabled ></td>
                 </tr>
               </tbody>
             </table>

@@ -15,12 +15,19 @@ export default {
       Deposit_Amount:"",
       SR_Name:"",
       tot_amt:"",
+      Reason:"",
+      RemainData:"",
       SRList:[],
+      DenominationList:[],
+      show:false
     }
   },
 
   computed: {
 
+  },
+  created() {
+  this.GetDenominationData();
   },
 
   mounted() {
@@ -28,6 +35,29 @@ export default {
   },
 
   methods: {
+    showModal(Balanc){
+       this.$refs.myModalRef.show(Balanc)
+      this.RemainData = Balanc;
+
+    },
+    hideModal() {
+       this.$refs.myModalRef.hide()
+     },
+    GetDenominationData(){
+      axios({
+          method: 'GET',
+          url: apiUrl.api_url + 'getAllDenomination',
+          headers: {
+            'Authorization': 'Bearer '
+          }
+        })
+        .then(result => {
+          this.DenominationList = result.data.data;
+        }, error => {
+          console.error(error)
+        })
+
+    },
     //to get SR List
     GetDeliveryAgentData() {
 
@@ -69,6 +99,20 @@ export default {
             let error = document.getElementById("d_a");
              error.innerHTML = "The Deposit Amount Fields is Required";
              error.style.display = "None";
+          }
+          var TotalAmt = (document.getElementById("Tot_Amt")).textContent;
+          var IntTotalAmt = parseInt(TotalAmt)
+          var IntDeposit_Amount = parseInt(this.Deposit_Amount)
+
+          if(IntTotalAmt > IntDeposit_Amount){
+            let Balanc = TotalAmt - this.Deposit_Amount ;
+            this.showModal(Balanc)
+            this.show = true
+            if(this.Reason){
+              this.hideModal()
+            }
+          }else{
+            this.show = false
           }
         }
           // event.target.reset();
