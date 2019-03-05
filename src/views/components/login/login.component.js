@@ -38,6 +38,7 @@ export default {
           let usersEncrupt = CryptoJS.AES.encrypt(JSON.stringify(response.data.userinfo), "Key");
           window.localStorage.setItem('accesspermissiondata', permissionEncrypt);
           window.localStorage.setItem('accessuserdata', usersEncrupt);
+          window.localStorage.setItem('isLoggedIn',true);
           permissionEncrypt = window.localStorage.getItem('accesspermissiondata')
           let permissiondatabytes = CryptoJS.AES.decrypt(permissionEncrypt.toString(), 'Key');
           let permissiondataplaintext = permissiondatabytes.toString(CryptoJS.enc.Utf8);

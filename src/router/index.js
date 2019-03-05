@@ -56,7 +56,7 @@ const router = new Router({
       component: Full,
       children: [{
           path: 'dashboard',
-          name: 'dashboard',
+          name: 'Dashboard',
           component: dashboard,
           meta: {
             requiresAuth: true,
@@ -73,14 +73,14 @@ const router = new Router({
         },
         {
           path: 'svcclosurep2p',
-          name: 'svcclosurep2p',
+          name: 'SVC Closure P2P',
           component: SVCClosureP2P,
           meta: {
             requiresAuth: true,
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/dashboard'
+                link: '/svcclosurep2p'
               },
               {
                 name: 'COD day Closure'
@@ -90,14 +90,14 @@ const router = new Router({
         },
         {
           path: 'srclosure',
-          name: 'srclosure',
+          name: 'SR Closure',
           component: srclosure,
           meta: {
             requiresAuth: true,
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/dashboard'
+                link: '/srclosure'
               },
               {
                 name: 'SR Closure'
@@ -107,14 +107,14 @@ const router = new Router({
         },
         {
           path: 'srclosuresearch',
-          name: 'srclosuresearch',
+          name: 'SVC Closure Search',
           component: srclosuresearch,
           meta: {
             requiresAuth: true,
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/dashboard'
+                link: '/srclosuresearch'
               },
               {
                 name: 'SR Closure Search'
@@ -124,8 +124,8 @@ const router = new Router({
         },
         {
           path: 'hubwisecodreport',
-          name: 'hubwisecodreport',
-          component: CODRemittance,
+          name: 'Hub Wise COD Report',
+          component: HubWiseCODReport,
           meta: {
             requiresAuth: true,
             adminAuth: true,
@@ -141,7 +141,7 @@ const router = new Router({
         },
         {
           path: 'CODRemittance',
-          name: 'CODRemittance',
+          name: 'COD Remittance',
           component: CODRemittance,
           meta: {
             requiresAuth: true,
@@ -158,7 +158,7 @@ const router = new Router({
         },
         {
           path: 'AddEditClientTAT',
-          name: 'AddEditClientTAT',
+          name: 'Add EditClient TAT',
           component: AddEditClientTAT,
           meta: {
             requiresAuth: true,
@@ -175,14 +175,14 @@ const router = new Router({
         },
         {
           path: 'svcclosuresearch',
-          name: 'svcclosuresearch',
+          name: 'SVC Closure Search',
           component: SVCClosureSearch,
           meta: {
             requiresAuth: true,
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/dashboard'
+                link: '/svcclosuresearch'
               },
               {
                 name: 'SVC Search'
@@ -192,7 +192,7 @@ const router = new Router({
         },
         {
           path: 'CODRemitanceClose',
-          name: 'CODRemitanceClose',
+          name: 'COD Remittance Closed Details',
           component: CODRemitanceClose,
           meta: {
             requiresAuth: true,
@@ -209,14 +209,14 @@ const router = new Router({
         },
         {
           path: 'mapbankhub',
-          name: 'mapbankhub',
+          name: 'Bank Hub Mapping',
           component: MapBankHub,
           meta: {
             requiresAuth: true,
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/dashboard'
+                link: '/mapbankhub'
               },
               {
                 name: 'Bank and Hub mapping'
@@ -226,14 +226,14 @@ const router = new Router({
         },
         {
           path: 'bankfiletoclosebulkaccount',
-          name: 'bankfiletoclosebulkaccount',
+          name: 'Bulk Upload To Close',
           component: BankFileToCloseBulkAccount,
           meta: {
             requiresAuth: true,
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/dashboard'
+                link: '/bankfiletoclosebulkaccount'
               },
               {
                 name: 'E-Payment MIS Upload'
@@ -243,14 +243,14 @@ const router = new Router({
         },
         {
           path: 'financeclosure',
-          name: 'financeclosure',
+          name: 'Finance Closure',
           component: FinanceClosure,
           meta: {
             requiresAuth: true,
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/dashboard'
+                link: '/financeclosure'
               },
               {
                 name: 'Finance Closure'
@@ -260,14 +260,14 @@ const router = new Router({
         },
         {
           path: 'csvreopenday',
-          name: 'csvreopenday',
+          name: 'Finance Re-Open Closure',
           component: CSVReOpenDay,
           meta: {
             requiresAuth: true,
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/dashboard'
+                link: '/csvreopenday'
               },
               {
                 name: 'SVC Re - Open Day'
@@ -277,14 +277,14 @@ const router = new Router({
         },
         {
           path: 'svcdepositexceptions',
-          name: 'svcdepositexceptions',
+          name: 'SVC Deposit Exceptions',
           component: SVCDepositExceptions,
           meta: {
             requiresAuth: true,
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/dashboard'
+                link: '/svcdepositexceptions'
               },
               {
                 name: 'SVC Bank Deposit Exceptions'
@@ -300,7 +300,7 @@ const router = new Router({
             requiresAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/dashboard'
+                link: '/Pagination'
               },
               {
                 name: 'Pagination'
@@ -310,25 +310,8 @@ const router = new Router({
 
         },
         {
-          path: 'hubwisecodreport',
-          name: 'hubwisecodreport',
-          component: HubWiseCODReport,
-          meta: {
-            requiresAuth: true,
-            adminAuth: true,
-            breadcrumb: [{
-                name: 'Home',
-                link: '/hubwisecodreport'
-              },
-              {
-                name: 'Hub Wise COD Report'
-              }
-            ]
-          },
-        },
-        {
           path: 'misp2preport',
-          name: 'misp2preport',
+          name: 'MIS P2P COD Report',
           component: MISP2PCODReport,
           meta: {
             requiresAuth: true,
@@ -423,43 +406,44 @@ router.beforeEach((to, from, next) => {
   } else {
     isLoggedIn = true;
   }
-  next();
-  // if (to.matched.some(record => record.meta.requiresAuth) && !isLoggedIn) {
-  //   next({
-  //     path: "/login",
-  //
-  //   });
-  // } else {
-  //   //console.log(to.matched.some(record => record.meta.adminAuth));
-  //   if (to.matched.some(record => record.meta.requiresAuth)) {
-  //
-  //     const permissionEncrypt = window.localStorage.getItem('permissiondata')
-  //     const bytes = CryptoJS.AES.decrypt(permissionEncrypt.toString(), 'Key');
-  //     const plaintext = bytes.toString(CryptoJS.enc.Utf8);
-  //     const permissiondata = JSON.parse(plaintext);
-  //
-  //     function isBigEnough(findURL) {
-  //       if(findURL.submenu.length>0){
-  //         return findURL.submenu.some(isBigChildEnough);
-  //       }
-  //       return findURL.url == to.name;
-  //     }
-  //     function isBigChildEnough(findURL) {
-  //       return findURL.url == to.name;
-  //     }
-  //     //console.log(permissiondata);
-  //     const setroles = permissiondata.some(isBigEnough)
-  //     if (setroles) {
-  //       next();
-  //     } else {
-  //       next({
-  //         path: "/dashboard",
-  //       });
-  //     }
-  //   } else {
-  //     next();
-  //   }
-  // }
+  //next();
+  if (to.matched.some(record => record.meta.requiresAuth) && !isLoggedIn) {
+    next({
+      path: "/login",
+
+    });
+  } else {
+
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+
+      const permissionEncrypt = window.localStorage.getItem('accesspermissiondata')
+      const bytes = CryptoJS.AES.decrypt(permissionEncrypt.toString(), 'Key');
+      const plaintext = bytes.toString(CryptoJS.enc.Utf8);
+      const permissiondata = JSON.parse(plaintext);
+      console.log("permissiondata",permissiondata);
+      function isBigEnough(findURL) {
+        if(findURL.children.length>0){
+          return findURL.children.some(isBigChildEnough);
+        }
+        return findURL.name == to.name;
+      }
+      function isBigChildEnough(findURL) {
+        return findURL.name == to.name;
+      }
+      //console.log(permissiondata);
+      const setroles = permissiondata.some(isBigEnough)
+      console.log(setroles);
+      if (setroles) {
+        next();
+      } else {
+        next({
+          path: "/dashboard",
+        });
+      }
+    } else {
+      next();
+    }
+  }
 
 });
 export default router;
