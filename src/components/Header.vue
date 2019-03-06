@@ -73,6 +73,9 @@
 .navbar-nav .nav-link.active,.navbar .navbar-nav .active.dropdown-toggle:hover,{
   color: #fff!important;
 }
+.dropdown-toggle::after{
+  border-top: 0.3em solid #000 !important;
+}
 </style>
 <template>
 <header class="app-header navbar">

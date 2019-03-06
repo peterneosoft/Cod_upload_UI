@@ -15,10 +15,12 @@ export default {
       Deposit_Amount:"",
       SR_Name:"",
       tot_amt:"",
-      Reason:"",
+      Reason:null,
       RemainData:"",
       SRList:[],
       DenominationList:[],
+      SRLedgerList:[],
+      ReasonList:[],
       show:false
     }
   },
@@ -28,6 +30,8 @@ export default {
   },
   created() {
   this.GetDenominationData();
+  this.GetReasonList();
+
   },
 
   mounted() {
@@ -43,6 +47,109 @@ export default {
     hideModal() {
        this.$refs.myModalRef.hide()
      },
+     saveSRClosure(){
+
+       var TotalAmt = (document.getElementById("Tot_Amt")).textContent;
+       var IntTotalAmt = parseInt(TotalAmt)
+       var IntDeposit_Amount = parseInt(this.Deposit_Amount)
+        let Balanc = 0;
+       if(IntTotalAmt > IntDeposit_Amount){
+         Balanc = TotalAmt - this.Deposit_Amount ;
+         this.showModal(Balanc)
+         this.show = true
+         if(this.Reason){
+           this.hideModal()
+         }
+       }else{
+         this.show = false
+       }
+        this.input = ({
+          srid: this.SR_Name,
+          hubid: "2",
+          status: "Less Amount",
+          creditamount: this.Deposit_Amount,
+          debitamount: Balanc,
+          reasonid: this.Reason,
+          islessamountaccept: false
+          })
+          axios({
+            method: 'POST',
+              'url': apiUrl.api_url + 'insertSRLedgerDetails',
+              'data': this.input,
+              headers: {
+                'Authorization': 'Bearer '
+                   }
+             })
+             .then((response) => {
+
+                 if (response.data.code) {
+                     this.$alertify.success("SRClosure Save successfully");
+                      this.GetSRLedgerDetails();
+                     //this.adddesignationmodal = false;
+                     event.target.reset();
+                 } else if (response.data.errorCode == -1) {
+                     this.$alertify.error(response.data.msg)
+                 }
+             })
+             .catch((httpException) => {
+                 console.error('exception is:::::::::', httpException)
+             });
+     },
+     SRchange(){
+       this.input = ({
+          SRID: this.SRList[0].SRID
+       })
+       axios({
+           method: 'POST',
+           url: apiUrl.api_url + 'insertSRShipment',
+           data: this.input,
+           headers: {
+             'Authorization': 'Bearer '
+           }
+         })
+         .then(result => {
+
+         }, error => {
+           console.error(error)
+         })
+     },
+    GetReasonList(){
+      this.input = ({
+        ReasonType:"SR"
+      })
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'external/getCODReasons',
+          data: this.input,
+          headers: {
+            'Authorization': 'Bearer '
+          }
+        })
+        .then(result => {
+          this.ReasonList = result.data.Reasons.data;
+        }, error => {
+          console.error(error)
+        })
+    },
+    GetSRLedgerDetails(){
+      this.input = ({
+        srid: this.SR_Name,
+        hubid:"2"
+      })
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'getSRLedgerDetails',
+          data: this.input,
+          headers: {
+            'Authorization': 'Bearer '
+          }
+        })
+        .then(result => {
+          this.SRLedgerList = result.data.data
+        }, error => {
+          console.error(error)
+        })
+    },
     GetDenominationData(){
       axios({
           method: 'GET',
@@ -82,7 +189,7 @@ export default {
           }
         })
         .then(result => {
-          this.SRList = result.data.SR;
+          this.SRList = result.data.SR
         }, error => {
           console.error(error)
         })
@@ -99,21 +206,9 @@ export default {
             let error = document.getElementById("d_a");
              error.innerHTML = "The Deposit Amount Fields is Required";
              error.style.display = "None";
+             this.saveSRClosure()
           }
-          var TotalAmt = (document.getElementById("Tot_Amt")).textContent;
-          var IntTotalAmt = parseInt(TotalAmt)
-          var IntDeposit_Amount = parseInt(this.Deposit_Amount)
 
-          if(IntTotalAmt > IntDeposit_Amount){
-            let Balanc = TotalAmt - this.Deposit_Amount ;
-            this.showModal(Balanc)
-            this.show = true
-            if(this.Reason){
-              this.hideModal()
-            }
-          }else{
-            this.show = false
-          }
         }
           // event.target.reset();
       }).catch(() => {
