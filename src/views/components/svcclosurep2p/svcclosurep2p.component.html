@@ -141,11 +141,8 @@
       <div class="col-lg-4">
         <div class="card">
           <div class="card-header">
-<<<<<<< HEAD
             <i class="fa fa-align-justify"></i> Denomination</div>
-=======
-          <i class="fa fa-align-justify"></i> Currency</div>
->>>>>>> master
+
           <div class="card-body" style="height: 500px;">
             <table class="table table-responsive-sm" height="10">
               <thead>
@@ -156,7 +153,6 @@
                 </tr>
               </thead>
               <tbody>
-<<<<<<< HEAD
                 <tr>
                   <td class="notes">2000</td>
                   <td class="notes"><input class="form-control" id="2000" type="number" min="0" name="2000" @change="notesCount"></td>
@@ -206,12 +202,6 @@
                   <td class="notes">1</td>
                   <td class="notes"><input class="form-control" id="1" type="number" min="0" name="1" @change="notesCount"></td>
                   <td class="notes"><input class="form-control" id="mo1" type="text" name="note_amt" value="0" disabled></td>
-=======
-                <tr v-for="data in DenominationList ">
-                  <td class="notes">{{data.Denomination}}</td>
-                  <td class="notes"><b-col sm="10"><input class="form-control" size="sm" :id="`${data.Denomination}`" type="text"  @change="notesCount"></b-col></td>
-                  <td class="notes"><b-col sm="10"><input class="form-control" size="sm" :id="`mo${data.Denomination}`"type="text" name="note_amt" value="0" disabled></b-col></td>
->>>>>>> master
                 </tr>
                 <tr>
                   <td class="notes"></td>
