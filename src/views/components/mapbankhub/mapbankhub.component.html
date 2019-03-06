@@ -11,18 +11,21 @@
               <div class="col-md-4">
                 <label>Hub Name</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                  <select name="hub" id="hub" class="form-control" v-model="hub">
-                    <option value="">--Select--</option>
-                </select>
+                  <select name="HubId" id="HubId" class="form-control" v-model="HubId" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('HubId') }">
+                    <option value="" disabled>--Select--</option>
+                    <option v-for="hub_obj in hubList" v-bind:value="hub_obj.HubID" >{{hub_obj.HubName}}</option>
+                  </select>
                 </b-input-group>
               </div>
 
               <div class="col-md-4">
                 <label>Bank Name</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                  <select name="bank" id="bank" class="form-control" v-model="bank">
-                    <option value="">--Select--</option>
-                </select>
+                  <select class="form-control" id="BankName" v-model="BankName" name="BankName" v-validate="{required: true}"
+                  v-bind:class="{'form-control': true, 'error': errors.has('BankName') }">
+                    <option value="" disabled>--Select--</option>
+                    <option v-for="Bank_obj in BankList" v-bind:value="Bank_obj.BankMasterId" >{{Bank_obj.BankName}}</option>
+                  </select>
                 </b-input-group>
               </div>
             </div>

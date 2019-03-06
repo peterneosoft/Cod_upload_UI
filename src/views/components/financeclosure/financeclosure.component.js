@@ -3,14 +3,10 @@ import axios from 'axios'
 import {
   Validator
 } from 'vee-validate'
-import Treeselect from '@riophae/vue-treeselect';
-import '@riophae/vue-treeselect/dist/vue-treeselect.css';
 
 export default {
   name: 'financeclosure',
-  components: {
-    Treeselect
-  },
+  components: {},
   data() {
     return {
       zone:'',
@@ -61,14 +57,7 @@ export default {
           }
         })
         .then(result => {
-          var data = [];
-          result.data.hub.data.forEach(function (hubData) {
-            data.push({
-              id:hubData.HubID,
-              label:hubData.HubName
-            });
-          });
-          this.hubList = data;
+          this.hubList = result.data.hub.data;
         }, error => {
           console.error(error)
         })

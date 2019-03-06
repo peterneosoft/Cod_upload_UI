@@ -12,13 +12,13 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">Delivery Date</span>
                   </div>
-                  <input class="form-control" id="date-input" type="date" name="date-input">
+                  <input class="form-control" id="DeliveryDate" type="date" name="DeliveryDate" v-validate="{required: true}"
+                  v-model="DeliveryDate" v-bind:class="{'form-control': true, 'error': errors.has('DeliveryDate') }">
                   <div class="input-group-append">
-                    <span class="input-group-text">
-                      <i class="fa fa-calendar"></i>
-                    </span>
+                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                   </div>
                 </div>
+                <span v-show="errors.has('DeliveryDate')" class="text-danger">Please select Delivery date. </span>
               </div>
 
               <div class="form-group">
@@ -26,104 +26,112 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">Deposit Date</span>
                   </div>
-                  <input class="form-control" id="DepositDate" type="date" name="DepositDate" v-validate="{required: true}" v-model="DepositDate"
-                       v-bind:class="{'form-control': true, 'error': errors.has('DepositDate') }">
+                  <input class="form-control" id="DepositDate" type="date" name="DepositDate" v-validate="{required: true}"
+                  v-model="DepositDate" v-bind:class="{'form-control': true, 'error': errors.has('DepositDate') }">
                   <div class="input-group-append">
-                    <span class="input-group-text">
-                      <i class="fa fa-calendar"></i>
-                    </span>
+                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                   </div>
                 </div>
-                <span  v-show="errors.has('DepositDate')" class="text-danger">Select Deposit Date </span>
+                <span v-show="errors.has('DepositDate')" class="text-danger">Please select Deposit date. </span>
               </div>
+
               <div class="form-group">
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <span class="input-group-text">Deposit Amt</span>
+                    <span class="input-group-text">Deposit Amount</span>
                   </div>
-                  <input class="form-control" id="dep_amount" type="text" name="dep_amount"
-                    v-validate="{required: true}" v-model="dep_amount"v-bind:class="{'form-control': true, 'error': errors.has('dep_amount') }">
+                  <input class="form-control" id="Deposit_Amount" type="text" name="Deposit_Amount" placeholder="Enter Deposit Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                    v-validate="{required: true}" v-model="Deposit_Amount" v-bind:class="{'form-control': true, 'error': errors.has('Deposit_Amount') }">
                   <div class="input-group-append">
-                    <span class="input-group-text">
-                      <i class="fa fa-rupee"></i>
-                    </span>
+                    <span class="input-group-text"><i class="fa fa-rupee"></i></span>
                   </div>
                 </div>
-                <span  v-show="errors.has('dep_amount')" class="text-danger">Enter Deposit Amount </span>
+                <span id="d_a" v-show="errors.has('Deposit_Amount')" class="text-danger">Please enter Deposit Amount. </span>
               </div>
+
               <div class="form-group">
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text">Deposit Type</span>
                   </div>
-                  <select class="form-control" id="DepositType" name="DepositType"
-                  v-validate="{required: true}" v-model="DepositType"v-bind:class="{'form-control': true, 'error': errors.has('DepositType') }">
-                    <option value="">--Select--</option>
+                  <select class="form-control" id="DepositType" name="DepositType" v-validate="{required: true}"
+                  v-model="DepositType" v-bind:class="{'form-control': true, 'error': errors.has('DepositType') }">
+                    <option value="" disabled>--Select--</option>
                     <option value="1">Bank Deposit</option>
                     <option value="2">CMS Deposit</option>
                     <option value="3">NEFT/ Other Deposit</option>
                   </select>
                   <div class="input-group-append">
-                    <span class="input-group-text">
-                      <i class="fa fa-angle-down"></i>
-                    </span>
+                    <span class="input-group-text"><i class="fa fa-angle-down"></i></span>
                   </div>
                 </div>
-                  <span  v-show="errors.has('DepositType')" class="text-danger">Select Deposit Type  </span>
+                  <span v-show="errors.has('DepositType')" class="text-danger">Please select Deposit type.  </span>
               </div>
+
               <div class="form-group">
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text">Bank Name</span>
                   </div>
-                  <select class="form-control" id="BankName" name="BankName"
-                  v-validate="{required: true}" v-model="BankName"v-bind:class="{'form-control': true, 'error': errors.has('BankName') }">
-                    <option value="0">--Select--</option>
-                    <option value="1">Option #1</option>
-                    <option value="2">Option #2</option>
-                    <option value="3">Option #3</option>
+                  <select class="form-control" id="BankName" v-model="BankName" name="BankName" v-validate="{required: true}"
+                  v-bind:class="{'form-control': true, 'error': errors.has('BankName') }">
+                    <option value="" disabled>--Select--</option>
+                    <option v-for="Bank_obj in BankList" v-bind:value="Bank_obj.BankMasterId" >{{Bank_obj.BankName}}</option>
                   </select>
                   <div class="input-group-append">
-                    <span class="input-group-text">
-                      <i class="fa fa-bank"></i>
-                    </span>
+                    <span class="input-group-text"><i class="fa fa-bank"></i></span>
                   </div>
                 </div>
-                <span  v-show="errors.has('DepositType')" class="text-danger">Select Bank Name  </span>
+                <span v-show="errors.has('BankName')" class="text-danger">Please select Bank Name.</span>
               </div>
+
               <div class="form-group">
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <span class="input-group-text">Transaction ID</span>
+                    <span class="input-group-text">Transaction Id</span>
                   </div>
-                  <input class="form-control" id="TransactionID" type="text" name="TransactionID"
-                  v-validate="{required: true}" v-model="TransactionID"v-bind:class="{'form-control': true, 'error': errors.has('TransactionID') }">
+                  <input class="form-control" id="TransactionID" type="text" name="TransactionID" placeholder="Enter Transaction Id" v-validate="{required: true}"
+                  v-model="TransactionID" v-bind:class="{'form-control': true, 'error': errors.has('TransactionID') }">
                   <div class="input-group-append">
-                    <span class="input-group-text">
-                      <i class="fa fa-exchange"></i>
-                    </span>
+                    <span class="input-group-text"><i class="fa fa-exchange"></i></span>
                   </div>
                 </div>
-                <span  v-show="errors.has('TransactionID')" class="text-danger">Enter Transaction ID </span>
+                <span v-show="errors.has('TransactionID')" class="text-danger">Please enter Transaction Id.</span>
               </div>
-              <div class="form-group">
+
+              <div class="form-group" v-show="unmatchedAmt != ''">
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <span class="input-group-text">Comments</span>
+                    <span class="input-group-text">Reason</span>
                   </div>
-                  <textarea class="form-control" id="textarea-input" name="textarea-input" rows="3" placeholder="Content.."></textarea>
+                  <select class="form-control" id="Reason" v-model="Reason" name="Reason" v-validate="`${unmatchedAmt != 0 ? 'required' : ''}`"
+                  v-bind:class="{'form-control': true, 'error': errors.has('Reason') }">
+                    <option value="" disabled>--Select--</option>
+                    <option value="1" disabled>Reason 1</option>
+                  </select>
                   <div class="input-group-append">
-                    <span class="input-group-text">
-                      <i class="fa fa-info"></i>
-                    </span>
+                    <span class="input-group-text"><i class="fa fa-angle-down"></i></span>
+                  </div>
+                </div>
+                <span v-show="errors.has('Reason')" class="text-danger">Please select Reason.</span>
+              </div>
+
+              <div class="form-group" v-show="DepositType != ''">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Upload Deposit Slip</span>
+                  </div>
+                  <input class="form-control" type="file" placeholder="Upload Deposit Slip" name="DepositSlip" id="DepositSlip"
+                  v-bind:class="{'form-control': true }">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-file"></i></span>
                   </div>
                 </div>
               </div>
+
               <div class="card-footer">
-                <button class="btn btn-sm btn-primary" type="submit">
-                  <i class="fa fa-dot-circle-o"></i> Submit</button>
-                <button class="btn btn-sm btn-danger" type="reset">
-                  <i class="fa fa-ban"></i> Clear</button>
+                <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-dot-circle-o"></i> Save</button>
+                <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> Clear</button>
               </div>
             </form>
           </div>
@@ -133,7 +141,11 @@
       <div class="col-lg-4">
         <div class="card">
           <div class="card-header">
+<<<<<<< HEAD
+            <i class="fa fa-align-justify"></i> Denomination</div>
+=======
           <i class="fa fa-align-justify"></i> Currency</div>
+>>>>>>> master
           <div class="card-body" style="height: 500px;">
             <table class="table table-responsive-sm" height="10">
               <thead>
@@ -144,10 +156,62 @@
                 </tr>
               </thead>
               <tbody>
+<<<<<<< HEAD
+                <tr>
+                  <td class="notes">2000</td>
+                  <td class="notes"><input class="form-control" id="2000" type="number" min="0" name="2000" @change="notesCount"></td>
+                  <td class="notes"><input class="form-control" id="mo2000" type="text" name="note_amt" value="0" disabled></td>
+                </tr>
+                <tr>
+                  <td class="notes">500</td>
+                  <td class="notes"><input class="form-control" id="500" type="number" min="0" name="500" @change="notesCount"></td>
+                  <td class="notes"><input class="form-control" id="mo500" type="text" name="note_amt" value="0" disabled></td>
+                </tr>
+                <tr>
+                  <td class="notes">200</td>
+                  <td class="notes"><input class="form-control" id="200" type="number" min="0" name="200" @change="notesCount"></td>
+                  <td class="notes"><input class="form-control" id="mo200" type="text" name="note_amt" value="0" disabled></td>
+                </tr>
+                <tr>
+                  <td class="notes">100</td>
+                  <td class="notes"><input class="form-control" id="100" type="number" min="0" name="100" @change="notesCount"></td>
+                  <td class="notes"><input class="form-control" id="mo100" type="text" name="note_amt" value="0" disabled></td>
+                </tr>
+                <tr>
+                  <td class="notes">50</td>
+                  <td class="notes"><input class="form-control" id="50" type="number" min="0" name="50" @change="notesCount"></td>
+                  <td class="notes"><input class="form-control" id="mo50" type="text" name="note_amt" value="0" disabled></td>
+                </tr>
+                <tr>
+                  <td class="notes">20</td>
+                  <td class="notes"><input class="form-control" id="20" type="number" min="0" name="20" @change="notesCount"></td>
+                  <td class="notes"><input class="form-control" id="mo20" type="text" name="note_amt" value="0" disabled></td>
+                </tr>
+                <tr>
+                  <td class="notes">10</td>
+                  <td class="notes"><input class="form-control" id="10" type="number" min="0" name="10" @change="notesCount"></td>
+                  <td class="notes"><input class="form-control" id="mo10" type="text" name="note_amt" value="0" disabled></td>
+                </tr>
+                <tr>
+                  <td class="notes">5</td>
+                  <td class="notes"><input class="form-control" id="5" type="number" min="0" name="5" @change="notesCount"></td>
+                  <td class="notes"><input class="form-control" id="mo5" type="text" name="note_amt" value="0" disabled></td>
+                </tr>
+                <tr>
+                  <td class="notes">2</td>
+                  <td class="notes"><input class="form-control" id="2" type="number" min="0" name="2" @change="notesCount"></td>
+                  <td class="notes"><input class="form-control" id="mo2" type="text" name="note_amt" value="0" disabled></td>
+                </tr>
+                <tr>
+                  <td class="notes">1</td>
+                  <td class="notes"><input class="form-control" id="1" type="number" min="0" name="1" @change="notesCount"></td>
+                  <td class="notes"><input class="form-control" id="mo1" type="text" name="note_amt" value="0" disabled></td>
+=======
                 <tr v-for="data in DenominationList ">
                   <td class="notes">{{data.Denomination}}</td>
                   <td class="notes"><b-col sm="10"><input class="form-control" size="sm" :id="`${data.Denomination}`" type="text"  @change="notesCount"></b-col></td>
                   <td class="notes"><b-col sm="10"><input class="form-control" size="sm" :id="`mo${data.Denomination}`"type="text" name="note_amt" value="0" disabled></b-col></td>
+>>>>>>> master
                 </tr>
                 <tr>
                   <td class="notes"></td>
@@ -177,7 +241,7 @@
                 </tr>
                 <tr>
                   <td>Total Amt</td>
-                  <td>0.00</td>
+                  <td id="pend_tot_amt">500.00</td>
                 </tr>
                 <tr>
                   <td>Total P2P Amt</td>
