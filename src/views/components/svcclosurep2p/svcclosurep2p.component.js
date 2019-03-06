@@ -63,8 +63,7 @@ export default {
       data: this.input,
       headers: {
         'Authorization': 'Bearer '  }
-        })
-        .then(result => {
+        }).then(result => {
           this.DenominationList = result.data.data;
         }, error => {
           console.error(error)
@@ -98,12 +97,9 @@ export default {
              error.innerHTML = "The Deposit_Amount Field is Required";
              error.style.display = "None";
           }
+        }
         })
-        .then(result => {
-          this.BankList = result.data.result.data;
-        }, error => {
-          console.error(error)
-        })
+
     },
 
     //function is used for calculate notes amount
