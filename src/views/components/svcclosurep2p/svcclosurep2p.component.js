@@ -12,16 +12,22 @@ export default {
       DeliveryDate: '',
       Deposit_Amount: '',
       DepositType: '',
-      BankName: '',
+      BankMasterId: '',
       TransactionID: '',
       DepositSlip: '',
       Reason: '',
       unmatchedAmt: 0,
+      CODAmount: 0,
       tot_amt: 0,
       BankList: [],
       pageno: 0,
       localuserid: 0,
-      DenominationList:[]
+      localhubid: 0,
+      DenominationList: [],
+      StatusID: 0,
+      FinanceConfirmAmount: 0,
+      BatchID: 0,
+      DenominationArr: []
     }
   },
 
@@ -29,7 +35,7 @@ export default {
 
   },
   created() {
-  this.GetDenominationData();
+    this.GetDenominationData();
   },
   mounted() {
     var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
@@ -42,7 +48,7 @@ export default {
     var bytes             = CryptoJS.AES.decrypt(hubdetailEncrypt.toString(), 'Key');
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
     var hubdetail         = JSON.parse(plaintext);
-    this.localhubid       = hubdetail.HubId;
+    this.localhubid       = hubdetail[0].HubID;
 
     DeliveryDate.max      = new Date().toISOString().split("T")[0];
     DepositDate.max       = new Date().toISOString().split("T")[0];
@@ -64,12 +70,12 @@ export default {
       headers: {
         'Authorization': 'Bearer '  }
         }).then(result => {
-          this.DenominationList = result.data.data;
+          this.BankList = result.data.result.data;
         }, error => {
           console.error(error)
       })
-
     },
+
     GetDenominationData(){
       axios({
           method: 'GET',
@@ -106,13 +112,22 @@ export default {
     notesCount(event){
       if(event.target.id){
 
-        document.getElementById("mo"+event.target.id).value = event.target.id * event.target.value;
+        let Denomination = event.target.id;
+        let NoteCount = event.target.value;
+
+        document.getElementById("mo"+event.target.id).value = Denomination * NoteCount;
         var arr = document.getElementsByName('note_amt');
-        this.tot_amt = 0;
+        this.tot_amt=0;
 
         for(var i=0;i<arr.length;i++){
-            if(parseInt(arr[i].value))
-                this.tot_amt += parseInt(arr[i].value);
+
+          if(this.DenominationArr.indexOf(Denomination) === -1) {
+            this.DenominationArr.push(Denomination);
+          }
+
+          if(parseInt(arr[i].value)){
+            this.tot_amt += parseInt(arr[i].value);
+          }
         }
         document.getElementById('tot_amt').value = this.tot_amt;
       }
@@ -121,31 +136,62 @@ export default {
     saveSvcClosure(event) {
 
       let d_amt = this.Deposit_Amount.split(".");
-      if(parseInt(d_amt[0]) !== parseInt(this.tot_amt)){
+      let DepositAmount = parseInt(d_amt[0]);
+
+      let TolatCollection = parseInt(document.getElementById("TolatCollection").innerHTML);
+
+      if(DepositAmount !== parseInt(this.tot_amt)){
 
         let error = document.getElementById("d_a");
          error.innerHTML      = "Denomination details & Deposit Amount is mismatch";
          error.style.display  = "block";
          return false;
       }else{
-        let pend_tot_amt = parseInt(document.getElementById("pend_tot_amt").innerHTML);
+        let error = document.getElementById("d_a");
+        error.style.display  = "none";
 
-        if(parseInt(d_amt[0]) < pend_tot_amt){
-          this.unmatchedAmt = pend_tot_amt-parseInt(d_amt[0]);
+        this.unmatchedAmt = TolatCollection-DepositAmount;
+
+        if((DepositAmount < TolatCollection) && this.Reason==''){
           return false;
         }
       }
 
+      let NoteCountArr = []; let DenominationIDArr = [];
+      this.DenominationArr.forEach(function (denomi) {
+        NoteCountArr.push(parseInt(document.getElementById("mo"+denomi).value) / parseInt(denomi));
+        DenominationIDArr.push(parseInt(document.getElementById("moi"+denomi).value));
+      });
+
+      let ClosingBalance = parseInt(document.getElementById("ClosingBalance").innerHTML);
+      let CODAmount = parseInt(document.getElementById("CODAmount").innerHTML);
+      let p2pamt = parseInt(document.getElementById("p2pamt").innerHTML);
+      let OpeningBalance = ClosingBalance;
+
       this.input = ({
           DepositDate: this.DepositDate,
           DeliveryDate: this.DeliveryDate,
-          Deposit_Amount: this.Deposit_Amount,
+          Deposit_Amount: DepositAmount,
           DepositType: this.DepositType,
-          BankName: this.BankName,
+          BankDeposit: this.BankMasterId,
           TransactionID: this.TransactionID,
-          ReasonID: this.ReasonID,
+          ReasonID: this.Reason,
           CreatedBy: this.localuserid,
-          HubId: this.localhubid
+          HubId: this.localhubid,
+          DifferenceAmount: this.unmatchedAmt,
+          TolatCollection: TolatCollection,
+          StatusID: (this.StatusID != '') ? this.StatusID : 0,
+          OpeningBalance: OpeningBalance,
+          ClosingBalance: ClosingBalance + CODAmount,
+          FinanceConfirmAmount: (this.FinanceConfirmAmount != '') ? this.FinanceConfirmAmount : 0,
+          CODAmount: CODAmount,
+          IsActive: true,
+          BatchID: (this.BatchID != '') ? this.BatchID : 0,
+          p2pamt: p2pamt,
+          totalAmtdeposit: DepositAmount + p2pamt,
+          Denomination: this.DenominationArr,
+          NoteCount: NoteCountArr,
+          DenominationID: DenominationIDArr
       })
       axios({
           method: 'POST',
@@ -158,8 +204,6 @@ export default {
       .then((response) => {
           if (response.data.errorCode == 0) {
               this.$alertify.success(response.data.msg);
-              this.adddesignationmodal = false;
-              event.target.reset();
           } else if (response.data.errorCode == -1) {
               this.$alertify.error(response.data.msg)
           }
@@ -177,10 +221,12 @@ export default {
              error.innerHTML = "Enter Denomination details OR Amount mismatches";
              error.style.display = "block";
           }else{
+            document.getElementById("d_a").style.display = "none";
             this.saveSvcClosure();
           }
         }
-          // event.target.reset();
+        document.getElementById("d_a").style.display = "none";
+        event.target.reset();
       }).catch(() => {
         console.log('errors exist', this.errors)
       });

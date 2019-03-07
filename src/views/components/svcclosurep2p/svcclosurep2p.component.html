@@ -73,8 +73,8 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">Bank Name</span>
                   </div>
-                  <select class="form-control" id="BankName" v-model="BankName" name="BankName" v-validate="{required: true}"
-                  v-bind:class="{'form-control': true, 'error': errors.has('BankName') }">
+                  <select class="form-control" id="BankMasterId" v-model="BankMasterId" name="BankMasterId" v-validate="{required: true}"
+                  v-bind:class="{'form-control': true, 'error': errors.has('BankMasterId') }">
                     <option value="" disabled>--Select--</option>
                     <option v-for="Bank_obj in BankList" v-bind:value="Bank_obj.BankMasterId" >{{Bank_obj.BankName}}</option>
                   </select>
@@ -82,7 +82,7 @@
                     <span class="input-group-text"><i class="fa fa-bank"></i></span>
                   </div>
                 </div>
-                <span v-show="errors.has('BankName')" class="text-danger">Please select Bank Name.</span>
+                <span v-show="errors.has('BankMasterId')" class="text-danger">Please select Bank Name.</span>
               </div>
 
               <div class="form-group">
@@ -107,7 +107,7 @@
                   <select class="form-control" id="Reason" v-model="Reason" name="Reason" v-validate="`${unmatchedAmt != 0 ? 'required' : ''}`"
                   v-bind:class="{'form-control': true, 'error': errors.has('Reason') }">
                     <option value="" disabled>--Select--</option>
-                    <option value="1" disabled>Reason 1</option>
+                    <option value="1">Reason 1</option>
                   </select>
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-angle-down"></i></span>
@@ -153,55 +153,13 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td class="notes">2000</td>
-                  <td class="notes"><input class="form-control" id="2000" type="number" min="0" name="2000" @change="notesCount"></td>
-                  <td class="notes"><input class="form-control" id="mo2000" type="text" name="note_amt" value="0" disabled></td>
-                </tr>
-                <tr>
-                  <td class="notes">500</td>
-                  <td class="notes"><input class="form-control" id="500" type="number" min="0" name="500" @change="notesCount"></td>
-                  <td class="notes"><input class="form-control" id="mo500" type="text" name="note_amt" value="0" disabled></td>
-                </tr>
-                <tr>
-                  <td class="notes">200</td>
-                  <td class="notes"><input class="form-control" id="200" type="number" min="0" name="200" @change="notesCount"></td>
-                  <td class="notes"><input class="form-control" id="mo200" type="text" name="note_amt" value="0" disabled></td>
-                </tr>
-                <tr>
-                  <td class="notes">100</td>
-                  <td class="notes"><input class="form-control" id="100" type="number" min="0" name="100" @change="notesCount"></td>
-                  <td class="notes"><input class="form-control" id="mo100" type="text" name="note_amt" value="0" disabled></td>
-                </tr>
-                <tr>
-                  <td class="notes">50</td>
-                  <td class="notes"><input class="form-control" id="50" type="number" min="0" name="50" @change="notesCount"></td>
-                  <td class="notes"><input class="form-control" id="mo50" type="text" name="note_amt" value="0" disabled></td>
-                </tr>
-                <tr>
-                  <td class="notes">20</td>
-                  <td class="notes"><input class="form-control" id="20" type="number" min="0" name="20" @change="notesCount"></td>
-                  <td class="notes"><input class="form-control" id="mo20" type="text" name="note_amt" value="0" disabled></td>
-                </tr>
-                <tr>
-                  <td class="notes">10</td>
-                  <td class="notes"><input class="form-control" id="10" type="number" min="0" name="10" @change="notesCount"></td>
-                  <td class="notes"><input class="form-control" id="mo10" type="text" name="note_amt" value="0" disabled></td>
-                </tr>
-                <tr>
-                  <td class="notes">5</td>
-                  <td class="notes"><input class="form-control" id="5" type="number" min="0" name="5" @change="notesCount"></td>
-                  <td class="notes"><input class="form-control" id="mo5" type="text" name="note_amt" value="0" disabled></td>
-                </tr>
-                <tr>
-                  <td class="notes">2</td>
-                  <td class="notes"><input class="form-control" id="2" type="number" min="0" name="2" @change="notesCount"></td>
-                  <td class="notes"><input class="form-control" id="mo2" type="text" name="note_amt" value="0" disabled></td>
-                </tr>
-                <tr>
-                  <td class="notes">1</td>
-                  <td class="notes"><input class="form-control" id="1" type="number" min="0" name="1" @change="notesCount"></td>
-                  <td class="notes"><input class="form-control" id="mo1" type="text" name="note_amt" value="0" disabled></td>
+                <tr v-for="data in DenominationList">
+                  <td class="notes">{{data.Denomination}}</td>
+                  <td class="notes"><input class="form-control" :id="`${data.Denomination}`" type="number" min="0" name="`${data.Denomination}`" @change="notesCount" onkeypress="return event.charCode >= 48 && event.charCode <= 57"></td>
+                  <td class="notes">
+                    <input class="form-control" :id="`mo${data.Denomination}`" type="text" name="note_amt" value="0" disabled>
+                    <input class="form-control" :id="`moi${data.Denomination}`" type="hidden" :value="`${data.DenominationID}`" disabled>
+                  </td>
                 </tr>
                 <tr>
                   <td class="notes"></td>
@@ -223,23 +181,69 @@
               <tbody>
                 <tr>
                   <td>Yesterday's COD Amt</td>
-                  <td>0.00</td>
+                  <td id="ClosingBalance">1000.00</td>
                 </tr>
                 <tr>
                   <td>Pending COD Amt</td>
-                  <td>0.00</td>
+                  <td id="CODAmount">500.00</td>
                 </tr>
                 <tr>
                   <td>Total Amt</td>
-                  <td id="pend_tot_amt">500.00</td>
+                  <td id="TolatCollection">1500.00</td>
                 </tr>
                 <tr>
                   <td>Total P2P Amt</td>
-                  <td>0.00</td>
+                  <td id="p2pamt">500.00</td>
                 </tr>
               </tbody>
             </table>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card-headerfrm" style="margin-bottom: 15px;">
+          <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
+          <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+          <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+            <thead>
+              <tr class="text-primary">
+                <th class="text-center tableheader"><b>#</b></th>
+                <th class="text-center tableheader"><b>Delivery Date</b></th>
+                <th class="text-center tableheader"><b>Deposite Date</b></th>
+                <th class="text-center tableheader"><b>Opening Amt</b></th>
+                <th class="text-center tableheader"><b>COD Receivable</b></th>
+                <th class="text-center tableheader"><b>Bank Deposited Amt</b></th>
+                <th class="text-center tableheader"><b>Balance Outstanding</b></th>
+                <th class="text-center tableheader"><b>Status</b></th>
+                <th class="text-center tableheader"><b>Reason</b></th>
+                <th class="text-center tableheader"><b>Finance Reason</b></th>
+                <th class="text-center tableheader"><b>Receipt</b></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="resultCount==0">
+                <td colspan="7" align="center">No record found</td>
+              </tr>
+              <tr>
+                <td scope="row" class="text-center"><strong>1</strong></td>
+                <td>31/01/2019</td>
+                <td>31/01/2019</td>
+                <td>0.00</td>
+                <td>0.00</td>
+                <td>0.00</td>
+                <td>0.00</td>
+                <td>Open</td>
+                <td>COD used for Imprest Tax</td>
+                <td>Bank Amount not matched</td>
+                <td><a href="">View Images</a></td>
+              </tr>
+            </tbody>
+          </table><br>
+          <paginate :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+          </paginate>
         </div>
       </div>
     </div>
