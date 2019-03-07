@@ -1,9 +1,8 @@
 import apiUrl from '../../../constants'
 import axios from 'axios'
-import {
-  Validator
-} from 'vee-validate'
+import {Validator} from 'vee-validate'
 import CryptoJS from 'crypto-js'
+import Paginate from 'vuejs-paginate'
 
 export default {
   name: 'srclosure',
@@ -15,13 +14,28 @@ export default {
       Deposit_Amount:"",
       SR_Name:"",
       tot_amt:"",
+      PendingCOD:"",
+      TotalAmount:"",
+      TodaysCOD:"",
+      DeliveryDate: '',
+      assign: '',
+      card: '',
+      cash: '',
+      cod: '',
+      ndr: '',
+      prepaid: '',
+      wallet: '',
       Reason:null,
       RemainData:"",
+      pagecount: 0,
       SRList:[],
       DenominationList:[],
+      RightSRLedgerList:[],
       SRLedgerList:[],
       ReasonList:[],
-      show:false
+      show:false,
+      localhubid: 0,
+      localusername: 0
     }
   },
 
@@ -35,6 +49,18 @@ export default {
   },
 
   mounted() {
+    var hubdetailEncrypt  = window.localStorage.getItem('accesshubdata')
+    var bytes             = CryptoJS.AES.decrypt(hubdetailEncrypt.toString(), 'Key');
+    var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
+    var hubdetail         = JSON.parse(plaintext);
+    this.localhubid       = hubdetail[0].HubID;
+
+    var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
+    var bytes             = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
+    var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
+    var userdetail        = JSON.parse(plaintext);
+    this.localusername      = userdetail.username;
+
     this.GetDeliveryAgentData();
   },
 
@@ -42,62 +68,96 @@ export default {
     showModal(Balanc){
        this.$refs.myModalRef.show(Balanc)
       this.RemainData = Balanc;
-
     },
     hideModal() {
        this.$refs.myModalRef.hide()
      },
      saveSRClosure(){
-
-       var TotalAmt = (document.getElementById("Tot_Amt")).textContent;
-       var IntTotalAmt = parseInt(TotalAmt)
-       var IntDeposit_Amount = parseInt(this.Deposit_Amount)
-        let Balanc = 0;
+       let statusAmount = ""
+       let TotalAmt = (document.getElementById("Tot_Amt")).textContent;
+       let IntTotalAmt = parseInt(TotalAmt)
+       let IntDeposit_Amount = parseInt(this.Deposit_Amount)
+       let Balanc = 0;
+       let insertflag= 0;
        if(IntTotalAmt > IntDeposit_Amount){
          Balanc = TotalAmt - this.Deposit_Amount ;
          this.showModal(Balanc)
          this.show = true
+         statusAmount = "Less Amount"
          if(this.Reason){
+           insertflag=1;
            this.hideModal()
          }
        }else{
+         insertflag=1;
          this.show = false
        }
-        this.input = ({
-          srid: this.SR_Name,
-          hubid: "2",
-          status: "Less Amount",
-          creditamount: this.Deposit_Amount,
-          debitamount: Balanc,
-          reasonid: this.Reason,
-          islessamountaccept: false
-          })
-          axios({
-            method: 'POST',
-              'url': apiUrl.api_url + 'insertSRLedgerDetails',
-              'data': this.input,
-              headers: {
-                'Authorization': 'Bearer '
-                   }
-             })
-             .then((response) => {
-
-                 if (response.data.code) {
-                     this.$alertify.success("SRClosure Save successfully");
-                      this.GetSRLedgerDetails();
-                     //this.adddesignationmodal = false;
-                     event.target.reset();
-                 } else if (response.data.errorCode == -1) {
-                     this.$alertify.error(response.data.msg)
-                 }
-             })
-             .catch((httpException) => {
-                 console.error('exception is:::::::::', httpException)
-             });
+       if(insertflag){
+         this.input = ({
+           srid: this.SR_Name,
+           hubid: this.localhubid,
+           status: statusAmount,
+           creditamount: this.Deposit_Amount,
+           debitamount: Balanc,
+           reasonid: this.Reason,
+           islessamountaccept: false,
+           username: this.localusername
+           })
+           axios({
+             method: 'POST',
+               'url': apiUrl.api_url + 'insertSRLedgerDetails',
+               'data': this.input,
+               headers: {
+                 'Authorization': 'Bearer '
+                    }
+              })
+              .then((response) => {
+                  if (response.data.code) {
+                      this.$alertify.success(response.data.data);
+                       this.GetSRLedgerDetails();
+                    }
+              })
+              .catch((httpException) => {
+                  console.error('exception is:::::::::', httpException)
+              });
+       }
      },
-     SRchange(){
+     P2PEntry(){
+       window.open("", "_blank");
+     },
+     //to get pagination
+     getPaginationData(pageNum) {
+         this.pageno = (pageNum - 1) * 10
+         this.GetSRLedgerDetails()
+     },
+     getRightSRLedgerDetails(){
        this.input = ({
-          SRID: this.SRList[0].SRID
+          srid: this.SR_Name
+       })
+       axios({
+           method: 'POST',
+           url: apiUrl.api_url + 'getRightSRLedgerDetails',
+           data: this.input,
+           headers: {
+             'Authorization': 'Bearer '
+           }
+         })
+         .then(result => {
+           this.PendingCOD = result.data.PendingCOD
+           this.TodaysCOD = result.data.TodaysCOD
+           this.TotalAmount = result.data.TotalAmount
+         }, error => {
+           console.error(error)
+         })
+     },
+     SRchange(event){
+       this.getRightSRLedgerDetails()
+       this.GetSRLedgerDetails()
+       this.input = ({
+          srid: this.SR_Name,
+          hubid: this.localhubid,
+          username: this.localusername,
+          status: ""
        })
        axios({
            method: 'POST',
@@ -108,7 +168,13 @@ export default {
            }
          })
          .then(result => {
-
+            this.assign = result.data.data.assign
+            this.card = result.data.data.card
+            this.cash = result.data.data.cash
+            this.cod = result.data.data.cod
+            this.ndr = result.data.data.ndr
+            this.prepaid = result.data.data.prepaid
+            this.wallet = result.data.data.wallet
          }, error => {
            console.error(error)
          })
@@ -134,7 +200,7 @@ export default {
     GetSRLedgerDetails(){
       this.input = ({
         srid: this.SR_Name,
-        hubid:"2"
+        hubid:this.localhubid
       })
       axios({
           method: 'POST',
@@ -146,10 +212,12 @@ export default {
         })
         .then(result => {
           this.SRLedgerList = result.data.data
+
         }, error => {
           console.error(error)
         })
     },
+      //to get Denomination List
     GetDenominationData(){
       axios({
           method: 'GET',
@@ -167,7 +235,6 @@ export default {
     },
     //to get SR List
     GetDeliveryAgentData() {
-
       var hubEncrypt = window.localStorage.getItem('accesshubdata')
       var hubbytes  = CryptoJS.AES.decrypt(hubEncrypt.toString(), 'Key');
       var hubtext = hubbytes.toString(CryptoJS.enc.Utf8);
@@ -206,11 +273,11 @@ export default {
             let error = document.getElementById("d_a");
              error.innerHTML = "The Deposit Amount Fields is Required";
              error.style.display = "None";
+
              this.saveSRClosure()
           }
-
         }
-          // event.target.reset();
+        //  event.target.reset();
       }).catch(() => {
         console.log('errors exist', this.errors)
       });
