@@ -420,7 +420,7 @@ router.beforeEach((to, from, next) => {
       const bytes = CryptoJS.AES.decrypt(permissionEncrypt.toString(), 'Key');
       const plaintext = bytes.toString(CryptoJS.enc.Utf8);
       const permissiondata = JSON.parse(plaintext);
-      console.log("permissiondata",permissiondata);
+      //console.log("permissiondata",permissiondata);
       function isBigEnough(findURL) {
         if(findURL.children.length>0){
           return findURL.children.some(isBigChildEnough);
@@ -432,7 +432,7 @@ router.beforeEach((to, from, next) => {
       }
       //console.log(permissiondata);
       const setroles = permissiondata.some(isBigEnough)
-      console.log(setroles);
+      //console.log(setroles);
       if (setroles) {
         next();
       } else {
