@@ -2,10 +2,15 @@ import apiUrl from '../../../constants'
 import axios from 'axios'
 import CryptoJS from 'crypto-js';
 import { Validator } from 'vee-validate'
+import Paginate from 'vuejs-paginate'
+import VueElementLoading from 'vue-element-loading';
 
 export default {
   name: 'svcclosurep2p',
-  components: {},
+  components: {
+      Paginate,
+      VueElementLoading
+  },
   data() {
     return {
       DepositDate: '',
@@ -21,13 +26,21 @@ export default {
       tot_amt: 0,
       BankList: [],
       pageno: 0,
+      pagecount: 0,
       localuserid: 0,
       localhubid: 0,
       DenominationList: [],
       StatusID: 0,
       FinanceConfirmAmount: 0,
       BatchID: 0,
-      DenominationArr: []
+      DenominationArr: [],
+      listSVCledgerData: [],
+      ShipmentUpdateList: [],
+      isLoading: false,
+      resultCount: '',
+      pendingCODAmt: '0.00',
+      yesterdayCODAmt: '0.00',
+      TolatCollection:'0.00'
     }
   },
 
@@ -50,15 +63,74 @@ export default {
     var hubdetail         = JSON.parse(plaintext);
     this.localhubid       = hubdetail[0].HubID;
 
-    DeliveryDate.max      = new Date().toISOString().split("T")[0];
-    DepositDate.max       = new Date().toISOString().split("T")[0];
+    var date = new Date();
+    DeliveryDate.max      = date.toISOString().split("T")[0];
+    DepositDate.max       = date.toISOString().split("T")[0];
 
-    this.pageno           = 0;
+    date.setDate(date.getDate() - 1);
+    this.DeliveryDate = date.toISOString().split("T")[0];
 
+    this.GetShipmentUpdate();
     this.GetBankData();
+    this.GetSVCledgerData();
+    this.GetPendingCODAmt();
   },
 
   methods: {
+    GetShipmentUpdate() {
+
+      this.input = ({
+          hubid: this.localhubid,
+          status: 'Shipped' //Delivered
+      })
+
+      axios({
+        method: 'POST',
+        url: apiUrl.api_url + 'external/getShipmentUpdate',
+        data: this.input,
+        headers: {
+          'Authorization': 'Bearer '
+        }
+      }).then(result => {
+          //this.ShipmentUpdateList = result.data.shipmentupdate.Result;
+
+          var data = []; let yDayCODAmt = 0;
+          result.data.shipmentupdate.Result.forEach(function (ShipmentUpdateData) {
+            if(ShipmentUpdateData.PaymentType==='cash' && ShipmentUpdateData.OrderType==='COD'){
+              yDayCODAmt += parseInt(ShipmentUpdateData.CollectibleAmount);
+            }
+          });
+          data.push({
+            yesterdayCODAmt:yDayCODAmt
+          });
+          this.ShipmentUpdateList = data;
+          //console.log('ShipmentUpdateList===', this.ShipmentUpdateList);
+        }, error => {
+          console.error(error)
+      })
+    },
+
+    GetPendingCODAmt() {
+
+      this.input = ({
+          hubid: this.localhubid
+      })
+
+      axios({
+          method: 'POST',
+          'url': apiUrl.api_url + 'svcpendcodamt',
+          'data': this.input,
+          headers: {
+              'Authorization': 'Bearer '
+          }
+      })
+      .then(result => {
+          this.TolatCollection = parseFloat(Math.round((parseInt(result.data.rows[0].closingbalance)+parseInt(this.yesterdayCODAmt)) * 100) / 100).toFixed(2);
+          this.pendingCODAmt = result.data.rows[0].closingbalance;
+      }, error => {
+          console.error(error)
+      })
+    },
 
     GetBankData() {
       this.input = {}
@@ -91,21 +163,42 @@ export default {
         })
 
     },
-    onSubmit: function(event) {
-      this.$validator.validateAll().then((result) => {
-         if(result){
-          if((this.tot_amt != '0' && this.tot_amt != this.Deposit_Amount)||!this.tot_amt){
-            let error = document.getElementById("d_a");
-             error.innerHTML = " 	Enter Denomination details. Amount mismatches";
-             error.style.display = "block";
-          }else{
-            let error = document.getElementById("d_a");
-             error.innerHTML = "The Deposit_Amount Field is Required";
-             error.style.display = "None";
-          }
-        }
-        })
 
+    GetSVCledgerData() {
+
+        this.input = ({
+            offset: this.pageno,
+            limit: 10
+        })
+        this.isLoading = true;
+
+        axios({
+            method: 'POST',
+            'url': apiUrl.api_url + 'svcledgermaster',
+            'data': this.input,
+            headers: {
+                'Authorization': 'Bearer '
+            }
+        })
+        .then(result => {
+            this.listSVCledgerData = result.data.rows;
+            this.isLoading    = false;
+            let totalRows     = result.data.count
+            this.resultCount  = result.data.count
+            if (totalRows < 10) {
+                this.pagecount = 1
+            } else {
+                this.pagecount = Math.ceil(totalRows / 10)
+            }
+        }, error => {
+            console.error(error)
+        })
+    },
+
+    //to get pagination
+    getPaginationData(pageNum) {
+        this.pageno = (pageNum - 1) * 10
+        this.GetSVCledgerData()
     },
 
     //function is used for calculate notes amount
@@ -141,6 +234,7 @@ export default {
       let TolatCollection = parseInt(document.getElementById("TolatCollection").innerHTML);
 
       if(DepositAmount !== parseInt(this.tot_amt)){
+        this.$alertify.error("Denomination details & Deposit Amount is mismatch, Please Check.");
 
         let error = document.getElementById("d_a");
          error.innerHTML      = "Denomination details & Deposit Amount is mismatch";
@@ -153,6 +247,7 @@ export default {
         this.unmatchedAmt = TolatCollection-DepositAmount;
 
         if((DepositAmount < TolatCollection) && this.Reason==''){
+          this.$alertify.error("Remaining Amount is Rs."+this.unmatchedAmt);
           return false;
         }
       }
@@ -216,17 +311,18 @@ export default {
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
          if(result){
-          if((this.tot_amt != '0' && this.tot_amt != this.Deposit_Amount)||!this.tot_amt){
-            let error = document.getElementById("d_a");
-             error.innerHTML = "Enter Denomination details OR Amount mismatches";
-             error.style.display = "block";
+           document.getElementById("d_a").style.display = "none";
+           if((this.tot_amt != '0' && this.tot_amt != this.Deposit_Amount)||!this.tot_amt){
+              let error = document.getElementById("d_a");
+              error.innerHTML = "Deposit Amount & Denomination details mismatches";
+              error.style.display = "block";
           }else{
             document.getElementById("d_a").style.display = "none";
             this.saveSvcClosure();
+
+            event.target.reset();
           }
         }
-        document.getElementById("d_a").style.display = "none";
-        event.target.reset();
       }).catch(() => {
         console.log('errors exist', this.errors)
       });

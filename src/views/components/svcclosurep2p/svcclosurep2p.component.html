@@ -13,7 +13,7 @@
                     <span class="input-group-text">Delivery Date</span>
                   </div>
                   <input class="form-control" id="DeliveryDate" type="date" name="DeliveryDate" v-validate="{required: true}"
-                  v-model="DeliveryDate" v-bind:class="{'form-control': true, 'error': errors.has('DeliveryDate') }">
+                  v-model="DeliveryDate" v-bind:class="{'form-control': true, 'error': errors.has('DeliveryDate') }" disabled>
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                   </div>
@@ -104,7 +104,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">Reason</span>
                   </div>
-                  <select class="form-control" id="Reason" v-model="Reason" name="Reason" v-validate="`${unmatchedAmt != 0 ? 'required' : ''}`"
+                  <select class="form-control" id="Reason" v-model="Reason" name="Reason" v-validate="`${DepositType != '' ? 'required' : ''}`"
                   v-bind:class="{'form-control': true, 'error': errors.has('Reason') }">
                     <option value="" disabled>--Select--</option>
                     <option value="1">Reason 1</option>
@@ -121,7 +121,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">Upload Deposit Slip</span>
                   </div>
-                  <input class="form-control" type="file" placeholder="Upload Deposit Slip" name="DepositSlip" id="DepositSlip"
+                  <input class="form-control" type="file" placeholder="Upload Deposit Slip"  v-validate="`${unmatchedAmt != 0 ? 'required' : ''}`" name="DepositSlip" id="DepositSlip"
                   v-bind:class="{'form-control': true }">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-file"></i></span>
@@ -181,15 +181,15 @@
               <tbody>
                 <tr>
                   <td>Yesterday's COD Amt</td>
-                  <td id="ClosingBalance">1000.00</td>
+                  <td id="ClosingBalance">{{yesterdayCODAmt}}</td>
                 </tr>
                 <tr>
                   <td>Pending COD Amt</td>
-                  <td id="CODAmount">500.00</td>
+                  <td id="CODAmount">{{pendingCODAmt}}</td>
                 </tr>
                 <tr>
                   <td>Total Amt</td>
-                  <td id="TolatCollection">1500.00</td>
+                  <td id="TolatCollection">{{TolatCollection}}</td>
                 </tr>
                 <tr>
                   <td>Total P2P Amt</td>
@@ -227,17 +227,17 @@
               <tr v-if="resultCount==0">
                 <td colspan="7" align="center">No record found</td>
               </tr>
-              <tr>
-                <td scope="row" class="text-center"><strong>1</strong></td>
-                <td>31/01/2019</td>
-                <td>31/01/2019</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>Open</td>
-                <td>COD used for Imprest Tax</td>
-                <td>Bank Amount not matched</td>
+              <tr v-for="(data,index) in listSVCledgerData">
+                <td scope="row" class="text-center"><strong>{{index+1}}</strong></td>
+                <td>{{data.deliverydate}}</td>
+                <td>{{data.bankdepositdate}}</td>
+                <td>{{data.openingbalance}}</td>
+                <td>{{data.codamount}}</td>
+                <td>{{data.bankdeposit}}</td>
+                <td>{{data.closingbalance}}</td>
+                <td>{{data.statusid}}</td>
+                <td>{{data.reasonid}}</td>
+                <td>{{data.rmreasonid}}</td>
                 <td><a href="">View Images</a></td>
               </tr>
             </tbody>
