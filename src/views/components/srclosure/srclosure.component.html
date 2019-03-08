@@ -12,7 +12,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">SR Name</span>
                   </div>
-                  <select class="form-control" id="SR_Name" v-model="SR_Name"name="SR_Name" @change="SRchange"
+                  <select class="form-control" id="SR_Name" v-model="SR_Name" name="SR_Name" v-on:input="srChange"
                      v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('SR_Name') }">
                     <option value="" disabled>--Select--</option>
                     <option v-for="SR_obj in SRList"  v-bind:value="SR_obj.SRID" >{{SR_obj.SRName}}</option>
@@ -39,7 +39,7 @@
               </div>
 
 
-              <div class="form-group" v-show="show" >
+              <div class="form-group" v-show="Regionshow" >
                 <div class="input-group">
 
                   <div class="input-group-prepend">
@@ -57,7 +57,7 @@
               <div class="card-footer">
                 <button class="btn btn-sm btn-primary" type="submit">
                   <i class="fa fa-dot-circle-o"></i> Submit</button>
-                <button class="btn btn-sm btn-danger" type="reset">
+                <button class="btn btn-sm btn-danger" type="reset" @click="resetData">
                   <i class="fa fa-ban"></i> Clear</button>
               </div>
             </form>
@@ -98,8 +98,8 @@
         </div>
       </div>
 
-        <div class="col-sm-4">
-          <b-card>
+        <div class="col-sm-4" v-show="RightSRLedger">
+          <b-card >
             <table class="table table-bordered table-striped table-sm">
               <thead>
                 <tr>
@@ -133,7 +133,7 @@
               <i class="fa fa-align-justify"></i> Amount</div>
             <div class="card-body">
               <table class="table table-responsive-sm">
-                <tbody  >
+                <tbody>
                   <tr>
                     <td>Today's COD Amt</td>
                     <td>{{TodaysCOD}}</td>
@@ -163,7 +163,7 @@
       </div>
     </div>
 
-    <div class="col-12">
+    <div class="col-12" v-show="SRLedgerDetails">
       <div class="card-headerfrm" style="margin-bottom: 15px;">
         <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Mapping Result</h4>
 
@@ -179,15 +179,12 @@
             </tr>
           </thead>
           <tbody>
-            <!-- <tr v-if="resultCount==0">
-              <td colspan="7" align="center">No record found</td>
-            </tr> -->
             <tr v-for="SL_List in SRLedgerList ">
               <td>{{SL_List.creditamount}}</td>
               <td>{{SL_List.debitamount}}</td>
               <td>{{SL_List.createddate}}</td>
               <td>{{SL_List.deliverydate}}</td>
-              <td>{{SL_List.reasonid}}</td>
+              <td>{{SL_List.Reason}}</td>
               <td>{{SL_List.createdby}}</td>
             </tr>
           </tbody>

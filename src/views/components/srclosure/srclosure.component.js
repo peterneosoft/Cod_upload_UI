@@ -27,13 +27,16 @@ export default {
       wallet: '',
       Reason:null,
       RemainData:"",
+      resultCount:"",
       pagecount: 0,
       SRList:[],
       DenominationList:[],
       RightSRLedgerList:[],
       SRLedgerList:[],
       ReasonList:[],
-      show:false,
+      Regionshow:false,
+      RightSRLedger:false,
+      SRLedgerDetails:false,
       localhubid: 0,
       localusername: 0
     }
@@ -43,9 +46,9 @@ export default {
 
   },
   created() {
+  this.GetDeliveryAgentData();
   this.GetDenominationData();
   this.GetReasonList();
-
   },
 
   mounted() {
@@ -61,7 +64,7 @@ export default {
     var userdetail        = JSON.parse(plaintext);
     this.localusername      = userdetail.username;
 
-    this.GetDeliveryAgentData();
+
   },
 
   methods: {
@@ -72,8 +75,11 @@ export default {
     hideModal() {
        this.$refs.myModalRef.hide()
      },
+     P2PEntry(){
+       window.open("", "_blank");
+     },
      saveSRClosure(){
-       let statusAmount = ""
+       let statusAmount =""
        let TotalAmt = (document.getElementById("Tot_Amt")).textContent;
        let IntTotalAmt = parseInt(TotalAmt)
        let IntDeposit_Amount = parseInt(this.Deposit_Amount)
@@ -82,17 +88,23 @@ export default {
        if(IntTotalAmt > IntDeposit_Amount){
          Balanc = TotalAmt - this.Deposit_Amount ;
          this.showModal(Balanc)
-         this.show = true
+         this.Regionshow = true
          statusAmount = "Less Amount"
          if(this.Reason){
            insertflag=1;
            this.hideModal()
          }
+       }else if(IntTotalAmt < IntDeposit_Amount){
+         insertflag=1;
+         this.Regionshow = false
+         statusAmount = "Extra Amount"
        }else{
          insertflag=1;
-         this.show = false
+         this.Regionshow = false
+         statusAmount = "Equal Amount"
        }
        if(insertflag){
+         this.SRLedgerDetails = true;
          this.input = ({
            srid: this.SR_Name,
            hubid: this.localhubid,
@@ -122,8 +134,21 @@ export default {
               });
        }
      },
-     P2PEntry(){
-       window.open("", "_blank");
+
+     resetData(){
+      this.DenominationList.map(data=>{
+        let countVal = document.getElementById(data.Denomination);
+        let amountVal = document.getElementById("mo"+data.Denomination);
+        countVal.value=""
+        amountVal.value=""
+      });
+      this.Regionshow = false,
+      this.RightSRLedger = false,
+      this.SRLedgerDetails = false,
+      this.SR_Name = "",
+      this.Deposit_Amount = "",
+      this.Reason = "",
+      this.tot_amt = ""
      },
      //to get pagination
      getPaginationData(pageNum) {
@@ -150,9 +175,11 @@ export default {
            console.error(error)
          })
      },
-     SRchange(event){
+     srChange(event){
        this.getRightSRLedgerDetails()
        this.GetSRLedgerDetails()
+       this.RightSRLedger = true;
+       this.SRLedgerDetails = true;
        this.input = ({
           srid: this.SR_Name,
           hubid: this.localhubid,
@@ -212,7 +239,6 @@ export default {
         })
         .then(result => {
           this.SRLedgerList = result.data.data
-
         }, error => {
           console.error(error)
         })
@@ -235,6 +261,7 @@ export default {
     },
     //to get SR List
     GetDeliveryAgentData() {
+
       var hubEncrypt = window.localStorage.getItem('accesshubdata')
       var hubbytes  = CryptoJS.AES.decrypt(hubEncrypt.toString(), 'Key');
       var hubtext = hubbytes.toString(CryptoJS.enc.Utf8);
@@ -277,7 +304,6 @@ export default {
              this.saveSRClosure()
           }
         }
-        //  event.target.reset();
       }).catch(() => {
         console.log('errors exist', this.errors)
       });
