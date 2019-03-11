@@ -10,6 +10,8 @@ export default {
   data() {
     return {
       HubId:'',
+      DeliveryDate:'',
+      Status:'',
       hubList: [],
     }
   },
@@ -42,9 +44,9 @@ export default {
         })
     },
 
-    onSubmit: function(event) {
-      this.$validator.validateAll().then(() => {
-        console.log('form is valid', this.model)
+    onSubmit: function() {
+      this.$validator.validateAll().then((result) => {
+        console.log('form is valid', result)
         event.target.reset();
       }).catch(() => {
         console.log('errors exist', this.errors)

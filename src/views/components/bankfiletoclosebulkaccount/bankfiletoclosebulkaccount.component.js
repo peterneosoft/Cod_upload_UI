@@ -11,6 +11,7 @@ export default {
 
   data() {
     return {
+      DepositType:""
     }
   },
 
@@ -23,9 +24,9 @@ export default {
 
   methods: {
 
-    onSubmit: function(event) {
-      this.$validator.validateAll().then(() => {
-        console.log('form is valid', this.model)
+    onSubmit: function(res) {
+      this.$validator.validateAll().then((result) => {
+        console.log('form is valid', result)
         event.target.reset();
       }).catch(() => {
         console.log('errors exist', this.errors)

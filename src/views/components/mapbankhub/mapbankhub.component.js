@@ -11,6 +11,7 @@ export default {
   data() {
     return {
       BankName:'',
+      CodeName:'',
       HubId:'',
       hubList: [],
       BankList: [],
@@ -65,9 +66,9 @@ export default {
         })
     },
 
-    onSubmit: function(event) {
-      this.$validator.validateAll().then(() => {
-        console.log('form is valid', this.model)
+    onSubmit: function(result) {
+      this.$validator.validateAll().then((result) => {
+        console.log('form is valid',result)
         event.target.reset();
       }).catch(() => {
         console.log('errors exist', this.errors)

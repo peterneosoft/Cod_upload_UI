@@ -6,23 +6,27 @@
           <i class=" fa fa-bars barcolor"></i>  E-Payment MIS [COD] Upload
         </div>
         <div class="card-body">
-          <form action="" method="post" class="form-horizontal">
+          <form v-on:submit.prevent="onSubmit">
             <div class="form-group row">
               <div class="col-md-4">
                 <label>Deposit Type</label>
                 <b-input-group style="height: 46px;" left="<i class='fa fa-list'></i>">
-                  <select name="hub" id="hub" class="form-control" v-model="hub" style="height: 46px;">
+                  <select name="DepositType" id="DepositType" class="form-control" v-model="DepositType" style="height: 46px;"
+                   v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('DepositType') }">
                     <option value="">--Select--</option>
                 </select>
                 </b-input-group>
+                <span v-show="errors.has('DepositType')" class="text-danger">{{ "Please select Deposit Type " }}</span>
               </div>
 
               <div class="col-md-4">
                 <label>Upload File</label>
                 <b-input-group left="<i class='fa fa-file'></i>">
-                  <input type="file" placeholder="Upload File" name="Xb_DeliveryUser_PhotoFileUpload" id="Xb_DeliveryUser_PhotoFileUpload" v-bind:class="{'form-control': true }">
+                  <input type="file" placeholder="Upload File" name="Xb_DeliveryUser_PhotoFileUpload" id="Xb_DeliveryUser_PhotoFileUpload"  v-validate="{required: true}"
+                    v-bind:class="{'form-control': true, 'error': errors.has('Xb_DeliveryUser_PhotoFileUpload') }">
                 </b-input-group>
                 <small class="text-muted"><font color="red">Note: * Only .csv files allowed to upload.</font></small>
+                <label v-show="errors.has('Xb_DeliveryUser_PhotoFileUpload')" class="text-danger">{{ "Please select File Upload " }}</label>
               </div>
             </div>
 

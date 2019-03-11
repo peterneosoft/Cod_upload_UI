@@ -6,7 +6,7 @@
           <i class=" fa fa-filter filter"></i>  Bank & Hub Search
         </div>
         <div class="card-body">
-          <form action="" method="post" class="form-horizontal">
+          <form  v-on:submit.prevent="onSubmit">
             <div class="form-group row">
               <div class="col-md-4">
                 <label>Hub Name</label>
@@ -16,6 +16,7 @@
                     <option v-for="hub_obj in hubList" v-bind:value="hub_obj.HubID" >{{hub_obj.HubName}}</option>
                   </select>
                 </b-input-group>
+                  <span v-show="errors.has('HubId')" class="text-danger">{{ "Please select Hub" }}</span>
               </div>
 
               <div class="col-md-4">
@@ -27,6 +28,7 @@
                     <option v-for="Bank_obj in BankList" v-bind:value="Bank_obj.BankMasterId" >{{Bank_obj.BankName}}</option>
                   </select>
                 </b-input-group>
+                  <span v-show="errors.has('BankName')" class="text-danger">{{ "Please select Bank Name" }}</span>
               </div>
             </div>
 
@@ -34,8 +36,10 @@
               <div class="col-md-4">
                 <label>Code Name</label>
                 <b-input-group left="<i class='fa fa-user'></i>">
-                  <b-form-input id="code" type="text" placeholder=" Enter Code Name" v-model="usertypename"></b-form-input>
+                  <b-form-input class="form-control" id="CodeName" name="CodeName" type="text" placeholder=" Enter Code Name" v-model="CodeName"
+                    v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('CodeName') }"></b-form-input>
                 </b-input-group>
+                <span v-show="errors.has('CodeName')" class="text-danger">{{ "Please select Code " }}</span>
               </div>
 
               <div class="col-md-4">
