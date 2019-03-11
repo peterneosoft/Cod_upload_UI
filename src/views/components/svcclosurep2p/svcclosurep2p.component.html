@@ -13,7 +13,7 @@
                     <span class="input-group-text">Delivery Date</span>
                   </div>
                   <input class="form-control" id="DeliveryDate" type="date" name="DeliveryDate" v-validate="{required: true}"
-                  v-model="DeliveryDate" v-bind:class="{'form-control': true, 'error': errors.has('DeliveryDate') }" disabled>
+                  v-model="DeliveryDate" v-bind:class="{'form-control': true, 'error': errors.has('DeliveryDate') }">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                   </div>
@@ -56,7 +56,7 @@
                   </div>
                   <select class="form-control" id="DepositType" name="DepositType" v-validate="{required: true}"
                   v-model="DepositType" v-bind:class="{'form-control': true, 'error': errors.has('DepositType') }">
-                    <option value="" disabled>--Select--</option>
+                    <option value="">--Select--</option>
                     <option value="1">Bank Deposit</option>
                     <option value="2">CMS Deposit</option>
                     <option value="3">NEFT/ Other Deposit</option>
@@ -75,7 +75,7 @@
                   </div>
                   <select class="form-control" id="BankMasterId" v-model="BankMasterId" name="BankMasterId" v-validate="{required: true}"
                   v-bind:class="{'form-control': true, 'error': errors.has('BankMasterId') }">
-                    <option value="" disabled>--Select--</option>
+                    <option value="">--Select--</option>
                     <option v-for="Bank_obj in BankList" v-bind:value="Bank_obj.BankMasterId" >{{Bank_obj.BankName}}</option>
                   </select>
                   <div class="input-group-append">
@@ -99,34 +99,35 @@
                 <span v-show="errors.has('TransactionID')" class="text-danger">Please enter Transaction Id.</span>
               </div>
 
-              <div class="form-group" v-show="unmatchedAmt != ''">
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Reason</span>
-                  </div>
-                  <select class="form-control" id="Reason" v-model="Reason" name="Reason" v-validate="`${DepositType != '' ? 'required' : ''}`"
-                  v-bind:class="{'form-control': true, 'error': errors.has('Reason') }">
-                    <option value="" disabled>--Select--</option>
-                    <option value="1">Reason 1</option>
-                  </select>
-                  <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-angle-down"></i></span>
-                  </div>
-                </div>
-                <span v-show="errors.has('Reason')" class="text-danger">Please select Reason.</span>
-              </div>
-
               <div class="form-group" v-show="DepositType != ''">
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text">Upload Deposit Slip</span>
                   </div>
-                  <input class="form-control" type="file" placeholder="Upload Deposit Slip"  v-validate="`${unmatchedAmt != 0 ? 'required' : ''}`" name="DepositSlip" id="DepositSlip"
-                  v-bind:class="{'form-control': true }">
+                  <input class="form-control" type="file" placeholder="Upload Deposit Slip"  v-validate="`${DepositType != '' ? 'required' : ''}`" name="DepositSlip" id="DepositSlip"
+                  v-bind:class="{'form-control': true, 'error': errors.has('DepositSlip')}">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-file"></i></span>
                   </div>
                 </div>
+                <span v-show="errors.has('DepositSlip')" class="text-danger">Please Upload Deposit Slip.</span>
+              </div>
+
+              <div class="form-group" v-show="unmatchedAmt != ''">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Reason</span>
+                  </div>
+                  <select class="form-control" id="Reason" v-model="Reason" name="Reason" v-validate="`${unmatchedAmt != 0 ? 'required' : ''}`"
+                  v-bind:class="{'form-control': true, 'error': errors.has('Reason') }">
+                    <option value="">--Select--</option>
+                    <option v-for="Reason_obj in ReasonList" v-bind:value="Reason_obj.ReasonsID" >{{Reason_obj.Reason}}</option>
+                  </select>
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-angle-down"></i></span>
+                  </div>
+                </div>
+                <span v-show="errors.has('Reason')" class="text-danger">Rs.{{unmatchedAmt}} is remaining amount so, please select Reason.</span>
               </div>
 
               <div class="card-footer">
@@ -140,11 +141,10 @@
 
       <div class="col-lg-4">
         <div class="card">
-          <div class="card-header">
-            <i class="fa fa-align-justify"></i> Denomination</div>
+          <div class="card-header"><i class="fa fa-align-justify"></i> Denomination</div>
 
           <div class="card-body" style="height: 500px;">
-            <table class="table table-responsive-sm" height="10">
+            <table class="table table-responsive-sm" height="10" id="denomlist">
               <thead>
                 <tr>
                   <th>Notes</th>

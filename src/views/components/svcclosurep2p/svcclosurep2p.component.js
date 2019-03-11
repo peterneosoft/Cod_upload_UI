@@ -36,6 +36,7 @@ export default {
       DenominationArr: [],
       listSVCledgerData: [],
       ShipmentUpdateList: [],
+      ReasonList: [],
       isLoading: false,
       resultCount: '',
       pendingCODAmt: '0.00',
@@ -64,8 +65,7 @@ export default {
     this.localhubid       = hubdetail[0].HubID;
 
     var date = new Date();
-    DeliveryDate.max      = date.toISOString().split("T")[0];
-    DepositDate.max       = date.toISOString().split("T")[0];
+    DepositDate.max = DeliveryDate.max = date.toISOString().split("T")[0];
 
     date.setDate(date.getDate() - 1);
     this.DeliveryDate = date.toISOString().split("T")[0];
@@ -73,7 +73,7 @@ export default {
     this.GetShipmentUpdate();
     this.GetBankData();
     this.GetSVCledgerData();
-    this.GetPendingCODAmt();
+    this.GetReasonList();
   },
 
   methods: {
@@ -81,7 +81,7 @@ export default {
 
       this.input = ({
           hubid: this.localhubid,
-          status: 'Shipped' //Delivered
+          status: 'Delivered'
       })
 
       axios({
@@ -92,19 +92,18 @@ export default {
           'Authorization': 'Bearer '
         }
       }).then(result => {
-          //this.ShipmentUpdateList = result.data.shipmentupdate.Result;
 
           var data = []; let yDayCODAmt = 0;
           result.data.shipmentupdate.Result.forEach(function (ShipmentUpdateData) {
-            if(ShipmentUpdateData.PaymentType==='cash' && ShipmentUpdateData.OrderType==='COD'){
+            if((ShipmentUpdateData.PaymentMode.PaymentType==='cash' || ShipmentUpdateData.PaymentMode.PaymentType==='CASH' || ShipmentUpdateData.PaymentMode.PaymentType==='Cash')
+             || (ShipmentUpdateData.OrderType==='COD' || ShipmentUpdateData.OrderType==='Cod' || ShipmentUpdateData.OrderType==='cod')){ //&&
               yDayCODAmt += parseInt(ShipmentUpdateData.CollectibleAmount);
             }
           });
-          data.push({
-            yesterdayCODAmt:yDayCODAmt
-          });
-          this.ShipmentUpdateList = data;
-          //console.log('ShipmentUpdateList===', this.ShipmentUpdateList);
+          this.yesterdayCODAmt = parseFloat(Math.round(yDayCODAmt)).toFixed(2);
+          if(this.yesterdayCODAmt > 0){
+            this.GetPendingCODAmt();
+          }
         }, error => {
           console.error(error)
       })
@@ -125,8 +124,8 @@ export default {
           }
       })
       .then(result => {
-          this.TolatCollection = parseFloat(Math.round((parseInt(result.data.rows[0].closingbalance)+parseInt(this.yesterdayCODAmt)) * 100) / 100).toFixed(2);
-          this.pendingCODAmt = result.data.rows[0].closingbalance;
+        this.pendingCODAmt = result.data.rows[0].closingbalance;
+        this.TolatCollection = parseFloat(Math.round((parseInt(this.pendingCODAmt)+parseInt(this.yesterdayCODAmt)) * 100) / 100).toFixed(2);
       }, error => {
           console.error(error)
       })
@@ -192,6 +191,25 @@ export default {
             }
         }, error => {
             console.error(error)
+        })
+    },
+
+    GetReasonList(){
+      this.input = ({
+        ReasonType:"SVC"
+      })
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'external/getCODReasons',
+          data: this.input,
+          headers: {
+            'Authorization': 'Bearer '
+          }
+        })
+        .then(result => {
+          this.ReasonList = result.data.Reasons.data;
+        }, error => {
+          console.error(error)
         })
     },
 
@@ -298,9 +316,11 @@ export default {
       })
       .then((response) => {
           if (response.data.errorCode == 0) {
-              this.$alertify.success(response.data.msg);
+            this.$alertify.success(response.data.msg);
+            event.target.reset();
+            this.resetForm();
           } else if (response.data.errorCode == -1) {
-              this.$alertify.error(response.data.msg)
+            this.$alertify.error(response.data.msg)
           }
       })
       .catch((httpException) => {
@@ -318,14 +338,23 @@ export default {
               error.style.display = "block";
           }else{
             document.getElementById("d_a").style.display = "none";
-            this.saveSvcClosure();
-
-            event.target.reset();
+            this.saveSvcClosure(event);
           }
         }
       }).catch(() => {
         console.log('errors exist', this.errors)
       });
-    }
+    },
+
+    resetForm() {
+      $('#denomlist input[type="text"]').val('');
+      $('#denomlist input[type="number"]').val('');
+      $('#tot_amt').val();
+      this.$validator.reset();
+      this.errors.clear();
+      this.pageno = 0;
+      this.GetShipmentUpdate();
+      this.GetSVCledgerData();
+    },
   }
 }

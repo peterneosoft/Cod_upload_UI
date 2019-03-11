@@ -107,7 +107,7 @@ const router = new Router({
         },
         {
           path: 'srclosuresearch',
-          name: 'SVC Closure Search',
+          name: 'SR Closure Search',
           component: srclosuresearch,
           meta: {
             requiresAuth: true,
