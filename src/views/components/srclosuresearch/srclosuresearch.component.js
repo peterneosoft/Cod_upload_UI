@@ -13,8 +13,8 @@ export default {
   data() {
     return {
       SR_Name:'',
-      ToDate:'',
-      FromDate:'',
+      toDate:'',
+      fromDate:'',
       SRList:[],
       SRLedgerList:[],
       localhubid:0,
@@ -86,9 +86,6 @@ export default {
           if(result.data.code == 200){
           this.SRLedgerList = result.data.data
           }
-          console.log(this.SRLedgerList.length);
-          console.log("getMonthlySRLedgerDetails", result);
-
         }, error => {
           console.error(error)
         })
@@ -99,7 +96,7 @@ export default {
          if(result){
            this.getMonthlySRLedgerDetails();
          }
-        event.target.reset();
+        // event.target.reset();
       }).catch(() => {
         console.log('errors exist', this.errors)
       });

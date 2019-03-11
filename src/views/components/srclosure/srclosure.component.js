@@ -77,7 +77,8 @@ export default {
        this.$refs.myModalRef.hide()
      },
      P2PEntry(){
-       window.open("", "_blank");
+       window.open ("http://p2pstage.xbees.in/fastbees?xbhubid="+this.localhubid+"&codclosedby="+this.localusername,"mywindow","menubar=1,resizable=1,width=600,height=260,top=200,left=400,");
+
      },
      saveSRClosure(){
        let statusAmount
@@ -154,7 +155,7 @@ export default {
      //to get pagination
      // getPaginationData(pageNum) {
      //     this.pageno = (pageNum - 1) * 10
-     
+
      // },
 
 
