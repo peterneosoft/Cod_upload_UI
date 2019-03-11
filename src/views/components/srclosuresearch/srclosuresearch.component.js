@@ -13,7 +13,12 @@ export default {
   data() {
     return {
       SR_Name:'',
+      ToDate:'',
+      FromDate:'',
       SRList:[],
+      SRLedgerList:[],
+      localhubid:0,
+      SRLedgerDetails:false
     }
   },
 
@@ -22,6 +27,12 @@ export default {
   },
 
   mounted() {
+    var hubdetailEncrypt  = window.localStorage.getItem('accesshubdata')
+    var bytes             = CryptoJS.AES.decrypt(hubdetailEncrypt.toString(), 'Key');
+    var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
+    var hubdetail         = JSON.parse(plaintext);
+    this.localhubid       = hubdetail[0].HubID;
+
     this.GetDeliveryAgentData();
   },
 
@@ -55,26 +66,39 @@ export default {
           console.error(error)
         })
     },
+    getMonthlySRLedgerDetails(){
+      this.SRLedgerDetails = true
+      this.input = ({
+        srid: this.SR_Name,
+        hubid:this.localhubid,
+        fromdate:this.FromDate,
+        todate:this.ToDate
+      })
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'getMonthlySRLedgerDetails',
+          data: this.input,
+          headers: {
+            'Authorization': 'Bearer '
+          }
+        })
+        .then(result => {
+          if(result.data.code == 200){
+          this.SRLedgerList = result.data.data
+          }
+          console.log(this.SRLedgerList.length);
+          console.log("getMonthlySRLedgerDetails", result);
 
-    //function is used for calculate notes amount
-    notesCount(event){
-
-      if(event.srcElement.value){
-        document.getElementById("mo"+event.srcElement.id).value = event.srcElement.id * event.srcElement.value;
-
-        var arr = document.getElementsByName('note_amt');
-        var tot=0;
-        for(var i=0;i<arr.length;i++){
-            if(parseInt(arr[i].value))
-                tot += parseInt(arr[i].value);
-        }
-        document.getElementById('tot_amt').value = tot;
-      }
+        }, error => {
+          console.error(error)
+        })
     },
 
     onSubmit: function(event) {
-      this.$validator.validateAll().then(() => {
-        console.log('form is valid', this.model)
+      this.$validator.validateAll().then((result) => {
+         if(result){
+           this.getMonthlySRLedgerDetails();
+         }
         event.target.reset();
       }).catch(() => {
         console.log('errors exist', this.errors)

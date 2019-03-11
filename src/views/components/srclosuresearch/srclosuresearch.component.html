@@ -5,7 +5,7 @@
         COD SR Day Closure Search
       </div>
       <div class="card-body1">
-        <form action="" method="post" class="form-horizontal">
+        <form  v-on:submit.prevent="onSubmit">
           <div class="col-md-6">
             <div class="form-group">
               <div class="input-group">
@@ -13,36 +13,68 @@
                   <span class="input-group-text">SR Name</span>
                 </div>
                 <select class="form-control" id="SR_Name" v-model="SR_Name"name="SR_Name" v-validate="{required: true}"
-                v-bind:class="{'form-control': true, 'error': errors.has('SR_Name') }">
-                  <option value="" disabled>--Select--</option>
+                   v-bind:class="{'form-control': true, 'error': errors.has('SR_Name') }">
+                  <option value="">--Select--</option>
                   <option v-for="SR_obj in SRList" v-bind:value="SR_obj.SRID" >{{SR_obj.SRName}}</option>
                 </select>
               </div>
             </div>
+              <span v-show="errors.has('SR_Name')" class="text-danger">{{ "Please select SR Name" }}</span>
           </div>
           <div class="form-group row">
            <div class="input-group">
             <div class="col-md-4">
               <label>From Date</label>
               <b-input-group left="<i class='fa fa-user'></i>">
-                <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="usertypename"></b-form-input>
+                <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="FromDate"></b-form-input>
               </b-input-group>
             </div>
 
             <div class="col-md-4">
               <label>To Date</label>
               <b-input-group left="<i class='fa fa-user'></i>">
-                <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="usertypename"></b-form-input>
+                <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="ToDate"></b-form-input>
               </b-input-group>
             </div>
            </div>
           </div>
           <div >
             <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
-            <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> Clear</button>
           </div>
         </form>
       </div>
+
     </b-card>
+    <div class="col-12" v-show="SRLedgerDetails">
+      <div class="card-headerfrm" style="margin-bottom: 15px;">
+        <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Mapping Result</h4>
+
+        <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+          <thead>
+            <tr class="text-primary">
+              <th class="text-center tableheader"><b>Credit Amount</b></th>
+              <th class="text-center tableheader"><b>Debit Amount</b></th>
+              <th class="text-center tableheader"><b>Created Date</b></th>
+              <th class="text-center tableheader"><b>Delivery Date</b></th>
+              <th class="text-center tableheader"><b>Reason</b></th>
+              <th class="text-center tableheader"><b>Created By</b></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="SL_List in SRLedgerList ">
+              <td>{{SL_List.creditamount}}</td>
+              <td>{{SL_List.debitamount}}</td>
+              <td>{{SL_List.createddate}}</td>
+              <td>{{SL_List.deliverydate}}</td>
+              <td>{{SL_List.Reason}}</td>
+              <td>{{SL_List.createdby}}</td>
+            </tr>
+          </tbody>
+
+        </table><br>
+        <!-- <paginate :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+        </paginate> -->
+      </div>
+     </div>
   </div><!--/.col-->
 </div><!--/.row-->

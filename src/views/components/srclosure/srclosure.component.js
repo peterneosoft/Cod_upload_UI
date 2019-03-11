@@ -28,6 +28,7 @@ export default {
       Reason:null,
       RemainData:"",
       resultCount:"",
+      pageno: 0,
       pagecount: 0,
       SRList:[],
       DenominationList:[],
@@ -79,7 +80,7 @@ export default {
        window.open("", "_blank");
      },
      saveSRClosure(){
-       let statusAmount =""
+       let statusAmount
        let TotalAmt = (document.getElementById("Tot_Amt")).textContent;
        let IntTotalAmt = parseInt(TotalAmt)
        let IntDeposit_Amount = parseInt(this.Deposit_Amount)
@@ -151,10 +152,12 @@ export default {
       this.tot_amt = ""
      },
      //to get pagination
-     getPaginationData(pageNum) {
-         this.pageno = (pageNum - 1) * 10
-         this.GetSRLedgerDetails()
-     },
+     // getPaginationData(pageNum) {
+     //     this.pageno = (pageNum - 1) * 10
+     
+     // },
+
+
      getRightSRLedgerDetails(){
        this.input = ({
           srid: this.SR_Name
@@ -176,6 +179,7 @@ export default {
          })
      },
      srChange(event){
+       this.SR_Name = event.target.value
        this.getRightSRLedgerDetails()
        this.GetSRLedgerDetails()
        this.RightSRLedger = true;
@@ -238,7 +242,9 @@ export default {
           }
         })
         .then(result => {
+          if(result.data.code == 200){
           this.SRLedgerList = result.data.data
+          }
         }, error => {
           console.error(error)
         })

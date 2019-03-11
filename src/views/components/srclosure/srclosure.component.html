@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-sm-4">
         <div class="card">
-          <div class="card-header"><i class="fa fa-align-justify"></i> COD SR Day Closure</div>
+          <div class="card-header"> COD SR Day Closure</div>
           <div class="card-body">
 
             <form  v-on:submit.prevent="onSubmit">
@@ -14,7 +14,7 @@
                   </div>
                   <select class="form-control" id="SR_Name" v-model="SR_Name" name="SR_Name" v-on:input="srChange"
                      v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('SR_Name') }">
-                    <option value="" disabled>--Select--</option>
+                    <option value="">--Select--</option>
                     <option v-for="SR_obj in SRList"  v-bind:value="SR_obj.SRID" >{{SR_obj.SRName}}</option>
                   </select>
                 </div>
@@ -70,8 +70,7 @@
 
       <div class="col-lg-4">
         <div class="card">
-          <div class="card-header">
-          <i class="fa fa-align-justify"></i> Currency</div>
+          <div class="card-header"> Currency</div>
           <div class="card-body" style="height: 500px;">
             <table class="table table-responsive-sm" height="10">
               <thead>
@@ -129,8 +128,7 @@
             </table>
           </b-card>
           <div class="card">
-            <div class="card-header">
-              <i class="fa fa-align-justify"></i> Amount</div>
+            <div class="card-header"> Amount</div>
             <div class="card-body">
               <table class="table table-responsive-sm">
                 <tbody>
@@ -165,7 +163,7 @@
 
     <div class="col-12" v-show="SRLedgerDetails">
       <div class="card-headerfrm" style="margin-bottom: 15px;">
-        <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Mapping Result</h4>
+        <h4 class="header">Result</h4>
 
         <table class="table-bordered table-hover tbl datatables" style="width:100%;">
           <thead>
@@ -190,8 +188,8 @@
           </tbody>
 
         </table><br>
-        <paginate :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
-        </paginate>
+        <!-- <paginate :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+        </paginate> -->
       </div>
      </div>
     </div>
