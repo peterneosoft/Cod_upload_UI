@@ -4,10 +4,15 @@ import {
   Validator
 } from 'vee-validate'
 import CryptoJS from 'crypto-js'
+import Paginate from 'vuejs-paginate'
+import VueElementLoading from 'vue-element-loading';
 
 export default {
   name: 'srclosuresearch',
-  components: {},
+  components: {
+    Paginate,
+    VueElementLoading
+  },
   props: [],
 
   data() {
@@ -15,10 +20,13 @@ export default {
       SR_Name:'',
       toDate:'',
       fromDate:'',
+      resultCount:'',
       SRList:[],
       SRLedgerList:[],
       localhubid:0,
-      SRLedgerDetails:false
+      SRLedgerDetails:false,
+      pageno: 0,
+      pagecount: 0
     }
   },
 
@@ -66,13 +74,19 @@ export default {
           console.error(error)
         })
     },
+    getPaginationData(pageNum) {
+        this.pageno = (pageNum - 1) * 10
+        this.getMonthlySRLedgerDetails()
+    },
     getMonthlySRLedgerDetails(){
       this.SRLedgerDetails = true
       this.input = ({
         srid: this.SR_Name,
         hubid:this.localhubid,
         fromdate:this.fromDate,
-        todate:this.toDate
+        todate:this.toDate,
+        offset:this.pageno,
+        limit:10
       })
       axios({
           method: 'POST',
@@ -83,8 +97,20 @@ export default {
           }
         })
         .then(result => {
+          console.log("result",result);
           if(result.data.code == 200){
-          this.SRLedgerList = result.data.data
+            this.SRLedgerList = result.data.data.rows;
+            this.isLoading    = false;
+            let totalRows     = result.data.data.count
+            console.log("totalRows",totalRows);
+            this.resultCount  = result.data.data.count
+            if (totalRows < 10) {
+                this.pagecount = 1
+            } else {
+                this.pagecount = Math.ceil(totalRows / 10)
+                console.log("this.pagecount",this.pagecount);
+            }
+
           }
         }, error => {
           console.error(error)

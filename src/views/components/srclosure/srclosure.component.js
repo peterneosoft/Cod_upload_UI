@@ -40,7 +40,8 @@ export default {
       SRLedgerDetails:false,
       localhubid: 0,
       localusername: 0,
-      userdetailEncrypt:0
+      userToken:0,
+      myStr:""
     }
   },
 
@@ -66,7 +67,8 @@ export default {
     var userdetail        = JSON.parse(plaintext);
     this.localusername      = userdetail.username;
 
-   this.userdetailEncrypt = window.localStorage.getItem('accessuserToken')
+   this.userToken = window.localStorage.getItem('accessuserToken')
+   this.myStr = this.userToken.replace(/"/g, '');
   },
 
   methods: {
@@ -78,7 +80,7 @@ export default {
        this.$refs.myModalRef.hide()
      },
      P2PEntry(){
-       window.open ("http://p2pstage.xbees.in/fastbees?xbhubid="+this.localhubid+"&codclosedby="+this.localusername+"&token="+this.userdetailEncrypt,"mywindow","menubar=1,resizable=1,width=600,height=260,top=200,left=400,");
+       window.open ("http://p2pstage.xbees.in/fastbees?xbhubid="+this.localhubid+"&codclosedby="+this.localusername+"&token="+this.userToken,"myWindow","menubar=1,resizable=1,width=600,height=260,top=200,left=400,");
 
      },
      saveSRClosure(){
@@ -123,19 +125,21 @@ export default {
                'url': apiUrl.api_url + 'insertSRLedgerDetails',
                'data': this.input,
                headers: {
-                 'Authorization': 'Bearer '
+                   'Authorization': 'Bearer '+this.myStr
                     }
               })
               .then((response) => {
                   if (response.data.code) {
                       this.$alertify.success(response.data.data);
                        this.GetSRLedgerDetails();
+
                     }
               })
               .catch((httpException) => {
                   console.error('exception is:::::::::', httpException)
               });
        }
+
      },
 
      resetData(){
@@ -159,7 +163,6 @@ export default {
 
      // },
 
-
      getRightSRLedgerDetails(){
        this.input = ({
           srid: this.SR_Name
@@ -169,7 +172,7 @@ export default {
            url: apiUrl.api_url + 'getRightSRLedgerDetails',
            data: this.input,
            headers: {
-             'Authorization': 'Bearer '
+              'Authorization': 'Bearer '+this.myStr
            }
          })
          .then(result => {
@@ -197,7 +200,7 @@ export default {
            url: apiUrl.api_url + 'insertSRShipment',
            data: this.input,
            headers: {
-             'Authorization': 'Bearer '
+              'Authorization': 'Bearer '+this.myStr
            }
          })
          .then(result => {
@@ -221,7 +224,7 @@ export default {
           url: apiUrl.api_url + 'external/getCODReasons',
           data: this.input,
           headers: {
-            'Authorization': 'Bearer '
+             'Authorization': 'Bearer '+this.myStr
           }
         })
         .then(result => {
@@ -240,7 +243,7 @@ export default {
           url: apiUrl.api_url + 'getSRLedgerDetails',
           data: this.input,
           headers: {
-            'Authorization': 'Bearer '
+             'Authorization': 'Bearer '+this.myStr
           }
         })
         .then(result => {
@@ -257,7 +260,7 @@ export default {
           method: 'GET',
           url: apiUrl.api_url + 'getAllDenomination',
           headers: {
-            'Authorization': 'Bearer '
+             'Authorization': 'Bearer '+this.myStr
           }
         })
         .then(result => {
@@ -287,7 +290,7 @@ export default {
           url: apiUrl.api_url + 'external/getdeliveryagents',
           data: this.input,
           headers: {
-            'Authorization': 'Bearer '
+             'Authorization': 'Bearer '+this.myStr
           }
         })
         .then(result => {
@@ -310,6 +313,7 @@ export default {
              error.style.display = "None";
 
              this.saveSRClosure()
+
           }
         }
       }).catch(() => {

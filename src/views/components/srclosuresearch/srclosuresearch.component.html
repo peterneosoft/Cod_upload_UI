@@ -51,7 +51,7 @@
     <div class="col-12" v-show="SRLedgerDetails">
       <div class="card-headerfrm" style="margin-bottom: 15px;">
         <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Mapping Result</h4>
-
+          <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
         <table class="table-bordered table-hover tbl datatables" style="width:100%;">
           <thead>
             <tr class="text-primary">
@@ -64,6 +64,9 @@
             </tr>
           </thead>
           <tbody>
+            <tr v-if="resultCount==0">
+              <td colspan="7" align="center">No record found</td>
+            </tr>
             <tr v-for="SL_List in SRLedgerList ">
               <td>{{SL_List.creditamount}}</td>
               <td>{{SL_List.debitamount}}</td>
@@ -75,8 +78,8 @@
           </tbody>
 
         </table><br>
-        <!-- <paginate :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
-        </paginate> -->
+        <paginate :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+        </paginate>
       </div>
      </div>
   </div><!--/.col-->
