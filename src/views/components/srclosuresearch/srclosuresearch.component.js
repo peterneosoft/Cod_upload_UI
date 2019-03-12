@@ -71,8 +71,8 @@ export default {
       this.input = ({
         srid: this.SR_Name,
         hubid:this.localhubid,
-        fromdate:this.FromDate,
-        todate:this.ToDate
+        fromdate:this.fromDate,
+        todate:this.toDate
       })
       axios({
           method: 'POST',

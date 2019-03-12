@@ -39,7 +39,8 @@ export default {
       RightSRLedger:false,
       SRLedgerDetails:false,
       localhubid: 0,
-      localusername: 0
+      localusername: 0,
+      userdetailEncrypt:0
     }
   },
 
@@ -65,7 +66,7 @@ export default {
     var userdetail        = JSON.parse(plaintext);
     this.localusername      = userdetail.username;
 
-
+   this.userdetailEncrypt = window.localStorage.getItem('accessuserToken')
   },
 
   methods: {
@@ -77,7 +78,7 @@ export default {
        this.$refs.myModalRef.hide()
      },
      P2PEntry(){
-       window.open ("http://p2pstage.xbees.in/fastbees?xbhubid="+this.localhubid+"&codclosedby="+this.localusername,"mywindow","menubar=1,resizable=1,width=600,height=260,top=200,left=400,");
+       window.open ("http://p2pstage.xbees.in/fastbees?xbhubid="+this.localhubid+"&codclosedby="+this.localusername+"&token="+this.userdetailEncrypt,"mywindow","menubar=1,resizable=1,width=600,height=260,top=200,left=400,");
 
      },
      saveSRClosure(){
