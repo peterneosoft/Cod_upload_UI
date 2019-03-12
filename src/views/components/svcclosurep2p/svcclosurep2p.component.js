@@ -41,7 +41,8 @@ export default {
       resultCount: '',
       pendingCODAmt: '0.00',
       yesterdayCODAmt: '0.00',
-      TolatCollection:'0.00'
+      TolatCollection:'0.00',
+      myStr: ''
     }
   },
 
@@ -64,6 +65,9 @@ export default {
     var hubdetail         = JSON.parse(plaintext);
     this.localhubid       = hubdetail[0].HubID;
 
+    var userToken = window.localStorage.getItem('userToken')
+    this.myStr = userToken.replace(/"/g, '');
+
     var date = new Date();
     DepositDate.max = DeliveryDate.max = date.toISOString().split("T")[0];
 
@@ -72,8 +76,8 @@ export default {
 
     this.GetShipmentUpdate();
     this.GetBankData();
-    this.GetSVCledgerData();
     this.GetReasonList();
+    this.GetSVCledgerData();
   },
 
   methods: {
@@ -89,7 +93,7 @@ export default {
         url: apiUrl.api_url + 'external/getShipmentUpdate',
         data: this.input,
         headers: {
-          'Authorization': 'Bearer '
+          'Authorization': 'Bearer '+this.myStr
         }
       }).then(result => {
 
@@ -120,7 +124,7 @@ export default {
           'url': apiUrl.api_url + 'svcpendcodamt',
           'data': this.input,
           headers: {
-              'Authorization': 'Bearer '
+              'Authorization': 'Bearer '+this.myStr
           }
       })
       .then(result => {
@@ -135,15 +139,16 @@ export default {
       this.input = {}
 
       axios({
-      method: 'POST',
-      url: apiUrl.api_url + 'external/getBankList',
-      data: this.input,
-      headers: {
-        'Authorization': 'Bearer '  }
-        }).then(result => {
-          this.BankList = result.data.result.data;
-        }, error => {
-          console.error(error)
+        method: 'POST',
+        url: apiUrl.api_url + 'external/getBankList',
+        data: this.input,
+        headers: {
+          'Authorization': 'Bearer '+this.myStr
+        }
+      }).then(result => {
+        this.BankList = result.data.result.data;
+      }, error => {
+        console.error(error)
       })
     },
 
@@ -152,7 +157,7 @@ export default {
           method: 'GET',
           url: apiUrl.api_url + 'getAllDenomination',
           headers: {
-            'Authorization': 'Bearer '
+            'Authorization': 'Bearer '+this.myStr
           }
         })
         .then(result => {
@@ -170,18 +175,17 @@ export default {
             limit: 10
         })
         this.isLoading = true;
-
         axios({
             method: 'POST',
             'url': apiUrl.api_url + 'svcledgermaster',
             'data': this.input,
             headers: {
-                'Authorization': 'Bearer '
+                'Authorization': 'Bearer '+this.myStr
             }
         })
         .then(result => {
             this.listSVCledgerData = result.data.rows;
-            this.isLoading    = false;
+            this.isLoading = false;
             let totalRows     = result.data.count
             this.resultCount  = result.data.count
             if (totalRows < 10) {
@@ -203,7 +207,7 @@ export default {
           url: apiUrl.api_url + 'external/getCODReasons',
           data: this.input,
           headers: {
-            'Authorization': 'Bearer '
+            'Authorization': 'Bearer '+this.myStr
           }
         })
         .then(result => {
@@ -264,9 +268,11 @@ export default {
 
         this.unmatchedAmt = TolatCollection-DepositAmount;
 
-        if((DepositAmount < TolatCollection) && this.Reason==''){
-          this.$alertify.error("Remaining Amount is Rs."+this.unmatchedAmt);
-          return false;
+        if(DepositAmount < TolatCollection){
+          if(this.Reason==''){
+            this.$alertify.error("Remaining Amount is Rs."+this.unmatchedAmt);
+            return false;
+          }
         }
       }
 
@@ -286,20 +292,21 @@ export default {
           DeliveryDate: this.DeliveryDate,
           Deposit_Amount: DepositAmount,
           DepositType: this.DepositType,
-          BankDeposit: this.BankMasterId,
+          BankID: this.BankMasterId,
+          BankDeposit: DepositAmount,
           TransactionID: this.TransactionID,
-          ReasonID: this.Reason,
+          ReasonID: (this.Reason)?this.Reason:null,
           CreatedBy: this.localuserid,
           HubId: this.localhubid,
           DifferenceAmount: this.unmatchedAmt,
           TolatCollection: TolatCollection,
-          StatusID: (this.StatusID != '') ? this.StatusID : 0,
+          StatusID: (this.StatusID != '') ? this.StatusID : 1,
           OpeningBalance: OpeningBalance,
           ClosingBalance: ClosingBalance + CODAmount,
           FinanceConfirmAmount: (this.FinanceConfirmAmount != '') ? this.FinanceConfirmAmount : 0,
           CODAmount: CODAmount,
           IsActive: true,
-          BatchID: (this.BatchID != '') ? this.BatchID : 0,
+          BatchID: (this.BatchID != '') ? this.BatchID : Math.floor(Math.random() * (Math.pow(10,5))),
           p2pamt: p2pamt,
           totalAmtdeposit: DepositAmount + p2pamt,
           Denomination: this.DenominationArr,
@@ -311,17 +318,16 @@ export default {
           'url': apiUrl.api_url + 'submitSVCClosure',
           'data': this.input,
           headers: {
-              'Authorization': 'Bearer '
+              'Authorization': 'Bearer '+this.myStr
           }
       })
       .then((response) => {
-          if (response.data.errorCode == 0) {
-            this.$alertify.success(response.data.msg);
-            event.target.reset();
-            this.resetForm();
-          } else if (response.data.errorCode == -1) {
-            this.$alertify.error(response.data.msg)
-          }
+        if (response.data.errorCode == 0) {
+          this.$alertify.success(response.data.msg);
+          this.resetForm(event);
+        } else if (response.data.errorCode == -1) {
+          this.$alertify.error(response.data.msg)
+        }
       })
       .catch((httpException) => {
           console.error('exception is:::::::::', httpException)
@@ -346,13 +352,14 @@ export default {
       });
     },
 
-    resetForm() {
-      $('#denomlist input[type="text"]').val('');
+    resetForm(event) {
+      this.pageno = this.tot_amt = 0;
+      this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.Reason = '';
+      $('#denomlist input[type="text"]').val(0);
       $('#denomlist input[type="number"]').val('');
-      $('#tot_amt').val();
       this.$validator.reset();
       this.errors.clear();
-      this.pageno = 0;
+      event.target.reset();
       this.GetShipmentUpdate();
       this.GetSVCledgerData();
     },

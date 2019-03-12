@@ -113,12 +113,12 @@
                 <span v-show="errors.has('DepositSlip')" class="text-danger">Please Upload Deposit Slip.</span>
               </div>
 
-              <div class="form-group" v-show="unmatchedAmt != ''">
+              <div class="form-group" v-show="unmatchedAmt > 0">
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text">Reason</span>
                   </div>
-                  <select class="form-control" id="Reason" v-model="Reason" name="Reason" v-validate="`${unmatchedAmt != 0 ? 'required' : ''}`"
+                  <select class="form-control" id="Reason" v-model="Reason" name="Reason" v-validate="`${unmatchedAmt > 0 ? 'required' : ''}`"
                   v-bind:class="{'form-control': true, 'error': errors.has('Reason') }">
                     <option value="">--Select--</option>
                     <option v-for="Reason_obj in ReasonList" v-bind:value="Reason_obj.ReasonsID" >{{Reason_obj.Reason}}</option>
@@ -213,9 +213,9 @@
                 <th class="text-center tableheader"><b>#</b></th>
                 <th class="text-center tableheader"><b>Delivery Date</b></th>
                 <th class="text-center tableheader"><b>Deposite Date</b></th>
-                <th class="text-center tableheader"><b>Opening Amt</b></th>
+                <th class="text-center tableheader"><b>Opening Amount</b></th>
                 <th class="text-center tableheader"><b>COD Receivable</b></th>
-                <th class="text-center tableheader"><b>Bank Deposited Amt</b></th>
+                <th class="text-center tableheader"><b>Bank Deposited Amount</b></th>
                 <th class="text-center tableheader"><b>Balance Outstanding</b></th>
                 <th class="text-center tableheader"><b>Status</b></th>
                 <th class="text-center tableheader"><b>Reason</b></th>
