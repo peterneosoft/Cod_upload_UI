@@ -40,7 +40,7 @@ export default {
       SRLedgerDetails:false,
       localhubid: 0,
       localusername: 0,
-      userToken:0,
+      StaticUserToken: "sKB3uGF0qvklWhTLOgsIXDRJc",
       myStr:""
     }
   },
@@ -67,8 +67,9 @@ export default {
     var userdetail        = JSON.parse(plaintext);
     this.localusername      = userdetail.username;
 
-   this.userToken = window.localStorage.getItem('accessuserToken')
-   this.myStr = this.userToken.replace(/"/g, '');
+    var userToken = window.localStorage.getItem('accessuserToken')
+   this.myStr = userToken.replace(/"/g, '');
+   console.log("StaticuserToken",this.StaticUserToken);
   },
 
   methods: {
@@ -80,7 +81,7 @@ export default {
        this.$refs.myModalRef.hide()
      },
      P2PEntry(){
-       window.open ("http://p2pstage.xbees.in/fastbees?xbhubid="+this.localhubid+"&codclosedby="+this.localusername+"&token="+this.userToken,"myWindow","menubar=1,resizable=1,width=600,height=260,top=200,left=400,");
+       window.open ("http://p2pstage.xbees.in/fastbees/#/codSRDayClosure?xbhubid="+this.localhubid+"&codclosedby="+this.localusername+"&token="+this.StaticUserToken,"myWindow","menubar=1,resizable=1,width=600,height=260,top=200,left=400,");
 
      },
      saveSRClosure(){
@@ -185,8 +186,6 @@ export default {
      },
      srChange(event){
        this.SR_Name = event.target.value
-       this.getRightSRLedgerDetails()
-       this.GetSRLedgerDetails()
        this.RightSRLedger = true;
        this.SRLedgerDetails = true;
        this.input = ({
@@ -211,6 +210,8 @@ export default {
             this.ndr = result.data.data.ndr
             this.prepaid = result.data.data.prepaid
             this.wallet = result.data.data.wallet
+            this.getRightSRLedgerDetails()
+            this.GetSRLedgerDetails()
          }, error => {
            console.error(error)
          })
