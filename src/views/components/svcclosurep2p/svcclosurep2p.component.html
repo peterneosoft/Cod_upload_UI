@@ -193,7 +193,7 @@
                 </tr>
                 <tr>
                   <td>Total P2P Amt</td>
-                  <td id="p2pamt">500.00</td>
+                  <td id="p2pamt">{{p2pAmount}}</td>
                 </tr>
               </tbody>
             </table>
@@ -234,15 +234,15 @@
                 <td>{{data.openingbalance}}</td>
                 <td>{{data.codamount}}</td>
                 <td>{{data.bankdeposit}}</td>
-                <td>{{data.closingbalance}}</td>
-                <td>{{data.statusid}}</td>
-                <td>{{data.reasonid}}</td>
+                <td>{{data.differenceamount}}</td>
+                <td v-if="data.statusid==1">Open</td>
+                <td>{{data.Reason}}</td>
                 <td>{{data.rmreasonid}}</td>
                 <td><a href="">View Images</a></td>
               </tr>
             </tbody>
           </table><br>
-          <paginate :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+          <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
           </paginate>
         </div>
       </div>

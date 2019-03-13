@@ -38,10 +38,11 @@ export default {
       ShipmentUpdateList: [],
       ReasonList: [],
       isLoading: false,
-      resultCount: '',
+      resultCount: 0,
       pendingCODAmt: '0.00',
       yesterdayCODAmt: '0.00',
-      TolatCollection:'0.00',
+      TolatCollection: '0.00',
+      p2pAmount: '500.00',
       myStr: ''
     }
   },
@@ -65,7 +66,7 @@ export default {
     var hubdetail         = JSON.parse(plaintext);
     this.localhubid       = hubdetail[0].HubID;
 
-    var userToken = window.localStorage.getItem('userToken')
+    var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');
 
     var date = new Date();
@@ -83,32 +84,51 @@ export default {
   methods: {
     GetShipmentUpdate() {
 
-      this.input = ({
-          hubid: this.localhubid,
-          status: 'Delivered'
-      })
-
       axios({
-        method: 'POST',
-        url: apiUrl.api_url + 'external/getShipmentUpdate',
-        data: this.input,
-        headers: {
-          'Authorization': 'Bearer '+this.myStr
-        }
-      }).then(result => {
-
-          var data = []; let yDayCODAmt = 0;
-          result.data.shipmentupdate.Result.forEach(function (ShipmentUpdateData) {
-            if((ShipmentUpdateData.PaymentMode.PaymentType==='cash' || ShipmentUpdateData.PaymentMode.PaymentType==='CASH' || ShipmentUpdateData.PaymentMode.PaymentType==='Cash')
-             || (ShipmentUpdateData.OrderType==='COD' || ShipmentUpdateData.OrderType==='Cod' || ShipmentUpdateData.OrderType==='cod')){ //&&
-              yDayCODAmt += parseInt(ShipmentUpdateData.CollectibleAmount);
-            }
-          });
-          this.yesterdayCODAmt = parseFloat(Math.round(yDayCODAmt)).toFixed(2);
-          if(this.yesterdayCODAmt > 0){
-            this.GetPendingCODAmt();
+          method: 'POST',
+          'url': apiUrl.api_url + 'svcactualcodamt',
+          'data': {
+              hubid: this.localhubid,
+              status: 'Delivered'
+          },
+          headers: {
+              'Authorization': 'Bearer '+this.myStr
           }
-        }, error => {
+      })
+      .then(result => {
+        if(result.data.rows.length > 0){
+          this.yesterdayCODAmt = parseFloat(Math.round(0)).toFixed(2);
+          this.GetPendingCODAmt();
+        }else{
+
+          axios({
+            method: 'POST',
+            url: apiUrl.api_url + 'external/getShipmentUpdate',
+            data: {
+                hubid: this.localhubid,
+                status: 'Delivered'
+            },
+            headers: {
+              'Authorization': 'Bearer '+this.myStr
+            }
+          }).then(result => {
+
+            var data = []; let yDayCODAmt = 0;
+            result.data.shipmentupdate.Result.forEach(function (ShipmentUpdateData) {
+              if((ShipmentUpdateData.PaymentMode.PaymentType==='cash' || ShipmentUpdateData.PaymentMode.PaymentType==='CASH' || ShipmentUpdateData.PaymentMode.PaymentType==='Cash')
+               || (ShipmentUpdateData.OrderType==='COD' || ShipmentUpdateData.OrderType==='Cod' || ShipmentUpdateData.OrderType==='cod')){ //&&
+                yDayCODAmt += parseInt(ShipmentUpdateData.CollectibleAmount);
+              }
+            });
+            this.yesterdayCODAmt = parseFloat(Math.round(yDayCODAmt)).toFixed(2);
+            if(this.yesterdayCODAmt > 0){
+              this.GetPendingCODAmt();
+            }
+          }, error => {
+            console.error(error)
+          })
+        }
+      }, error => {
           console.error(error)
       })
     },
@@ -128,7 +148,14 @@ export default {
           }
       })
       .then(result => {
-        this.pendingCODAmt = result.data.rows[0].closingbalance;
+        if(result.data.rows.length > 0){
+          this.pendingCODAmt = result.data.rows[0].differenceamount;
+          if(result.data.rows[0].totalamtdeposit > result.data.rows[0].p2pamt){
+            this.p2pAmount = '0.00';
+          }
+        }else{
+          this.pendingCODAmt = '0.00';
+        }
         this.TolatCollection = parseFloat(Math.round((parseInt(this.pendingCODAmt)+parseInt(this.yesterdayCODAmt)) * 100) / 100).toFixed(2);
       }, error => {
           console.error(error)
@@ -172,7 +199,8 @@ export default {
 
         this.input = ({
             offset: this.pageno,
-            limit: 10
+            limit: 10,
+            hubid: this.localhubid
         })
         this.isLoading = true;
         axios({
@@ -184,15 +212,20 @@ export default {
             }
         })
         .then(result => {
-            this.listSVCledgerData = result.data.rows;
+          if(result.data.code == 200){
+            this.listSVCledgerData = result.data.data.rows;
             this.isLoading = false;
-            let totalRows     = result.data.count
-            this.resultCount  = result.data.count
+            let totalRows     = result.data.data.count;
+            this.resultCount  = result.data.data.count;
             if (totalRows < 10) {
                 this.pagecount = 1
             } else {
                 this.pagecount = Math.ceil(totalRows / 10)
             }
+          }else{
+            this.resultCount  = 0;
+            this.isLoading = false;
+          }
         }, error => {
             console.error(error)
         })
@@ -253,7 +286,8 @@ export default {
       let d_amt = this.Deposit_Amount.split(".");
       let DepositAmount = parseInt(d_amt[0]);
 
-      let TolatCollection = parseInt(document.getElementById("TolatCollection").innerHTML);
+      let TolatCollection = parseInt(this.TolatCollection);
+      let p2pamt = parseInt(this.p2pAmount);
 
       if(DepositAmount !== parseInt(this.tot_amt)){
         this.$alertify.error("Denomination details & Deposit Amount is mismatch, Please Check.");
@@ -263,6 +297,10 @@ export default {
          error.style.display  = "block";
          return false;
       }else{
+        if(p2pamt > 0){
+          DepositAmount = DepositAmount - p2pamt;
+        }
+
         let error = document.getElementById("d_a");
         error.style.display  = "none";
 
@@ -277,15 +315,16 @@ export default {
       }
 
       let NoteCountArr = []; let DenominationIDArr = [];
-      this.DenominationArr.forEach(function (denomi) {
-        NoteCountArr.push(parseInt(document.getElementById("mo"+denomi).value) / parseInt(denomi));
-        DenominationIDArr.push(parseInt(document.getElementById("moi"+denomi).value));
-      });
+      if(this.DenominationArr.length > 0){
+        this.DenominationArr.forEach(function (denomi) {
+          NoteCountArr.push(parseInt(document.getElementById("mo"+denomi).value) / parseInt(denomi));
+          DenominationIDArr.push(parseInt(document.getElementById("moi"+denomi).value));
+        });
+      }
 
-      let ClosingBalance = parseInt(document.getElementById("ClosingBalance").innerHTML);
-      let CODAmount = parseInt(document.getElementById("CODAmount").innerHTML);
-      let p2pamt = parseInt(document.getElementById("p2pamt").innerHTML);
-      let OpeningBalance = ClosingBalance;
+      let OpeningBalance = parseInt(this.yesterdayCODAmt);
+      let ClosingBalance = parseInt(DepositAmount);
+      let CODAmount = parseInt(ClosingBalance + p2pamt);
 
       this.input = ({
           DepositDate: this.DepositDate,
@@ -302,7 +341,7 @@ export default {
           TolatCollection: TolatCollection,
           StatusID: (this.StatusID != '') ? this.StatusID : 1,
           OpeningBalance: OpeningBalance,
-          ClosingBalance: ClosingBalance + CODAmount,
+          ClosingBalance: ClosingBalance,
           FinanceConfirmAmount: (this.FinanceConfirmAmount != '') ? this.FinanceConfirmAmount : 0,
           CODAmount: CODAmount,
           IsActive: true,

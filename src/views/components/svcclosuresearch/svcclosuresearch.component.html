@@ -70,8 +70,8 @@
                 <td>{{data.codamount}}</td>
                 <td>{{data.bankdeposit}}</td>
                 <td>{{data.closingbalance}}</td>
-                <td>{{data.statusid}}</td>
-                <td>{{data.reasonid}}</td>
+                <td v-if="data.statusid==1">Open</td>
+                <td>{{data.Reason}}</td>
                 <td>{{data.rmreasonid}}</td>
                 <td><a href="">View Images</a></td>
               </tr>

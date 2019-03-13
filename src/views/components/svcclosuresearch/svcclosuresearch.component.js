@@ -1,5 +1,6 @@
 import apiUrl from '../../../constants'
 import axios from 'axios'
+import CryptoJS from 'crypto-js';
 import { Validator } from 'vee-validate'
 import Paginate from 'vuejs-paginate'
 import VueElementLoading from 'vue-element-loading';
@@ -29,6 +30,12 @@ export default {
   mounted() {
     var date = new Date();
     toDate.max = fromDate.max = date.toISOString().split("T")[0];
+
+    var hubdetailEncrypt  = window.localStorage.getItem('accesshubdata')
+    var bytes             = CryptoJS.AES.decrypt(hubdetailEncrypt.toString(), 'Key');
+    var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
+    var hubdetail         = JSON.parse(plaintext);
+    this.localhubid       = hubdetail[0].HubID;
   },
 
   methods: {
@@ -47,6 +54,7 @@ export default {
       this.input = ({
           offset: this.pageno,
           limit: 10,
+          hubid: this.localhubid,
           fromDate: this.fromDate,
           toDate: this.toDate
       })
@@ -61,10 +69,10 @@ export default {
           }
       })
       .then(result => {
-          this.listSVCledgerData = result.data.rows;
+          this.listSVCledgerData = result.data.data.rows;
           this.isLoading    = false;
-          let totalRows     = result.data.count
-          this.resultCount  = result.data.count
+          let totalRows     = result.data.data.count
+          this.resultCount  = result.data.data.count
           if (totalRows < 10) {
               this.pagecount = 1
           } else {
