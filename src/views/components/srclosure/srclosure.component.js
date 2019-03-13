@@ -41,7 +41,9 @@ export default {
       localhubid: 0,
       localusername: 0,
       StaticUserToken: "sKB3uGF0qvklWhTLOgsIXDRJc",
-      myStr:""
+      myStr:"",
+      show:false,
+      urltoken:""
     }
   },
 
@@ -49,6 +51,7 @@ export default {
 
   },
   created() {
+  this.urltoken = window.localStorage.getItem('accesstoken');
   this.GetDeliveryAgentData();
   this.GetDenominationData();
   this.GetReasonList();
@@ -198,7 +201,7 @@ export default {
            url: apiUrl.api_url + 'insertSRShipment',
            data: this.input,
            headers: {
-              'Authorization': 'Bearer '+this.myStr
+             'Authorization': 'Bearer '+this.urltoken
            }
          })
          .then(result => {
@@ -224,7 +227,7 @@ export default {
           url: apiUrl.api_url + 'external/getCODReasons',
           data: this.input,
           headers: {
-             'Authorization': 'Bearer '+this.myStr
+            'Authorization': 'Bearer '+this.urltoken
           }
         })
         .then(result => {
@@ -243,7 +246,7 @@ export default {
           url: apiUrl.api_url + 'getSRLedgerDetails',
           data: this.input,
           headers: {
-             'Authorization': 'Bearer '+this.myStr
+            'Authorization': 'Bearer '+this.urltoken
           }
         })
         .then(result => {
@@ -260,7 +263,7 @@ export default {
           method: 'GET',
           url: apiUrl.api_url + 'getAllDenomination',
           headers: {
-             'Authorization': 'Bearer '+this.myStr
+            'Authorization': 'Bearer '+this.urltoken
           }
         })
         .then(result => {
@@ -290,7 +293,7 @@ export default {
           url: apiUrl.api_url + 'external/getdeliveryagents',
           data: this.input,
           headers: {
-             'Authorization': 'Bearer '+this.myStr
+            'Authorization': 'Bearer '+this.urltoken
           }
         })
         .then(result => {
