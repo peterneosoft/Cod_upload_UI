@@ -35,6 +35,8 @@ export default {
   },
 
   mounted() {
+    var date = new Date();
+    toDate.max = fromDate.max = date.toISOString().split("T")[0];
     var hubdetailEncrypt  = window.localStorage.getItem('accesshubdata')
     var bytes             = CryptoJS.AES.decrypt(hubdetailEncrypt.toString(), 'Key');
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
@@ -97,18 +99,16 @@ export default {
           }
         })
         .then(result => {
-          console.log("result",result);
           if(result.data.code == 200){
             this.SRLedgerList = result.data.data.rows;
             this.isLoading    = false;
             let totalRows     = result.data.data.count
-            console.log("totalRows",totalRows);
+
             this.resultCount  = result.data.data.count
             if (totalRows < 10) {
                 this.pagecount = 1
             } else {
                 this.pagecount = Math.ceil(totalRows / 10)
-                console.log("this.pagecount",this.pagecount);
             }
 
           }

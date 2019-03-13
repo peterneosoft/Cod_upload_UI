@@ -7,64 +7,58 @@
 
         <b-card>
           <div class="card-body1">
-            <form action="" method="post" class="form-horizontal">
-              <div class="form-group row">
+            <form  v-on:submit.prevent="onSubmit">
 
-                <div class="col-md-4">
-                  <b-form-fieldset
-                  label="Zone"
-                  :label-cols="3"
-                  :horizontal="true">
-                  <b-form-select
-                  :plain="true"
-                  :options="['Please select','Option 1', 'Option 2', 'Option 3']"
-                  value="Please select">
-                </b-form-select>
-              </b-form-fieldset>
-                </div>
-                <div class="col-md-4">
-                  <b-form-fieldset
-                  label="Hub/Svc"
-                  :label-cols="3"
-                  :horizontal="true">
-                  <b-form-select
-                  :plain="true"
-                  :options="['Please select','Option 1', 'Option 2', 'Option 3']"
-                  value="Please select">
-                </b-form-select>
-              </b-form-fieldset>
-                </div>
-                <div class="col-md-4">
-                  <b-form-fieldset
-                  label="Status"
-                  :label-cols="3"
-                  :horizontal="true">
-                  <b-form-select
-                  :plain="true"
-                  :options="['Please select','Option 1', 'Option 2', 'Option 3']"
-                  value="Please select">
-                </b-form-select>
-              </b-form-fieldset>
-                </div>
-              </div>
               <div class="form-group row">
-                  <div class="col-md-4">
-                      <b-form-fieldset
-                        label="From Date:"
-                        :label-cols="3"
-                        :horizontal="true">
-                        <b-form-input id="date-input" type="date" placeholder="Select from Date" v-model="usertypename"></b-form-input>
-                     </b-form-fieldset>
-                    </div>
-                <div class="col-md-4">
-                    <b-form-fieldset
-                    label="To Date:"
-                    :label-cols="3"
-                    :horizontal="true">
-                    <b-form-input id="date-input" type="date" placeholder="Select to Date" v-model="usertypename"></b-form-input>
-                 </b-form-fieldset>
-                </div>
+               <div class="col-md-4">
+                <label>Zone</label>
+                <b-input-group left="<i class='fa fa-list'></i>">
+                  <select name="zone" id="zone" class="form-control" v-model="zone" v-on:change="getHubData" >
+                    <option value="" >--Select--</option>
+                    <option v-for="zone_obj in zoneList" v-bind:value="zone_obj.hubzoneid" >{{zone_obj.hubzonename}}</option>
+                  </select>
+                </b-input-group>
               </div>
+
+              <div class="col-md-4">
+                <label>Hub/Svc</label>
+                <b-input-group left="<i class='fa fa-list'></i>">
+                  <select name="HubId" id="HubId" class="form-control" v-model="HubId" >
+                    <option value="" >--Select--</option>
+                    <option v-for="hub_obj in hubList" v-bind:value="hub_obj.HubID" >{{hub_obj.HubName}}</option>
+                  </select>
+                </b-input-group>
+              </div>
+                <div class="col-md-4">
+                <label>Status</label>
+                <b-input-group left="<i class='fa fa-list'></i>">
+                  <select name="status" id="status" class="form-control" v-model="status">
+                    <option value="">--Select--</option>
+                    <option value="open">Open</option>
+                    <option value="close">Close</option>
+                  </select>
+                </b-input-group>
+              </div>
+            </div>
+            <div class="form-group row">
+              <div class="col-md-4">
+                <label>From Date</label>
+                <b-input-group left="<i class='fa fa-user'></i>">
+                  <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}"
+                  v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
+                </b-input-group>
+                <span v-show="errors.has('fromDate')" class="text-danger">Please select From date. </span>
+              </div>
+
+              <div class="col-md-4">
+                <label>To Date</label>
+                <b-input-group left="<i class='fa fa-user'></i>">
+                  <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}"
+                  v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
+                </b-input-group>
+                <span v-show="errors.has('toDate')" class="text-danger">Please select To date. </span>
+              </div>
+            </div>
               <div class="card-footer">
                 <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
                 <button class="btn btn-sm btn-primary" type="submit"><i class="fa"></i> Export </button>
@@ -72,6 +66,45 @@
             </form>
           </div>
         </b-card>
+
+        <div class="col-12" >
+          <div class="card-headerfrm" style="margin-bottom: 15px;">
+            <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result</h4>
+              <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+            <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+              <thead>
+                <tr class="text-primary">
+                  <th class="text-center tableheader"><b>Zone</b></th>
+                  <th class="text-center tableheader"><b>SVC/RSE Name</b></th>
+                  <th class="text-center tableheader"><b>Location Type</b></th>
+                  <th class="text-center tableheader"><b>Owner Name</b></th>
+                  <th class="text-center tableheader"><b>Delivery Date</b></th>
+                  <th class="text-center tableheader"><b>COD Receivable</b></th>
+                  <th class="text-center tableheader"><b>COD Received</b></th>
+                  <th class="text-center tableheader"><b>Balance o/s</b></th>
+                  <th class="text-center tableheader"><b>Status</b></th>
+                  <th class="text-center tableheader"><b>Closed by</b></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-if="resultCount==0">
+                  <td colspan="7" align="center">No record found</td>
+                </tr>
+                <tr v-for="SL_List in SRLedgerList ">
+                  <td>{{SL_List.creditamount}}</td>
+                  <td>{{SL_List.debitamount}}</td>
+                  <td>{{SL_List.createddate}}</td>
+                  <td>{{SL_List.deliverydate}}</td>
+                  <td>{{SL_List.Reason}}</td>
+                  <td>{{SL_List.createdby}}</td>
+                </tr>
+              </tbody>
+
+            </table><br>
+            <paginate :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+            </paginate>
+          </div>
+         </div>
     </div>
   </div>
 </section>

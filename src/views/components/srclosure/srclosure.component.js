@@ -69,7 +69,6 @@ export default {
 
     var userToken = window.localStorage.getItem('accessuserToken')
    this.myStr = userToken.replace(/"/g, '');
-   console.log("StaticuserToken",this.StaticUserToken);
   },
 
   methods: {

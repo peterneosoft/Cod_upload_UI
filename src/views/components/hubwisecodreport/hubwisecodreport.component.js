@@ -11,6 +11,13 @@ export default {
 
   data() {
     return {
+      zoneList:[],
+      hubList:[],
+      zone:"",
+      HubId:"",
+      toDate:"",
+      fromDate:"",
+      status:""
     }
   },
 
@@ -19,9 +26,53 @@ export default {
   },
 
   mounted() {
+    var date = new Date();
+    toDate.max = fromDate.max = date.toISOString().split("T")[0];
+    this.getZoneData();
   },
 
   methods: {
+    //to get All Hub List
+    getZoneData() {
+      this.input = {}
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'external/getallzones',
+          data: this.input,
+          headers: {
+            'Authorization': 'Bearer '
+          }
+        })
+        .then(result => {
+          this.zoneList = result.data.zone.data;
+        }, error => {
+          console.error(error)
+        })
+    },
+    getHubData() {
+
+      if(this.zone==""){
+        return false;
+      }
+
+      this.input = ({
+          zoneid: this.zone
+      })
+
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'external/getzonehub',
+          'data': this.input,
+          headers: {
+            'Authorization': 'Bearer '
+          }
+        })
+        .then(result => {
+          this.hubList = result.data.hub.data;
+        }, error => {
+          console.error(error)
+        })
+    },
 
     onSubmit: function(event) {
       this.$validator.validateAll().then(() => {

@@ -11,6 +11,13 @@ export default {
 
   data() {
     return {
+      zoneList:[],
+      hubList:[],
+      zone:"",
+      HubId:"",
+      toDate:"",
+      fromDate:""
+
     }
   },
 
@@ -19,13 +26,62 @@ export default {
   },
 
   mounted() {
+    var date = new Date();
+    toDate.max = fromDate.max = date.toISOString().split("T")[0];
+    this.getZoneData();
   },
 
   methods: {
+    //to get All Hub List
+    getZoneData() {
+      this.input = {}
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'external/getallzones',
+          data: this.input,
+          headers: {
+            'Authorization': 'Bearer '
+          }
+        })
+        .then(result => {
+          this.zoneList = result.data.zone.data;
+        }, error => {
+          console.error(error)
+        })
+    },
+    getHubData() {
 
-    onSubmit: function(event) {
-      this.$validator.validateAll().then(() => {
-        console.log('form is valid', this.model)
+      if(this.zone==""){
+        return false;
+      }
+
+      this.input = ({
+          zoneid: this.zone
+      })
+
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'external/getzonehub',
+          'data': this.input,
+          headers: {
+            'Authorization': 'Bearer '
+          }
+        })
+        .then(result => {
+          this.hubList = result.data.hub.data;
+        }, error => {
+          console.error(error)
+        })
+    },
+
+    onSubmit: function() {
+      this.$validator.validateAll().then((result) => {
+        if(this.toDate>this.fromDate){
+        let error = document.getElementById("t_d");
+         error.innerHTML = "ToDate must greater than FromDate";
+         error.style.display = "block";
+      }
+
         event.target.reset();
       }).catch(() => {
         console.log('errors exist', this.errors)
