@@ -17,6 +17,7 @@ export default {
       zone:'',
       HubId:'',
       HubName:'',
+      HubID:'',
       status:1,
       StatusVal:'',
       isLoading: false,
@@ -171,7 +172,7 @@ export default {
                 codamount: finData.codamount,
                 bankdeposit: finData.bankdeposit,
                 actualrecamt: finData.bankdeposit,
-                discrepancyamt: finData.bankdeposit,
+                discrepancyamt: finData.codamount-finData.bankdeposit,
                 balanceoutstanding: finData.differenceamount,
                 statusid: finData.statusid,
                 deposittype: finData.DepositType,
@@ -202,6 +203,7 @@ export default {
       this.$validator.validateAll().then((result) => {
         if(result){
           this.HubName = event.target[1].selectedOptions[0].attributes.title.nodeValue;
+          this.HubID = event.target[1].selectedOptions[0].attributes.value.nodeValue;
           this.StatusVal = event.target[2].selectedOptions[0].attributes.title.nodeValue;
           this.GetFinanceledgerData(event);
          }
@@ -212,7 +214,7 @@ export default {
 
     updateSVCFinanceledger(event) {
 
-      let finreasonid = ''; let ledgerid = ''; let financedate = ''; let amount = '';
+      let finreasonid = ''; let ledgerid = ''; let financedate = ''; let amount = 0;
       this.form.finreason.map((obj,key) =>{
         finreasonid = obj;
         ledgerid = key;
@@ -231,7 +233,7 @@ export default {
           financereasonid: finreasonid,
           financeconfirmdate: financedate,
           confirmamount: amount,
-          hubid: amount,
+          hubid: this.HubID,
           username: this.localuserid
       })
       axios({
@@ -243,11 +245,10 @@ export default {
           }
       })
       .then((response) => {
-        if (response.data.errorCode == 0) {
-          this.$alertify.success(response.data.msg);
-          this.resetForm(event);
-        } else if (response.data.errorCode == -1) {
-          this.$alertify.error(response.data.msg)
+        if (response.data.code == 200) {
+          this.$alertify.success(response.data.message);
+        } else if (response.data.code == 202) {
+          this.$alertify.error(response.data.message)
         }
       })
       .catch((httpException) => {

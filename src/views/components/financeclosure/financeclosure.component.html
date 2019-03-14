@@ -31,7 +31,7 @@
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <select name="status" id="status" class="form-control" v-model="status">
                     <option value="1" title="Open">Open</option>
-                    <option value="0" title="Close">Close</option>
+                    <option value="6" title="Close">Close</option>
                   </select>
                 </b-input-group>
               </div>
@@ -140,7 +140,7 @@
               </tr>
               <tr v-for="(data,index) in listFinanceledgerData">
                 <td scope="row" class="text-center"><strong>{{index+1}}</strong></td>
-                <td>{{data.HubName}}</td>
+                <td>{{HubName}}</td>
                 <td>{{data.depositdate}}</td>
                 <td>{{data.openingbalance}}</td>
                 <td>{{data.codamount}}</td>

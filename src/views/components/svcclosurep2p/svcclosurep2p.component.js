@@ -213,7 +213,26 @@ export default {
         })
         .then(result => {
           if(result.data.code == 200){
-            this.listSVCledgerData = result.data.data.rows;
+            var data = [];
+            result.data.data.rows.forEach(function (svcData) {
+
+              let deliverydatedate = new Date(svcData.deliverydate);
+              let bankdepositdate = new Date(svcData.bankdepositdate);
+
+              data.push({
+                deliverydate:  deliverydatedate.toISOString().slice(0,10),
+                bankdepositdate:  bankdepositdate.toISOString().slice(0,10),
+                openingbalance: svcData.openingbalance,
+                codamount: svcData.codamount,
+                bankdeposit: svcData.bankdeposit,
+                differenceamount: svcData.differenceamount,
+                statusid: (svcData.statusid != '') ? svcData.statusid : ' ',
+                Reason: (svcData.Reason != '') ? svcData.Reason : ' ',
+                financereason: (svcData.finReason != '') ? svcData.finReason : ' ',
+              });
+            });
+
+            this.listSVCledgerData = data;
             this.isLoading = false;
             let totalRows     = result.data.data.count;
             this.resultCount  = result.data.data.count;

@@ -236,8 +236,9 @@
                 <td>{{data.bankdeposit}}</td>
                 <td>{{data.differenceamount}}</td>
                 <td v-if="data.statusid==1">Open</td>
+                <td v-if="data.statusid==6">Close</td>
                 <td>{{data.Reason}}</td>
-                <td>{{data.rmreasonid}}</td>
+                <td>{{data.financereason}}</td>
                 <td><a href="">View Images</a></td>
               </tr>
             </tbody>
