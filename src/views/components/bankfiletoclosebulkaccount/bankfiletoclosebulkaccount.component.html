@@ -22,11 +22,11 @@
               <div class="col-md-4">
                 <label>Upload File</label>
                 <b-input-group left="<i class='fa fa-file'></i>">
-                  <input type="file" placeholder="Upload File" name="Xb_DeliveryUser_PhotoFileUpload" id="Xb_DeliveryUser_PhotoFileUpload"  v-validate="{required: true}"
-                    v-bind:class="{'form-control': true, 'error': errors.has('Xb_DeliveryUser_PhotoFileUpload') }">
+                  <input type="file"  @change="onUpload" placeholder="Upload File" name="paymentfile" id="paymentfile" v-validate="{required: true}"
+                    v-bind:class="{'form-control': true, 'error': errors.has('paymentfile') }">
                 </b-input-group>
                 <small class="text-muted"><font color="red">Note: * Only .csv files allowed to upload.</font></small>
-                <label v-show="errors.has('Xb_DeliveryUser_PhotoFileUpload')" class="text-danger">{{ "Please select File Upload " }}</label>
+                <label v-show="errors.has('paymentfile')" class="text-danger">{{ "Please select File Upload " }}</label>
               </div>
             </div>
 

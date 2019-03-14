@@ -19,8 +19,10 @@ export default {
       resultCount: '',
       toDate: '',
       fromDate: '',
-      listSVCledgerData: [],
-      myStr: ''
+      listSearchSVCledgerData: [],
+      myStr: '',
+      localhubid: '',
+      localhubname: ''
     }
   },
 
@@ -37,6 +39,7 @@ export default {
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
     var hubdetail         = JSON.parse(plaintext);
     this.localhubid       = hubdetail[0].HubID;
+    this.localhubname     = hubdetail[0].HubName;
 
     var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');
@@ -45,7 +48,7 @@ export default {
   methods: {
     searchSVCledgerData(){
       this.pageno = 0;
-      this.GetSVCledgerData();
+      this.GetSearchSVCledgerData();
     },
 
     //to get pagination
@@ -54,7 +57,8 @@ export default {
         this.GetSVCledgerData()
     },
 
-    GetSVCledgerData() {
+    GetSearchSVCledgerData() {
+
       this.input = ({
           offset: this.pageno,
           limit: 10,
@@ -63,25 +67,58 @@ export default {
           toDate: this.toDate
       })
       this.isLoading = true;
-
       axios({
           method: 'POST',
-          'url': apiUrl.api_url + 'svcledgermaster',
+          'url': apiUrl.api_url + 'svcledgersearchmaster',
           'data': this.input,
           headers: {
               'Authorization': 'Bearer '+this.myStr
           }
       })
       .then(result => {
-          this.listSVCledgerData = result.data.data.rows;
-          this.isLoading    = false;
-          let totalRows     = result.data.data.count
-          this.resultCount  = result.data.data.count
+        if(result.data.code == 200){
+          var data = [];
+          result.data.data.rows.forEach(function (searchData) {
+
+            let date = new Date(searchData.bankdepositdate);
+
+            if(searchData.DepositType==1){ searchData.DepositType = 'Bank Deposit'; }
+            else if(searchData.DepositType==2){ searchData.DepositType = 'CMS Deposit'; }
+            else{ searchData.DepositType = 'NEFT/ Other Deposit'; }
+
+            if(searchData.statusid==1){ searchData.statusid = 'Open'; }
+            else if(searchData.statusid==6){ searchData.statusid = 'Close'; }
+            else { searchData.statusid = ' '; }
+
+            data.push({
+              depositdate: date.toISOString().slice(0,10),
+              openingbalance: searchData.openingbalance,
+              codamount: searchData.codamount,
+              bankdeposit: searchData.bankdeposit,
+              actualrecamt: searchData.bankdeposit,
+              discrepancyamt: searchData.codamount-searchData.bankdeposit,
+              balanceoutstanding: searchData.differenceamount,
+              status: searchData.statusid,
+              deposittype: searchData.DepositType,
+              bank: searchData.Bank,
+              reason: searchData.Reason,
+              finreason: searchData.finReason,
+            });
+          });
+
+          this.listSearchSVCledgerData = data;
+          this.isLoading = false;
+          let totalRows     = result.data.data.count;
+          this.resultCount  = result.data.data.count;
           if (totalRows < 10) {
               this.pagecount = 1
           } else {
               this.pagecount = Math.ceil(totalRows / 10)
           }
+        }else{
+          this.resultCount  = 0;
+          this.isLoading = false;
+        }
       }, error => {
           console.error(error)
       })
@@ -90,7 +127,7 @@ export default {
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
-          this.searchSVCledgerData();
+          this.GetSearchSVCledgerData();
         }
       }).catch(() => {
         console.log('errors exist', this.errors)

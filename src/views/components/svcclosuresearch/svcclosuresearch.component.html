@@ -46,33 +46,41 @@
             <thead>
               <tr class="text-primary">
                 <th class="text-center tableheader"><b>#</b></th>
-                <th class="text-center tableheader"><b>Delivery Date</b></th>
+                <th class="text-center tableheader"><b>Hub</b></th>
                 <th class="text-center tableheader"><b>Deposite Date</b></th>
                 <th class="text-center tableheader"><b>Opening Amt</b></th>
                 <th class="text-center tableheader"><b>COD Receivable</b></th>
                 <th class="text-center tableheader"><b>Bank Deposited Amt</b></th>
+                <th class="text-center tableheader"><b>Actual Received Amt</b></th>
+                <th class="text-center tableheader"><b>Discrepancy Amt</b></th>
                 <th class="text-center tableheader"><b>Balance Outstanding</b></th>
                 <th class="text-center tableheader"><b>Status</b></th>
-                <th class="text-center tableheader"><b>Reason</b></th>
                 <th class="text-center tableheader"><b>Finance Reason</b></th>
-                <th class="text-center tableheader"><b>Receipt</b></th>
+                <th class="text-center tableheader"><b>Deposit Type</b></th>
+                <th class="text-center tableheader"><b>Bank Name</b></th>
+                <th class="text-center tableheader"><b>Reason</b></th>
+                <th class="text-center tableheader"><b>View</b></th>
               </tr>
             </thead>
             <tbody>
               <tr v-if="resultCount==0">
-                <td colspan="7" align="center">No record found</td>
+                <td colspan="15" align="center">No record found</td>
               </tr>
-              <tr v-for="(data,index) in listSVCledgerData">
+              <tr v-for="(data,index) in listSearchSVCledgerData">
                 <td scope="row" class="text-center"><strong>{{index+1}}</strong></td>
-                <td>{{data.deliverydate}}</td>
-                <td>{{data.bankdepositdate}}</td>
+                <td>{{localhubname}}</td>
+                <td>{{data.depositdate}}</td>
                 <td>{{data.openingbalance}}</td>
                 <td>{{data.codamount}}</td>
                 <td>{{data.bankdeposit}}</td>
-                <td>{{data.closingbalance}}</td>
-                <td v-if="data.statusid==1">Open</td>
-                <td>{{data.Reason}}</td>
-                <td>{{data.rmreasonid}}</td>
+                <td>{{data.actualrecamt}}</td>
+                <td>{{data.discrepancyamt}}</td>
+                <td>{{data.balanceoutstanding}}</td>
+                <td>{{data.status}}</td>
+                <td>{{data.finreason}}</td>
+                <td>{{data.deposittype}}</td>
+                <td>{{data.bank}}</td>
+                <td>{{data.reason}}</td>
                 <td><a href="">View Images</a></td>
               </tr>
             </tbody>
