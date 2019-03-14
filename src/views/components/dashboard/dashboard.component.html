@@ -1,7 +1,87 @@
 <section>
 <div class="animated fadeIn">
     <div class="row">
+      <!--/.col-->
+      <div class="col-xs-12 col-sm-12 col-lg-12 col-lg-12 pdl_0">
+        <div class="card h-100 block_hgt">
+          <div class="h-100 form-verticle">
+            <div class="col-xs-2  h-100 col-sm-2 col-lg-2 col-lg-2 float-left">
+              <label>Zone</label>
+              <b-input-group left="<i class='fa fa-list'></i>">
+                <select name="hub" id="hub" class="form-control" v-model="hub">
+                  <option value="">--Select--</option>
+                  <option value="">Sunday</option>
+                  <option value="">Monday</option>
+                  <option value="">Tuesday-</option>
+                  <option value="">Wensday</option>
+                  <option value="">Friday</option>
+              </select>
+              </b-input-group>
+            </div>
+            <div class="col-xs-2 col-sm-2 col-lg-2 col-lg-2 float-left">
+              <label>State</label>
+              <b-input-group left="<i class='fa fa-list'></i>">
+                <select name="hub" id="hub" class="form-control" v-model="hub">
+                  <option value="">--Select--</option>
+                  <option value="">Sunday</option>
+                  <option value="">Monday</option>
+                  <option value="">Tuesday-</option>
+                  <option value="">Wensday</option>
+                  <option value="">Friday</option>
+              </select>
+              </b-input-group>
+            </div>
+            <div class="col-xs-2 col-sm-2 col-lg-2 col-lg-2 float-left">
+              <label>City</label>
+              <b-input-group left="<i class='fa fa-list'></i>">
+                <select name="hub" id="hub" class="form-control" v-model="hub">
+                  <option value="">--Select--</option>
+                  <option value="">Sunday</option>
+                  <option value="">Monday</option>
+                  <option value="">Tuesday-</option>
+                  <option value="">Wensday</option>
+                  <option value="">Friday</option>
+              </select>
+              </b-input-group>
+            </div>
+            <div class="col-xs-2 col-sm-2 col-lg-2 col-lg-2 float-left">
+              <label>From Date</label>
+              <b-input-group left="<i class='fa fa-user'></i>">
+                <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="usertypename"></b-form-input>
+              </b-input-group>
+            </div>
+            <div class="col-xs-2 col-sm-2 col-lg-2 col-lg-2 float-left">
+              <label>To Date</label>
+              <b-input-group left="<i class='fa fa-user'></i>">
+                <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="usertypename"></b-form-input>
+              </b-input-group>
+            </div>
+            <div class="col-xs-2 col-sm-2 col-lg-2 col-lg-2 float-left d-flex h-100">
+
+              <button class="btn btn-sm btn-square btn-success justify-content-center align-self-center" type="submit"><i class="fa fa-search"></i> Search</button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+          <!--/.col-->
+
+
+      <!--/.col-->
+      <!-- <div class="col-xs-6 col-sm-6 col-lg-2 col-lg-2 pdl_0">
+        <div class="card block_hgt">
+          <div class="card-body p-3 d-flex align-items-center">
+            <i class="fa fa-cart-plus highlight-icon bg-warning p-3 fnt_blk_icon mr-3"></i>
+            <div>
+              <div class="card-text text-dark "> Damaged Boxes</div>
+              <strong>{{damagedboxescount}}</strong>
+              <div class="text-muted text-uppercase font-weight-bold small"></div>
+            </div>
+          </div>
+        </div>
+      </div> -->
 
     </div>
+
   </div>
 </section>
