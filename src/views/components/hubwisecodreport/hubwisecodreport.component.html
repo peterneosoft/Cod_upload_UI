@@ -15,7 +15,7 @@
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <select name="zone" id="zone" class="form-control" v-model="zone" v-on:change="getHubData" >
                     <option value="" >--Select--</option>
-                    <option v-for="zone_obj in zoneList" v-bind:value="zone_obj.hubzoneid" >{{zone_obj.hubzonename}}</option>
+                    <option v-for="zone_obj in zoneList" v-bind:title="zone_obj.hubzonename" v-bind:value="zone_obj.hubzoneid" >{{zone_obj.hubzonename}}</option>
                   </select>
                 </b-input-group>
               </div>
@@ -25,7 +25,7 @@
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <select name="HubId" id="HubId" class="form-control" v-model="HubId" >
                     <option value="" >--Select--</option>
-                    <option v-for="hub_obj in hubList" v-bind:value="hub_obj.HubID" >{{hub_obj.HubName}}</option>
+                    <option v-for="hub_obj in hubList" v-bind:title="hub_obj.HubName" v-bind:value="hub_obj.HubID" >{{hub_obj.HubName}}</option>
                   </select>
                 </b-input-group>
               </div>
@@ -34,8 +34,8 @@
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <select name="status" id="status" class="form-control" v-model="status">
                     <option value="">--Select--</option>
-                    <option value="open">Open</option>
-                    <option value="close">Close</option>
+                    <option value="1">Open</option>
+                    <option value="0">Close</option>
                   </select>
                 </b-input-group>
               </div>
@@ -67,7 +67,7 @@
           </div>
         </b-card>
 
-        <div class="col-12" >
+        <div class="col-12" v-if="HubWiseCODLedge">
           <div class="card-headerfrm" style="margin-bottom: 15px;">
             <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result</h4>
               <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
@@ -90,13 +90,17 @@
                 <tr v-if="resultCount==0">
                   <td colspan="7" align="center">No record found</td>
                 </tr>
-                <tr v-for="SL_List in SRLedgerList ">
-                  <td>{{SL_List.creditamount}}</td>
-                  <td>{{SL_List.debitamount}}</td>
-                  <td>{{SL_List.createddate}}</td>
-                  <td>{{SL_List.deliverydate}}</td>
-                  <td>{{SL_List.Reason}}</td>
-                  <td>{{SL_List.createdby}}</td>
+                <tr v-for="CODLedger_List in CODLedgerReports ">
+                  <td>{{zonename}}</td>
+                  <td>{{hubname}}</td>
+                  <td>{{CODLedger_List.hubLocationType}}</td>
+                  <td>{{CODLedger_List.lastmodifiedby}}</td>
+                  <td>{{CODLedger_List.createddate}}</td>
+                  <td>{{CODLedger_List.receivable}}</td>
+                  <td>{{CODLedger_List.financeconfirmamount}}</td>
+                  <td>{{CODLedger_List.balanceLogic}}</td>
+                  <td>{{CODLedger_List.statusid}}</td>
+                  <td>{{CODLedger_List.Closedby}}</td>
                 </tr>
               </tbody>
 

@@ -3,21 +3,32 @@ import axios from 'axios'
 import {
   Validator
 } from 'vee-validate'
+import Paginate from 'vuejs-paginate'
+import VueElementLoading from 'vue-element-loading';
 
 export default {
   name: 'hubwisecodreport',
-  components: {},
+  components: {Paginate,
+  VueElementLoading},
   props: [],
 
   data() {
     return {
       zoneList:[],
       hubList:[],
+      CODLedgerReports:[],
       zone:"",
       HubId:"",
+      resultCount:'',
       toDate:"",
       fromDate:"",
-      status:""
+      status:"",
+      zonename:"",
+      hubname:"",
+      pageno:0,
+      pagecount:0,
+      HubWiseCODLedge:false
+
     }
   },
 
@@ -32,6 +43,46 @@ export default {
   },
 
   methods: {
+    getPaginationData(pageNum) {
+        this.pageno = (pageNum - 1) * 10
+        this.getHubWiseCODLedgerReports()
+    },
+    getHubWiseCODLedgerReports(){
+      this.HubWiseCODLedge = true ;
+            this.input = ({
+                hubid: this.HubId,
+                fromdate: this.fromDate,
+                todate: this.toDate,
+                status: this.status,
+                offset:this.pageno,
+                limit:10
+            })
+            axios({
+                method: 'POST',
+                url: apiUrl.api_url + 'getHubWiseCODLedgerReports',
+                'data': this.input,
+                headers: {
+                  'Authorization': 'Bearer '
+                }
+              })
+              .then(result => {
+                if(result.data.code == 200){
+                this.CODLedgerReports = result.data.data.rows;
+                this.isLoading    = false;
+                let totalRows     = result.data.data.count
+
+                this.resultCount  = result.data.data.count
+                if (totalRows < 10) {
+                     this.pagecount = 1
+                 } else {
+                     this.pagecount = Math.ceil(totalRows / 10)
+                 }
+               }
+                },
+                 error => {
+                console.error(error)
+              })
+    },
     //to get All Hub List
     getZoneData() {
       this.input = {}
@@ -68,6 +119,7 @@ export default {
           }
         })
         .then(result => {
+
           this.hubList = result.data.hub.data;
         }, error => {
           console.error(error)
@@ -75,9 +127,13 @@ export default {
     },
 
     onSubmit: function(event) {
-      this.$validator.validateAll().then(() => {
-        console.log('form is valid', this.model)
-        event.target.reset();
+      this.$validator.validateAll().then((result) => {
+        if(result){
+          this.zonename = event.target[0].selectedOptions[0].attributes.title.nodeValue;
+          this.hubname = event.target[1].selectedOptions[0].attributes.title.nodeValue;
+          this.getHubWiseCODLedgerReports()
+        }
+      //  event.target.reset();
       }).catch(() => {
         console.log('errors exist', this.errors)
       });
