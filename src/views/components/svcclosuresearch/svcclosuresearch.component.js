@@ -19,7 +19,8 @@ export default {
       resultCount: '',
       toDate: '',
       fromDate: '',
-      listSVCledgerData: []
+      listSVCledgerData: [],
+      myStr: ''
     }
   },
 
@@ -36,6 +37,9 @@ export default {
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
     var hubdetail         = JSON.parse(plaintext);
     this.localhubid       = hubdetail[0].HubID;
+
+    var userToken = window.localStorage.getItem('accessuserToken')
+    this.myStr = userToken.replace(/"/g, '');
   },
 
   methods: {
@@ -65,7 +69,7 @@ export default {
           'url': apiUrl.api_url + 'svcledgermaster',
           'data': this.input,
           headers: {
-              'Authorization': 'Bearer '
+              'Authorization': 'Bearer '+this.myStr
           }
       })
       .then(result => {

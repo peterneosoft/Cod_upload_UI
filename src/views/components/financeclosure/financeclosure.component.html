@@ -5,12 +5,12 @@
         <div class="card" style="height: 370px;">
           <div class="card-header"><i class="fa fa-filter filter"></i> Closure</div>
           <div class="card-body">
-            <form action="" method="post">
+            <form v-on:submit.prevent="onSubmit">
               <div class="form-group">
                 <label>Zone</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <select name="zone" id="zone" class="form-control" v-model="zone" v-on:change="getHubData" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('zone') }">
-                    <option value="" disabled>--Select--</option>
+                    <option value="">--Select--</option>
                     <option v-for="zone_obj in zoneList" v-bind:value="zone_obj.hubzoneid" >{{zone_obj.hubzonename}}</option>
                   </select>
                 </b-input-group>
@@ -20,8 +20,8 @@
                 <label>Hub</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <select name="HubId" id="HubId" class="form-control" v-model="HubId" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('HubId') }">
-                    <option value="" disabled>--Select--</option>
-                    <option v-for="hub_obj in hubList" v-bind:value="hub_obj.HubID" >{{hub_obj.HubName}}</option>
+                    <option value="">--Select--</option>
+                    <option v-for="hub_obj in hubList" v-bind:value="hub_obj.HubID" v-bind:title="hub_obj.HubName">{{hub_obj.HubName}}</option>
                   </select>
                 </b-input-group>
                 <span v-show="errors.has('HubId')" class="text-danger">The Hub field is required.</span>
@@ -30,8 +30,8 @@
                 <label>Status</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <select name="status" id="status" class="form-control" v-model="status">
-                    <option value="open">Open</option>
-                    <option value="close">Close</option>
+                    <option value="1" title="Open">Open</option>
+                    <option value="0" title="Close">Close</option>
                   </select>
                 </b-input-group>
               </div>
@@ -131,71 +131,50 @@
                 <th class="text-center tableheader"><b>Deposit Type</b></th>
                 <th class="text-center tableheader"><b>Bank Name</b></th>
                 <th class="text-center tableheader"><b>Reason</b></th>
-                <th class="text-center tableheader"><b>SVC Comment</b></th>
                 <th class="text-center tableheader"><b>View</b></th>
               </tr>
             </thead>
             <tbody>
               <tr v-if="resultCount==0">
-                <td colspan="7" align="center">No record found</td>
+                <td colspan="15" align="center">No record found</td>
               </tr>
-              <tr>
-                <td scope="row" class="text-center"><strong>1</strong></td>
-                <td>PNQ/CHK</td>
-                <td>31/01/2019</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>Open</td>
+              <tr v-for="(data,index) in listFinanceledgerData">
+                <td scope="row" class="text-center"><strong>{{index+1}}</strong></td>
+                <td>{{data.HubName}}</td>
+                <td>{{data.depositdate}}</td>
+                <td>{{data.openingbalance}}</td>
+                <td>{{data.codamount}}</td>
+                <td>{{data.bankdeposit}}</td>
+                <td>{{data.actualrecamt}}</td>
+                <td>{{data.discrepancyamt}}</td>
+                <td>{{data.balanceoutstanding}}</td>
+                <td>{{StatusVal}}</td>
                 <td>
-                  <select name="reason" id="reason" class="form-control" v-model="reason">
-                    <option value="">--Select--</option>
-                    <option value="">Amount Matched</option>
-                    <option value="">Bank Amount Not Matched</option>
-                    <option value="">Is Recoverable</option>
-                  </select>
-                  <br>
-                  <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-dot-circle-o"></i> Submit</button>
+                  <form v-on:submit.prevent="onUpdate">
+                    <select v-model="form.finreason[data.svcledgerid]" v-bind:name="setid('finreason', data.svcledgerid)" v-bind:id="setid('finreason', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('finreason'+data.svcledgerid) }">
+                      <option value="">--Select--</option>
+                      <option v-for="finreason_obj in FinanceReasonList" v-bind:value="finreason_obj.ReasonsID" >{{finreason_obj.Reason}}</option>
+                    </select>
+                    <span v-show="errors.has('finreason'+data.svcledgerid)" class="text-danger">The Finance Reason field is required.</span>
+                    <br v-show="form.finreason[data.svcledgerid] > 0">
+                    <input v-show="form.finreason[data.svcledgerid] > 0" v-model="form.financeconfirmdate[data.svcledgerid]" v-bind:name="setid('financeconfirmdate', data.svcledgerid)" v-bind:id="setid('financeconfirmdate', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('financeconfirmdate'+data.svcledgerid) }" type="date">
+                    <span v-show="errors.has('financeconfirmdate'+data.svcledgerid)" class="text-danger">The Finance Confirm Date field is required.</span>
+                    <br v-show="form.finreason[data.svcledgerid] == 5">
+                    <input v-show="form.finreason[data.svcledgerid] == 5" v-model="form.confirmamount[data.svcledgerid]" v-bind:name="setid('confirmamount', data.svcledgerid)" v-bind:id="setid('confirmamount', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('confirmamount'+data.svcledgerid) }" type="text" placeholder="Enter Received Amount">
+                    <span v-show="errors.has('confirmamount'+data.svcledgerid)" class="text-danger">The Finance Confirm Amount field is required.</span>
+                    <br>
+                    <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-dot-circle-o"></i> Submit</button>
+                </form>
                 </td>
-                <td>Bank</td>
-                <td>ICICI</td>
-                <td>COD used for Imprest Tax</td>
-                <td>Comment</td>
-                <td><a href="">View Images</a></td>
-              </tr>
-              <tr>
-                <td scope="row" class="text-center"><strong>2</strong></td>
-                <td>PNQ/CHK</td>
-                <td>31/01/2019</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>0.00</td>
-                <td>Open</td>
-                <td>
-                  <select name="reason" id="reason" class="form-control" v-model="reason">
-                    <option value="">--Select--</option>
-                    <option value="">Amount Matched</option>
-                    <option value="">Bank Amount Not Matched</option>
-                    <option value="">Is Recoverable</option>
-                  </select>
-                  <br>
-                  <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-dot-circle-o"></i> Submit</button>
-                </td>
-                <td>Bank</td>
-                <td>ICICI</td>
-                <td>COD used for Imprest Tax</td>
-                <td>Comment</td>
+
+                <td>{{data.deposittype}}</td>
+                <td>{{data.bank}}</td>
+                <td>{{data.reason}}</td>
                 <td><a href="">View Images</a></td>
               </tr>
             </tbody>
           </table><br>
-          <paginate :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+          <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
           </paginate>
         </div>
       </div>
