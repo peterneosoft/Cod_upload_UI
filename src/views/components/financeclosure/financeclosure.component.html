@@ -151,17 +151,17 @@
                 <td>{{StatusVal}}</td>
                 <td>
                   <form v-on:submit.prevent="onUpdate">
-                    <select v-model="form.finreason[data.svcledgerid]" v-bind:name="setid('finreason', data.svcledgerid)" v-bind:id="setid('finreason', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('finreason'+data.svcledgerid) }">
+                    <select  v-model="form.finreason[data.svcledgerid]" v-bind:name="setid('finreason', data.svcledgerid)" v-bind:id="setid('finreason', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('finreason'+data.svcledgerid) }">
                       <option value="">--Select--</option>
-                      <option v-for="finreason_obj in FinanceReasonList" v-bind:value="finreason_obj.ReasonsID" >{{finreason_obj.Reason}}</option>
+                      <option v-for="finreason_obj in FinanceReasonList" v-bind:value="finreason_obj.ReasonsID"  >{{finreason_obj.Reason}}</option>
                     </select>
                     <span v-show="errors.has('finreason'+data.svcledgerid)" class="text-danger">The Finance Reason field is required.</span>
                     <br v-show="form.finreason[data.svcledgerid] > 0">
-                    <input v-show="form.finreason[data.svcledgerid] > 0" v-model="form.financeconfirmdate[data.svcledgerid]" v-bind:name="setid('financeconfirmdate', data.svcledgerid)" v-bind:id="setid('financeconfirmdate', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('financeconfirmdate'+data.svcledgerid) }" type="date">
-                    <span v-show="errors.has('financeconfirmdate'+data.svcledgerid)" class="text-danger">The Finance Confirm Date field is required.</span>
+                    <input  v-show="form.finreason[data.svcledgerid] > 0" v-model="form.financeconfirmdate[data.svcledgerid]" v-bind:name="setid('financeconfirmdate', data.svcledgerid)" v-bind:id="setid('financeconfirmdate', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('financeconfirmdate'+data.svcledgerid) }" type="date">
+                    <span id="d_t" v-show="errors.has('financeconfirmdate'+data.svcledgerid)" class="text-danger">The Finance Confirm Date field is required.</span>
                     <br v-show="form.finreason[data.svcledgerid] == 5">
                     <input v-show="form.finreason[data.svcledgerid] == 5" v-model="form.confirmamount[data.svcledgerid]" v-bind:name="setid('confirmamount', data.svcledgerid)" v-bind:id="setid('confirmamount', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('confirmamount'+data.svcledgerid) }" type="text" placeholder="Enter Received Amount">
-                    <span v-show="errors.has('confirmamount'+data.svcledgerid)" class="text-danger">The Finance Confirm Amount field is required.</span>
+                    <span id="d_a" v-show="errors.has('confirmamount'+data.svcledgerid)" class="text-danger">The Finance Confirm Amount field is required.</span>
                     <br>
                     <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-dot-circle-o"></i> Submit</button>
                 </form>

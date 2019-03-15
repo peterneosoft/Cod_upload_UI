@@ -34,6 +34,7 @@ export default {
       FinanceReasonList: [],
       vid: '',
       vfin: '',
+      data: '',
       form: {
           finreason: [],
           financeconfirmdate: [],
@@ -182,6 +183,7 @@ export default {
             });
 
             this.listFinanceledgerData = data;
+            console.log("this.listFinanceledgerData",JSON.stringify(this.listFinanceledgerData));
             this.isLoading = false;
             let totalRows     = result.data.data.count;
             this.resultCount  = result.data.data.count;
@@ -213,21 +215,48 @@ export default {
     },
 
     updateSVCFinanceledger(event) {
-
-      let finreasonid = ''; let ledgerid = ''; let financedate = ''; let amount = 0;
+     let insertflag= 0;
+      let finreasonid = ''; let ledgerid = ''; let financedate = ''; let amount = 0; let financeid = ""; let amountid = "";
       this.form.finreason.map((obj,key) =>{
         finreasonid = obj;
         ledgerid = key;
       });
-
       this.form.financeconfirmdate.map((obj,key) =>{
         financedate = obj;
+        financeid = key;
       });
 
       this.form.confirmamount.map((obj,key) =>{
         amount = obj;
-      });
+        amountid = key;
 
+      });
+      if(finreasonid){
+        let financeconfirmdate = document.getElementById('financeconfirmdate'+ledgerid).value;
+        let confirmamount = document.getElementById('confirmamount'+ledgerid).value;
+        if(!financeconfirmdate){
+          let error = document.getElementById("d_t");
+           error.style.display = "block";
+        }else{
+           insertflag=1;
+        }
+      }
+      if(finreasonid == "5"){
+        let financeconfirmdate = document.getElementById('financeconfirmdate'+ledgerid).value;
+        let confirmamount = document.getElementById('confirmamount'+ledgerid).value;
+        if(!financeconfirmdate || !confirmamount){
+         let error = document.getElementById("d_t");
+          error.style.display = "block";
+         let errord_a = document.getElementById("d_a");
+          errord_a.style.display = "block";
+           insertflag=1;
+         return false;
+       }else{
+          insertflag=1;
+       }
+      }
+
+      if(insertflag){
       this.input = ({
           svcledgerid: ledgerid,
           financereasonid: finreasonid,
@@ -247,19 +276,28 @@ export default {
       .then((response) => {
         if (response.data.code == 200) {
           this.$alertify.success(response.data.message);
+          this.form.finreason = [];
+          this.form.financeconfirmdate = [];
+          this.form.confirmamount = [];
         } else if (response.data.code == 202) {
           this.$alertify.error(response.data.message)
         }
+        let error = document.getElementById("d_t");
+        error.style.display = "None";
+        let errord_a = document.getElementById("d_a");
+        errord_a.style.display = "None";
+        event.target.reset();
       })
       .catch((httpException) => {
           console.error('exception is:::::::::', httpException)
       });
+    }
+
     },
 
     onUpdate: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
-
           this.updateSVCFinanceledger(event);
          }
       }).catch(() => {
