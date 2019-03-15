@@ -1,87 +1,209 @@
 <section>
-<div class="animated fadeIn">
-    <div class="row">
-      <!--/.col-->
-      <div class="col-xs-12 col-sm-12 col-lg-12 col-lg-12 pdl_0">
-        <div class="card h-100 block_hgt">
-          <div class="h-100 form-verticle">
-            <div class="col-xs-2  h-100 col-sm-2 col-lg-2 col-lg-2 float-left">
-              <label>Zone</label>
-              <b-input-group left="<i class='fa fa-list'></i>">
-                <select name="hub" id="hub" class="form-control" v-model="hub">
-                  <option value="">--Select--</option>
-                  <option value="">Sunday</option>
-                  <option value="">Monday</option>
-                  <option value="">Tuesday-</option>
-                  <option value="">Wensday</option>
-                  <option value="">Friday</option>
-              </select>
-              </b-input-group>
-            </div>
-            <div class="col-xs-2 col-sm-2 col-lg-2 col-lg-2 float-left">
-              <label>State</label>
-              <b-input-group left="<i class='fa fa-list'></i>">
-                <select name="hub" id="hub" class="form-control" v-model="hub">
-                  <option value="">--Select--</option>
-                  <option value="">Sunday</option>
-                  <option value="">Monday</option>
-                  <option value="">Tuesday-</option>
-                  <option value="">Wensday</option>
-                  <option value="">Friday</option>
-              </select>
-              </b-input-group>
-            </div>
-            <div class="col-xs-2 col-sm-2 col-lg-2 col-lg-2 float-left">
-              <label>City</label>
-              <b-input-group left="<i class='fa fa-list'></i>">
-                <select name="hub" id="hub" class="form-control" v-model="hub">
-                  <option value="">--Select--</option>
-                  <option value="">Sunday</option>
-                  <option value="">Monday</option>
-                  <option value="">Tuesday-</option>
-                  <option value="">Wensday</option>
-                  <option value="">Friday</option>
-              </select>
-              </b-input-group>
-            </div>
-            <div class="col-xs-2 col-sm-2 col-lg-2 col-lg-2 float-left">
-              <label>From Date</label>
-              <b-input-group left="<i class='fa fa-user'></i>">
-                <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="usertypename"></b-form-input>
-              </b-input-group>
-            </div>
-            <div class="col-xs-2 col-sm-2 col-lg-2 col-lg-2 float-left">
-              <label>To Date</label>
-              <b-input-group left="<i class='fa fa-user'></i>">
-                <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="usertypename"></b-form-input>
-              </b-input-group>
-            </div>
-            <div class="col-xs-2 col-sm-2 col-lg-2 col-lg-2 float-left d-flex h-100">
-
-              <button class="btn btn-sm btn-square btn-success justify-content-center align-self-center" type="submit"><i class="fa fa-search"></i> Search</button>
-
-            </div>
-          </div>
-        </div>
-      </div>
-          <!--/.col-->
-
-
-      <!--/.col-->
-      <!-- <div class="col-xs-6 col-sm-6 col-lg-2 col-lg-2 pdl_0">
-        <div class="card block_hgt">
-          <div class="card-body p-3 d-flex align-items-center">
-            <i class="fa fa-cart-plus highlight-icon bg-warning p-3 fnt_blk_icon mr-3"></i>
-            <div>
-              <div class="card-text text-dark "> Damaged Boxes</div>
-              <strong>{{damagedboxescount}}</strong>
-              <div class="text-muted text-uppercase font-weight-bold small"></div>
-            </div>
-          </div>
-        </div>
-      </div> -->
-
-    </div>
-
-  </div>
+  <div class="pcoded-content">
+       <div class="page-header card" style="border:none;">
+           <div class="row align-items-end">
+               <div class="col-lg-8">
+                   <div class="page-header-title">
+                       <i class="feather icon-home bg-c-blue"></i>
+                       <div class="d-inline">
+                           <h6 style="position: relative;top: 10px;">Dashboard</h6>
+                       </div>
+                   </div>
+               </div>
+               <div class="col-lg-4">
+                   <a data-toggle="collapse" href="#collapsesearch" role="button" aria-expanded="false" aria-controls="collapsesearch" class="waves-effect waves-dark" style="float: right;">
+                       <span class="pcoded-micon"><i class="feather icon-filter"></i></span>
+                       <span class="pcoded-mtext">Filter</span>
+                   </a>
+               </div>
+               <div class="col-lg-12 collapse" id="collapsesearch" style="margin-top: 20px;">
+                   <div class="card">
+                       <div class="card-body">
+                       <form class="form-group">
+                        <div class="form-row">
+                           <div class="form-group col-md-2">
+                             <label for="inputState">Zone</label>
+                             <select id="inputState" class="form-control">
+                               <option selected>Choose...</option>
+                               <option>...</option>
+                             </select>
+                           </div>
+                           <div class="form-group col-md-2">
+                             <label for="inputState">State</label>
+                             <select id="inputState" class="form-control">
+                               <option selected>Choose...</option>
+                               <option>...</option>
+                             </select>
+                           </div>
+                           <div class="form-group col-md-2">
+                             <label for="inputState">City</label>
+                             <select id="inputState" class="form-control">
+                               <option selected>Choose...</option>
+                               <option>...</option>
+                             </select>
+                           </div>
+                           <div class="form-group col-md-2">
+                             <label for="inputState">From Date</label>
+                             <input type="date" class="form-control" data-toggle="datepicker">
+                           </div>
+                           <div class="form-group col-md-2">
+                             <label for="inputState">To Date</label>
+                             <input type="date" class="form-control" data-toggle="datepicker">
+                           </div>
+                            <button type="submit" class="btn btn-success sbtn">Search</button>
+                         </div>
+                       </form>
+                       </div>
+                   </div>
+               </div>
+               </div>
+           </div>
+       </div>
+       <div class="pcoded-inner-content">
+           <div class="main-body">
+               <div class="page-wrapper">
+                   <div class="page-body">
+                       <div class="row">
+                           <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                               <div class="card">
+                                   <div class="card-header">
+                                       <h6>Volume Trend</h6>
+                                       <i class="feather icon-refresh-cw reload-card" style="float:right;"></i>
+                                   </div>
+                                   <div class="card-body">
+                                       <div id="chartdiv"></div>
+                                   </div>
+                               </div>
+                               <div class="card">
+                                   <div class="card-header">
+                                       <h6>Zone Distribution</h6>
+                                       <i class="feather icon-refresh-cw reload-card" style="float:right;"></i>
+                                   </div>
+                                   <div class="card-body">
+                                       <h6 style="color:#D3D3D3;">Geographical Distribution of Orders</h6>
+                                       <div id="chartdiv3"></div>
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="col-xs-12 col-sm-12 col-md-2 col-lg-2">
+                               <div class="card csh-16">
+                                   <div class="card-header">
+                                       <h6>On Time Pickups</h6>
+                                       <i class="feather icon-refresh-cw reload-card" style="float:right;position: relative;bottom: 18px;left: 5px;"></i>
+                                   </div>
+                                   <div class="card-body">
+                                       <h3 class="f-w-700 text-c-blue txtc">00</h3>
+                                       <h6 class="txtc">Feb 13 - Feb 19</h6>
+                                   </div>
+                               </div>
+                               <div class="card csh-16">
+                                   <div class="card-header">
+                                       <h6>Return Rate</h6>
+                                       <i class="feather icon-refresh-cw reload-card" style="float:right;"></i>
+                                   </div>
+                                   <div class="card-body">
+                                       <h3 class="f-w-700 text-c-blue txtc" style="font-family:sans-serif;">14%</h3>
+                                   </div>
+                               </div>
+                               <div class="card csh-16">
+                                   <div class="card-header">
+                                       <h6>Service Precision</h6>
+                                       <i class="feather icon-refresh-cw reload-card" style="float:right;position: relative;bottom: 18px;left: 5px;"></i>
+                                   </div>
+                                   <div class="card-body">
+                                       <table style="font-size: 13px;">
+                                           <thead>
+                                               <th>Reversed Order</th>
+                                               <th style="float:right;">100%</th>
+                                           </thead>
+                                           <thead>
+                                               <th>Forward Order</th>
+                                               <th style="float:right;">NA</th>
+                                           </thead>
+                                           <thead>
+                                               <th>Returened Order</th>
+                                               <th style="float:right;">NA</th>
+                                           </thead>
+                                       </table>
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                               <div class="card csh-16">
+                                   <div class="card-header">
+                                       <h6>COD Balance</h6>
+                                       <i class="feather icon-refresh-cw reload-card" style="float:right;"></i>
+                                   </div>
+                                   <div class="card-body">
+                                       <h3 class="f-w-700 text-c-blue txtc" style="font-family:sans-serif;">&#x20B9;.150</h3>
+                                   </div>
+                               </div>
+                               <div class="card csh-16">
+                                   <div class="card-header">
+                                       <h6>Outstanding Billing</h6>
+                                       <i class="feather icon-refresh-cw reload-card" style="float:right;"></i>
+                                   </div>
+                                   <div class="card-body">
+                                       <h3 class="f-w-700 text-c-blue txtc" style="font-family:sans-serif;">&#x20B9;.340</h3>
+                                   </div>
+                               </div>
+                               <div class="card csh-16">
+                                   <div class="card-header">
+                                       <h6>Services not used</h6>
+                                       <i class="feather icon-refresh-cw reload-card" style="float:right;"></i>
+                                   </div>
+                                   <div class="card-body">
+                                       <h6 style="color:#D3D3D3;">No Data Found</h6>
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
+                               <div class="card csh-16">
+                                   <div class="card-header">
+                                       <h6>ACT on Exception</h6>
+                                       <i class="feather icon-refresh-cw reload-card" style="float:right;"></i>
+                                   </div>
+                                   <div class="card-body">
+                                       <p>Undelivered Orders</p>
+                                       <h3 class="f-w-700 text-c-blue txtc" style="font-family:sans-serif;">&#x20B9;.234</h3>
+                                   </div>
+                               </div>
+                               <div class="card csh-16">
+                                   <div class="card-header">
+                                       <h6>Delayed Shipments</h6>
+                                       <i class="feather icon-refresh-cw reload-card" style="float:right;"></i>
+                                   </div>
+                                   <div class="card-body">
+                                       <p>Undelivered Orders</p>
+                                       <div class="card-body">
+                                       <h6 style="color:#D3D3D3;">No Data Found</h6>
+                                   </div>
+                                   </div>
+                               </div>
+                               <div class="card csh-16">
+                                   <div class="card-header">
+                                       <h6>Pincodes you have shipped to</h6>
+                                       <i class="feather icon-refresh-cw reload-card" style="float:right;"></i>
+                                   </div>
+                                   <div class="card-body">
+                                       <h3 class="f-w-700 text-c-blue txtc" style="font-family:sans-serif;"><span style="color:red;">569</span>/700</h3>
+                                       <table>
+                                           <thead>
+                                               <th>Forward Order</th>&nbsp;
+                                               <th style="float:right;margin-left: 20px;">10</th>
+                                           </thead>
+                                           <thead>
+                                               <th>Reversed Order</th>&nbsp;&nbsp;&nbsp;
+                                               <th style="float:right;margin-left: 20px;">120</th>
+                                           </thead>
+                                       </table>
+                                   </div>
+                               </div>
+                           </div>
+                       </div>
+               </div>
+               </div>
+             </div>
+         </div>
+     </div>
 </section>
