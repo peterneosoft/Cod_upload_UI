@@ -29,6 +29,7 @@ export default {
       pagecount: 0,
       localuserid: 0,
       localhubid: 0,
+      localhubzoneid: 0,
       DenominationList: [],
       StatusID: 0,
       FinanceConfirmAmount: 0,
@@ -42,7 +43,7 @@ export default {
       pendingCODAmt: '0.00',
       yesterdayCODAmt: '0.00',
       TolatCollection: '0.00',
-      p2pAmount: '500.00',
+      p2pAmount: '0.00',
       myStr: ''
     }
   },
@@ -65,6 +66,7 @@ export default {
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
     var hubdetail         = JSON.parse(plaintext);
     this.localhubid       = hubdetail[0].HubID;
+    this.localhubzoneid   = hubdetail[0].HubZoneId;
 
     var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');
@@ -356,6 +358,7 @@ export default {
           ReasonID: (this.Reason)?this.Reason:null,
           CreatedBy: this.localuserid,
           HubId: this.localhubid,
+          HubZoneId: this.localhubzoneid,
           DifferenceAmount: this.unmatchedAmt,
           TolatCollection: TolatCollection,
           StatusID: (this.StatusID != '') ? this.StatusID : 1,

@@ -40,6 +40,8 @@ export default {
           financeconfirmdate: [],
           confirmamount: []
       },
+      zoneAmtList: [],
+      totalzoneamt: '0.00'
     }
   },
 
@@ -59,12 +61,77 @@ export default {
 
     this.getZoneData();
     this.GetReasonList();
+    this.GetSumOfZoneHubAmtData();
   },
 
   methods: {
 
     setid(name, key){
       return name+key;
+    },
+
+    //to get All Hub List
+    getZoneData() {
+
+      this.input = {}
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'external/getallzones',
+          data: this.input,
+          headers: {
+            'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+          this.zoneList = result.data.zone.data;
+        }, error => {
+          console.error(error)
+        })
+    },
+
+    //to get Hub List According to Zone
+    GetSumOfZoneHubAmtData() {
+      this.input = {}
+
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'getsumofzonehubamt',
+          'data': this.input,
+          headers: {
+            'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+
+          var data = []; let zonelist = this.zoneList; let zoneAmt = result.data.rows; let totalamt = 0;
+
+          zonelist.forEach(function (zData, ind) {
+
+             if(result.data.rows.findIndex(x => x.hubzoneid==zData.hubzoneid) != -1){
+               for(var j=0; j<zoneAmt.length; j++){
+                 if(zData.hubzoneid==zoneAmt[j].hubzoneid){
+                   totalamt += parseInt(zoneAmt[j].zoneamount);
+                   data.push({
+                     hubzoneid:zData.hubzoneid,
+                     hubzonename:zData.hubzonename,
+                     zoneamount:zoneAmt[j].zoneamount
+                   });
+                 }
+               }
+             }else{
+               data.push({
+                 hubzoneid:zData.hubzoneid,
+                 hubzonename:zData.hubzonename,
+                 zoneamount:'0.00'
+               });
+             }
+          });
+
+          this.zoneAmtList = data;
+          this.totalzoneamt = parseFloat(Math.round(totalamt)).toFixed(2);
+        }, error => {
+          console.error(error)
+        })
     },
 
     //to get Hub List According to Zone
