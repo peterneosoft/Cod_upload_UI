@@ -52,12 +52,14 @@ export default {
   },
   created() {
   this.urltoken = window.localStorage.getItem('accessuserToken');
-  this.GetDeliveryAgentData();
-  this.GetDenominationData();
-  this.GetReasonList();
+
+
   },
 
   mounted() {
+    this.GetDeliveryAgentData();
+    this.GetDenominationData();
+    this.GetReasonList();
     var hubdetailEncrypt  = window.localStorage.getItem('accesshubdata')
     var bytes             = CryptoJS.AES.decrypt(hubdetailEncrypt.toString(), 'Key');
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
@@ -267,6 +269,7 @@ export default {
           }
         })
         .then(result => {
+
           this.DenominationList = result.data.data;
         }, error => {
           console.error(error)
@@ -297,6 +300,7 @@ export default {
           }
         })
         .then(result => {
+
           this.SRList = result.data.SR
         }, error => {
           console.error(error)
