@@ -42,6 +42,7 @@ export default {
       },
       zoneAmtList: [],
       totalzoneamt: '0.00'
+
     }
   },
 
@@ -235,6 +236,7 @@ export default {
               data.push({
                 svcledgerid: finData.svcledgerid,
                 hubid: finData.hubid,
+                financereasonid: finData.financereasonid,
                 depositdate: date.toISOString().slice(0,10),
                 openingbalance: finData.openingbalance,
                 codamount: finData.codamount,
@@ -250,7 +252,6 @@ export default {
             });
 
             this.listFinanceledgerData = data;
-            console.log("this.listFinanceledgerData",JSON.stringify(this.listFinanceledgerData));
             this.isLoading = false;
             let totalRows     = result.data.data.count;
             this.resultCount  = result.data.data.count;
@@ -274,6 +275,11 @@ export default {
           this.HubName = event.target[1].selectedOptions[0].attributes.title.nodeValue;
           this.HubID = event.target[1].selectedOptions[0].attributes.value.nodeValue;
           this.StatusVal = event.target[2].selectedOptions[0].attributes.title.nodeValue;
+          if(this.StatusVal == "Close"){
+              this.StatusVal = "Transacton Closed"
+          }else{
+              this.StatusVal
+          }
           this.GetFinanceledgerData(event);
          }
       }).catch(() => {
@@ -305,7 +311,10 @@ export default {
           let error = document.getElementById("d_t");
            error.style.display = "block";
         }else{
-           insertflag=1;
+          let error = document.getElementById("d_t");
+          error.style.display = "None";
+          insertflag=1;
+
         }
       }
       if(finreasonid == "5"){
@@ -316,10 +325,14 @@ export default {
           error.style.display = "block";
          let errord_a = document.getElementById("d_a");
           errord_a.style.display = "block";
-           insertflag=1;
          return false;
        }else{
-          insertflag=1;
+         let error = document.getElementById("d_t");
+         error.style.display = "None";
+         let errord_a = document.getElementById("d_a");
+         errord_a.style.display = "None";
+         insertflag=1;
+
        }
       }
 
@@ -349,10 +362,6 @@ export default {
         } else if (response.data.code == 202) {
           this.$alertify.error(response.data.message)
         }
-        let error = document.getElementById("d_t");
-        error.style.display = "None";
-        let errord_a = document.getElementById("d_a");
-        errord_a.style.display = "None";
         event.target.reset();
       })
       .catch((httpException) => {

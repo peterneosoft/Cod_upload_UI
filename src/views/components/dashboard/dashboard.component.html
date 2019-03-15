@@ -1,7 +1,51 @@
 <section>
-  <div class="pcoded-content">
-       <div class="page-header card" style="border:none;">
-           <div class="row align-items-end">
+<div class="animated fadeIn">
+    <div class="row">
+      <!--/.col-->
+      <div class="col-xs-12 col-sm-12 col-lg-12 col-lg-12 pdl_0">
+        <div class="card h-100 block_hgt">
+          <div class="h-100 form-verticle">
+            <div class="col-xs-2  h-100 col-sm-2 col-lg-2 col-lg-2 float-left">
+              <label>Zone</label>
+              <b-input-group left="<i class='fa fa-list'></i>">
+                <select name="zone" id="zone" class="form-control" v-model="zone" v-on:change="getStateData" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('zone') }">
+                  <option value="">--Select--</option>
+                  <option v-for="zone_obj in zoneList" v-bind:value="zone_obj.hubzonename" >{{zone_obj.hubzonename}}</option>
+                </select>
+              </b-input-group>
+            </div>
+            <div class="col-xs-2 col-sm-2 col-lg-2 col-lg-2 float-left">
+              <label>State</label>
+              <b-input-group left="<i class='fa fa-list'></i>">
+                <select name="state" id="state" class="form-control" v-model="state" v-on:change="getCityData"  v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('state') }">
+                  <option value="">--Select--</option>
+                  <option v-for="state_obj in stateList" v-bind:value="state_obj.statename" >{{state_obj.statename}}</option>
+                </select>
+              </b-input-group>
+              </b-input-group>
+            </div>
+            <div class="col-xs-2 col-sm-2 col-lg-2 col-lg-2 float-left">
+              <label>City</label>
+              <b-input-group left="<i class='fa fa-list'></i>">
+                <select name="city" id="city" class="form-control" v-model="city"   v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('city') }">
+                  <option value="">--Select--</option>
+                  <option v-for="city_obj in cityList" v-bind:value="city_obj.cityname" >{{city_obj.cityname}}</option>
+                </select>
+              </b-input-group>
+            </div>
+            <div class="col-xs-2 col-sm-2 col-lg-2 col-lg-2 float-left">
+              <label>From Date</label>
+              <b-input-group left="<i class='fa fa-user'></i>">
+                <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="usertypename"></b-form-input>
+              </b-input-group>
+            </div>
+            <div class="col-xs-2 col-sm-2 col-lg-2 col-lg-2 float-left">
+              <label>To Date</label>
+              <b-input-group left="<i class='fa fa-user'></i>">
+                <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="usertypename"></b-form-input>
+              </b-input-group>
+            </div>
+            <div class="col-xs-2 col-sm-2 col-lg-2 col-lg-2 float-left d-flex h-100">
 
 
                <div class="col-lg-12" id="collapsesearch" style="margin-top: 20px;">
@@ -194,4 +238,5 @@
              </div>
          </div>
      </div>
+   </div>
 </section>
