@@ -6,30 +6,34 @@
           <i class=" fa fa-filter filter"></i> COD Remittance
         </div>
         <div class="card-body">
-          <form action="" method="post" class="form-horizontal">
+          <form v-on:submit.prevent="onSubmit">
 
             <div class="form-group row">
               <div class="col-md-5">
-                <label>Remittance Day:</label>
+                <label>Remittance Day</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                  <select name="hub" id="hub" class="form-control" v-model="hub">
+                  <select name="day" id="day" class="form-control" v-model="day" v-validate="{required: true}"
+                  v-bind:class="{'form-control': true, 'error': errors.has('day') }">
                     <option value="">--Select--</option>
-                    <option value="">Sunday</option>
-                    <option value="">Monday</option>
-                    <option value="">Tuesday-</option>
-                    <option value="">Wensday</option>
-                    <option value="">Friday</option>
+                    <option value="sunday">Sunday</option>
+                    <option value="monday">Monday</option>
+                    <option value="tuesday">Tuesday</option>
+                    <option value="wednesday">Wednesday</option>
+                    <option value="thursday">Thursday</option>
+                    <option value="friday">Friday</option>
+                    <option value="saturday">Saturday</option>
                 </select>
                 </b-input-group>
+                <span v-show="errors.has('day')" class="text-danger">Please select Days.</span>
               </div>
 
               <div class="col-md-5">
                 <label>Client Name</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                  <select name="bank" id="bank" class="form-control" v-model="bank">
-                    <option value="">--Select--</option>
-                </select>
+                  <Multiselect :options="ClientList" name="ClientMasterID" id="ClientMasterID" v-model="ClientMasterID" placeholder="Select Client" label="CompanyName" track-by="CompanyName" v-bind:multiple="multiple()" v-validate="{required: true}" v-bind:class="{'error': errors.has('ClientMasterID') }" :optionHeight="100" :hide-selected="true" style="z-index:999999;border: 1px solid #c2cfd6;">
+                  </Multiselect>
                 </b-input-group>
+                <span v-show="errors.has('ClientMasterID')" class="text-danger">Please select Client.</span>
               </div>
             </div>
               <div class="card-footer">
