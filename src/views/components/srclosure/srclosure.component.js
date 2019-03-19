@@ -93,6 +93,7 @@ export default {
        let IntDeposit_Amount = parseInt(this.Deposit_Amount)
        let Balanc = 0;
        let insertflag= 0;
+       //console.log(TotalAmt+" "+this.Deposit_Amount);
        if(IntTotalAmt > IntDeposit_Amount){
          Balanc = TotalAmt - this.Deposit_Amount ;
          this.showModal(Balanc)
@@ -152,6 +153,7 @@ export default {
                       this.errors.clear();
                       event.target.reset();
                     }
+
               })
               .catch((httpException) => {
                   console.error('exception is:::::::::', httpException)
@@ -226,15 +228,17 @@ export default {
             this.getRightSRLedgerDetails()
             this.GetSRLedgerDetails()
             if(result.data.code == 200){
-            this.Loading = false;
-            this.assign = result.data.data.assign
-            this.card = result.data.data.card
-            this.cash = result.data.data.cash
-            this.cod = result.data.data.cod
-            this.ndr = result.data.data.ndr
-            this.prepaid = result.data.data.prepaid
-            this.wallet = result.data.data.wallet
-           }
+              this.Loading = false;
+              this.assign = result.data.data.assign
+              this.card = result.data.data.card
+              this.cash = result.data.data.cash
+              this.cod = result.data.data.cod
+              this.ndr = result.data.data.ndr
+              this.prepaid = result.data.data.prepaid
+              this.wallet = result.data.data.wallet
+              this.getRightSRLedgerDetails()
+              this.GetSRLedgerDetails()
+            }
 
          }, error => {
            console.error(error)
