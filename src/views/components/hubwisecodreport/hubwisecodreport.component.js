@@ -39,6 +39,10 @@ export default {
   mounted() {
     var date = new Date();
     toDate.max = fromDate.max = date.toISOString().split("T")[0];
+
+    var userToken = window.localStorage.getItem('accessuserToken')
+    this.myStr = userToken.replace(/"/g, '');
+
     this.getZoneData();
   },
 
@@ -91,7 +95,7 @@ export default {
           url: apiUrl.api_url + 'external/getallzones',
           data: this.input,
           headers: {
-            'Authorization': 'Bearer '
+            'Authorization': 'Bearer '+this.myStr
           }
         })
         .then(result => {
@@ -109,13 +113,12 @@ export default {
       this.input = ({
           zoneid: this.zone
       })
-
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/getzonehub',
           'data': this.input,
           headers: {
-            'Authorization': 'Bearer '
+            'Authorization': 'Bearer '+this.myStr
           }
         })
         .then(result => {

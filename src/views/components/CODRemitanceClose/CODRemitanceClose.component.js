@@ -13,6 +13,7 @@ export default {
 
   data() {
     return {
+      fromDate:"",
       selected: 'DeliveryDate',
         options: [
           { text: 'Delivery Date', value: 'DeliveryDate' },
@@ -48,13 +49,13 @@ export default {
     //   }
     // },
     //
-    // onSubmit: function(event) {
-    //   this.$validator.validateAll().then(() => {
-    //     console.log('form is valid', this.model)
-    //     event.target.reset();
-    //   }).catch(() => {
-    //     console.log('errors exist', this.errors)
-    //   });
-    // }
+    onSubmit: function(event) {
+      this.$validator.validateAll().then(() => {
+        console.log('form is valid', this.model)
+        event.target.reset();
+      }).catch(() => {
+        console.log('errors exist', this.errors)
+      });
+    }
   }
 }

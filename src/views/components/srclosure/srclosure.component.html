@@ -18,7 +18,7 @@
                     <option v-for="SR_obj in SRList"  v-bind:value="SR_obj.SRID" >{{SR_obj.SRName}}</option>
                   </select>
                 </div>
-                <span v-show="errors.has('SR_Name')" class="text-danger">{{ "Please select SR Name" }}</span>
+                <span v-show="errors.has('SR_Name')" class="text-danger">Please select SR name.</span>
               </div>
 
               <div class="form-group">
@@ -28,14 +28,14 @@
                   </div>
                   <input class="form-control"  id="Deposit_Amount" v-model="Deposit_Amount" type="text" name="Deposit_Amount"
                      onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8" v-validate="{required: true}"
-                   v-bind:class="{'form-control': true, 'error': errors.has('Deposit_Amount') }" >
+                     v-bind:class="{'form-control': true, 'error': errors.has('Deposit_Amount') }" >
                   <div class="input-group-append">
                     <span class="input-group-text">
                       <i class="fa fa-rupee"></i>
                     </span>
                   </div>
               </div>
-              <span id="d_a" v-show="errors.has('Deposit_Amount')" class="text-danger">{{ errors.first('Deposit_Amount') }}</span>
+              <span id="d_a" v-show="errors.has('Deposit_Amount')" class="text-danger">The deposit amount field is required.</span>
               </div>
 
 
@@ -47,11 +47,11 @@
                   </div>
                   <select class="form-control" id="Reason" name="Reason"
                    v-model="Reason"v-bind:class="{'form-control': true, 'error': errors.has('Reason') }">
-                   <option value="" disabled>--Select--</option>
+                   <option value="" >--Select--</option>
                    <option v-for="Reason_obj in ReasonList" v-bind:value="Reason_obj.ReasonsID" >{{Reason_obj.Reason}}</option>
                   </select>
                 </div>
-                <span  v-show="errors.has('Reason')" class="text-danger">Select Reason  </span>
+                <span  v-show="errors.has('Reason')" class="text-danger">Select reason  </span>
               </div>
 
               <div class="card-footer">
@@ -62,9 +62,6 @@
               </div>
             </form>
           </div>
-        </div>
-        <div>
-          <b-link  @click="P2PEntry">Click Here For P2P Entry </b-link>
         </div>
       </div>
 
@@ -99,6 +96,7 @@
 
         <div class="col-sm-4" v-show="RightSRLedger">
           <b-card >
+            <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="Loading" />
             <table class="table table-bordered table-striped table-sm">
               <thead>
                 <tr>
@@ -130,18 +128,19 @@
           <div class="card">
             <div class="card-header"> Amount</div>
             <div class="card-body">
+             <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
               <table class="table table-responsive-sm">
                 <tbody>
                   <tr>
-                    <td>Today's COD Amt</td>
+                    <td>Today's COD Amount</td>
                     <td>{{TodaysCOD}}</td>
                   </tr>
                   <tr>
-                    <td>Pending COD Amt</td>
+                    <td>Pending COD Amount</td>
                     <td>{{PendingCOD}}</td>
                   </tr>
                   <tr>
-                    <td>Total Amt</td>
+                    <td>Total Amount</td>
                     <td id="Tot_Amt">{{TotalAmount}}</td>
                   </tr>
                 </tbody>
@@ -156,7 +155,7 @@
             <h5 class="text-danger" >Remaining Amount is Rs {{RemainData}}</h5>
           </div>
          </div>
-          <center><b-button class="mt-3"  @click="hideModal">OK</b-button></center>
+          <center><b-button size="sm" class="float-center" variant="primary"  @click="hideModal">OK</b-button></center>
         </b-modal>
       </div>
     </div>

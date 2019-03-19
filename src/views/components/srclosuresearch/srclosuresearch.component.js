@@ -21,6 +21,7 @@ export default {
       toDate:'',
       fromDate:'',
       resultCount:'',
+      urltoken:'',
       SRList:[],
       SRLedgerList:[],
       localhubid:0,
@@ -29,7 +30,6 @@ export default {
       pagecount: 0
     }
   },
-
   computed: {
 
   },
@@ -42,6 +42,8 @@ export default {
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
     var hubdetail         = JSON.parse(plaintext);
     this.localhubid       = hubdetail[0].HubID;
+
+    this.urltoken = window.localStorage.getItem('accessuserToken');
 
     this.GetDeliveryAgentData();
   },
@@ -67,7 +69,7 @@ export default {
           url: apiUrl.api_url + 'external/getdeliveryagents',
           data: this.input,
           headers: {
-            'Authorization': 'Bearer '
+            'Authorization': 'Bearer '+this.urltoken
           }
         })
         .then(result => {
@@ -95,7 +97,7 @@ export default {
           url: apiUrl.api_url + 'getMonthlySRLedgerDetails',
           data: this.input,
           headers: {
-            'Authorization': 'Bearer '
+            'Authorization': 'Bearer '+this.urltoken
           }
         })
         .then(result => {

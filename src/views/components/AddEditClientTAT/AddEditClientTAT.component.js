@@ -11,6 +11,11 @@ export default {
 
   data() {
     return {
+      RemittanceDay:"",
+      BeneficiaryName:"",
+      BankName:"",
+      BankAccount:"",
+      TAT:""
     }
   },
 

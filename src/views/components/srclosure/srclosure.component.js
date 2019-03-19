@@ -3,10 +3,11 @@ import axios from 'axios'
 import {Validator} from 'vee-validate'
 import CryptoJS from 'crypto-js'
 import Paginate from 'vuejs-paginate'
+import VueElementLoading from 'vue-element-loading';
 
 export default {
   name: 'srclosure',
-  components: {},
+  components: {  VueElementLoading},
   props: [],
 
   data() {
@@ -18,18 +19,20 @@ export default {
       TotalAmount:"",
       TodaysCOD:"",
       DeliveryDate: '',
-      assign: '',
-      card: '',
-      cash: '',
-      cod: '',
-      ndr: '',
-      prepaid: '',
-      wallet: '',
+      assign: 0,
+      card: 0,
+      cash: 0,
+      cod: "",
+      ndr: 0,
+      prepaid: 0,
+      wallet: 0,
       Reason:null,
       RemainData:"",
       resultCount:"",
       pageno: 0,
       pagecount: 0,
+      isLoading: false,
+      Loading: false,
       SRList:[],
       DenominationList:[],
       RightSRLedgerList:[],
@@ -52,8 +55,6 @@ export default {
   },
   created() {
   this.urltoken = window.localStorage.getItem('accessuserToken');
-
-
   },
 
   mounted() {
@@ -84,10 +85,7 @@ export default {
     hideModal() {
        this.$refs.myModalRef.hide()
      },
-     P2PEntry(){
-       window.open ("http://p2pstage.xbees.in/fastbees/#/codSRDayClosure?xbhubid="+this.localhubid+"&codclosedby="+this.localusername+"&token="+this.StaticUserToken,"myWindow","menubar=1,resizable=1,width=600,height=260,top=200,left=400,");
 
-     },
      saveSRClosure(){
        let statusAmount
        let TotalAmt = (document.getElementById("Tot_Amt")).textContent;
@@ -136,8 +134,23 @@ export default {
               .then((response) => {
                   if (response.data.code) {
                       this.$alertify.success(response.data.data);
-                       this.GetSRLedgerDetails();
-
+                      this.GetSRLedgerDetails();
+                      this.getRightSRLedgerDetails()
+                      this.DenominationList.map(data=>{
+                        let countVal = document.getElementById(data.Denomination);
+                        let amountVal = document.getElementById("mo"+data.Denomination);
+                        countVal.value=""
+                        amountVal.value=0
+                      });
+                      this.Regionshow = false,
+                      this.RightSRLedger = true,
+                      this.SRLedgerDetails = true,
+                      this.Deposit_Amount = "",
+                      this.Reason = "",
+                      this.tot_amt = ""
+                      this.$validator.reset();
+                      this.errors.clear();
+                      event.target.reset();
                     }
               })
               .catch((httpException) => {
@@ -152,7 +165,7 @@ export default {
         let countVal = document.getElementById(data.Denomination);
         let amountVal = document.getElementById("mo"+data.Denomination);
         countVal.value=""
-        amountVal.value=""
+        amountVal.value=0
       });
       this.Regionshow = false,
       this.RightSRLedger = false,
@@ -161,17 +174,16 @@ export default {
       this.Deposit_Amount = "",
       this.Reason = "",
       this.tot_amt = ""
+      this.$validator.reset();
+      this.errors.clear();
+      event.target.reset();
      },
-     //to get pagination
-     // getPaginationData(pageNum) {
-     //     this.pageno = (pageNum - 1) * 10
-
-     // },
 
      getRightSRLedgerDetails(){
        this.input = ({
           srid: this.SR_Name
        })
+       this.isLoading = true;
        axios({
            method: 'POST',
            url: apiUrl.api_url + 'getRightSRLedgerDetails',
@@ -181,9 +193,12 @@ export default {
            }
          })
          .then(result => {
+           if(result.data.code = 200){
+           this.isLoading = false;
            this.PendingCOD = result.data.PendingCOD
            this.TodaysCOD = result.data.TodaysCOD
            this.TotalAmount = result.data.TotalAmount
+         }
          }, error => {
            console.error(error)
          })
@@ -198,6 +213,7 @@ export default {
           username: this.localusername,
           status: ""
        })
+       this.Loading = true;
        axios({
            method: 'POST',
            url: apiUrl.api_url + 'insertSRShipment',
@@ -207,6 +223,10 @@ export default {
            }
          })
          .then(result => {
+            this.getRightSRLedgerDetails()
+            this.GetSRLedgerDetails()
+            if(result.data.code == 200){
+            this.Loading = false;
             this.assign = result.data.data.assign
             this.card = result.data.data.card
             this.cash = result.data.data.cash
@@ -214,8 +234,8 @@ export default {
             this.ndr = result.data.data.ndr
             this.prepaid = result.data.data.prepaid
             this.wallet = result.data.data.wallet
-            this.getRightSRLedgerDetails()
-            this.GetSRLedgerDetails()
+           }
+
          }, error => {
            console.error(error)
          })
@@ -312,15 +332,13 @@ export default {
          if(result){
           if((this.tot_amt != '0' && this.tot_amt != this.Deposit_Amount)||!this.tot_amt){
             let error = document.getElementById("d_a");
-             error.innerHTML = " 	Enter Denomination details. Amount mismatches";
+             error.innerHTML = " 	Enter denomination details. amount mismatches";
              error.style.display = "block";
           }else{
             let error = document.getElementById("d_a");
-             error.innerHTML = "The Deposit Amount Fields is Required";
+             error.innerHTML = "The deposit amount field is required";
              error.style.display = "None";
-
              this.saveSRClosure()
-
           }
         }
       }).catch(() => {

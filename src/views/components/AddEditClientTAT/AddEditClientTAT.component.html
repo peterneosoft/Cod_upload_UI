@@ -6,7 +6,7 @@
           <i class=" fa fa-filter filter"></i> Add Edit Client TAT
         </div>
         <div class="card-body">
-          <form action="" method="post" class="form-horizontal">
+          <form  v-on:submit.prevent="onSubmit">
             <div class="form-group row">
               <div class="col-md-4">
                 <label>Client Name</label>
@@ -30,44 +30,59 @@
               <div class="col-md-4">
                 <label>Remittance Day</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                  <select name="bank" id="bank" class="form-control" v-model="bank">
+                  <select name="RemittanceDay" id="RemittanceDay" class="form-control" v-model="RemittanceDay" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('RemittanceDay') }">
                     <option value="">--Select--</option>
                 </select>
                 </b-input-group>
+                  <span v-show="errors.has('RemittanceDay')" class="text-danger">Please Select  Remittance Day.</span>
               </div>
 
               <div class="col-md-4">
                 <label>TAT</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                  <select name="TAT" id="TAT" class="form-control" v-model="TAT">
+                  <select name="TAT" id="TAT" class="form-control" v-model="TAT" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('TAT') }">
                     <option value="">--Select--</option>
                     <option value="">T+2</option>
                     <option value="">T+3</option>
                 </select>
                 </b-input-group>
+                <span v-show="errors.has('TAT')" class="text-danger">Please Select TAT.</span>
               </div>
             </div>
-            <div class="form-group row">
-              <div class="col-md-4">
+           <div class="form-group row">
+            <div class="col-md-4">
+              <b-form-fieldset>
                 <label>Beneficiary Name</label>
                 <b-input-group left="<i class='fa fa-user'></i>">
-                  <b-form-input id="Beneficiary" type="text" placeholder=" Enter Beneficiary Name" v-model="Beneficiary"></b-form-input>
+                  <b-form-input type="text" placeholder="Enter Beneficiary Name" name="Beneficiary" id="Beneficiary" v-model="Beneficiary" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('Beneficiary') }"></b-form-input>
                 </b-input-group>
-              </div>
+                <span v-show="errors.has('Beneficiary')" class="text-danger">Please Enter Beneficiary Name
+                </span>
+              </b-form-fieldset>
+            </div>
 
-              <div class="col-md-4">
+            <div class="col-md-4">
+              <b-form-fieldset>
                 <label>Bank Name</label>
                 <b-input-group left="<i class='fa fa-bank'></i>">
-                  <b-form-input id="Bank" type="text" placeholder=" Enter Bank Name" v-model="Bank"></b-form-input>
+                  <b-form-input type="text" placeholder="Enter Bank Name" name="BankName" id="BankName" v-model="BankName" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('BankName') }"></b-form-input>
                 </b-input-group>
-              </div>
+                <span v-show="errors.has('BankName')" class="text-danger">Please Enter Bank Name
+                </span>
+              </b-form-fieldset>
             </div>
+            </div>
+
             <div class="form-group row">
               <div class="col-md-4">
-                <label>Bank Account No</label>
-                <b-input-group left="<i class='fa fa-user'></i>">
-                  <b-form-input id="BankAccount" type="text" placeholder=" Enter BankAccount Name" v-model="BankAccount"></b-form-input>
-                </b-input-group>
+                <b-form-fieldset>
+                  <label>Bank Account No</label>
+                  <b-input-group left="<i class='fa fa-user'></i>">
+                    <b-form-input type="text" placeholder="Enter Bank Account No" name="BankAccount" id="BankAccount" v-model="BankAccount" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('BankAccount') }"></b-form-input>
+                  </b-input-group>
+                  <span v-show="errors.has('BankAccount')" class="text-danger">Please Enter Account No
+                  </span>
+                </b-form-fieldset>
               </div>
 
               <div class="col-md-4">

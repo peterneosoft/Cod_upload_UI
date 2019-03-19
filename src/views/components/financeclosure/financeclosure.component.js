@@ -63,6 +63,7 @@ export default {
     this.getZoneData();
     this.GetReasonList();
     this.GetSumOfZoneHubAmtData();
+
   },
 
   methods: {
@@ -194,6 +195,7 @@ export default {
         })
         .then(result => {
           this.FinanceReasonList = result.data.Reasons.data;
+          console.log("this.FinanceReasonList",JSON.stringify(this.FinanceReasonList));
         }, error => {
           console.error(error)
         })
@@ -252,6 +254,7 @@ export default {
             });
 
             this.listFinanceledgerData = data;
+            console.log("this.listFinanceledgerData",JSON.stringify(this.listFinanceledgerData));
             this.isLoading = false;
             let totalRows     = result.data.data.count;
             this.resultCount  = result.data.data.count;

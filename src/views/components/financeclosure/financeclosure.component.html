@@ -113,10 +113,9 @@
                 <td>{{StatusVal}}</td>
                 <td>
                   <form v-on:submit.prevent="onUpdate">
-
-                    <select  v-model="form.finreason[data.svcledgerid]"  v-bind:name="setid('finreason', data.svcledgerid)" v-bind:id="setid('finreason', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('finreason'+data.svcledgerid) }" :disabled = "data.statusid == 6" >
-                      <option value="">--Select--</option>
-                      <option v-for="finreason_obj in FinanceReasonList"  v-bind:value="finreason_obj.ReasonsID" selected="`${data.financereasonid === finreason_obj.ReasonsID}`">{{finreason_obj.Reason}}</option>
+                    <select   v-model="form.finreason[data.svcledgerid]"  v-bind:name="setid('finreason', data.svcledgerid)" v-bind:id="setid('finreason', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('finreason'+data.svcledgerid) }" :disabled="data.statusid == 6 ? true : false">
+                      <option  value="">--Select--</option>
+                      <option v-for="finreason_obj in FinanceReasonList"   :selected="`${data.financereasonid == finreason_obj.ReasonsID  }`" v-bind:value="finreason_obj.ReasonsID" >{{finreason_obj.Reason}}</option>
                     </select>
                     <span v-show="errors.has('finreason'+data.svcledgerid)"  class="text-danger">The Finance Reason field is required.</span>
                     <br v-show="form.finreason[data.svcledgerid] > 0">
