@@ -26,7 +26,7 @@ export default {
       ndr: 0,
       prepaid: 0,
       wallet: 0,
-      Reason:null,
+      Reason:0,
       RemainData:"",
       resultCount:"",
       pageno: 0,
