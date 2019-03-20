@@ -101,8 +101,8 @@ export default {
       this.isLoading = true;
 
       axios({
-          method: 'POST',
-          'url': apiUrl.api_url + 'codremittancemaster',
+          method: 'GET',
+          'url': apiUrl.api_url + 'codremittancemaster?RemittanceDay='+dData+'&ClientId='+cData+'&offset='+this.pageno+'&limit=10',
           'data': this.input,
           headers: {
               'Authorization': 'Bearer '+this.myStr
@@ -131,11 +131,45 @@ export default {
           } else {
               this.pagecount = Math.ceil(totalRows / 10)
           }
-          this.resetForm(event);
+          //this.resetForm(event);
         }else{
           this.listCODRemittanceData = [];
           this.resultCount  = 0;
           this.isLoading = false;
+        }
+      }, error => {
+          console.error(error)
+      })
+    },
+
+    exportCODRemittanceData(){
+      let cData = [];
+      this.ClientId.forEach(function (val) {
+        cData.push(val.ClientMasterID);
+      });
+
+      let dData = [];
+      this.RemittanceDay.forEach(function (val) {
+        dData.push(val.day);
+      });
+
+      this.input = ({
+          RemittanceDay: dData,
+          ClientId: cData
+      })
+
+      axios({
+          method: 'GET',
+          'url': apiUrl.api_url + 'exportcodremittance?RemittanceDay='+dData+'&ClientId='+cData,
+          'data': this.input,
+          headers: {
+              'Authorization': 'Bearer '+this.myStr
+          }
+      })
+      .then(result => {
+        if(result.data.code == 200){
+          //this.listCODRemittanceData = result.data.data.rows;
+        }else{
         }
       }, error => {
           console.error(error)
