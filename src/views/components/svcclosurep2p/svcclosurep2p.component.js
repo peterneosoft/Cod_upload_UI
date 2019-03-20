@@ -52,7 +52,7 @@ export default {
 
   },
   created() {
-    this.GetDenominationData();
+
   },
   mounted() {
     var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
@@ -70,7 +70,7 @@ export default {
 
     var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');
-
+    this.GetDenominationData();
     var date = new Date();
     DepositDate.max = DeliveryDate.max = date.toISOString().split("T")[0];
 

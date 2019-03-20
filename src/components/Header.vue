@@ -111,7 +111,8 @@
 </template>
 <script>
 import CryptoJS from 'crypto-js';
-
+import axios from 'axios';
+import apiUrl from '../constants'
 export default {
   name: 'header',
   data() {
@@ -123,6 +124,28 @@ export default {
     }
   },
   mounted() {
+  //console.log(window.localStorage.getItem('accessuserToken'));
+  axios({
+    method: 'POST',
+      'url': apiUrl.api_url + 'appvalidatetoken',
+      'data': {},
+      headers: {
+          'Authorization': 'Bearer '+window.localStorage.getItem('accessuserToken')
+           }
+     })
+     .then((response) => {
+       //console.log(response)
+
+    },(error)=>{
+      if(error.response.status===401){
+        localStorage.removeItem('accesshubdata')
+        localStorage.removeItem('accesspermissiondata')
+        localStorage.removeItem('accessuserdata')
+        localStorage.removeItem('accessuserToken')
+        localStorage.removeItem('isLoggedIn')
+        this.$router.push('/login')
+      }
+    });
     var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
     var bytes  = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
     var plaintext = bytes.toString(CryptoJS.enc.Utf8);
@@ -156,10 +179,10 @@ export default {
 
     logout(e) {
       e.preventDefault()
-      localStorage.removeItem('permissiondata')
-      localStorage.removeItem('userdetail')
-      localStorage.removeItem('userToken')
-      localStorage.removeItem('isLoggedIn')
+      localStorage.removeItem('accesshubdata')
+      localStorage.removeItem('accesspermissiondata')
+      localStorage.removeItem('accessuserdata')
+      localStorage.removeItem('accessuserToken')
       this.$router.push('/login')
     },
      changepassword() {
