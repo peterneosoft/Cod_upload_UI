@@ -15,7 +15,7 @@
                     <input id="fromDate" type="date" name="fromDate" v-validate="{required: true}"
                     v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }">
                   </b-input-group>
-                  <span v-show="errors.has('fromDate')" class="text-danger">Please select From date. </span>
+                  <span v-show="errors.has('fromDate')" class="text-danger">Please select from date. </span>
                 </div>
 
                 <div class="col-md-4">
@@ -24,7 +24,7 @@
                     <input id="toDate" type="date" name="toDate" v-validate="{required: true}"
                     v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }">
                   </b-input-group>
-                  <span v-show="errors.has('toDate')" class="text-danger">Please select To date. </span>
+                  <span v-show="errors.has('toDate')" class="text-danger">Please select to date. </span>
                 </div>
               </div>
               <div class="card-footer">
@@ -48,11 +48,11 @@
                 <th class="text-center tableheader"><b>#</b></th>
                 <th class="text-center tableheader"><b>Hub</b></th>
                 <th class="text-center tableheader"><b>Deposite Date</b></th>
-                <th class="text-center tableheader"><b>Opening Amt</b></th>
+                <th class="text-center tableheader"><b>Opening Amount</b></th>
                 <th class="text-center tableheader"><b>COD Receivable</b></th>
-                <th class="text-center tableheader"><b>Bank Deposited Amt</b></th>
-                <th class="text-center tableheader"><b>Actual Received Amt</b></th>
-                <th class="text-center tableheader"><b>Discrepancy Amt</b></th>
+                <th class="text-center tableheader"><b>Bank Deposited Amount</b></th>
+                <th class="text-center tableheader"><b>Actual Received Amount</b></th>
+                <th class="text-center tableheader"><b>Discrepancy Amount</b></th>
                 <th class="text-center tableheader"><b>Balance Outstanding</b></th>
                 <th class="text-center tableheader"><b>Status</b></th>
                 <th class="text-center tableheader"><b>Finance Reason</b></th>

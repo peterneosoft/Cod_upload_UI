@@ -17,11 +17,16 @@ export default {
 
   data() {
     return {
-      localhubid: 0,
-      localhubname: '',
-      day: '',
-      ClientMasterID: '',
-      ClientList: []
+      pageno: 0,
+      pagecount: 0,
+      isLoading: false,
+      resultCount: '',
+      ClientId: '',
+      ClientList: [],
+      RemittanceDay: '',
+      RemittanceDayList: [],
+      listCODRemittanceData: [],
+      calcModal: false,
     }
   },
 
@@ -36,20 +41,27 @@ export default {
     var userdetail        = JSON.parse(plaintext);
     this.localuserid      = userdetail.userid;
 
-    var hubdetailEncrypt  = window.localStorage.getItem('accesshubdata')
-    var bytes             = CryptoJS.AES.decrypt(hubdetailEncrypt.toString(), 'Key');
-    var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
-    var hubdetail         = JSON.parse(plaintext);
-    this.localhubid       = hubdetail[0].HubID;
-    this.localhubname     = hubdetail[0].HubName;
-
     var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');
 
     this.GetClientData();
+
+    this.RemittanceDayList = [
+      {day:"Sunday"},
+      {day:"Monday"},
+      {day:"Tuesday"},
+      {day:"Wednesday"},
+      {day:"Thursday"},
+      {day:"Friday"},
+      {day:"Saturday"}
+    ]
   },
 
   methods: {
+    setid(name, key){
+      return name+key;
+    },
+
     multiple(){
       return true;
     },
@@ -69,21 +81,116 @@ export default {
       })
     },
 
+    searchCODRemittanceData(event){
+      let cData = [];
+      this.ClientId.forEach(function (val) {
+        cData.push(val.ClientMasterID);
+      });
+
+      let dData = [];
+      this.RemittanceDay.forEach(function (val) {
+        dData.push(val.day);
+      });
+
+      this.input = ({
+          offset: this.pageno,
+          limit: 10,
+          RemittanceDay: dData,
+          ClientId: cData
+      })
+      this.isLoading = true;
+
+      axios({
+          method: 'POST',
+          'url': apiUrl.api_url + 'codremittancemaster',
+          'data': this.input,
+          headers: {
+              'Authorization': 'Bearer '+this.myStr
+          }
+      })
+      .then(result => {
+        if(result.data.code == 200){
+
+          const clientsArray = this.ClientList;
+
+          if(clientsArray.length>0){
+            result.data.data.rows.map(item => {
+              if(item.ClientId){
+                  let obj = clientsArray.find(el => el.ClientMasterID === item.ClientId);
+                  item.Company = obj.CompanyName;
+              }
+            });
+          }
+
+          this.listCODRemittanceData = result.data.data.rows;
+          this.isLoading = false;
+          let totalRows     = result.data.data.count;
+          this.resultCount  = result.data.data.count;
+          if (totalRows < 10) {
+              this.pagecount = 1
+          } else {
+              this.pagecount = Math.ceil(totalRows / 10)
+          }
+          this.resetForm(event);
+        }else{
+          this.listCODRemittanceData = [];
+          this.resultCount  = 0;
+          this.isLoading = false;
+        }
+      }, error => {
+          console.error(error)
+      })
+    },
+
     //to get pagination
     getPaginationData(pageNum) {
         this.pageno = (pageNum - 1) * 10
-        this.GetSVCledgerData()
+        this.searchCODRemittanceData()
     },
 
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
-           //this.saveSvcClosure(event);
-           event.target.reset();
+           this.searchCODRemittanceData(event);
          }
       }).catch(() => {
         console.log('errors exist', this.errors)
       });
-    }
+    },
+
+    resetForm(event) {
+      this.pageno = 0;
+      this.RemittanceDay = this.ClientId = '';
+      this.$validator.reset();
+      this.errors.clear();
+      event.target.reset();
+    },
+
+    checkAll(form) {
+      var myForm = document.forms[form];
+      let toggle = document.getElementById("checkAll").value;
+
+      for( var i=1; i < myForm.length; i++ ) {
+        if(toggle == 'on'){ document.getElementById("checkItem"+i).checked = true; }else{ document.getElementById("checkItem"+i).checked = false; }
+        //console.log('checkItem'+i, document.getElementById("checkItem"+i).value);
+      }
+      if(toggle=='on'){ document.getElementById("checkAll").value = 'off'; }else{ document.getElementById("checkAll").value = 'on'; }
+    },
+
+    calc() {
+      this.calcModal = true;
+      let RemittanceId = [];
+      $.each($("input[name='item']:checked"), function(){
+        RemittanceId.push($(this).val());
+      });
+
+      //alert("RemittanceDetailsId are: " + RemittanceId.join(", "));
+    },
+
+    closeCalcModal() {
+        this.calcModal = false,
+        this.$validator.reset();
+        this.errors.clear();
+    },
   }
 }

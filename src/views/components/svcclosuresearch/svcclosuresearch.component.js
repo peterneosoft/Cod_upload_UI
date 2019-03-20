@@ -91,7 +91,7 @@ export default {
             else { searchData.statusid = ' '; }
 
             data.push({
-              depositdate: date.toISOString().slice(0,10),
+              depositdate: date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear(),
               openingbalance: searchData.openingbalance,
               codamount: searchData.codamount,
               bankdeposit: searchData.bankdeposit,

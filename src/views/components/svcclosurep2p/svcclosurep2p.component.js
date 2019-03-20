@@ -222,8 +222,8 @@ export default {
               let bankdepositdate = new Date(svcData.bankdepositdate);
 
               data.push({
-                deliverydate:  deliverydatedate.toISOString().slice(0,10),
-                bankdepositdate:  bankdepositdate.toISOString().slice(0,10),
+                deliverydate:  deliverydatedate.getDate() + "/" + (deliverydatedate.getMonth() + 1) + "/" + deliverydatedate.getFullYear(),
+                bankdepositdate:  bankdepositdate.getDate() + "/" + (bankdepositdate.getMonth() + 1) + "/" + bankdepositdate.getFullYear(),
                 openingbalance: svcData.openingbalance,
                 codamount: svcData.codamount,
                 bankdeposit: svcData.bankdeposit,
@@ -414,7 +414,7 @@ export default {
     },
 
     resetForm(event) {
-      this.pageno = this.tot_amt = 0;
+      this.pageno = this.tot_amt = this.unmatchedAmt = 0;
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.Reason = '';
       $('#denomlist input[type="text"]').val(0);
       $('#denomlist input[type="number"]').val('');

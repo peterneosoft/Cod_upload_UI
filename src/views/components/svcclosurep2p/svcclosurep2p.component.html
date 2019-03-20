@@ -5,8 +5,7 @@
         <div class="card">
           <div class="card-header"><i class="fa fa-align-justify"></i> Closure</div>
           <div class="card-body">
-            <form  v-on:submit.prevent="onSubmit" >
-
+            <form v-on:submit.prevent="onSubmit">
               <div class="form-group">
                 <div class="input-group">
                   <div class="input-group-prepend">
@@ -18,7 +17,7 @@
                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                   </div>
                 </div>
-                <span v-show="errors.has('DeliveryDate')" class="text-danger">Please select Delivery date. </span>
+                <span v-show="errors.has('DeliveryDate')" class="text-danger">Please select delivery date. </span>
               </div>
 
               <div class="form-group">
@@ -32,7 +31,7 @@
                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                   </div>
                 </div>
-                <span v-show="errors.has('DepositDate')" class="text-danger">Please select Deposit date. </span>
+                <span v-show="errors.has('DepositDate')" class="text-danger">Please select deposit date. </span>
               </div>
 
               <div class="form-group">
@@ -46,7 +45,7 @@
                     <span class="input-group-text"><i class="fa fa-rupee"></i></span>
                   </div>
                 </div>
-                <span id="d_a" v-show="errors.has('Deposit_Amount')" class="text-danger">Please enter Deposit Amount. </span>
+                <span id="d_a" v-show="errors.has('Deposit_Amount')" class="text-danger">Please enter deposit amount. </span>
               </div>
 
               <div class="form-group">
@@ -65,7 +64,7 @@
                     <span class="input-group-text"><i class="fa fa-angle-down"></i></span>
                   </div>
                 </div>
-                  <span v-show="errors.has('DepositType')" class="text-danger">Please select Deposit type.  </span>
+                  <span v-show="errors.has('DepositType')" class="text-danger">Please select deposit type.  </span>
               </div>
 
               <div class="form-group">
@@ -82,7 +81,7 @@
                     <span class="input-group-text"><i class="fa fa-bank"></i></span>
                   </div>
                 </div>
-                <span v-show="errors.has('BankMasterId')" class="text-danger">Please select Bank Name.</span>
+                <span v-show="errors.has('BankMasterId')" class="text-danger">Please select bank name.</span>
               </div>
 
               <div class="form-group">
@@ -96,7 +95,7 @@
                     <span class="input-group-text"><i class="fa fa-exchange"></i></span>
                   </div>
                 </div>
-                <span v-show="errors.has('TransactionID')" class="text-danger">Please enter Transaction Id.</span>
+                <span v-show="errors.has('TransactionID')" class="text-danger">Please enter transaction id.</span>
               </div>
 
               <div class="form-group" v-show="DepositType != ''">
@@ -110,7 +109,7 @@
                     <span class="input-group-text"><i class="fa fa-file"></i></span>
                   </div>
                 </div>
-                <span v-show="errors.has('DepositSlip')" class="text-danger">Please Upload Deposit Slip.</span>
+                <span v-show="errors.has('DepositSlip')" class="text-danger">Please upload deposit slip.</span>
               </div>
 
               <div class="form-group" v-show="unmatchedAmt > 0">
@@ -127,12 +126,12 @@
                     <span class="input-group-text"><i class="fa fa-angle-down"></i></span>
                   </div>
                 </div>
-                <span v-show="errors.has('Reason')" class="text-danger">Rs.{{unmatchedAmt}} is remaining amount so, please select Reason.</span>
+                <span v-show="errors.has('Reason')" class="text-danger">Rs.{{unmatchedAmt}} is remaining amount so, please select reason to verify.</span>
               </div>
 
               <div class="card-footer">
                 <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-dot-circle-o"></i> Save</button>
-                <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> Clear</button>
+                <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
               </div>
             </form>
           </div>
@@ -180,21 +179,21 @@
             <table class="table table-responsive-sm">
               <tbody>
                 <tr>
-                  <td>Yesterday's COD Amt</td>
+                  <td>Yesterday's COD Amount</td>
                   <td id="ClosingBalance">{{yesterdayCODAmt}}</td>
                 </tr>
                 <tr>
-                  <td>Pending COD Amt</td>
+                  <td>Pending COD Amount</td>
                   <td id="CODAmount">{{pendingCODAmt}}</td>
                 </tr>
                 <tr>
-                  <td>Total Amt</td>
+                  <td>Total Amount</td>
                   <td id="TolatCollection">{{TolatCollection}}</td>
                 </tr>
-                <tr>
-                  <td>Total P2P Amt</td>
+                <!-- <tr>
+                  <td>Total P2P Amount</td>
                   <td id="p2pamt">{{p2pAmount}}</td>
-                </tr>
+                </tr> -->
               </tbody>
             </table>
           </div>
