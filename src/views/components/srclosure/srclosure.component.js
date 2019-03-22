@@ -4,10 +4,15 @@ import {Validator} from 'vee-validate'
 import CryptoJS from 'crypto-js'
 import Paginate from 'vuejs-paginate'
 import VueElementLoading from 'vue-element-loading';
+import Multiselect from 'vue-multiselect'
+import 'vue-multiselect/dist/vue-multiselect.min.css';
+
 
 export default {
   name: 'srclosure',
-  components: {  VueElementLoading},
+  components: {
+  VueElementLoading,
+  Multiselect},
   props: [],
 
   data() {
@@ -27,7 +32,7 @@ export default {
       prepaid: 0,
       wallet: 0,
       Reason:0,
-      RemainData:"",
+      RemainData:0,
       resultCount:"",
       pageno: 0,
       pagecount: 0,
@@ -41,6 +46,7 @@ export default {
       Regionshow:false,
       RightSRLedger:false,
       SRLedgerDetails:false,
+      modalShow:false,
       localhubid: 0,
       localusername: 0,
       StaticUserToken: "sKB3uGF0qvklWhTLOgsIXDRJc",
@@ -85,15 +91,16 @@ export default {
     hideModal() {
        this.$refs.myModalRef.hide()
      },
-
-     saveSRClosure(){
+     closeStatusRoleModal() {
+         this.modalShow = false
+     },
+     saveSRClosure(event){
        let statusAmount
        let TotalAmt = (document.getElementById("Tot_Amt")).textContent;
        let IntTotalAmt = parseInt(TotalAmt)
        let IntDeposit_Amount = parseInt(this.Deposit_Amount)
        let Balanc = 0;
        let insertflag= 0;
-       //console.log(TotalAmt+" "+this.Deposit_Amount);
        if(IntTotalAmt > IntDeposit_Amount){
          Balanc = TotalAmt - this.Deposit_Amount ;
          this.showModal(Balanc)
@@ -206,9 +213,15 @@ export default {
          })
      },
      srChange(event){
+       //console.log("this.SR_Name",this.SR_Name);
+        //this.SR_Name = this.SR_Name.SRID
        this.SR_Name = event.target.value
        this.RightSRLedger = true;
        this.SRLedgerDetails = true;
+       if(!this.SR_Name){
+         return false;
+         this.resetData(event);
+       }
        this.input = ({
           srid: this.SR_Name,
           hubid: this.localhubid,
@@ -342,7 +355,7 @@ export default {
             let error = document.getElementById("d_a");
              error.innerHTML = "The deposit amount field is required";
              error.style.display = "None";
-             this.saveSRClosure()
+             this.saveSRClosure(event)
           }
         }
       }).catch(() => {

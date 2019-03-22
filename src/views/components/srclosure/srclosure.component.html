@@ -7,6 +7,15 @@
           <div class="card-body">
 
             <form  v-on:submit.prevent="onSubmit">
+              <!-- <div class="form-group" >
+                  <label>SR Name</label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                  <Multiselect :options="SRList" name="SR_Name" id="SR_Name" v-model="SR_Name"  label="SRName" track-by="SRName"  :value="SRID"
+                    :searchable="true" v-bind:class="{'form-control': true, 'error': errors.has('SR_Name') }":max-height="100" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;" @input="srChange">
+                    </Multiselect>
+                  </b-input-group>
+                <span v-show="errors.has('SR_Name')" class="text-danger">Please select SR name.</span>
+              </div> -->
               <div class="form-group" >
                 <div class="input-group">
                   <div class="input-group-prepend">
@@ -45,13 +54,13 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">Reason</span>
                   </div>
-                  <select class="form-control" id="Reason" name="Reason"
+                  <select class="form-control" id="Reason" name="Reason" v-validate="`${Regionshow ? 'required' : ''}`"
                    v-model="Reason"v-bind:class="{'form-control': true, 'error': errors.has('Reason') }">
                    <option value="" >--Select--</option>
                    <option v-for="Reason_obj in ReasonList" v-bind:value="Reason_obj.ReasonsID" >{{Reason_obj.Reason}}</option>
                   </select>
                 </div>
-                <span  v-show="errors.has('Reason')" class="text-danger">Select reason  </span>
+                <span v-show="errors.has('Reason')" class="text-danger">Rs.{{RemainData}} is remaining amount so, please select reason.</span>
               </div>
 
               <div class="card-footer">
@@ -148,16 +157,26 @@
             </div>
           </div>
         </div>
-        <div @click="showModal">
-        <b-modal ref="myModalRef" >
-        <div>
-          <div class="d-block text-center danger"  >
-            <h5 class="text-danger" >Remaining Amount is Rs {{RemainData}}</h5>
+
+      <b-modal ref="myModalRef" v-model="modalShow"  id=#confirmationmodal title="Confirmation" >
+        <div role="document">
+          <div class="modal-content">
+            <div class="modal-headerfrm">
+              <h5 class="modal-title">Confirmation</h5>
+              <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-bodyfrm">
+              <h4>Remaining Amount is Rs {{RemainData}}</h4>
+            </div>
+            <div class="modal-footerfrm">
+              <button type="button"  @click="modalShow = false" class="btn btn-success">OK</button>&nbsp;
+              <button type="button" class="btn btn-danger" @click="closeStatusRoleModal">Cancel</button>
+            </div>
           </div>
-         </div>
-          <center><b-button size="sm" class="float-center" variant="primary"  @click="hideModal">OK</b-button></center>
-        </b-modal>
-      </div>
+        </div>
+      </b-modal>
     </div>
 
     <div class="col-12" v-show="SRLedgerDetails">
