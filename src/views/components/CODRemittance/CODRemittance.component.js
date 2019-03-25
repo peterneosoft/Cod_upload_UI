@@ -27,6 +27,7 @@ export default {
       RemittanceDayList: [],
       listCODRemittanceData: [],
       calcModal: false,
+      exportPath:''
     }
   },
 
@@ -110,27 +111,17 @@ export default {
       })
       .then(result => {
         if(result.data.code == 200){
-
-          const clientsArray = this.ClientList;
-
-          if(clientsArray.length>0){
-            result.data.data.rows.map(item => {
-              if(item.ClientId){
-                  let obj = clientsArray.find(el => el.ClientMasterID === item.ClientId);
-                  item.Company = obj.CompanyName;
-              }
-            });
-          }
-
-          this.listCODRemittanceData = result.data.data.rows;
+          this.listCODRemittanceData = result.data.data;
           this.isLoading = false;
-          let totalRows     = result.data.data.count;
-          this.resultCount  = result.data.data.count;
+          let totalRows     = result.data.count;
+          this.resultCount  = result.data.count;
+
           if (totalRows < 10) {
               this.pagecount = 1
           } else {
               this.pagecount = Math.ceil(totalRows / 10)
           }
+          this.exportCODRemittanceData();
           //this.resetForm(event);
         }else{
           this.listCODRemittanceData = [];
@@ -168,7 +159,7 @@ export default {
       })
       .then(result => {
         if(result.data.code == 200){
-          //this.listCODRemittanceData = result.data.data.rows;
+          this.exportPath = result.data.data;
         }else{
         }
       }, error => {
