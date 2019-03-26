@@ -1,17 +1,15 @@
 import apiUrl from '../../../constants'
 import axios from 'axios'
-import {
-  Validator
-} from 'vee-validate'
+import {Validator} from 'vee-validate'
 import CryptoJS from 'crypto-js'
-import Paginate from 'vuejs-paginate'
-import VueElementLoading from 'vue-element-loading';
+import Paginate from 'vuejs-paginate';
+
 
 export default {
   name: 'srclosuresearch',
   components: {
-    Paginate,
-    VueElementLoading
+    Paginate
+
   },
   props: [],
 
@@ -28,6 +26,7 @@ export default {
       SRLedgerDetails:false,
       pageno: 0,
       pagecount: 0
+
     }
   },
   computed: {
@@ -50,33 +49,35 @@ export default {
 
   methods: {
     //to get SR List
-    GetDeliveryAgentData() {
 
-      var hubEncrypt = window.localStorage.getItem('accesshubdata')
-      var hubbytes  = CryptoJS.AES.decrypt(hubEncrypt.toString(), 'Key');
-      var hubtext = hubbytes.toString(CryptoJS.enc.Utf8);
-      var hubArr=JSON.parse(hubtext);
+    GetDeliveryAgentData(){
+       var hubEncrypt = window.localStorage.getItem('accesshubdata')
+       var hubbytes  = CryptoJS.AES.decrypt(hubEncrypt.toString(), 'Key');
+       var hubtext = hubbytes.toString(CryptoJS.enc.Utf8);
+       var hubArr=JSON.parse(hubtext);
 
-      this.input = ({
-          usertype: "3",
-          hubid: [hubArr[0].HubID],
-          hubname: hubArr[0].HubName,
-          appkey: '$#@COD&&Mang&*^%$$'
-      })
+       this.input = ({
+           hubid: [hubArr[0].HubID],
+           appkey: '$#@COD&&Mang&*^%$$'
+       })
 
-      axios({
-          method: 'POST',
-          url: apiUrl.api_url + 'external/getdeliveryagents',
-          data: this.input,
-          headers: {
-            'Authorization': 'Bearer '+this.urltoken
-          }
-        })
-        .then(result => {
-          this.SRList = result.data.SR;
-        }, error => {
-          console.error(error)
-        })
+       axios({
+           method: 'POST',
+           url: apiUrl.api_url + 'external/GetdeliveryAgentsFromHubId',
+           data: this.input,
+           headers: {
+             'Authorization': 'Bearer '+this.urltoken
+           }
+         })
+         .then(result => {
+           if(result.data.code == 200){
+           this.SRList = result.data.data;
+         }else{
+            this.$alertify.error("Data Not Found")
+         }
+         }, error => {
+           console.error(error)
+         })
     },
     getPaginationData(pageNum) {
         this.pageno = (pageNum - 1) * 10
@@ -92,6 +93,7 @@ export default {
         offset:this.pageno,
         limit:10
       })
+
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'getMonthlySRLedgerDetails',
@@ -103,7 +105,7 @@ export default {
         .then(result => {
           if(result.data.code == 200){
             this.SRLedgerList = result.data.data.rows;
-            this.isLoading    = false;
+
             let totalRows     = result.data.data.count
 
             this.resultCount  = result.data.data.count

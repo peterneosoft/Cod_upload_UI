@@ -10,8 +10,8 @@
           <div class="h-100 form-verticle">
             <div class="col-xs-2  h-100 col-sm-2 col-lg-2 col-lg-2 float-left">
               <label>Zone</label>
-              <b-input-group left="<i class='fa fa-list'></i>">
-                <select  name="zone" id="zone" class="form-control" v-model="zone" v-on:change="getStateData" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('zone') }">
+              <b-input-group  left="<i class='fa fa-list'></i>">
+                <select   name="zone" id="zone" class="form-control" v-model="zone" v-on:change="getStateData" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('zone') }">
                   <option value="">--Select--</option>
                   <option v-for="zone_obj in zoneList" v-bind:value="zone_obj.hubzonename" >{{zone_obj.hubzonename}}</option>
                 </select>
@@ -103,7 +103,7 @@
                                        <i class="feather icon-refresh-cw reload-card" style="float:right;position: relative;bottom: 18px;left: 5px;"></i>
                                    </div>
                                    <div class="card-body">
-                                       <table style="font-size: 13px;">
+                                       <table style="font-size: 10px;margin-left: -1.5em">
                                            <thead>
                                                <th>Reversed Order</th>
                                                <th style="float:right;">100%</th>

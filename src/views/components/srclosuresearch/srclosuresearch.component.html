@@ -13,7 +13,7 @@
                   <select class="form-control" id="SR_Name" v-model="SR_Name"name="SR_Name" v-validate="{required: true}"
                      v-bind:class="{'form-control': true, 'error': errors.has('SR_Name') }">
                     <option value="">--Select--</option>
-                    <option v-for="SR_obj in SRList" v-bind:value="SR_obj.SRID" >{{SR_obj.SRName}}</option>
+                    <option v-for="SR_obj in SRList" v-bind:value="SR_obj.srid" >{{SR_obj.srname}}</option>
                   </select>
                 </b-input-group>
                   <span v-show="errors.has('SR_Name')" class="text-danger">Please select SR name.</span>
@@ -50,7 +50,7 @@
     <div class="col-12" v-show="SRLedgerDetails">
       <div class="card-headerfrm" style="margin-bottom: 15px;">
         <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Mapping Result</h4>
-          <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+
         <table class="table-bordered table-hover tbl datatables" style="width:100%;">
           <thead>
             <tr class="text-primary">
