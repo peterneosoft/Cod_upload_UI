@@ -1,7 +1,7 @@
 import apiUrl from '../../../constants'
 import axios from 'axios'
 import CryptoJS from 'crypto-js';
-import { Validator } from 'vee-validate'
+import {Validator} from 'vee-validate'
 import Paginate from 'vuejs-paginate'
 import VueElementLoading from 'vue-element-loading';
 
@@ -41,6 +41,8 @@ export default {
       isLoading: false,
       resultCount: 0,
       pendingCODAmt: '0.00',
+      closingBalance: '0.00',
+      yestClosingbalance: '0.00',
       yesterdayCODAmt: '0.00',
       TolatCollection: '0.00',
       p2pAmount: '0.00',
@@ -70,13 +72,14 @@ export default {
 
     var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');
-    this.GetDenominationData();
+
     var date = new Date();
     DepositDate.max = DeliveryDate.max = date.toISOString().split("T")[0];
 
     date.setDate(date.getDate() - 1);
     this.DeliveryDate = date.toISOString().split("T")[0];
 
+    this.GetDenominationData();
     this.GetShipmentUpdate();
     this.GetBankData();
     this.GetReasonList();
@@ -116,12 +119,13 @@ export default {
           }).then(result => {
 
             var data = []; let yDayCODAmt = 0;
-            result.data.shipmentupdate.Result.forEach(function (ShipmentUpdateData) {
-              if((ShipmentUpdateData.PaymentMode.PaymentType==='cash' || ShipmentUpdateData.PaymentMode.PaymentType==='CASH' || ShipmentUpdateData.PaymentMode.PaymentType==='Cash')
-               || (ShipmentUpdateData.OrderType==='COD' || ShipmentUpdateData.OrderType==='Cod' || ShipmentUpdateData.OrderType==='cod')){ //&&
-                yDayCODAmt += parseInt(ShipmentUpdateData.CollectibleAmount);
-              }
-            });
+            if(result.data.shipmentupdate.ReturnCode==100){
+              result.data.shipmentupdate.Result.forEach(function (ShipmentUpdateData) {
+                if((ShipmentUpdateData.PaymentMode.PaymentType.toLowerCase()==='cash') && (ShipmentUpdateData.OrderType.toLowerCase()==='cod')){
+                  yDayCODAmt += parseFloat(ShipmentUpdateData.CollectibleAmount);
+                }
+              });
+            }
             this.yesterdayCODAmt = parseFloat(Math.round(yDayCODAmt)).toFixed(2);
             if(this.yesterdayCODAmt > 0){
               this.GetPendingCODAmt();
@@ -152,6 +156,8 @@ export default {
       .then(result => {
         if(result.data.rows.length > 0){
           this.pendingCODAmt = result.data.rows[0].differenceamount;
+          this.closingBalance = result.data.rows[0].closingbalance;
+
           if(result.data.rows[0].totalamtdeposit > result.data.rows[0].p2pamt){
             this.p2pAmount = '0.00';
           }
@@ -219,11 +225,17 @@ export default {
             result.data.data.rows.forEach(function (svcData) {
 
               let deliverydatedate = new Date(svcData.deliverydate);
-              let bankdepositdate = new Date(svcData.bankdepositdate);
+              deliverydatedate = deliverydatedate.getDate() + "/" + (deliverydatedate.getMonth() + 1) + "/" + deliverydatedate.getFullYear();
+
+              let bankdepositdate = ' ';
+              if(svcData.bankdepositdate){
+                bankdepositdate = new Date(svcData.bankdepositdate);
+                bankdepositdate = bankdepositdate.getDate() + "/" + (bankdepositdate.getMonth() + 1) + "/" + bankdepositdate.getFullYear();
+              }
 
               data.push({
-                deliverydate:  deliverydatedate.getDate() + "/" + (deliverydatedate.getMonth() + 1) + "/" + deliverydatedate.getFullYear(),
-                bankdepositdate:  bankdepositdate.getDate() + "/" + (bankdepositdate.getMonth() + 1) + "/" + bankdepositdate.getFullYear(),
+                deliverydate:  deliverydatedate,
+                bankdepositdate:  bankdepositdate,
                 openingbalance: svcData.openingbalance,
                 codamount: svcData.codamount,
                 bankdeposit: svcData.bankdeposit,
@@ -231,6 +243,7 @@ export default {
                 statusid: (svcData.statusid != '') ? svcData.statusid : ' ',
                 Reason: (svcData.Reason != '') ? svcData.Reason : ' ',
                 financereason: (svcData.finReason != '') ? svcData.finReason : ' ',
+                createdby: svcData.createdby
               });
             });
 
@@ -343,9 +356,9 @@ export default {
         });
       }
 
-      let OpeningBalance = parseInt(this.yesterdayCODAmt);
-      let ClosingBalance = parseInt(DepositAmount);
-      let CODAmount = parseInt(ClosingBalance + p2pamt);
+      let OpeningBalance = parseInt(this.closingBalance);
+      let ClosingBalance = parseFloat(Math.round((parseInt(OpeningBalance)+parseInt(this.yesterdayCODAmt)-parseInt(DepositAmount)) * 100) / 100).toFixed(2);
+      let CODAmount = parseFloat(Math.round((parseInt(this.yesterdayCODAmt)+parseInt(p2pamt)) * 100) / 100).toFixed(2);
 
       this.input = ({
           DepositDate: this.DepositDate,

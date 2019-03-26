@@ -132,6 +132,12 @@ export default {
       }).catch(() => {
         console.log('errors exist', this.errors)
       });
-    }
+    },
+
+    resetForm() {
+      this.fromDate = this.toDate = '';
+      this.$validator.reset();
+      this.errors.clear();
+    },
   }
 }

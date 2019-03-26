@@ -11,8 +11,8 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">Delivery Date</span>
                   </div>
-                  <input class="form-control" id="DeliveryDate" type="date" name="DeliveryDate" v-validate="{required: true}"
-                  v-model="DeliveryDate" v-bind:class="{'form-control': true, 'error': errors.has('DeliveryDate') }">
+                  <b-form-input id="DeliveryDate" type="date" name="DeliveryDate" v-validate="{required: true}"
+                  v-model="DeliveryDate" v-bind:class="{'form-control': true, 'error': errors.has('DeliveryDate') }"></b-form-input>
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                   </div>
@@ -25,8 +25,8 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">Deposit Date</span>
                   </div>
-                  <input class="form-control" id="DepositDate" type="date" name="DepositDate" v-validate="{required: true}"
-                  v-model="DepositDate" v-bind:class="{'form-control': true, 'error': errors.has('DepositDate') }">
+                  <b-form-input id="DepositDate" type="date" name="DepositDate" v-validate="{required: true}"
+                  v-model="DepositDate" v-bind:class="{'form-control': true, 'error': errors.has('DepositDate') }"></b-form-input>
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                   </div>
@@ -224,9 +224,9 @@
             </thead>
             <tbody>
               <tr v-if="resultCount==0">
-                <td colspan="7" align="center">No record found</td>
+                <td colspan="11" align="center">No record found</td>
               </tr>
-              <tr v-for="(data,index) in listSVCledgerData">
+              <tr v-for="(data,index) in listSVCledgerData" v-bind:class="`${data.createdby == 'schedular@xpressbees.com' ? 'scheduler' : ''}`">
                 <td scope="row" class="text-center"><strong>{{index+1}}</strong></td>
                 <td>{{data.deliverydate}}</td>
                 <td>{{data.bankdepositdate}}</td>
