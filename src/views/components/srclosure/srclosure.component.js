@@ -31,7 +31,7 @@ export default {
       ndr: 0,
       prepaid: 0,
       wallet: 0,
-      Reason:0,
+      Reason:"",
       RemainData:0,
       resultCount:"",
       pageno: 0,
@@ -169,7 +169,7 @@ export default {
 
      },
 
-     resetData(){
+     resetData(event){
       this.DenominationList.map(data=>{
         let countVal = document.getElementById(data.Denomination);
         let amountVal = document.getElementById("mo"+data.Denomination);

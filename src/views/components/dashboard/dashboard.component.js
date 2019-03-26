@@ -16,10 +16,15 @@
       return {
         zone:'',
         state:'',
+        FromDate:'',
+        ToDate:'',
         city:'',
+        hub:'',
         stateList: [],
         zoneList: [],
-        cityList: []
+        cityList: [],
+        hubList: [],
+        calcModal: false
       }
     },
 
@@ -38,9 +43,17 @@
       this.localuserid      = userdetail.userid;
 
       this.getZoneData();
+
     },
 
     methods: {
+      POPUP() {
+          this.calcModal = true
+      },
+      closeCalcModal() {
+          this.calcModal = false
+
+      },
 
       //to get All Hub List
       getZoneData() {
@@ -100,24 +113,40 @@
           })
           .then(result => {
             this.cityList = result.data.city.data;
-
-
           }, error => {
             console.error(error)
           })
       },
-
-
+      getHubData() {
+        if(this.city==""){
+          return false;
+        }
+        this.input = ({
+            cityname: this.city
+        })
+        axios({
+            method: 'POST',
+            url: apiUrl.api_url + 'external/GetCityHubList',
+            data: this.input,
+            headers: {
+              'Authorization': 'Bearer '+this.myStr
+            }
+          })
+          .then(result => {
+            this.hubList = result.data.hub.data;
+          }, error => {
+            console.error(error)
+          })
+      },
       onSubmit: function(event) {
         this.$validator.validateAll().then((result) => {
           if(result){
-
+            // this.state = this.hub =this.city=this.zone = "";
+             this.$alertify.success("Data Submit Successfully");
            }
         }).catch(() => {
           console.log('errors exist', this.errors)
         });
       },
-
-
     }
   }

@@ -1,5 +1,8 @@
 <section>
 <div class="animated fadeIn">
+  <!-- <div>
+    <b-link  @click="POPUP">Click Here For P2P Entry </b-link>
+  </div> -->
 
       <!--/.col-->
       <div class="col-xs-12 col-sm-12 col-lg-12 col-lg-12 pdl_0">
@@ -8,7 +11,7 @@
             <div class="col-xs-2  h-100 col-sm-2 col-lg-2 col-lg-2 float-left">
               <label>Zone</label>
               <b-input-group left="<i class='fa fa-list'></i>">
-                <select name="zone" id="zone" class="form-control" v-model="zone" v-on:change="getStateData" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('zone') }">
+                <select  name="zone" id="zone" class="form-control" v-model="zone" v-on:change="getStateData" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('zone') }">
                   <option value="">--Select--</option>
                   <option v-for="zone_obj in zoneList" v-bind:value="zone_obj.hubzonename" >{{zone_obj.hubzonename}}</option>
                 </select>
@@ -36,13 +39,13 @@
             <div class="col-xs-2 col-sm-2 col-lg-2 col-lg-2 float-left">
               <label>From Date</label>
               <b-input-group left="<i class='fa fa-user'></i>">
-                <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="usertypename"></b-form-input>
+                <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="FromDate"></b-form-input>
               </b-input-group>
             </div>
             <div class="col-xs-2 col-sm-2 col-lg-2 col-lg-2 float-left">
               <label>To Date</label>
               <b-input-group left="<i class='fa fa-user'></i>">
-                <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="usertypename"></b-form-input>
+                <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="ToDate"></b-form-input>
               </b-input-group>
             </div>
 
@@ -194,6 +197,65 @@
                </div>
              </div>
          </div>
+         <b-modal size="vlg" v-model="calcModal" @ok="calcModal = false">
+           <b-card>
+             <div slot="header">
+               <span class="mdltitle">Login Details</span>
+               <button type="button" aria-label="Close" @click="closeCalcModal" class="close">×</button>
+             </div>
+               <form v-on:submit.prevent="onSubmit">
+                 <div class="form-group row">
+                  <div class="col-md-3">
+                   <label>Zone</label>
+                   <b-input-group left="<i class='fa fa-list'></i>">
+                     <select name="zone" id="zone" class="form-control" v-model="zone" v-on:change="getStateData" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('zone') }">
+                       <option value="">--Select--</option>
+                       <option v-for="zone_obj in zoneList" v-bind:value="zone_obj.hubzonename" >{{zone_obj.hubzonename}}</option>
+                     </select>
+                   </b-input-group>
+                   <span v-show="errors.has('zone')" class="text-danger">Please select Zone. </span>
+                 </div>
+
+                 <div class="col-md-3">
+                   <label>State</label>
+                   <b-input-group left="<i class='fa fa-list'></i>">
+                     <select name="state" id="state" class="form-control" v-model="state" v-on:change="getCityData"  v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('state') }">
+                       <option value="">--Select--</option>
+                       <option v-for="state_obj in stateList" v-bind:value="state_obj.statename" >{{state_obj.statename}}</option>
+                     </select>
+                   </b-input-group>
+                    <span v-show="errors.has('state')" class="text-danger">Please select state. </span>
+                 </div>
+
+                   <div class="col-md-3">
+                   <label>City</label>
+                   <b-input-group left="<i class='fa fa-list'></i>">
+                     <select name="city" id="city" class="form-control" v-model="city"  v-on:change = "getHubData" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('city') }">
+                       <option value="">--Select--</option>
+                       <option v-for="city_obj in cityList" v-bind:value="city_obj.cityname" >{{city_obj.cityname}}</option>
+                     </select>
+                   </b-input-group>
+                     <span v-show="errors.has('city')" class="text-danger">Please select city. </span>
+                 </div>
+                   <div class="col-md-3">
+                   <label>Hub</label>
+                   <b-input-group left="<i class='fa fa-list'></i>">
+                     <select name="hub" id="hub" class="form-control" v-model="hub"   v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('hub') }">
+                       <option value="">--Select--</option>
+                       <option v-for="hub_obj in hubList" v-bind:value="hub_obj.HubName" >{{hub_obj.HubName}}</option>
+                     </select>
+                   </b-input-group>
+                   <span v-show="errors.has('hub')" class="text-danger">Please select hub. </span>
+                 </div>
+               </div>
+
+             <div class="modal-footerfrm">
+             <button type="submit"  size="vlg" class="btn btn-primary">Submit</button>&nbsp;
+             <button type="button" size="vlg" class="btn btn-danger" @click="closeCalcModal">Cancel</button>
+           </div>
+          </form>
+         </b-card>
+        </b-modal>
      </div>
    </div>
 
