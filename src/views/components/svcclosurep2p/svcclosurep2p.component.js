@@ -33,12 +33,14 @@ export default {
       DenominationList: [],
       StatusID: 0,
       FinanceConfirmAmount: 0,
-      BatchID: 0,
+      BatchID : Math.floor(Math.random() * (Math.pow(10,5))),
       DenominationArr: [],
       listSVCledgerData: [],
       ShipmentUpdateList: [],
       ReasonList: [],
+      uploadFileList: [],
       isLoading: false,
+      Loading: false,
       resultCount: 0,
       pendingCODAmt: '0.00',
       closingBalance: '0.00',
@@ -121,12 +123,15 @@ export default {
             var data = []; let yDayCODAmt = 0;
             if(result.data.shipmentupdate.ReturnCode==100){
               result.data.shipmentupdate.Result.forEach(function (ShipmentUpdateData) {
-                if((ShipmentUpdateData.PaymentMode.PaymentType.toLowerCase()==='cash') && (ShipmentUpdateData.OrderType.toLowerCase()==='cod')){
-                  yDayCODAmt += parseFloat(ShipmentUpdateData.CollectibleAmount);
+                if((ShipmentUpdateData.PaymentMode.PaymentType != null) && (ShipmentUpdateData.OrderType != null)){
+                  if((ShipmentUpdateData.PaymentMode.PaymentType.toLowerCase()==='cash') && (ShipmentUpdateData.OrderType.toLowerCase()==='cod')){
+                    yDayCODAmt += parseFloat(ShipmentUpdateData.CollectibleAmount);
+                  }
                 }
               });
             }
             this.yesterdayCODAmt = parseFloat(Math.round(yDayCODAmt)).toFixed(2);
+
             if(this.yesterdayCODAmt > 0){
               this.GetPendingCODAmt();
             }
@@ -380,7 +385,7 @@ export default {
           FinanceConfirmAmount: (this.FinanceConfirmAmount != '') ? this.FinanceConfirmAmount : 0,
           CODAmount: CODAmount,
           IsActive: true,
-          BatchID: (this.BatchID != '') ? this.BatchID : Math.floor(Math.random() * (Math.pow(10,5))),
+          BatchID: this.BatchID,
           p2pamt: p2pamt,
           totalAmtdeposit: DepositAmount + p2pamt,
           Denomination: this.DenominationArr,
@@ -408,6 +413,55 @@ export default {
       });
     },
 
+    //function is used for upload files on AWS s3bucket
+    onUpload(event){
+
+      this.selectedFile = event.target.files[0];
+
+      var name = this.selectedFile.name;
+
+      const fd = new FormData();
+      fd.append('file', this.selectedFile, name);
+      fd.append('s3bucketKey', 'SVC-'+this.BatchID);
+
+      this.Loading = true;
+
+      axios.post(apiUrl.api_url + 'uploadsvcfile', fd,
+      {
+        headers: {
+          'Authorization': 'Bearer ' + this.myStr
+        }
+      })
+      .then(res => {
+        this.getS3bucketFiles();
+         console.log(res);
+      }, error => {
+        console.error(error)
+      });
+    },
+
+    getS3bucketFiles(){
+
+      this.input = ({
+        BatchID : this.BatchID
+      });
+
+      axios({
+        method: 'POST',
+        'url': apiUrl.api_url + 'getfilelist',
+        'data': this.input,
+        headers: {
+          'Authorization': 'Bearer ' + this.myStr
+        }
+      })
+      .then(result => {
+        this.Loading = false;
+        this.uploadFileList = result.data.data;
+      }, error => {
+        console.error(error)
+      })
+    },
+
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
          if(result){
@@ -427,6 +481,8 @@ export default {
     },
 
     resetForm(event) {
+      this.Loading = false;
+      this.BatchID = Math.floor(Math.random() * (Math.pow(10,5)));
       this.pageno = this.tot_amt = this.unmatchedAmt = 0;
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.Reason = '';
       $('#denomlist input[type="text"]').val(0);
