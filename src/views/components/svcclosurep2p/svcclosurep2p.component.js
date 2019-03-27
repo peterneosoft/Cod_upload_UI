@@ -58,7 +58,7 @@ export default {
   created() {
 
   },
-  mounted() {
+  async mounted() {
     var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
     var bytes             = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
@@ -81,11 +81,11 @@ export default {
     date.setDate(date.getDate() - 1);
     this.DeliveryDate = date.toISOString().split("T")[0];
 
-    this.GetDenominationData();
-    this.GetShipmentUpdate();
-    this.GetBankData();
-    this.GetReasonList();
-    this.GetSVCledgerData();
+    await this.GetDenominationData();
+    await this.GetShipmentUpdate();
+    await this.GetBankData();
+    await this.GetReasonList();
+    await this.GetSVCledgerData();
   },
 
   methods: {
@@ -119,18 +119,10 @@ export default {
               'Authorization': 'Bearer '+this.myStr
             }
           }).then(result => {
-
             var data = []; let yDayCODAmt = 0;
-            if(result.data.shipmentupdate.ReturnCode==100){
-              result.data.shipmentupdate.Result.forEach(function (ShipmentUpdateData) {
-                if((ShipmentUpdateData.PaymentMode.PaymentType != null) && (ShipmentUpdateData.OrderType != null)){
-                  if((ShipmentUpdateData.PaymentMode.PaymentType.toLowerCase()==='cash') && (ShipmentUpdateData.OrderType.toLowerCase()==='cod')){
-                    yDayCODAmt += parseFloat(ShipmentUpdateData.CollectibleAmount);
-                  }
-                }
-              });
+            if(result.data.code==200){
+              this.yesterdayCODAmt = parseFloat(Math.round(result.data.shipmentupdate)).toFixed(2);
             }
-            this.yesterdayCODAmt = parseFloat(Math.round(yDayCODAmt)).toFixed(2);
 
             if(this.yesterdayCODAmt > 0){
               this.GetPendingCODAmt();
@@ -226,36 +218,10 @@ export default {
         })
         .then(result => {
           if(result.data.code == 200){
-            var data = [];
-            result.data.data.rows.forEach(function (svcData) {
-
-              let deliverydatedate = new Date(svcData.deliverydate);
-              deliverydatedate = deliverydatedate.getDate() + "/" + (deliverydatedate.getMonth() + 1) + "/" + deliverydatedate.getFullYear();
-
-              let bankdepositdate = ' ';
-              if(svcData.bankdepositdate){
-                bankdepositdate = new Date(svcData.bankdepositdate);
-                bankdepositdate = bankdepositdate.getDate() + "/" + (bankdepositdate.getMonth() + 1) + "/" + bankdepositdate.getFullYear();
-              }
-
-              data.push({
-                deliverydate:  deliverydatedate,
-                bankdepositdate:  bankdepositdate,
-                openingbalance: svcData.openingbalance,
-                codamount: svcData.codamount,
-                bankdeposit: svcData.bankdeposit,
-                differenceamount: svcData.differenceamount,
-                statusid: (svcData.statusid != '') ? svcData.statusid : ' ',
-                Reason: (svcData.Reason != '') ? svcData.Reason : ' ',
-                financereason: (svcData.finReason != '') ? svcData.finReason : ' ',
-                createdby: svcData.createdby
-              });
-            });
-
-            this.listSVCledgerData = data;
+            this.listSVCledgerData = result.data.data;
             this.isLoading = false;
-            let totalRows     = result.data.data.count;
-            this.resultCount  = result.data.data.count;
+            let totalRows     = result.data.count;
+            this.resultCount  = result.data.count;
             if (totalRows < 10) {
                 this.pagecount = 1
             } else {

@@ -77,39 +77,10 @@ export default {
       })
       .then(result => {
         if(result.data.code == 200){
-          var data = [];
-          result.data.data.rows.forEach(function (searchData) {
-
-            let date = new Date(searchData.bankdepositdate);
-
-            if(searchData.DepositType==1){ searchData.DepositType = 'Bank Deposit'; }
-            else if(searchData.DepositType==2){ searchData.DepositType = 'CMS Deposit'; }
-            else{ searchData.DepositType = 'NEFT/ Other Deposit'; }
-
-            if(searchData.statusid==1){ searchData.statusid = 'Open'; }
-            else if(searchData.statusid==6){ searchData.statusid = 'Close'; }
-            else { searchData.statusid = ' '; }
-
-            data.push({
-              depositdate: date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear(),
-              openingbalance: searchData.openingbalance,
-              codamount: searchData.codamount,
-              bankdeposit: searchData.bankdeposit,
-              actualrecamt: searchData.bankdeposit,
-              discrepancyamt: searchData.codamount-searchData.bankdeposit,
-              balanceoutstanding: searchData.differenceamount,
-              status: searchData.statusid,
-              deposittype: searchData.DepositType,
-              bank: searchData.Bank,
-              reason: searchData.Reason,
-              finreason: searchData.finReason,
-            });
-          });
-
-          this.listSearchSVCledgerData = data;
+          this.listSearchSVCledgerData = result.data.data;
           this.isLoading = false;
-          let totalRows     = result.data.data.count;
-          this.resultCount  = result.data.data.count;
+          let totalRows     = result.data.count;
+          this.resultCount  = result.data.count;
           if (totalRows < 10) {
               this.pagecount = 1
           } else {
