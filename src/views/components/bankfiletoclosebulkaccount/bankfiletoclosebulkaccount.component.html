@@ -7,45 +7,44 @@
         </div>
         <div class="card-body">
           <form v-on:submit.prevent="onSubmit">
-            <div class="form-group row">
-              <div class="col-md-4">
-                <label>Deposit Type</label>
-                <b-input-group style="height: 46px;" left="<i class='fa fa-list'></i>">
-                  <select name="DepositType" id="DepositType" class="form-control" v-model="DepositType" style="height: 46px;"
-                   v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('DepositType') }">
-                    <option value="">--Select--</option>
-                </select>
-                </b-input-group>
-                <span v-show="errors.has('DepositType')" class="text-danger">{{ "Please select Deposit Type " }}</span>
-              </div>
-
+            <div class="form-group ">
               <div class="col-md-4">
                 <label>Upload File</label>
                 <b-input-group left="<i class='fa fa-file'></i>">
-                  <input type="file"  @change="onUpload" placeholder="Upload File" name="paymentfile" id="paymentfile" v-validate="{required: true}"
+                  <input type="file"  @change="onUpload" placeholder="Upload File"  name="paymentfile" id="paymentfile" v-validate="{required: true}"
                     v-bind:class="{'form-control': true, 'error': errors.has('paymentfile') }">
                 </b-input-group>
                 <small class="text-muted"><font color="red">Note: * Only .csv files allowed to upload.</font></small>
                 <label v-show="errors.has('paymentfile')" class="text-danger">{{ "Please select File Upload " }}</label>
               </div>
             </div>
-
-            <div class="form-group row">
-              <div class="col-md-8">
-                <label>Comment</label>
-                <b-input-group left="<i class='fa fa-user'></i>">
-                  <textarea placeholder="Enter Comment.."  name="Comment" id="Comment" :rows="3" v-model="Comment" v-bind:class="{'form-control': true, 'error': errors.has('Comment') }"></textarea>
-                </b-input-group>
-                <small class="text-muted"><font color="red">Note: please remove any , (comma) traces before uploading to the system.</font></small>
-              </div>
-            </div>
             <div class="card-footer">
-              <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-upload"></i> Upload</button>
+              <button class="btn btn-sm btn-primary" type="submit"@click="uploadFile" ><i class="fa fa-upload" ></i> Upload</button>
               <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> Clear</button>
             </div>
           </form>
         </div>
+       </div>
       </div>
-    </div>
-  </div>
+        <div class="col-12">
+          <div class="card-headerfrm" style="margin-bottom: 15px;">
+            <h4 class="header">Result</h4>
+            <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+              <thead>
+                <tr class="text-primary">
+                  <th class="text-center tableheader"><b>Succees</b></th>
+                  <th class="text-center tableheader"><b>Failure</b></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><center><h6>{{success}}</h6></center></td>
+                  <td><center><b-link href="s3link"><h6>{{failed}}</h6></b-link></center></td>
+                </tr>
+              </tbody>
+
+            </table><br>
+          </div>
+         </div>
+      </div>
 </section>

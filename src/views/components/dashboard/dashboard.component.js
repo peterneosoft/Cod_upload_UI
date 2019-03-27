@@ -19,6 +19,9 @@
         FromDate:'',
         ToDate:'',
         city:'',
+        popupZone:'',
+        popupState:'',
+        PopupCity:'',
         hub:'',
         stateList: [],
         zoneList: [],
@@ -41,7 +44,6 @@
       var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
       var userdetail        = JSON.parse(plaintext);
       this.localuserid      = userdetail.userid;
-
       this.getZoneData();
 
     },
@@ -117,6 +119,10 @@
             console.error(error)
           })
       },
+      saveData(){
+        let hubEncrypt = CryptoJS.AES.encrypt(this.hub, "Key");
+        window.localStorage.setItem('accesshubdata', hubEncrypt);
+      },
       getHubData() {
         if(this.city==""){
           return false;
@@ -142,6 +148,7 @@
         this.$validator.validateAll().then((result) => {
           if(result){
             // this.state = this.hub =this.city=this.zone = "";
+             this.saveData(event);
              this.$alertify.success("Data Submit Successfully");
            }
         }).catch(() => {
