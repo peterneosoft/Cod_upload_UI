@@ -152,7 +152,7 @@ export default {
       })
       .then(result => {
         if(result.data.rows.length > 0){
-          this.pendingCODAmt = result.data.rows[0].differenceamount;
+          this.pendingCODAmt = result.data.rows[0].closingbalance;
           this.closingBalance = result.data.rows[0].closingbalance;
 
           if(result.data.rows[0].totalamtdeposit > result.data.rows[0].p2pamt){
