@@ -122,11 +122,12 @@
                     <button class="btn btn-sm btn-primary" type="submit" :disabled = "data.statusid == 6" ><i class="fa fa-dot-circle-o"></i> Submit</button>
                 </form>
                 </td>
-
                 <td>{{data.deposittype}}</td>
                 <td>{{data.bank}}</td>
                 <td>{{data.reason}}</td>
-                <td><a href="">View Images</a></td>
+                <td>
+                  <a v-bind:title='`${file.name}`' v-for="file in data.files" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
+                </td>
               </tr>
             </tbody>
           </table><br>

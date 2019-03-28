@@ -201,45 +201,19 @@ export default {
             }
         })
         .then(result => {
+
           if(result.data.code == 200){
-            var data = [];
-            result.data.data.rows.forEach(function (finData) {
-
-              let date = new Date(finData.bankdepositdate);
-
-              if(finData.DepositType==1){ finData.DepositType = 'Bank Deposit'; }
-              else if(finData.DepositType==2){ finData.DepositType = 'CMS Deposit'; }
-              else{ finData.DepositType = 'NEFT/ Other Deposit'; }
-
-              data.push({
-                svcledgerid: finData.svcledgerid,
-                hubid: finData.hubid,
-                financereasonid: finData.financereasonid,
-                depositdate: date.toISOString().slice(0,10),
-                openingbalance: finData.openingbalance,
-                codamount: finData.codamount,
-                bankdeposit: finData.bankdeposit,
-                actualrecamt: finData.financeconfirmamount,
-                discrepancyamt: finData.differenceamount,
-                balanceoutstanding: finData.closingbalance,
-                statusid: finData.statusid,
-                deposittype: finData.DepositType,
-                bank: finData.Bank,
-                reason: finData.Reason,
-              });
-            });
-
-            this.listFinanceledgerData = data;
-            console.log("this.listFinanceledgerData",JSON.stringify(this.listFinanceledgerData));
+            this.listFinanceledgerData = result.data.data;
             this.isLoading = false;
-            let totalRows     = result.data.data.count;
-            this.resultCount  = result.data.data.count;
+            let totalRows     = result.data.count;
+            this.resultCount  = result.data.count;
             if (totalRows < 10) {
                 this.pagecount = 1
             } else {
                 this.pagecount = Math.ceil(totalRows / 10)
             }
           }else{
+            this.listFinanceledgerData=[];
             this.resultCount  = 0;
             this.isLoading = false;
           }
