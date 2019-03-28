@@ -401,10 +401,21 @@ router.beforeEach((to, from, next) => {
 
 
   var isLoggedIn = window.localStorage.getItem('isLoggedIn');
+  var accessuserToken = window.localStorage.getItem('accessuserToken');
   if (isLoggedIn == null) {
     isLoggedIn = false;
   } else {
-    isLoggedIn = true;
+    if(accessuserToken==null){
+      localStorage.removeItem('accesshubdata')
+      localStorage.removeItem('accesspermissiondata')
+      localStorage.removeItem('accessuserdata')
+      localStorage.removeItem('accessuserToken')
+      localStorage.removeItem('isLoggedIn')
+      isLoggedIn = false;
+    }else{
+      isLoggedIn = true;
+    }
+
   }
   //next();
   if (to.matched.some(record => record.meta.requiresAuth) && !isLoggedIn) {
