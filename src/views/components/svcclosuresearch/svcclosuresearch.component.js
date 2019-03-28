@@ -87,6 +87,7 @@ export default {
               this.pagecount = Math.ceil(totalRows / 10)
           }
         }else{
+          this.listSearchSVCledgerData=[];
           this.resultCount  = 0;
           this.isLoading = false;
         }
