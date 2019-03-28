@@ -50,9 +50,13 @@ export default {
 
   },
 
-  mounted() {
+  created() {
     var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');
+    this.GetSumOfZoneHubAmtData();
+  },
+
+  mounted() {
 
     var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
     var bytes             = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
@@ -62,8 +66,6 @@ export default {
 
     this.getZoneData();
     this.GetReasonList();
-    this.GetSumOfZoneHubAmtData();
-
   },
 
   methods: {
@@ -104,33 +106,7 @@ export default {
           }
         })
         .then(result => {
-
-          var data = []; let zonelist = this.zoneList; let zoneAmt = result.data.rows; let totalamt = 0;
-
-          zonelist.forEach(function (zData, ind) {
-
-             if(result.data.rows.findIndex(x => x.hubzoneid==zData.hubzoneid) != -1){
-               for(var j=0; j<zoneAmt.length; j++){
-                 if(zData.hubzoneid==zoneAmt[j].hubzoneid){
-                   totalamt += parseInt(zoneAmt[j].zoneamount);
-                   data.push({
-                     hubzoneid:zData.hubzoneid,
-                     hubzonename:zData.hubzonename,
-                     zoneamount:zoneAmt[j].zoneamount
-                   });
-                 }
-               }
-             }else{
-               data.push({
-                 hubzoneid:zData.hubzoneid,
-                 hubzonename:zData.hubzonename,
-                 zoneamount:'0.00'
-               });
-             }
-          });
-
-          this.zoneAmtList = data;
-          this.totalzoneamt = parseFloat(Math.round(totalamt)).toFixed(2);
+          this.zoneAmtList = result.data.data;
         }, error => {
           console.error(error)
         })
@@ -243,9 +219,9 @@ export default {
                 openingbalance: finData.openingbalance,
                 codamount: finData.codamount,
                 bankdeposit: finData.bankdeposit,
-                actualrecamt: finData.bankdeposit,
-                discrepancyamt: finData.codamount-finData.bankdeposit,
-                balanceoutstanding: finData.differenceamount,
+                actualrecamt: finData.financeconfirmamount,
+                discrepancyamt: finData.differenceamount,
+                balanceoutstanding: finData.closingbalance,
                 statusid: finData.statusid,
                 deposittype: finData.DepositType,
                 bank: finData.Bank,
