@@ -7,11 +7,11 @@
         @click="routeTo(idx)"
         :class="{'linked': !!breadcrumb.link}">
 
-        {{ breadcrumb.name }}
+         {{ breadcrumb.name }}
 
       </li>
 
-      <li style="margin-left:50%">Logged In Hub : {{hub}}</li>
+      <li style="right: 9px;position: absolute;">Logged In Hub : {{hub}}</li>
     </ul>
   </div>
 </template>
