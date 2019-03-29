@@ -207,6 +207,8 @@ export default {
            this.PendingCOD = result.data.PendingCOD
            this.TodaysCOD = result.data.TodaysCOD
            this.TotalAmount = result.data.TotalAmount
+         }else{
+            this.isLoading = false;
          }
          }, error => {
            console.error(error)
@@ -251,6 +253,8 @@ export default {
               this.wallet = result.data.data.wallet
               this.getRightSRLedgerDetails()
               this.GetSRLedgerDetails()
+            }else{
+              this.Loading = false;
             }
 
          }, error => {

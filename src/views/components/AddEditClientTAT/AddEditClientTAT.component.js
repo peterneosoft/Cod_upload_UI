@@ -17,14 +17,25 @@ export default {
   data() {
     return {
       ClientList:[],
+      ClientBusinessList:[],
+      ClientAccountsList:[],
+      AccountsDeatilsList:[],
       ClientId:"",
+      Bussinesstype:"",
       Client:"",
+      TAT:"",
+      bank:"",
+      Beneficiary:"",
+      BankName:"",
       RemittanceDay:"",
+      BankAccount:"",
+      RTGS:"",
+      AccountName:"",
       BeneficiaryName:"",
       BankName:"",
       myStr:"",
       BankAccount:"",
-      TAT:""
+      AddEditClientTAT:false
     }
   },
 
@@ -39,8 +50,71 @@ export default {
   },
 
   methods: {
+    GetClientBusinessConfigList(){
+      if(this.ClientId.ClientMasterID == ""){
+        return false;
+      }
+      this.input = ({
+        clientid: this.ClientId.ClientMasterID
+      })
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'external/GetClientBusinessConfigList',
+          data: this.input,
+          headers: {
+             'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+           this.ClientBusinessList = result.data.client.data;
+        }, error => {
+          console.error(error)
+        })
+    },
+     GetClientBusinessAccounts(){
+       if(this.Bussinesstype == ""){
+         return false;
+       }
+      this.input = ({
+        clientid: this.ClientId.ClientMasterID,
+        businessid:parseInt(this.Bussinesstype)
+      })
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'external/GetClientBusinessAccountsList',
+          data: this.input,
+          headers: {
+             'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+           this.ClientAccountsList = result.data.Accounts.data;
+        }, error => {
+          console.error(error)
+        })
+    },
+     getAccountDetails(){
+      this.input = ({
+        ClientBusinessAccountId: this.AccountName
+      })
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'external/getAccountDetails',
+          data: this.input,
+          headers: {
+             'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+            this.Beneficiary = result.data.data.BeneficiaryName
+            this.BankName =  result.data.data.ClientBankName
+            this.BankAccount = result.data.data.ClientAccountNo
+            this.RTGS = result.data.data.ClientBankNeftIFSC
+        }, error => {
+          console.error(error)
+        })
+    },
     GetClientData() {
-
       axios({
         method: 'GET',
         url: apiUrl.api_url + 'external/getclientlist',

@@ -7,15 +7,6 @@
           <div class="card-body">
 
             <form  v-on:submit.prevent="onSubmit">
-              <!-- <div class="form-group" >
-                  <label>SR Name</label>
-                  <b-input-group left="<i class='fa fa-list'></i>">
-                  <Multiselect :options="SRList" name="SR_Name" id="SR_Name" v-model="SR_Name"  label="SRName" track-by="SRName"  :value="SRID"
-                    :searchable="true" v-bind:class="{'form-control': true, 'error': errors.has('SR_Name') }":max-height="100" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;" @input="srChange">
-                    </Multiselect>
-                  </b-input-group>
-                <span v-show="errors.has('SR_Name')" class="text-danger">Please select SR name.</span>
-              </div> -->
               <div class="form-group" >
                 <div class="input-group">
                   <div class="input-group-prepend">

@@ -1,7 +1,7 @@
 <section class="user">
   <div class="animated fadeIn">
     <div class="col-md-12 mb-2">
-      <div class="card">
+      <div class="card" v-show = "AddEditClientTAT"  >
         <div class="card-header filter_main">
           <i class=" fa fa-filter filter"></i> Add Edit Client TAT
         </div>
@@ -11,7 +11,7 @@
               <div class="col-md-4">
                 <label>Client Name</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                  <Multiselect :options="ClientList" name="ClientId" id="ClientId" v-model="ClientId" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID"  v-validate="{required: true}" v-bind:class="{'error': errors.has('ClientId') }" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                  <Multiselect :options="ClientList" name="ClientId" id="ClientId" @input="GetClientBusinessConfigList()" v-model="ClientId" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID"  v-validate="{required: true}" v-bind:class="{'error': errors.has('ClientId') }" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
                   </Multiselect>
                 </b-input-group>
                 <span v-show="errors.has('ClientId')" class="text-danger">Please select Client.</span>
@@ -19,29 +19,26 @@
               <div class="col-md-4">
                 <label>Bussiness Service Type</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                  <select name="Client" id="Client" class="form-control" v-model="Client">
+                  <select name="Bussinesstype" id="Bussinesstype" class="form-control" v-on:change = "GetClientBusinessAccounts" v-model="Bussinesstype"  v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('Bussinesstype') }">
                     <option value="">--Select--</option>
-                    <option value="">Select</option>
-                    <option value="">Select</option>
-                    <option value="">Select</option>
-                </select>
+                    <option v-for="Client_obj in ClientBusinessList" v-bind:value="Client_obj.ClientBusinessDetailID" >{{Client_obj.BusinessConfig}}</option>
+                  </select>
                 </b-input-group>
+                <span v-show="errors.has('Bussinesstype')" class="text-danger">Please select Bussiness Type.</span>
               </div>
 
               <div class="col-md-4">
                 <label>Account Name</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                  <select name="Client" id="Client" class="form-control" v-model="Client">
+                  <select name="AccountName" id="AccountName" class="form-control" v-model="AccountName" v-on:change="getAccountDetails" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('AccountName') }">
                     <option value="">--Select--</option>
-                    <option value="">Select</option>
-                    <option value="">Select</option>
-                    <option value="">Select</option>
+                    <option v-for="Client_obj in ClientAccountsList"  v-bind:value="Client_obj.ClientBusinessAccountId" >{{Client_obj.AccountName}}</option>
                 </select>
                 </b-input-group>
+                <span v-show="errors.has('AccountName')" class="text-danger">Please select account name.</span>
               </div>
-
-
             </div>
+
             <div class="form-group row">
               <div class="col-md-4">
                 <label>Remittance Day</label>
@@ -81,7 +78,7 @@
               <b-form-fieldset>
                 <label>Beneficiary Name</label>
                 <b-input-group left="<i class='fa fa-user'></i>">
-                  <b-form-input type="text" placeholder="Enter Beneficiary Name" name="Beneficiary" id="Beneficiary" v-model="Beneficiary" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('Beneficiary') }"></b-form-input>
+                  <b-form-input :disabled="true" type="text"  name="Beneficiary" id="Beneficiary" v-model="Beneficiary" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('Beneficiary') }"></b-form-input>
                 </b-input-group>
                 <span v-show="errors.has('Beneficiary')" class="text-danger">Please Enter Beneficiary Name
                 </span>
@@ -92,7 +89,7 @@
               <b-form-fieldset>
                 <label>Bank Name</label>
                 <b-input-group left="<i class='fa fa-bank'></i>">
-                  <b-form-input type="text" placeholder="Enter Bank Name" name="BankName" id="BankName" v-model="BankName" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('BankName') }"></b-form-input>
+                  <b-form-input type="text" :disabled="true"  name="BankName" id="BankName" v-model="BankName" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('BankName') }"></b-form-input>
                 </b-input-group>
                 <span v-show="errors.has('BankName')" class="text-danger">Please Enter Bank Name
                 </span>
@@ -102,7 +99,7 @@
               <b-form-fieldset>
                 <label>Bank Account No</label>
                 <b-input-group left="<i class='fa fa-user'></i>">
-                  <b-form-input type="text" placeholder="Enter Bank Account No" name="BankAccount" id="BankAccount" v-model="BankAccount" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('BankAccount') }"></b-form-input>
+                  <b-form-input type="text" :disabled="true"  name="BankAccount" id="BankAccount" v-model="BankAccount" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('BankAccount') }"></b-form-input>
                 </b-input-group>
                 <span v-show="errors.has('BankAccount')" class="text-danger">Please Enter Account No
                 </span>
@@ -113,8 +110,8 @@
             <div class="form-group row">
               <div class="col-md-4">
                 <label>RTGS/IFSC:</label>
-                <b-input-group >
-                  <b-form-input id="RTGS" type="text"  v-model="RTGS"></b-form-input>
+                <b-input-group left="<i class='fa fa-user'></i>">
+                  <b-form-input :disabled="true" id="RTGS" type="text" name="RTGS" v-model="RTGS"></b-form-input>
                 </b-input-group>
               </div>
             </div>
@@ -122,10 +119,10 @@
               <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Submit</button>
               <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> Clear</button>
             </div>
-
           </form>
         </div>
       </div>
+
       <div class="card">
       <div class="card-body">
         <div class="form-group row">
@@ -139,7 +136,7 @@
           </div>
         </div>
         <div class="card-footer">
-          <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+          <button class="btn btn-sm btn-primary" @click = "AddEditClientTAT = false" type="submit"><i class="fa fa-search"></i> Search</button>
         </div>
       </div>
       </div>
@@ -148,7 +145,7 @@
     <div class="col-12">
       <div class="card-headerfrm" style="margin-bottom: 15px;">
         <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Mapping Result</h4>
-        <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+
         <table class="table-bordered table-hover tbl datatables" style="width:100%;">
           <thead>
             <tr class="text-primary">
@@ -164,11 +161,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-if="resultCount==0">
-              <td colspan="7" align="center">No record found</td>
-            </tr>
             <tr>
-              <td class="text-center">
+              <td class="text-center" @click = "AddEditClientTAT = true">
                    <b-link href="#foo">
                <i @click.prevent="getRoleRowData(data, resultCount)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3"></i>
              </b-link></td>
@@ -182,7 +176,8 @@
               <td>SBINO12121</td>
             </tr>
             <tr>
-              <td class="text-center"><i @click.prevent="getRoleRowData(data, resultCount)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3"></i></td>
+              <td class="text-center" @click = "AddEditClientTAT = true">
+                <i @click.prevent="getRoleRowData(data, resultCount)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3"></i></td>
               <td>FirstCry BussyBees</td>
               <td></td>
               <td></td>
@@ -194,7 +189,8 @@
               </tr>
             </tr>
             <tr>
-              <td class="text-center"><i @click.prevent="getRoleRowData(data, resultCount)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3"></i></td>
+              <td class="text-center" @click = "AddEditClientTAT = true">
+                <i @click.prevent="getRoleRowData(data, resultCount)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3"></i></td>
               <td>FirstCry BussyBees</td>
               <td></td>
               <td></td>
@@ -207,9 +203,9 @@
             </tr>
           </tbody>
         </table><br>
-        <paginate :page-count="pagecount" :page-range="2" :margin-pages="2"
+        <!-- <paginate :page-count="pagecount" :page-range="2" :margin-pages="2"
         :click-handler="getPaginationData"  :container-class="'pagination'">
-        </paginate>
+        </paginate> -->
       </div>
     </div>
   </div>
