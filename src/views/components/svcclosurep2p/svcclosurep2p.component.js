@@ -121,7 +121,7 @@ export default {
           }).then(result => {
             var data = []; let yDayCODAmt = 0;
             if(result.data.code==200){
-              this.yesterdayCODAmt = parseFloat(Math.round(result.data.shipmentupdate)).toFixed(2);
+              this.yesterdayCODAmt = parseFloat(result.data.shipmentupdate).toFixed(2);
             }
 
             if(this.yesterdayCODAmt > 0){
@@ -161,7 +161,7 @@ export default {
         }else{
           this.pendingCODAmt = '0.00';
         }
-        this.TolatCollection = parseFloat(Math.round((parseInt(this.pendingCODAmt)+parseInt(this.yesterdayCODAmt)) * 100) / 100).toFixed(2);
+        this.TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)))).toFixed(2);
       }, error => {
           console.error(error)
       })
@@ -291,7 +291,7 @@ export default {
       let d_amt = this.Deposit_Amount.split(".");
       let DepositAmount = parseInt(d_amt[0]);
 
-      let TolatCollection = parseInt(this.TolatCollection);
+      let TolatCollection = parseFloat((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt))).toFixed(2);
       let p2pamt = parseInt(this.p2pAmount);
 
       if(DepositAmount !== parseInt(this.tot_amt)){
@@ -309,7 +309,7 @@ export default {
         let error = document.getElementById("d_a");
         error.style.display  = "none";
 
-        this.unmatchedAmt = TolatCollection-DepositAmount;
+        this.unmatchedAmt = parseFloat((parseFloat(TolatCollection)-parseFloat(DepositAmount))).toFixed(2);
 
         if(DepositAmount < TolatCollection){
           if(this.Reason==''){
@@ -327,9 +327,9 @@ export default {
         });
       }
 
-      let OpeningBalance = parseInt(this.closingBalance);
-      let ClosingBalance = parseFloat(Math.round((parseInt(OpeningBalance)+parseInt(this.yesterdayCODAmt)-parseInt(DepositAmount)) * 100) / 100).toFixed(2);
-      let CODAmount = parseFloat(Math.round((parseInt(this.yesterdayCODAmt)+parseInt(p2pamt)) * 100) / 100).toFixed(2);
+      let OpeningBalance = parseFloat(this.closingBalance);
+      let ClosingBalance = parseFloat(parseFloat(OpeningBalance)+parseFloat(this.yesterdayCODAmt)-parseFloat(DepositAmount)).toFixed(2);
+      let CODAmount = parseFloat(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)).toFixed(2);
 
       this.input = ({
           DepositDate: this.DepositDate,

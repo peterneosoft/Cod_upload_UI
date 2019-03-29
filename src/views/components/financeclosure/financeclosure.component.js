@@ -317,6 +317,9 @@ export default {
           this.form.finreason = [];
           this.form.financeconfirmdate = [];
           this.form.confirmamount = [];
+
+          this.GetFinanceledgerData();
+
         } else if (response.data.code == 202) {
           this.$alertify.error(response.data.message)
         }
