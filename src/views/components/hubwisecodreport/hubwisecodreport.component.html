@@ -23,11 +23,10 @@
               <div class="col-md-4">
                 <label>Hub/Svc</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                  <select name="HubId" id="HubId" class="form-control" v-model="HubId" >
-                    <option value="" >--Select--</option>
-                    <option v-for="hub_obj in hubList" v-bind:title="hub_obj.HubName" v-bind:value="hub_obj.HubID" >{{hub_obj.HubName}}</option>
-                  </select>
+                  <Multiselect :options="hubList" name="HubId" id="HubId" v-model="HubId"  label="HubName" track-by="HubID"  v-validate="{required: true}" v-bind:class="{'error': errors.has('HubId') }" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
+                  </Multiselect>
                 </b-input-group>
+                <span v-show="errors.has('HubId')" class="text-danger">Please select Client.</span>
               </div>
                 <div class="col-md-4">
                 <label>Status</label>

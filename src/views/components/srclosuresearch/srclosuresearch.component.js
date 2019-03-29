@@ -4,7 +4,7 @@ import {Validator} from 'vee-validate'
 import CryptoJS from 'crypto-js'
 import Paginate from 'vuejs-paginate';
 import Multiselect from 'vue-multiselect'
-//import 'vue-multiselect/dist/vue-multiselect.min.css';
+import 'vue-multiselect/dist/vue-multiselect.min.css';
 
 export default {
   name: 'srclosuresearch',
@@ -28,7 +28,6 @@ export default {
       SRLedgerDetails:false,
       pageno: 0,
       pagecount: 0
-
     }
   },
   computed: {
@@ -43,16 +42,14 @@ export default {
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
     var hubdetail         = JSON.parse(plaintext);
     this.localhubid       = hubdetail[0].HubID;
-
     this.urltoken = window.localStorage.getItem('accessuserToken');
-
     this.GetDeliveryAgentData();
   },
 
   methods: {
     //to get SR List
-
     GetDeliveryAgentData(){
+
        var hubEncrypt = window.localStorage.getItem('accesshubdata')
        var hubbytes  = CryptoJS.AES.decrypt(hubEncrypt.toString(), 'Key');
        var hubtext = hubbytes.toString(CryptoJS.enc.Utf8);
@@ -74,6 +71,8 @@ export default {
          .then(result => {
            if(result.data.code == 200){
            this.SRList = result.data.data;
+
+
          }else{
             this.$alertify.error("Data Not Found")
          }
@@ -86,16 +85,16 @@ export default {
         this.getMonthlySRLedgerDetails()
     },
     getMonthlySRLedgerDetails(){
+      this.SRLedgerList = [];
       this.SRLedgerDetails = true
       this.input = ({
-        srid: this.SR_Name,
+        srid: this.SR_Name.srid,
         hubid:this.localhubid,
         fromdate:this.fromDate,
         todate:this.toDate,
         offset:this.pageno,
         limit:10
       })
-
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'getMonthlySRLedgerDetails',
@@ -107,16 +106,17 @@ export default {
         .then(result => {
           if(result.data.code == 200){
             this.SRLedgerList = result.data.data.rows;
-
             let totalRows     = result.data.data.count
-
             this.resultCount  = result.data.data.count
+
             if (totalRows < 10) {
                 this.pagecount = 1
             } else {
                 this.pagecount = Math.ceil(totalRows / 10)
             }
-
+          }
+          if(result.data.code == 204){
+            this.resultCount  = 0
           }
         }, error => {
           console.error(error)

@@ -4,10 +4,13 @@ import {
   Validator
 } from 'vee-validate'
 import CryptoJS from 'crypto-js'
+import VueElementLoading from 'vue-element-loading';
 
 export default {
   name: 'bankfiletoclosebulkaccount',
-  components: {},
+  components: {
+    VueElementLoading
+  },
   props: [],
 
   data() {
@@ -17,7 +20,9 @@ export default {
       paymentfile: "",
       s3link: "",
       success: 0,
-      failed: 0
+      failed: 0,
+      isLoading: false,
+      Loading: false
     }
   },
 
@@ -31,8 +36,6 @@ export default {
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
     var userdetail        = JSON.parse(plaintext);
     this.localusername      = userdetail.username;
-
-
   },
 
   methods: {
@@ -40,17 +43,14 @@ export default {
     //function is used for upload files on AWS s3bucket
     onUpload(event){
       this.selectedFile = event.target.files[0];
-
       if ( /\.(csv)$/i.test(this.selectedFile.name) ){
         var name = event.target.name + "." +this.selectedFile.name.split(".").pop();
-
-
         var userToken = window.localStorage.getItem('accessuserToken')
         var myStr = userToken.replace(/"/g, '');
 
         const fd = new FormData();
         fd.append('file', this.selectedFile, name);
-
+        this.isLoading = true;
         axios.post(apiUrl.api_url + 'uploadFile', fd,
         {
           headers: {
@@ -58,8 +58,8 @@ export default {
           }
         })
         .then(res => {
-
            if(res.data.errorCode == 0){
+             this.isLoading = false;
              this.filename = res.data.filename
            }else{
              this.$alertify.error(".csv File does not Upload ");
@@ -77,6 +77,7 @@ export default {
           filename: this.filename,
           username: this.localusername,
       })
+      this.Loading = true;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'financeBulkClosure',
@@ -86,10 +87,13 @@ export default {
           }
         })
         .then(result => {
+
           this.failed = result.data.failed;
           this.success = result.data.success;
           this.s3link = result.data.s3link;
+
           if(result.data.code == 200){
+            this.Loading = false;
             this.$alertify.success(result.data.message);
           }
 
@@ -100,7 +104,6 @@ export default {
     onSubmit: function(res) {
       this.$validator.validateAll().then((result) => {
         if(result){
-
         event.target.reset();
        }
       }).catch(() => {

@@ -5,11 +5,15 @@ import {
 } from 'vee-validate'
 import Paginate from 'vuejs-paginate'
 import VueElementLoading from 'vue-element-loading';
+import Multiselect from 'vue-multiselect'
+import 'vue-multiselect/dist/vue-multiselect.min.css';
 
 export default {
   name: 'hubwisecodreport',
   components: {Paginate,
-  VueElementLoading},
+  VueElementLoading,
+  Multiselect
+},
   props: [],
 
   data() {
