@@ -22,9 +22,6 @@ export default {
       StatusVal:'',
       isLoading: false,
       resultCount: 0,
-      finreason: '',
-      financeconfirmdate: '',
-      financeconfirmdate: '',
       pagecount: 0,
       pageno: 0,
       count: 0,
@@ -38,7 +35,8 @@ export default {
       form: {
           finreason: [],
           financeconfirmdate: [],
-          confirmamount: []
+          confirmamount: [],
+          hide: []
       },
       zoneAmtList: [],
       totalzoneamt: '0.00'
@@ -171,7 +169,6 @@ export default {
         })
         .then(result => {
           this.FinanceReasonList = result.data.Reasons.data;
-          console.log("this.FinanceReasonList",JSON.stringify(this.FinanceReasonList));
         }, error => {
           console.error(error)
         })
@@ -204,6 +201,14 @@ export default {
 
           if(result.data.code == 200){
             this.listFinanceledgerData = result.data.data;
+
+            let finance = result.data.data;
+            finance.forEach((fin,key)=>{
+              this.form.finreason[fin.svcledgerid] = fin.financereasonid;
+              if(!fin.financereasonid)
+                this.form.hide[fin.svcledgerid] = 0;
+            });
+
             this.isLoading = false;
             let totalRows     = result.data.count;
             this.resultCount  = result.data.count;
