@@ -1,12 +1,12 @@
 <section class="user">
   <div class="animated fadeIn">
     <div class="col-md-12 mb-2">
-      <div class="card" v-show = "AddEditClientTAT"  >
+      <div class="card" v-show = "AddEditClientTAT">
         <div class="card-header filter_main">
           <i class=" fa fa-filter filter"></i> Add Edit Client TAT
         </div>
         <div class="card-body">
-          <form  v-on:submit.prevent="onSubmit">
+          <form v-on:submit.prevent="onSubmit">
             <div class="form-group row">
               <div class="col-md-4">
                 <label>Client Name</label>
@@ -43,32 +43,31 @@
               <div class="col-md-4">
                 <label>Remittance Day</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                  <select name="RemittanceDay" id="RemittanceDay" class="form-control" v-model="RemittanceDay" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('RemittanceDay') }">
-                    <option value="">--Select--</option>
-                </select>
+                <Multiselect :options="RemittanceDayList" name="RemittanceDay" id="RemittanceDay" v-model="RemittanceDay" placeholder="Select Remittance Day" label="day" track-by="day" :preselect-first="false" v-bind:multiple="multiple()" @select="handleSelect" v-validate="{required: true}" v-bind:class="{'error': errors.has('RemittanceDay') }" :max-height="150" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;">
+                </Multiselect>
                 </b-input-group>
-                  <span v-show="errors.has('RemittanceDay')" class="text-danger">Please Select  Remittance Day.</span>
+                <span v-show="errors.has('RemittanceDay')" class="text-danger">Please Select Remittance Day.</span>
               </div>
 
               <div class="col-md-4">
                 <label>TAT</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                  <select name="TAT" id="TAT" class="form-control" v-model="TAT" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('TAT') }">
+                  <select name="tat" id="tat" class="form-control" v-model="tat" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('tat') }">
                     <option value="">--Select--</option>
-                    <option value="">T+2</option>
-                    <option value="">T+3</option>
+                    <option value="2">T+2</option>
+                    <option value="3">T+3</option>
                 </select>
                 </b-input-group>
-                <span v-show="errors.has('TAT')" class="text-danger">Please Select TAT.</span>
+                <span v-show="errors.has('tat')" class="text-danger">Please Select TAT.</span>
               </div>
 
               <div class="col-md-4">
                 <label>Type</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                  <select name="bank" id="bank" class="form-control" v-model="bank">
+                  <select name="type" id="type" class="form-control" v-model="type">
                     <option value="">--Select--</option>
-                    <option value="">Hybrid</option>
-                    <option value="">Non-Hybrid</option>
+                    <option value="hybrid">Hybrid</option>
+                    <option value="non-hybrid">Non-Hybrid</option>
                 </select>
                 </b-input-group>
               </div>
@@ -78,7 +77,7 @@
               <b-form-fieldset>
                 <label>Beneficiary Name</label>
                 <b-input-group left="<i class='fa fa-user'></i>">
-                  <b-form-input :disabled="true" type="text"  name="Beneficiary" id="Beneficiary" v-model="Beneficiary" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('Beneficiary') }"></b-form-input>
+                  <b-form-input disabled type="text"  name="Beneficiary" id="Beneficiary" v-model="Beneficiary" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('Beneficiary') }"></b-form-input>
                 </b-input-group>
                 <span v-show="errors.has('Beneficiary')" class="text-danger">Please Enter Beneficiary Name
                 </span>
@@ -89,7 +88,7 @@
               <b-form-fieldset>
                 <label>Bank Name</label>
                 <b-input-group left="<i class='fa fa-bank'></i>">
-                  <b-form-input type="text" :disabled="true"  name="BankName" id="BankName" v-model="BankName" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('BankName') }"></b-form-input>
+                  <b-form-input type="text" disabled  name="BankName" id="BankName" v-model="BankName" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('BankName') }"></b-form-input>
                 </b-input-group>
                 <span v-show="errors.has('BankName')" class="text-danger">Please Enter Bank Name
                 </span>
@@ -99,7 +98,7 @@
               <b-form-fieldset>
                 <label>Bank Account No</label>
                 <b-input-group left="<i class='fa fa-user'></i>">
-                  <b-form-input type="text" :disabled="true"  name="BankAccount" id="BankAccount" v-model="BankAccount" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('BankAccount') }"></b-form-input>
+                  <b-form-input type="text" disabled  name="BankAccount" id="BankAccount" v-model="BankAccount" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('BankAccount') }"></b-form-input>
                 </b-input-group>
                 <span v-show="errors.has('BankAccount')" class="text-danger">Please Enter Account No
                 </span>
@@ -111,7 +110,7 @@
               <div class="col-md-4">
                 <label>RTGS/IFSC:</label>
                 <b-input-group left="<i class='fa fa-user'></i>">
-                  <b-form-input :disabled="true" id="RTGS" type="text" name="RTGS" v-model="RTGS"></b-form-input>
+                  <b-form-input disabled id="rtgs" type="text" name="rtgs" v-model="rtgs"></b-form-input>
                 </b-input-group>
               </div>
             </div>
@@ -123,23 +122,25 @@
         </div>
       </div>
 
-      <div class="card">
-      <div class="card-body">
-        <div class="form-group row">
-          <div class="col-md-4">
-            <label>Client </label>
-            <b-input-group left="<i class='fa fa-list'></i>">
-              <Multiselect :options="ClientList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID"  v-validate="{required: true}" v-bind:class="{'error': errors.has('Client') }" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
-              </Multiselect>
-            </b-input-group>
-            <span v-show="errors.has('Client')" class="text-danger">Please select Client.</span>
-          </div>
+      <!-- <div class="card">
+        <div class="card-body">
+          <form v-on:submit.prevent="onSearch">
+            <div class="form-group row">
+              <div class="col-md-4">
+                <label>Client </label>
+                <b-input-group left="<i class='fa fa-list'></i>">
+                  <Multiselect :options="ClientList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID"  v-validate="{required: true}" v-bind:class="{'error': errors.has('Client') }" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                  </Multiselect>
+                </b-input-group>
+                <span v-show="errors.has('Client')" class="text-danger">Please select Client.</span>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button class="btn btn-sm btn-primary" @click = "AddEditClientTAT = false" type="submit"><i class="fa fa-search"></i> Search</button>
+            </div>
+          </form>
         </div>
-        <div class="card-footer">
-          <button class="btn btn-sm btn-primary" @click = "AddEditClientTAT = false" type="submit"><i class="fa fa-search"></i> Search</button>
-        </div>
-      </div>
-      </div>
+      </div> -->
     </div>
 
     <div class="col-12">
