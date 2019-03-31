@@ -245,101 +245,88 @@ export default {
       });
     },
 
-    updateSVCFinanceledger(event) {
-     let insertflag= 0;
-      let finreasonid = ''; let ledgerid = ''; let financedate = ''; let amount = 0; let financeid = ""; let amountid = "";
-      this.form.finreason.map((obj,key) =>{
-        finreasonid = obj;
-        ledgerid = key;
-      });
-      this.form.financeconfirmdate.map((obj,key) =>{
-        financedate = obj;
-        financeid = key;
-      });
+    updateSVCFinanceledger(elem) {
 
-      this.form.confirmamount.map((obj,key) =>{
-        amount = obj;
-        amountid = key;
+      let insertflag= 0; let ledgerid = elem; let financeconfirmdate = ''; let confirmamount = 0;
 
-      });
-      if(finreasonid){
-        let financeconfirmdate = document.getElementById('financeconfirmdate'+ledgerid).value;
-        let confirmamount = document.getElementById('confirmamount'+ledgerid).value;
-        if(!financeconfirmdate){
-          let error = document.getElementById("d_t");
-           error.style.display = "block";
-        }else{
-          let error = document.getElementById("d_t");
-          error.style.display = "None";
-          insertflag=1;
+      let finreasonid = document.getElementById('finreason'+ledgerid).value;
 
-        }
-      }
-      if(finreasonid == "5"){
-        let financeconfirmdate = document.getElementById('financeconfirmdate'+ledgerid).value;
-        let confirmamount = document.getElementById('confirmamount'+ledgerid).value;
-        if(!financeconfirmdate || !confirmamount){
-         let error = document.getElementById("d_t");
-          error.style.display = "block";
-         let errord_a = document.getElementById("d_a");
-          errord_a.style.display = "block";
+      if(finreasonid==null || finreasonid==undefined || finreasonid==""){
+         document.getElementById("finR"+ledgerid).innerHTML="The Finance Reason field is required.";
          return false;
-       }else{
-         let error = document.getElementById("d_t");
-         error.style.display = "None";
-         let errord_a = document.getElementById("d_a");
-         errord_a.style.display = "None";
-         insertflag=1;
+      }else{
+        document.getElementById("finR"+ledgerid).innerHTML="";
+        financeconfirmdate = document.getElementById('financeconfirmdate'+ledgerid).value;
 
-       }
+        if(finreasonid == 5){
+
+          confirmamount = document.getElementById('confirmamount'+ledgerid).value;
+
+          if(confirmamount==null || confirmamount==undefined || confirmamount==""){
+            document.getElementById("finA"+ledgerid).innerHTML="The Finance Confirm Amount field is required.";
+            return false;
+          }else{
+            document.getElementById("finA"+ledgerid).innerHTML="";
+          }
+        }
+        if(financeconfirmdate==null || financeconfirmdate==undefined || financeconfirmdate==""){
+          document.getElementById("finD"+ledgerid).innerHTML="The Finance Confirm Date field is required.";
+          return false;
+        }else{
+          document.getElementById("finD"+ledgerid).innerHTML="";
+        }
+        insertflag=1;
       }
 
       if(insertflag){
-      this.input = ({
-          svcledgerid: ledgerid,
-          financereasonid: finreasonid,
-          financeconfirmdate: financedate,
-          confirmamount: amount,
-          hubid: this.HubID,
-          username: this.localuserid
-      })
-      axios({
-          method: 'POST',
-          'url': apiUrl.api_url + 'updateSVCLedgerDetails',
-          'data': this.input,
-          headers: {
-              'Authorization': 'Bearer '+this.myStr
+        this.input = ({
+            svcledgerid: ledgerid,
+            financereasonid: parseInt(finreasonid),
+            financeconfirmdate: financeconfirmdate,
+            confirmamount: confirmamount,
+            hubid: this.HubID,
+            username: this.localuserid
+        })
+        axios({
+            method: 'POST',
+            'url': apiUrl.api_url + 'updateSVCLedgerDetails',
+            'data': this.input,
+            headers: {
+                'Authorization': 'Bearer '+this.myStr
+            }
+        })
+        .then((response) => {
+          if (response.data.code == 200) {
+            this.$alertify.success(response.data.message);
+            this.form.finreason = [];
+            this.form.financeconfirmdate = [];
+            this.form.confirmamount = [];
+            this.form.hide[ledgerid] = ledgerid;
+            this.GetFinanceledgerData();
+
+          } else if (response.data.code == 202) {
+            this.$alertify.error(response.data.message)
           }
-      })
-      .then((response) => {
-        if (response.data.code == 200) {
-          this.$alertify.success(response.data.message);
-          this.form.finreason = [];
-          this.form.financeconfirmdate = [];
-          this.form.confirmamount = [];
-
-          this.GetFinanceledgerData();
-
-        } else if (response.data.code == 202) {
-          this.$alertify.error(response.data.message)
-        }
-        event.target.reset();
-      })
-      .catch((httpException) => {
-          console.error('exception is:::::::::', httpException)
-      });
-    }
-
+          event.target.reset();
+        })
+        .catch((httpException) => {
+            console.error('exception is:::::::::', httpException)
+        });
+      }
     },
 
-    onUpdate: function(event) {
-      this.$validator.validateAll().then((result) => {
-        if(result){
-          this.updateSVCFinanceledger(event);
-         }
-      }).catch(() => {
-        console.log('errors exist', this.errors)
-      });
+    onUpdate: function(elem) {
+      // console.log('result==', event);
+      // this.$validator.validateAll().then((result) => {
+      //   console.log('result==', result);
+        if(elem){
+          this.updateSVCFinanceledger(elem);
+        }else{
+          return false;
+        }
+      // }).catch(() => {
+      //   console.log('errors exist', this.errors)
+      // });
     }
   }
 }
