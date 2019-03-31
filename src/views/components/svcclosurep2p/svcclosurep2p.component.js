@@ -121,12 +121,12 @@ export default {
           }).then(result => {
             var data = []; let yDayCODAmt = 0;
             if(result.data.code==200){
-              this.yesterdayCODAmt = parseFloat(result.data.shipmentupdate).toFixed(2);
+              this.yesterdayCODAmt = (result.data.shipmentupdate) ? parseFloat(result.data.shipmentupdate).toFixed(2) : '0.00';
             }
 
-            if(this.yesterdayCODAmt > 0){
+            //if(this.yesterdayCODAmt > 0){
               this.GetPendingCODAmt();
-            }
+            //}
           }, error => {
             console.error(error)
           })
