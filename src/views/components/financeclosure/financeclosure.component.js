@@ -4,12 +4,15 @@ import CryptoJS from 'crypto-js';
 import { Validator } from 'vee-validate'
 import Paginate from 'vuejs-paginate'
 import VueElementLoading from 'vue-element-loading';
+import Multiselect from 'vue-multiselect'
+import 'vue-multiselect/dist/vue-multiselect.min.css';
 
 export default {
   name: 'svcclosurep2p',
   components: {
       Paginate,
-      VueElementLoading
+      VueElementLoading,
+      Multiselect
   },
 
   data() {
@@ -40,7 +43,6 @@ export default {
       },
       zoneAmtList: [],
       totalzoneamt: '0.00'
-
     }
   },
 
@@ -185,7 +187,7 @@ export default {
         this.input = ({
             offset: this.pageno,
             limit: 10,
-            hubid: this.HubId,
+            hubid: this.HubId.HubID,
             statusid: this.status
         })
         this.isLoading = true;
@@ -230,8 +232,8 @@ export default {
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
-          this.HubName = event.target[1].selectedOptions[0].attributes.title.nodeValue;
-          this.HubID = event.target[1].selectedOptions[0].attributes.value.nodeValue;
+          this.HubName = this.HubId.HubName;
+          this.HubID = this.HubId.HubID;
           this.StatusVal = event.target[2].selectedOptions[0].attributes.title.nodeValue;
           if(this.StatusVal == "Close"){
               this.StatusVal = "Transacton Closed"
@@ -316,17 +318,18 @@ export default {
     },
 
     onUpdate: function(elem) {
-      // console.log('result==', event);
-      // this.$validator.validateAll().then((result) => {
-      //   console.log('result==', result);
-        if(elem){
-          this.updateSVCFinanceledger(elem);
-        }else{
-          return false;
-        }
-      // }).catch(() => {
-      //   console.log('errors exist', this.errors)
-      // });
-    }
+      if(elem){
+        this.updateSVCFinanceledger(elem);
+      }else{
+        console.log('errors exist', elem)
+        return false;
+      }
+    },
+
+    resetForm() {
+      this.zone = this.HubId = this.status = '';
+      this.$validator.reset();
+      this.errors.clear();
+    },
   }
 }
