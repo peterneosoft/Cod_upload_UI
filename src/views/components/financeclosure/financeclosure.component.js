@@ -42,7 +42,9 @@ export default {
           hide: []
       },
       zoneAmtList: [],
-      totalzoneamt: '0.00'
+      totalzoneamt: '0.00',
+      resultdate: '',
+      resultfdate: ''
     }
   },
 
@@ -107,6 +109,7 @@ export default {
         })
         .then(result => {
           this.zoneAmtList = result.data.data;
+          this.resultdate  = result.data.date;
         }, error => {
           console.error(error)
         })
@@ -214,6 +217,7 @@ export default {
             this.isLoading = false;
             let totalRows     = result.data.count;
             this.resultCount  = result.data.count;
+            this.resultfdate  = result.data.fdate;
             if (totalRows < 10) {
                 this.pagecount = 1
             } else {

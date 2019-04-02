@@ -48,7 +48,8 @@ export default {
       yesterdayCODAmt: '0.00',
       TolatCollection: '0.00',
       p2pAmount: '0.00',
-      myStr: ''
+      myStr: '',
+      resultdate: ''
     }
   },
 
@@ -223,6 +224,7 @@ export default {
             this.isLoading = false;
             let totalRows     = result.data.count;
             this.resultCount  = result.data.count;
+            this.resultdate  = result.data.date;
             if (totalRows < 10) {
                 this.pagecount = 1
             } else {
