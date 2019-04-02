@@ -32,10 +32,10 @@
                 <div class="col-md-4">
                 <label>Status</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                  <select name="status" id="status" class="form-control" v-model="status">
+                  <select name="status" id="status"  class="form-control" v-model="status">
                     <option value="">--Select--</option>
-                    <option value="1">Open</option>
-                    <option value="0">Close</option>
+                    <option value="1" title="Open">Open</option>
+                    <option value="6" title="Close">Close</option>
                   </select>
                 </b-input-group>
               </div>
@@ -61,7 +61,7 @@
             </div>
               <div class="card-footer">
                 <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
-                <button class="btn btn-sm btn-primary" type="submit"><i class="fa"></i> Export </button>
+                <a v-bind:href="exportPath" ><button :disabled="resultCount>0 ? disabled : ''" class="btn btn-sm btn-success" type="button"><i class="fa fa-download"></i> Export</button></a>
               </div>
             </form>
           </div>
@@ -99,7 +99,7 @@
                   <td>{{CODLedger_List.receivable}}</td>
                   <td>{{CODLedger_List.financeconfirmamount}}</td>
                   <td>{{CODLedger_List.balanceLogic}}</td>
-                  <td>{{CODLedger_List.statusid}}</td>
+                  <td>{{StatusVal}}</td>
                   <td>{{CODLedger_List.Closedby}}</td>
                 </tr>
               </tbody>

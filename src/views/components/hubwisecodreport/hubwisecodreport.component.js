@@ -25,10 +25,12 @@ export default {
       HubId:"",
       resultCount:'',
       toDate:"",
+      StatusVal:"",
       fromDate:"",
       status:"",
       zonename:"",
       hubname:"",
+      exportPath:"",
       pageno:0,
       pagecount:0,
       HubWiseCODLedge:false
@@ -55,6 +57,35 @@ export default {
         this.pageno = (pageNum - 1) * 10
         this.getHubWiseCODLedgerReports()
     },
+
+    exportHubWiswData(){
+      this.input = ({
+          hubid: this.HubId.HubID,
+          status: this.status,
+          fromdate: this.fromDate,
+          todate: this.toDate
+      })
+
+      axios({
+          method: 'POST',
+          'url': apiUrl.api_url + 'exportHubWiseCODReports',
+          'data': this.input,
+          headers: {
+              'Authorization': 'Bearer '+this.myStr
+          }
+      })
+      .then(result => {
+
+        if(result.data.code == 200){
+          this.exportPath = result.data.data;
+          console.log("this.exportPath",this.exportPath);
+        }else{
+        }
+      }, error => {
+          console.error(error)
+      })
+    },
+
     getHubWiseCODLedgerReports(){
       this.HubWiseCODLedge = true ;
             this.input = ({
@@ -85,6 +116,7 @@ export default {
                  } else {
                      this.pagecount = Math.ceil(totalRows / 10)
                  }
+                 this.exportHubWiswData();
                }
                 },
                  error => {
@@ -135,6 +167,12 @@ export default {
         if(result){
           this.zonename = event.target[0].selectedOptions[0].attributes.title.nodeValue;
           this.hubname = this.HubId.HubName;
+          this.StatusVal = event.target[2].selectedOptions[0].attributes.title.nodeValue;
+          if(this.StatusVal == "Open"){
+              this.StatusVal = "Open"
+          }else{
+              this.StatusVal = "Close"
+          }
           this.getHubWiseCODLedgerReports()
         }
       //  event.target.reset();
