@@ -59,6 +59,13 @@ export default {
 
     GetSearchSVCledgerData() {
 
+      if(this.fromDate > this.toDate){
+         document.getElementById("fdate").innerHTML="From date should not be greater than To date.";
+         return false;
+      }else{
+        document.getElementById("fdate").innerHTML="";
+      }
+
       this.input = ({
           offset: this.pageno,
           limit: 10,

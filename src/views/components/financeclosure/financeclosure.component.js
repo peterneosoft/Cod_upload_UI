@@ -240,9 +240,9 @@ export default {
           this.HubID = this.HubId.HubID;
           this.StatusVal = event.target[2].selectedOptions[0].attributes.title.nodeValue;
           if(this.StatusVal == "Close"){
-              this.StatusVal = "Transacton Closed"
+              this.StatusVal = "Transaction Closed"
           }else{
-              this.StatusVal
+              this.StatusVal = "Transaction Open"
           }
           this.GetFinanceledgerData(event);
          }
@@ -258,7 +258,7 @@ export default {
       let finreasonid = document.getElementById('finreason'+ledgerid).value;
 
       if(finreasonid==null || finreasonid==undefined || finreasonid==""){
-         document.getElementById("finR"+ledgerid).innerHTML="The Finance Reason field is required.";
+         document.getElementById("finR"+ledgerid).innerHTML="Please select reason.";
          return false;
       }else{
         document.getElementById("finR"+ledgerid).innerHTML="";
@@ -269,14 +269,14 @@ export default {
           confirmamount = document.getElementById('confirmamount'+ledgerid).value;
 
           if(confirmamount==null || confirmamount==undefined || confirmamount==""){
-            document.getElementById("finA"+ledgerid).innerHTML="The Finance Confirm Amount field is required.";
+            document.getElementById("finA"+ledgerid).innerHTML="Please enter received amount.";
             return false;
           }else{
             document.getElementById("finA"+ledgerid).innerHTML="";
           }
         }
         if(financeconfirmdate==null || financeconfirmdate==undefined || financeconfirmdate==""){
-          document.getElementById("finD"+ledgerid).innerHTML="The Finance Confirm Date field is required.";
+          document.getElementById("finD"+ledgerid).innerHTML="Please select date.";
           return false;
         }else{
           document.getElementById("finD"+ledgerid).innerHTML="";

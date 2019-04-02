@@ -23,7 +23,7 @@ export default {
       resultCount: '',
       ClientId: '',
       ClientList: [],
-      RemittanceDay: '',
+      RemittanceDay: [],
       RemittanceDayList: [],
       listCODRemittanceData: [],
       calcModal: false,
@@ -48,6 +48,7 @@ export default {
     this.GetClientData();
 
     this.RemittanceDayList = [
+      {day:"Daily"},
       {day:"Sunday"},
       {day:"Monday"},
       {day:"Tuesday"},
@@ -59,13 +60,24 @@ export default {
   },
 
   methods: {
-    setid(name, key){
-      return name+key;
+    handleSelect(event) {
+      if (event.day == 'Daily') {
+        for (let item of this.RemittanceDayList) {
+          if (item.day != 'Daily' && this.RemittanceDay.includes(item) === false) {
+            this.RemittanceDay.push(item);
+          }
+        }
+      }
     },
 
     multiple(){
       return true;
     },
+
+    setid(name, key){
+      return name+key;
+    },
+
     GetClientData() {
 
       axios({
@@ -90,7 +102,9 @@ export default {
 
       let dData = [];
       this.RemittanceDay.forEach(function (val) {
-        dData.push(val.day);
+        if(val.day!='Daily'){
+          dData.push(val.day);
+        }
       });
 
       this.input = ({

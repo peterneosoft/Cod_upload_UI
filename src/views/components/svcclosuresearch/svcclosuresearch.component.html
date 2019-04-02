@@ -16,6 +16,7 @@
                     v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
                   </b-input-group>
                   <span v-show="errors.has('fromDate')" class="text-danger">Please select from date. </span>
+                  <span id="fdate" class="text-danger"></span>
                 </div>
 
                 <div class="col-md-4">
