@@ -11,6 +11,7 @@
               <label>SR Name</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
                     <Multiselect  :options="SRList"  name="SR_Name" id="SR_Name" v-model="SR_Name" label="srname" track-by="srid"  v-validate="{required: true}" v-bind:class="{'error': errors.has('SR_Name') }" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6; z-index:999">
+                      <template slot="noResult"><p>No Record Found.</p></template>
                     </Multiselect>
                 </b-input-group>
                 <span v-show="errors.has('SR_Name')" class="text-danger">Please select SR name.</span>

@@ -58,7 +58,7 @@ export default {
     getHubWiseCODLedgerReports(){
       this.HubWiseCODLedge = true ;
             this.input = ({
-                hubid: this.HubId,
+                hubid: this.HubId.HubID,
                 fromdate: this.fromDate,
                 todate: this.toDate,
                 status: this.status,
@@ -109,11 +109,9 @@ export default {
         })
     },
     getHubData() {
-
       if(this.zone==""){
         return false;
       }
-
       this.input = ({
           zoneid: this.zone
       })
@@ -126,7 +124,6 @@ export default {
           }
         })
         .then(result => {
-
           this.hubList = result.data.hub.data;
         }, error => {
           console.error(error)
@@ -137,7 +134,7 @@ export default {
       this.$validator.validateAll().then((result) => {
         if(result){
           this.zonename = event.target[0].selectedOptions[0].attributes.title.nodeValue;
-          this.hubname = event.target[1].selectedOptions[0].attributes.title.nodeValue;
+          this.hubname = this.HubId.HubName;
           this.getHubWiseCODLedgerReports()
         }
       //  event.target.reset();

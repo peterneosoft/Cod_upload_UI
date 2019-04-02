@@ -24,6 +24,7 @@
                 <label>Hub/Svc</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <Multiselect :options="hubList" name="HubId" id="HubId" v-model="HubId"  label="HubName" track-by="HubID"  v-validate="{required: true}" v-bind:class="{'error': errors.has('HubId') }" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
+                   <template slot="noResult"><p>No Record Found.</p></template>
                   </Multiselect>
                 </b-input-group>
                 <span v-show="errors.has('HubId')" class="text-danger">Please select Client.</span>

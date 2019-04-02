@@ -218,6 +218,7 @@ export default {
         })
         .then(result => {
           if(result.data.code == 200){
+            console.log("this.listSVCledgerData",JSON.stringify(this.listSVCledgerData));
             this.listSVCledgerData = result.data.data;
             this.isLoading = false;
             let totalRows     = result.data.count;
@@ -309,7 +310,7 @@ export default {
         let error = document.getElementById("d_a");
         error.style.display  = "none";
 
-        this.unmatchedAmt = parseFloat((parseFloat(TolatCollection)-parseFloat(DepositAmount))).toFixed(2);
+        this.unmatchedAmt = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositAmount))).toFixed(2);
 
         if(DepositAmount < TolatCollection){
           if(this.Reason==''){
@@ -368,6 +369,7 @@ export default {
       })
       .then((response) => {
         if (response.data.errorCode == 0) {
+          this.uploadFileList=[];
           this.$alertify.success(response.data.msg);
           this.resetForm(event);
         } else if (response.data.errorCode == -1) {
@@ -450,6 +452,7 @@ export default {
       this.Loading = false;
       this.BatchID = Math.floor(Math.random() * (Math.pow(10,5)));
       this.pageno = this.tot_amt = this.unmatchedAmt = 0;
+      this.uploadFileList=[];
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.Reason = '';
       $('#denomlist input[type="text"]').val(0);
       $('#denomlist input[type="number"]').val('');

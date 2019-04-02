@@ -220,6 +220,7 @@ export default {
 
     searchClientCODRemittanceData(event){
       this.isLoading = true;
+      this.AddEditClientTAT = false;
 
       axios({
           method: 'GET',

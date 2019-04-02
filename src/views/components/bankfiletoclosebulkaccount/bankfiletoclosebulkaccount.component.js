@@ -64,7 +64,6 @@ export default {
            }else{
              this.$alertify.error(".csv File does not Upload ");
            }
-           console.log("this.filename",this.filename);
         }, error => {
           console.error(error)
         });
@@ -87,23 +86,24 @@ export default {
           }
         })
         .then(result => {
-
           this.failed = result.data.failed;
           this.success = result.data.success;
           this.s3link = result.data.s3link;
-
           if(result.data.code == 200){
             this.Loading = false;
             this.$alertify.success(result.data.message);
+            this.filename = ""
           }
 
         }, error => {
           console.error(error)
+          this.Loading = false;
         })
     },
     onSubmit: function(res) {
       this.$validator.validateAll().then((result) => {
         if(result){
+          this.uploadFile()
         event.target.reset();
        }
       }).catch(() => {

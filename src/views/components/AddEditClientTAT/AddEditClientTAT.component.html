@@ -12,6 +12,7 @@
                 <label>Client Name</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <Multiselect :options="ClientList" name="ClientId" id="ClientId" @input="GetClientBusinessConfigList()" v-model="ClientId" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID"  v-validate="{required: true}" v-bind:class="{'error': errors.has('ClientId') }" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                   <template slot="noResult"><p>No Record Found.</p></template>
                   </Multiselect>
                 </b-input-group>
                 <span v-show="errors.has('ClientId')" class="text-danger">Please select Client.</span>
@@ -43,7 +44,8 @@
               <div class="col-md-4">
                 <label>Remittance Day</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                <Multiselect :options="RemittanceDayList" name="RemittanceDay" id="RemittanceDay" v-model="RemittanceDay" placeholder="Select Remittance Day" label="day" track-by="day" :preselect-first="false" v-bind:multiple="multiple()" @select="handleSelect" v-validate="{required: true}" v-bind:class="{'error': errors.has('RemittanceDay') }" :max-height="150" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;">
+                <Multiselect :options="RemittanceDayList" name="RemittanceDay" id="RemittanceDay" v-model="RemittanceDay" placeholder="Select Remittance Day" label="day" track-by="day" :preselect-first="false" v-bind:multiple="multiple()" @select="handleSelect" v-validate="{required: true}" v-bind:class="{'error': errors.has('RemittanceDay') }" :max-height="150" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                 <template slot="noResult"><p>No Record Found.</p></template>
                 </Multiselect>
                 </b-input-group>
                 <span v-show="errors.has('RemittanceDay')" class="text-danger">Please Select Remittance Day.</span>
@@ -130,6 +132,7 @@
                 <label>Client </label>
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <Multiselect :options="ClientList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                    <template slot="noResult"><p>No Record Found.</p></template>
                   </Multiselect>
                 </b-input-group>
                 <span id="clienterr" class="text-danger"></span>
@@ -180,7 +183,7 @@
             </tr>
           </tbody>
         </table><br>
-        <paginate  v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData"  :container-class="'pagination'"></paginate>
+        <paginate  v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'"  :container-class="'pagination'"></paginate>
       </div>
     </div>
   </div>
