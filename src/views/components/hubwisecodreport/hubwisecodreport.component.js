@@ -75,10 +75,9 @@ export default {
           }
       })
       .then(result => {
-
         if(result.data.code == 200){
           this.exportPath = result.data.data;
-          console.log("this.exportPath",this.exportPath);
+
         }else{
         }
       }, error => {
