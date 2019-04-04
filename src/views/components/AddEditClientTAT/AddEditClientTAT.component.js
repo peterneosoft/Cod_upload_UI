@@ -7,13 +7,15 @@ import Multiselect from 'vue-multiselect'
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import CryptoJS from 'crypto-js';
 import Paginate from 'vuejs-paginate'
+import VueElementLoading from 'vue-element-loading';
 
 
 export default {
   name: 'AddEditClientTAT',
   components: {
     Paginate,
-    Multiselect
+    Multiselect,
+    VueElementLoading
   },
   props: [],
 
@@ -39,7 +41,7 @@ export default {
       BankName:"",
       myStr:"",
       BankAccount:"",
-      AddEditClientTAT:true,
+      AddEditClientTAT:0,
       RemittanceDay:[],
       RemittanceDayList: [],
       pageno: 0,
@@ -94,6 +96,10 @@ export default {
     },
 
     GetClientBusinessConfigList(){
+      if(this.ClientId.ClientMasterID != this.CId){
+        this.Bussinesstype = this.AccountName = this.Beneficiary = this.BankName = this.BankAccount = this.rtgs = '';
+      }
+
       if(this.ClientId.ClientMasterID == ""){
         return false;
       }
@@ -109,8 +115,6 @@ export default {
           }
         })
         .then(result => {
-          this.AccountName = '';
-          this.Bussinesstype = '';
           this.ClientBusinessList = result.data.client.data;
         }, error => {
           console.error(error)
@@ -118,9 +122,13 @@ export default {
     },
 
     GetClientBusinessAccounts(){
-       if(this.Bussinesstype == ""){
-         return false;
-       }
+      if(this.Bussinesstype != this.BType){
+        this.AccountName = this.Beneficiary = this.BankName = this.BankAccount = this.rtgs = '';
+      }
+
+      if(this.Bussinesstype == ""){
+        return false;
+      }
       this.input = ({
         clientid: this.ClientId.ClientMasterID,
         businessid:parseInt(this.Bussinesstype)
@@ -191,12 +199,12 @@ export default {
       this.input = ({
           ClientId: this.ClientId.ClientMasterID,
           RemittanceType: this.type,
-          RemittanceDay: dData.join(),
+          RemittanceDay: dData,
           TAT: this.tat,
-          CustomerMailId: this.emailid,
-          Cycle: this.cycle,
           IsActive: true,
           HoldingAmount: 0,
+          BussinessType: this.Bussinesstype,
+          AccountId: this.AccountName,
           CreatedBy: this.localuserid
       })
       axios({
@@ -209,6 +217,51 @@ export default {
       })
       .then((response) => {
         if (response.data.errorCode == 0) {
+          this.AddEditClientTAT=0;
+          this.$alertify.success(response.data.msg);
+          this.resetForm(event);
+        } else if (response.data.errorCode == -1) {
+          this.$alertify.error(response.data.msg)
+        }
+      })
+      .catch((httpException) => {
+          console.error('exception is:::::::::', httpException)
+      });
+    },
+
+    editClientCODRemittanceData(event) {
+
+      let dData = [];
+      this.RemittanceDay.forEach(function (val) {
+        if(val.day!='Daily'){
+          dData.push(val.day);
+        }
+      });
+
+      this.input = ({
+          ClientCODRemmitanceId: this.ClientCODRemmitanceId,
+          ClientId: this.ClientId.ClientMasterID,
+          RemittanceType: this.type,
+          RemittanceDay: dData,
+          TAT: this.tat,
+          IsActive: true,
+          HoldingAmount: 0,
+          BussinessType: this.Bussinesstype,
+          AccountId: this.AccountName,
+          LastModifiedBy: this.localuserid
+      })
+      axios({
+          method: 'POST',
+          'url': apiUrl.api_url + 'editclientcodremittancedetail',
+          'data': this.input,
+          headers: {
+              'Authorization': 'Bearer '+this.myStr
+          }
+      })
+      .then((response) => {
+        if (response.data.errorCode == 0) {
+          this.AddEditClientTAT=0;
+          this.searchClientCODRemittanceData(event);
           this.$alertify.success(response.data.msg);
           this.resetForm(event);
         } else if (response.data.errorCode == -1) {
@@ -234,8 +287,8 @@ export default {
       .then(result => {
         if(result.data.code == 200){
           this.listClientCODRemittanceData = result.data.data;
-          this.company = this.Client.CompanyName;
-          this.isLoading = false;
+          this.company      = this.Client.CompanyName;
+          this.isLoading    = false;
           let totalRows     = result.data.count;
           this.resultCount  = result.data.count;
 
@@ -246,9 +299,9 @@ export default {
           }
         }else{
           this.listClientCODRemittanceData = [];
-          this.company = '';
-          this.resultCount = 0;
-          this.isLoading = false;
+          this.company      = '';
+          this.resultCount  = 0;
+          this.isLoading    = false;
         }
       }, error => {
           console.error(error)
@@ -256,32 +309,36 @@ export default {
     },
 
     getClientCODRemittanceRowData(data) {
-
       this.$validator.reset();
       this.errors.clear();
-      this.ClientCODRemmitanceId = data.ClientCODRemmitanceId;
+
       let clientarr = [];
       if(data.ClientId!=""){
         clientarr.push({"ClientMasterId":data.ClientId, "CompanyName":this.company});
       }
-      this.ClientId = clientarr;
 
       let dayarr = [];
-      data.RemittanceDay.split(",").forEach((d)=>{
+      data.RemittanceDay.forEach((d)=>{
         if(d!=""){
           dayarr.push({"day":d});
         }
       });
-      this.RemittanceDay = dayarr;
 
-      this.type = data.RemittanceType;
-      this.tat = data.tatno;
-      this.Beneficiary = data.BeneficiaryName;
-      this.BankName = data.ClientBankName;
-      this.BankAccount = data.ClientAccountNo;
-      this.rtgs = data.NEFTNo;
-      this.ClientId.ClientMasterID = data.ClientId;
-      this.Bussinesstype = '';
+      this.ClientCODRemmitanceId    = data.ClientCODRemmitanceId;
+      this.ClientId                 = clientarr;
+      this.RemittanceDay            = dayarr;
+      this.type                     = data.RemittanceType;
+      this.tat                      = data.tatno;
+      this.Beneficiary              = data.BeneficiaryName;
+      this.BankName                 = data.ClientBankName;
+      this.BankAccount              = data.ClientAccountNo;
+      this.rtgs                     = data.NEFTNo;
+      this.ClientId.ClientMasterID  = data.ClientId;
+      this.CId                      = data.ClientId;
+      this.Bussinesstype            = data.BussinessType;
+      this.BType                    = data.BussinessType;
+      this.AccountName              = data.AccountId;
+
       this.GetClientBusinessConfigList();
       this.GetClientBusinessAccounts();
     },
@@ -289,7 +346,11 @@ export default {
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
-          this.saveClientCODRemittanceData(event);
+          if(this.ClientCODRemmitanceId!=undefined && this.ClientCODRemmitanceId!=""){
+            this.editClientCODRemittanceData(event);
+          }else{
+            this.saveClientCODRemittanceData(event);
+          }
         }
       }).catch(() => {
         console.log('errors exist', this.errors)
@@ -302,12 +363,20 @@ export default {
         return false;
       }
       document.getElementById("clienterr").innerHTML="";
+      this.resetForm(event);
       this.searchClientCODRemittanceData(event);
     },
 
     getPaginationData(pageNum) {
         this.pageno = (pageNum - 1) * 10
         this.searchClientCODRemittanceData()
+    },
+
+    resetForm(event) {
+      this.RemittanceDay=[];
+      this.ClientId = this.Bussinesstype = this.AccountName = this.tat = this.type = this.Beneficiary = this.BankName = this.BankAccount = this.rtgs = '';
+      this.$validator.reset();
+      this.errors.clear();
     },
   }
 }
