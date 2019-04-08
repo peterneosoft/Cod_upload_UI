@@ -261,7 +261,7 @@ const router = new Router({
         },
         {
           path: 'settings',
-          name: 'System Settings',
+          name: 'Hub Settings',
           component: SystemSettings,
           meta: {
             requiresAuth: true,
@@ -271,7 +271,7 @@ const router = new Router({
                 link: '/dashboard'
               },
               {
-                name: 'System Settings'
+                name: 'Hub Settings'
               }
             ]
           },

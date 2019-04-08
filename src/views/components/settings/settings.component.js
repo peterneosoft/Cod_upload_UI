@@ -21,13 +21,18 @@ export default {
       isLoading: false,
       resultCount: 0,
       zone:'',
-      HubId:'',
+      HubId:[],
       count: 0,
       hubList: [],
       zoneList: [],
       listHubSettingsData: [],
       myStr: '',
-      localuserid: 0
+      localuserid: 0,
+      hubarr:[],
+      hubnamearr:[],
+      harr:'',
+      editHubSetting: false,
+      disableButton: true
     }
   },
 
@@ -117,16 +122,79 @@ export default {
           }
         })
         .then(result => {
-          this.listHubSettingsData = result.data;
+          if(result.data.code == 200){
+            this.listHubSettingsData  = result.data.data;
+            this.hubnamearr           = result.data.data[0].hubnamearr;
+            this.harr                 = result.data.data[0].harr;
+            this.hubarr               = result.data.data[0].hubnamearr;
+            this.isLoading            = false;
+            let totalRows             = result.data.count;
+            this.resultCount          = result.data.count;
+            if (totalRows < 10) {
+                this.pagecount = 1
+            } else {
+                this.pagecount = Math.ceil(totalRows / 10)
+            }
+          }else{
+            this.disableButton = false;
+            this.resultCount  = 0;
+            this.isLoading = false;
+          }
         }, error => {
           console.error(error)
         })
     },
 
+    removeHubData(data, index) {
+      if(data.HubID){
+        let obj = this.hubnamearr.find(el => el.HubID === data.HubID);
+        this.hubnamearr.splice(index, 1);
+        this.HubId = this.hubnamearr;
+      }
+    },
+
+    addHubData(event) {
+      this.editHubSetting = true,
+      this.hubarr = this.HubId;
+
+      let hData = [];
+      this.HubId.forEach(function (val) {
+          hData.push({'HubID':val.HubID, 'HubName':val.HubName});
+      });
+      this.hubnamearr = [...new Set([...this.hubarr, ...hData])];
+
+      let arr = this.hubnamearr;
+      let arrResult = [];
+      let n = arr.length;
+      for (i = 0, n; i < n; i++) {
+        var item = arr[i];
+        arrResult[ item.HubID + " - " + item.HubName ] = item; // create associative array
+      }
+
+      var i = 0;
+      var nonDuplicatedArray = [];
+      for(var item in arrResult) {
+        nonDuplicatedArray[i++] = arrResult[item]; // copy the objects that are now unique
+      }
+      this.hubnamearr = nonDuplicatedArray;
+    },
+
+    getHubSettingRowData(data) {
+      this.$validator.reset();
+      this.errors.clear();
+
+      this.settingid  = data.settingid;
+      this.HubID      = data.hubid;
+      this.HubId      = this.hubnamearr;
+
+      this.disableButton = false;
+      this.getZoneData();
+    },
+
     //to get pagination
     getPaginationData(pageNum) {
         this.pageno = (pageNum - 1) * 10
-        this.GetHubSettingsData()
+        this.GetHubSettingsData();
     },
 
     saveHubSettingsData() {
@@ -135,6 +203,8 @@ export default {
       this.HubId.forEach(function (val) {
           hData.push(val.HubID);
       });
+
+      this.disableButton = false;
 
       this.input = ({
           hubid: hData,
@@ -149,7 +219,7 @@ export default {
               'Authorization': 'Bearer '+this.myStr
           }
       })
-      .then(result => {
+      .then(response => {
         if (response.data.errorCode == 0) {
           this.$alertify.success(response.data.msg);
           this.resetForm(event);
@@ -176,6 +246,9 @@ export default {
       this.zone = this.HubId = '';
       this.$validator.reset();
       this.errors.clear();
+      this.editHubSetting = false;
+      this.disableButton = true;
+      this.GetHubSettingsData();
     },
   }
 }
