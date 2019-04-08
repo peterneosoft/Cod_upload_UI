@@ -76,7 +76,7 @@ export default {
       return name+key;
     },
 
-    //to get All Hub List
+    //to get All Zone List
     getZoneData() {
 
       this.input = {}
@@ -141,25 +141,6 @@ export default {
         })
     },
 
-    //to get All Hub List
-    getZoneData() {
-
-      this.input = {}
-      axios({
-          method: 'POST',
-          url: apiUrl.api_url + 'external/getallzones',
-          data: this.input,
-          headers: {
-            'Authorization': 'Bearer '+this.myStr
-          }
-        })
-        .then(result => {
-          this.zoneList = result.data.zone.data;
-        }, error => {
-          console.error(error)
-        })
-    },
-
     GetReasonList(){
       this.input = ({
         ReasonType:"Finance"
@@ -207,11 +188,16 @@ export default {
           if(result.data.code == 200){
             this.listFinanceledgerData = result.data.data;
 
+            $(".text-danger").html("");
+
             let finance = result.data.data;
             finance.forEach((fin,key)=>{
               this.form.finreason[fin.svcledgerid] = fin.financereasonid;
-              if(!fin.financereasonid)
+
+              if(!fin.financereasonid){
+                this.form.finreason[fin.svcledgerid] = '';
                 this.form.hide[fin.svcledgerid] = 0;
+              }
             });
 
             this.isLoading = false;

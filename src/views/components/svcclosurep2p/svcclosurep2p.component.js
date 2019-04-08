@@ -49,7 +49,8 @@ export default {
       TolatCollection: '0.00',
       p2pAmount: '0.00',
       myStr: '',
-      resultdate: ''
+      resultdate: '',
+      disableButton: false
     }
   },
 
@@ -334,6 +335,8 @@ export default {
       let ClosingBalance = parseFloat(parseFloat(OpeningBalance)+parseFloat(this.yesterdayCODAmt)-parseFloat(DepositAmount)).toFixed(2);
       let CODAmount = parseFloat(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)).toFixed(2);
 
+      this.disableButton = true;
+
       this.input = ({
           DepositDate: this.DepositDate,
           DeliveryDate: this.DeliveryDate,
@@ -373,6 +376,7 @@ export default {
         if (response.data.errorCode == 0) {
           this.uploadFileList=[];
           this.$alertify.success(response.data.msg);
+          this.disableButton = false;
           this.resetForm(event);
         } else if (response.data.errorCode == -1) {
           this.$alertify.error(response.data.msg)
@@ -385,7 +389,7 @@ export default {
 
     //function is used for upload files on AWS s3bucket
     onUpload(event){
-
+      this.disableButton = true;
       this.selectedFile = event.target.files[0];
 
       var name = this.selectedFile.name;
@@ -427,6 +431,7 @@ export default {
       .then(result => {
         this.Loading = false;
         this.uploadFileList = result.data.data;
+        this.disableButton = false;
       }, error => {
         console.error(error)
       })

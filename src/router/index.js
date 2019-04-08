@@ -22,6 +22,7 @@ import CSVReOpenDay from '@/views/components/csvreopenday'
 import SVCDepositExceptions from '@/views/components/svcdepositexceptions'
 import HubWiseCODReport from '@/views/components/hubwisecodreport'
 import MISP2PCODReport from '@/views/components/misp2preport'
+import SystemSettings from '@/views/components/settings'
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -80,7 +81,7 @@ const router = new Router({
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/svcclosurep2p'
+                link: '/dashboard'
               },
               {
                 name: 'COD day Closure'
@@ -97,7 +98,7 @@ const router = new Router({
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/srclosure'
+                link: '/dashboard'
               },
               {
                 name: 'SR Closure'
@@ -114,7 +115,7 @@ const router = new Router({
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/srclosuresearch'
+                link: '/dashboard'
               },
               {
                 name: 'SR Closure Search'
@@ -130,11 +131,11 @@ const router = new Router({
             requiresAuth: true,
             adminAuth: true,
             breadcrumb: [{
-                name: 'hubwisecodreport',
-                link: '/hubwisecodreport'
+                name: 'Home',
+                link: '/dashboard'
               },
               {
-                name: 'hubwisecodreport'
+                name: 'Hub Wise COD Report'
               }
             ]
           },
@@ -148,10 +149,10 @@ const router = new Router({
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/CODRemittance'
+                link: '/dashboard'
               },
               {
-                name: 'CODRemittance'
+                name: 'COD Remittance'
               }
             ]
           },
@@ -165,10 +166,10 @@ const router = new Router({
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/AddEditClientTAT'
+                link: '/dashboard'
               },
               {
-                name: 'AddEditClientTAT'
+                name: 'Add Edit Client TAT'
               }
             ]
           },
@@ -182,7 +183,7 @@ const router = new Router({
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/svcclosuresearch'
+                link: '/dashboard'
               },
               {
                 name: 'SVC Search'
@@ -199,10 +200,10 @@ const router = new Router({
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/CODRemitanceClose'
+                link: '/dashboard'
               },
               {
-                name: 'CODRemitanceClose'
+                name: 'COD Remitance Close'
               }
             ]
           },
@@ -216,7 +217,7 @@ const router = new Router({
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/mapbankhub'
+                link: '/dashboard'
               },
               {
                 name: 'Bank and Hub mapping'
@@ -233,7 +234,7 @@ const router = new Router({
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/bankfiletoclosebulkaccount'
+                link: '/dashboard'
               },
               {
                 name: 'E-Payment MIS Upload'
@@ -250,10 +251,27 @@ const router = new Router({
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/financeclosure'
+                link: '/dashboard'
               },
               {
                 name: 'Finance Closure'
+              }
+            ]
+          },
+        },
+        {
+          path: 'settings',
+          name: 'System Settings',
+          component: SystemSettings,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'System Settings'
               }
             ]
           },
@@ -267,7 +285,7 @@ const router = new Router({
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/csvreopenday'
+                link: '/dashboard'
               },
               {
                 name: 'SVC Re - Open Day'
@@ -284,7 +302,7 @@ const router = new Router({
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/svcdepositexceptions'
+                link: '/dashboard'
               },
               {
                 name: 'SVC Bank Deposit Exceptions'
@@ -318,7 +336,7 @@ const router = new Router({
             adminAuth: true,
             breadcrumb: [{
                 name: 'Home',
-                link: '/misp2preport'
+                link: '/dashboard'
               },
               {
                 name: 'MIS P2P COD Report'
