@@ -4,12 +4,16 @@
   import { Validator } from 'vee-validate'
   import Paginate from 'vuejs-paginate'
   import VueElementLoading from 'vue-element-loading';
+  import BarExample from './../../charts/BarExample'
+  import PieExample from './../../charts/PieExample'
 
   export default {
     name: 'dashboard',
     components: {
         Paginate,
-        VueElementLoading
+        VueElementLoading,
+        BarExample,
+        PieExample
     },
 
     data() {
@@ -27,7 +31,10 @@
         zoneList: [],
         cityList: [],
         hubList: [],
-        calcModal: false
+        calcModal: false,
+        max: 50,
+          value: 33.333333333
+
       }
     },
 
@@ -36,6 +43,7 @@
     },
 
     mounted() {
+
       var userToken = window.localStorage.getItem('accessuserToken')
       this.myStr = userToken.replace(/"/g, '');
 

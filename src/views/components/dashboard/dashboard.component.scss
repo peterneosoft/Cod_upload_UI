@@ -7,6 +7,9 @@ ul {
 *:focus {
 	outline: none
 }
+.special-card {
+					 background-color: rgba(245, 245, 245, 0.4) !important;
+			 }
 
 a {
 	font-size: 13px;
@@ -20,6 +23,7 @@ a {
 		font-size: 14px
 	}
 }
+
 
 a:focus,
 a:hover {
