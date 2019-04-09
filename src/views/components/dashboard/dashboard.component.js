@@ -33,8 +33,11 @@
         hubList: [],
         calcModal: false,
         max: 50,
-          value: 33.333333333
-
+        value: 33.333333333,
+        hubCollectionList:[],
+        maxCOD:[],
+        minCOD:[],
+        resultHubCollCount:0
       }
     },
 
@@ -53,6 +56,8 @@
       var userdetail        = JSON.parse(plaintext);
       this.localuserid      = userdetail.userid;
       this.getZoneData();
+      this.getHubWiseCollectionData();
+      this.getMaxMinCODCollectionData();
 
     },
 
@@ -152,6 +157,65 @@
             console.error(error)
           })
       },
+
+      //to get Hub Collection
+      getHubWiseCollectionData() {
+
+        let hubidArr = [];
+        this.hubList.forEach(function (val) {
+          hubidArr.push(val.HubID);
+        });
+
+        this.input = ({
+            hubids: [139, 401],
+            fromdate: this.fromdate,
+            todate: this.todate,
+        })
+        axios({
+            method: 'POST',
+            url: apiUrl.api_url + 'gethubwisecollection',
+            data: this.input,
+            headers: {
+              'Authorization': 'Bearer '+this.myStr
+            }
+          })
+          .then(result => {
+            this.hubCollectionList = result.data.data;
+            this.resultHubCollCount = result.data.data.length;
+          }, error => {
+            console.error(error)
+          })
+      },
+
+      //to get Hub Collection
+      getMaxMinCODCollectionData() {
+
+        let hubidArr = [];
+        this.hubList.forEach(function (val) {
+          hubidArr.push(val.HubID);
+        });
+
+        this.input = ({
+            hubids: [139, 401],
+            fromdate: this.fromdate,
+            todate: this.todate,
+        })
+        axios({
+            method: 'POST',
+            url: apiUrl.api_url + 'getMaxMinCODCollection',
+            data: this.input,
+            headers: {
+              'Authorization': 'Bearer '+this.myStr
+            }
+          })
+          .then(result => {
+            this.maxCOD = result.data.MaxCOD;
+            this.minCOD = result.data.MinCOD;
+          }, error => {
+            console.error(error)
+          })
+      },
+
       onSubmit: function(event) {
         this.$validator.validateAll().then((result) => {
           if(result){

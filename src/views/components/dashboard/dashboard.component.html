@@ -76,7 +76,7 @@
          </div>
 
          <div class="border border-dark" >
-           <div class="chart-wrapper"  style="width: 20rem;height:20rem">
+           <div class="chart-wrapper">
              <pie-example/>
            </div>
          </div>
@@ -85,7 +85,7 @@
       <div class ="row">
       <div class="col-6">
         <div class="card-headerfrm" style="margin-bottom: 15px;">
-          <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+          <table class="table-bordered table-hover tbl datatables tableBodyScroll">
             <thead>
               <tr class="text-primary">
                 <th class="text-center tableheader"><b>Hub Name</b></th>
@@ -97,29 +97,16 @@
               </tr>
             </thead>
             <tbody>
-              <tr >
-                <td>DEL/ISR</td>
-                <td>2500</td>
-                <td>1500</td>
-                <td>1900</td>
-                <td>1600</td>
-                <td>1600</td>
+              <tr v-if="resultHubCollCount==0">
+                <td colspan="6" align="center">No record found</td>
               </tr>
-              <tr >
-                <td>DEL/ISR</td>
-                <td>2500</td>
-                <td>1500</td>
-                <td>1900</td>
-                <td>1600</td>
-                <td>1600</td>
-              </tr>
-              <tr>
-                <td>DEL/ISR</td>
-                <td>2500</td>
-                <td>1500</td>
-                <td>1900</td>
-                <td>1600</td>
-                <td>1600</td>
+              <tr v-for="(data,index) in hubCollectionList">
+                <td>{{data.hubname}}</td>
+                <td><i class="fa fa-rupee"></i> {{data.receivable}}</td>
+                <td><i class="fa fa-rupee"></i> {{data.pending}}</td>
+                <td><i class="fa fa-rupee"></i> {{data.total}}</td>
+                <td><i class="fa fa-rupee"></i> {{data.received}}</td>
+                <td><i class="fa fa-rupee"></i> {{data.outstanding}}</td>
               </tr>
             </tbody>
           </table>
@@ -128,19 +115,19 @@
 
         <div class="col-5">
          <b-card-group deck>
-          <div class="card text-dark bg-danger mb-3  mt-4" style=" ">
-            <div class="card-header">Top Collection</div>
-             <div class="card-body special-card">
-              <h5 class="card-title">Mumbai</h5>
-              <p class="card-text">$5678</p>
+          <div class="card text-dark bg-success mb-3  mt-4" style=" ">
+             <div class="card-body">
+               <b style="font-weight: bold;"><p>Top Collection</p><hr style="border-top: 1px solid rgb(0, 0, 0);">
+               <p class="card-text">{{maxCOD.hubname}}</p>
+               <p class="card-text"><i class="fa fa-rupee"></i> {{maxCOD.value}}</p></b>
              </div>
           </div>
 
-          <div class="card text-dark bg-success mb-3 mt-4" style= "">
-            <div class="card-header">least Collection</div>
-            <div class="card-body special-card" style="">
-              <h5 class="card-title">Amravati</h5>
-              <p class="card-text">$5678</p>
+          <div class="card text-dark bg-danger mb-3 mt-4" style= "">
+            <div class="card-body">
+              <b style="font-weight: bold;"><p>Least Collection</p><hr style="border-top: 1px solid rgb(0, 0, 0);">
+              <p class="card-text">{{minCOD.hubname}}</p>
+              <p class="card-text"><i class="fa fa-rupee"></i> {{minCOD.value}}</p></b>
             </div>
           </div>
         </b-card-group>
