@@ -45,7 +45,7 @@ export default {
     var bytes             = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
     var userdetail        = JSON.parse(plaintext);
-    this.localuserid      = userdetail.userid;
+    this.localuserid      = userdetail.username;
 
     var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');

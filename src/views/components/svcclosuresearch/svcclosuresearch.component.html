@@ -68,7 +68,7 @@
                 <td colspan="15" align="center">No record found</td>
               </tr>
               <tr v-for="(data,index) in listSearchSVCledgerData">
-                <td scope="row" class="text-center"><strong>{{index+1}}</strong></td>
+                <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
                 <td>{{localhubname}}</td>
                 <td>{{data.depositdate}}</td>
                 <td>{{data.openingbalance}}</td>

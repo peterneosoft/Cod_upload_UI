@@ -229,7 +229,7 @@
                 <td colspan="11" align="center">No record found</td>
               </tr>
               <tr v-for="(data,index) in listSVCledgerData" v-bind:class="`${data.createdby == 'schedular@xpressbees.com' ? 'scheduler' : ''}`">
-                <td scope="row" class="text-center"><strong>{{index+1}}</strong></td>
+                <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
                 <td>{{data.deliverydate}}</td>
                 <td>{{data.bankdepositdate}}</td>
                 <td>{{data.openingbalance}}</td>
