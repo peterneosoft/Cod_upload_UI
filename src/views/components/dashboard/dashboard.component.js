@@ -4,6 +4,7 @@ import CryptoJS from 'crypto-js';
 import { Validator } from 'vee-validate'
 import Paginate from 'vuejs-paginate'
 import VueElementLoading from 'vue-element-loading';
+import {Chart} from 'highcharts-vue'
 import PieExample from './../../charts/PieExample'
 
 export default {
@@ -11,21 +12,20 @@ export default {
   components: {
       Paginate,
       VueElementLoading,
-      PieExample
+      PieExample,
+      highcharts:Chart
   },
-
   data() {
     return {
       cardPer:'',
-
       cashPer:'',
       ndrPer:'',
       prepaidPer:'',
       walletPer:'',
       zone:'',
       state:'',
-      FromDate:'',
-      ToDate:'',
+      FromDate:null,
+      ToDate:null,
       city:'',
       popupZone:'',
       popupState:'',
@@ -44,7 +44,40 @@ export default {
       hubCollectionList:[],
       maxCOD:[],
       minCOD:[],
-      resultHubCollCount:0
+      resultHubCollCount:0,
+    piechart: {
+      chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+      },
+      title: {
+           text: 'Total Orders'
+        },
+        tooltip: {
+          pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+          pie: {
+              allowPointSelect: true,
+              cursor: 'pointer',
+              dataLabels: {
+                  enabled: false,
+                  format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                  connectorColor: 'silver'
+                },showInLegend: true
+              }
+            },
+            credits: {
+              enabled: false
+            },
+            series: {
+              name: 'Share',
+              colorByPoint: true,
+              data: []
+            },
+          }
     }
   },
 
@@ -105,8 +138,8 @@ export default {
 
       this.input = ({
           hubids: [139, 401],
-          fromdate: this.fromdate,
-          todate: this.todate,
+          fromdate: this.FromDate,
+          todate: this.ToDate,
       })
       axios({
           method: 'POST',
@@ -117,30 +150,21 @@ export default {
           }
         })
         .then(result => {
-
               this.cardPer = result.data.cardPer
               this.cashPer = result.data.cashPer
               this.ndrPer = result.data.ndrPer
               this.prepaidPer = result.data.prepaidPer
               this.walletPer = result.data.walletPer
 
-            this.datacollection = {
-             labels: ['Prepaid', 'Wallet', 'Card', 'Cash','NDR'],
-             datasets: [
-               {
-                 backgroundColor: [
-                   '#41B883',
-                   '#E46651',
-                   '#00D8FF',
-                   '#DD1B16',
-                   '#FDCC0D'
-                 ],
-                 data: [this.prepaidPer, this.walletPer, this.cardPer, this.cashPer,this.ndrPer]
-
-               }
-             ]
-           }
-           console.log("this.datacollection",JSON.stringify(this.datacollection));
+              let y = [this.prepaidPer,this.walletPer,this.cardPer,this.cashPer,this.ndrPer,]
+              let name = ["Prepaid","Wallet","Card","Cash","NDR"]
+              let chartDataObj = {};
+                  for(let i=0;i<y.length;i++){
+                    chartDataObj.y = parseFloat(y[i]);
+                    chartDataObj.name = name[i];
+                    this.piechart.series.data.push(chartDataObj)
+                    chartDataObj ={}
+                  }
         }, error => {
           console.error(error)
         })

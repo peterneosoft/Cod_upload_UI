@@ -53,15 +53,12 @@
            </div>
        </div>
 
-    <div class="card" style="height: 550px;">
+    <div class="card" style="height: 650px;">
      <div class="card-body">
       <div class="row">
       <div class="col-lg-6">
        <div class="border border-dark" >
          <center><h6>West</h6></center>
-         <!-- <div class="chart-wrapper"style="width: 20rem;height:20rem" >
-           <bar-example/>
-         </div> -->
          <b-card>
          <div>
          <p class="progress-labels">
@@ -85,14 +82,12 @@
          </div>
        </div>
 
-       <div class="col-lg-6">
-        <div class="border border-dark" >
-          <center><h6>Total Orders</h6></center>
-          <center><div class="chart-wrapper"  style="width: 18rem;height:18rem">
-          
-          <PieExample  :data="datacollection"  />
-          </div></center>
-        </div>
+       <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+           <center><div  style="width: 20rem;height:15rem">
+           <div class="card-body">
+             <highcharts :options="piechart"></highcharts>
+           </div>
+       </div></center>
        </div>
       </div>
     </div>
@@ -200,7 +195,6 @@
                    <span v-show="errors.has('hub')" class="text-danger">Please select hub. </span>
                  </div>
                </div>
-
              <div class="modal-footerfrm">
              <button type="submit"  size="vlg" class="btn btn-primary">Submit</button>&nbsp;
              <button type="button" size="vlg" class="btn btn-danger" @click="closeCalcModal">Cancel</button>
