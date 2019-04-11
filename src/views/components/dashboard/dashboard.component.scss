@@ -3,6 +3,14 @@ ul {
 	list-style-type: none;
 	margin-bottom: 0
 }
+.progress-label {
+  float: left;
+  margin-right: 1em;
+}
+.progress-labels {
+  float: left;
+  margin-right: 3em;
+}
 
 *:focus {
 	outline: none
@@ -1032,7 +1040,7 @@ a.bg-danger:hover {
 }
 
 .progress {
-	height: 5rem
+	height: 1rem
 }
 
 .progress .progress-bar {
@@ -12728,17 +12736,4 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>th:first-child:before {
 
 .pcoded[layout-type="dark"] .bg-c-purple {
 	background: #536dfe
-}
-
-.tableBodyScroll tbody {
-  display: block;
-  max-height: 185px;
-  overflow-y: scroll;
-}
-
-.tableBodyScroll thead,
-tbody tr {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
 }

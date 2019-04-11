@@ -52,37 +52,52 @@
           </div>
            </div>
        </div>
-       <!-- <div class="col-lg-6">
-         <div class="card" style="height: 150px;" >
-         <div class="card-body">
 
-         <b-progress  height="20px" :value="value" :max="max"  variant="success"show-progress class="mt-2" ></b-progress>
-         <b-progress  height="20px" :value="value" :max="max"  variant="info"  show-progress class="mt-4"></b-progress>
-         <b-progress height="20px"  :value="value" :max="max"  variant="danger"  show-progress class="mt-4"></b-progress>
+    <div class="card" style="height: 550px;">
+     <div class="card-body">
+      <div class="row">
+      <div class="col-lg-6">
+       <div class="border border-dark" >
+         <center><h6>West</h6></center>
+         <!-- <div class="chart-wrapper"style="width: 20rem;height:20rem" >
+           <bar-example/>
+         </div> -->
+         <b-card>
+         <div>
+         <p class="progress-labels">
+           Pending:
+         </p>
+         <b-progress  height="25rem" :max="max"  v-bind:value="pendPerc"   variant="success" show-progress class="mt-2 w-75" ></b-progress>
        </div>
-       </div>
-       </div> -->
-       <!-- <div class="card-columns cols-2"> -->
-      <div class="card" style="height: 600px;">
-       <div class="card-columns cols-2" >
-         <div class="card-body">
-         <div class="border border-dark" >
-           <!-- <div class="chart-wrapper"style="width: 20rem;height:20rem" >
-             <bar-example/>
-           </div> -->
-           <b-progress  height="20px" :value="value" :max="max"  variant="success"show-progress class="mt-2" ></b-progress>
-           <b-progress  height="20px" :value="value" :max="max"  variant="info"  show-progress class="mt-4"></b-progress>
-           <b-progress height="20px"  :value="value" :max="max"  variant="danger"  show-progress class="mt-4"></b-progress>
+       <div>
+         <p class="progress-labels">
+           Received:
+         </p>
+         <b-progress  height="2rem" v-bind:value="recPerc" :max="max"  variant="info"  show-progress class="mt-4 w-75"  ></b-progress>
          </div>
+         <div>
+         <label class="progress-label">
+           Total Amount:
+         </label>
+         <b-progress  height="2rem"  v-bind:value="totPerc" :max="max"  variant="danger"  show-progress class="mt-4 w-75 h-70" ></b-progress>
+         </div>
+       </b-card>
+         </div>
+       </div>
 
-         <div class="border border-dark" >
-           <div class="chart-wrapper">
-             <pie-example/>
-           </div>
-         </div>
+       <div class="col-lg-6">
+        <div class="border border-dark" >
+          <center><h6>Total Orders</h6></center>
+          <center><div class="chart-wrapper"  style="width: 18rem;height:18rem">
+          
+          <PieExample  :data="datacollection"  />
+          </div></center>
+        </div>
+       </div>
       </div>
-      </div>
-      <div class ="row">
+    </div>
+
+    <div class ="row">
       <div class="col-6">
         <div class="card-headerfrm" style="margin-bottom: 15px;">
           <table class="table-bordered table-hover tbl datatables tableBodyScroll">
@@ -132,9 +147,8 @@
           </div>
         </b-card-group>
        </div>
-      </div>
     </div>
-
+  </div>
          <b-modal size="vlg" v-model="calcModal" @ok="calcModal = false">
            <b-card>
              <div slot="header">
