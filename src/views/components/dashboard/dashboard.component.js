@@ -13,7 +13,7 @@ export default {
       Paginate,
       VueElementLoading,
       PieExample,
-      highcharts:Chart
+      Chart
   },
   data() {
     return {
