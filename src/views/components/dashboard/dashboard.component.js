@@ -5,7 +5,6 @@ import { Validator } from 'vee-validate'
 import Paginate from 'vuejs-paginate'
 import VueElementLoading from 'vue-element-loading';
 import {Chart} from 'highcharts-vue'
-import PieExample from './../../charts/PieExample'
 
 export default {
   name: 'dashboard',
@@ -27,12 +26,15 @@ export default {
       FromDate:null,
       ToDate:null,
       city:'',
+      result:false,
+      resultdata:false,
       popupZone:'',
       popupState:'',
       PopupCity:'',
       hub:'',
       datacollection:null,
       stateList: [],
+      hubArray: [],
       zoneList: [],
       cityList: [],
       hubList: [],
@@ -44,7 +46,11 @@ export default {
       hubCollectionList:[],
       maxCOD:[],
       minCOD:[],
-      resultHubCollCount:0,
+      resultHubCollCount:"",
+       zoneid:"",
+       stateid:"",
+       cityid:"",
+       localhubid:"",
     piechart: {
       chart: {
         plotBackgroundColor: null,
@@ -77,7 +83,54 @@ export default {
               colorByPoint: true,
               data: []
             },
-          }
+          },
+
+        BarChart: {
+          chart: {
+              type: 'bar',
+              inverted:true
+          },
+          title: {
+              text:""
+
+          },
+          xAxis: {
+              type: 'category'
+          },
+          yAxis: {
+              // title: {
+              //     text: 'Total percent market share'
+              // }
+              labels: {
+            overflow: 'justify'
+        }
+          },
+          credits: {
+            enabled: false
+          },
+          legend: {
+              enabled: true
+          },
+          plotOptions: {
+              series: {
+                  borderWidth: 0,
+                  dataLabels: {
+                      enabled: true,
+                      format: '{point.y:.1f}%'
+                  }
+              }
+          },
+          tooltip: {
+              headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+              pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+          },
+
+       series: [{
+            name: "",
+            colorByPoint: true,
+            data: []
+         }]
+       }
     }
   },
 
@@ -95,6 +148,15 @@ export default {
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
     var userdetail        = JSON.parse(plaintext);
     this.localuserid      = userdetail.userid;
+
+    var hubdetailEncrypt  = window.localStorage.getItem('accesshubdata')
+    var bytes             = CryptoJS.AES.decrypt(hubdetailEncrypt.toString(), 'Key');
+    var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
+    var hubdetail         = JSON.parse(plaintext);
+    this.localhubid       = hubdetail[0].HubID;
+
+    this.BarChart.title.text =  hubdetail[0].HubName
+
     this.getZoneData();
     this.getHubWiseCollectionData();
     this.getMaxMinCODCollectionData();
@@ -110,10 +172,8 @@ export default {
         this.calcModal = false
 
     },
-
     //to get All Hub List
     getZoneData() {
-
       this.input = {}
       axios({
           method: 'POST',
@@ -135,9 +195,8 @@ export default {
       this.hubList.forEach(function (val) {
         hubidArr.push(val.HubID);
       });
-
       this.input = ({
-          hubids: [139, 401],
+          hubids: [this.localhubid],
           fromdate: this.FromDate,
           todate: this.ToDate,
       })
@@ -169,6 +228,98 @@ export default {
           console.error(error)
         })
     },
+
+    getPieShipmentPercentSearch() {
+      this.piechart.series.data = [];
+      this.input = ({
+          hubids: this.hubArray[0],
+          fromdate: this.FromDate,
+          todate: this.ToDate,
+      })
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'getPieShipmentPercent',
+          data: this.input,
+          headers: {
+            'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+          if(result.data.code == 200){
+              this.cardPer = result.data.cardPer
+              this.cashPer = result.data.cashPer
+              this.ndrPer = result.data.ndrPer
+              this.prepaidPer = result.data.prepaidPer
+              this.walletPer = result.data.walletPer
+
+              let y = [this.prepaidPer,this.walletPer,this.cardPer,this.cashPer,this.ndrPer,]
+              let name = ["Prepaid","Wallet","Card","Cash","NDR"]
+              let chartDataObj = {};
+                  for(let i=0;i<y.length;i++){
+                    chartDataObj.y = parseFloat(y[i]);
+                    chartDataObj.name = name[i];
+                    this.piechart.series.data.push(chartDataObj)
+                    chartDataObj ={}
+                  }
+            this.hubArray=[];
+            this.result = false;
+          }
+          if(result.data.code == 204){
+            this.hubArray=[];
+            this.result = true;
+          }
+
+        }, error => {
+          console.error(error)
+        })
+    },
+
+    getHubIdsArray(event) {
+
+      let filter ="";
+      let id = 0;
+      if(this.city){
+        this.cityid = event.target[2].selectedOptions[0].attributes.title.nodeValue;
+        filter = "city"
+        id = this.cityid
+        this.BarChart.title.text = this.city
+      }else if(this.state){
+        this.stateid = event.target[1].selectedOptions[0].attributes.title.nodeValue;
+        filter = "state"
+        id = this.stateid
+        this.BarChart.title.text = this.state
+      }else {
+        this.zoneid = event.target[0].selectedOptions[0].attributes.title.nodeValue;
+        filter = "zone"
+        id = this.zoneid
+        this.BarChart.title.text = this.zone
+      }
+      this.input = ({
+          filter: filter,
+          id: id
+      })
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'getHubIdsArray',
+          data: this.input,
+          headers: {
+            'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+          if(result.data.code == 200){
+          this.hubArray.push(result.data.hubids)
+          this.getPieShipmentPercentSearch()
+          this.getHubWiseCollectionDataSearch()
+          this.getMaxMinCODCollectionDataSearch()
+        }else{
+            this.$alertify.success("No Record Found");
+        }
+        }, error => {
+          console.error(error)
+        })
+    },
+
     getStateData() {
       if(this.zone==""){
         return false;
@@ -212,10 +363,7 @@ export default {
           console.error(error)
         })
     },
-    saveData(){
-      let hubEncrypt = CryptoJS.AES.encrypt(this.hub, "Key");
-      window.localStorage.setItem('accesshubdata', hubEncrypt);
-    },
+
     getHubData() {
       if(this.city==""){
         return false;
@@ -240,16 +388,8 @@ export default {
 
     //to get Hub Collection
     getHubWiseCollectionData() {
-
-      let hubidArr = [];
-      this.hubList.forEach(function (val) {
-        hubidArr.push(val.HubID);
-      });
-
       this.input = ({
-          hubids: [139, 401],
-          fromdate: this.fromdate,
-          todate: this.todate,
+          hubids: [this.localhubid]
       })
       axios({
           method: 'POST',
@@ -260,11 +400,82 @@ export default {
           }
         })
         .then(result => {
+          if(result.data.code == 200){
           this.hubCollectionList = result.data.data;
           this.pendPerc = result.data.pendPerc;
           this.recPerc = result.data.recPerc;
           this.totPerc = result.data.totPerc;
           this.resultHubCollCount = result.data.data.length;
+
+          let y = [this.pendPerc,this.recPerc,this.totPerc]
+          let name = ["Pending","Received","Total Amount"]
+          let barDataObj = {};
+              for(let i=0;i<y.length;i++){
+                barDataObj.y = parseFloat(y[i]);
+                barDataObj.name = name[i];
+                this.BarChart.series.map(chart=>{
+                  chart.data.push(barDataObj)
+                })
+                barDataObj ={}
+              }
+              this.hubArray=[];
+        }
+        if(result.data.code == 204){
+           this.hubCollectionList = [];
+           this.resultHubCollCount  = 0
+            this.hubArray=[];
+        }
+        }, error => {
+          console.error(error)
+        })
+    },
+
+    getHubWiseCollectionDataSearch() {
+      this.BarChart.series.map(chart=>{
+      chart.data = [];
+      })
+
+      this.input = ({
+          hubids: this.hubArray[0],
+          fromdate: this.FromDate,
+          todate: this.ToDate,
+      })
+
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'gethubwisecollection',
+          data: this.input,
+          headers: {
+            'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+          if(result.data.code == 200){
+          this.hubCollectionList = result.data.data;
+          this.pendPerc = result.data.pendPerc;
+          this.recPerc = result.data.recPerc;
+          this.totPerc = result.data.totPerc;
+          this.resultHubCollCount = result.data.data.length;
+
+          let y = [this.pendPerc,this.recPerc,this.totPerc]
+          let name = ["Pending","Received","Total Amount"]
+          let barDataObj = {};
+              for(let i=0;i<y.length;i++){
+                barDataObj.y = parseFloat(y[i]);
+                barDataObj.name = name[i];
+                this.BarChart.series.map(chart=>{
+                chart.data.push(barDataObj)
+                })
+                barDataObj ={}
+              }
+              this.resultdata = false;
+        }
+        if(result.data.code == 204){
+           this.resultdata = true;
+           this.hubCollectionList = [];
+           this.BarChart.series.data =[];
+           this.resultHubCollCount  = 0;
+        }
         }, error => {
           console.error(error)
         })
@@ -272,15 +483,10 @@ export default {
 
     //to get Hub Collection
     getMaxMinCODCollectionData() {
-      let hubidArr = [];
-      this.hubList.forEach(function (val) {
-        hubidArr.push(val.HubID);
-      });
-
       this.input = ({
-          hubids: [139, 401],
-          fromdate: this.fromdate,
-          todate: this.todate,
+          hubids: [this.localhubid],
+          fromdate: this.FromDate,
+          todate: this.ToDate
       })
       axios({
           method: 'POST',
@@ -291,19 +497,51 @@ export default {
           }
         })
         .then(result => {
+
+          if(result.data.code == 200){
           this.maxCOD = result.data.MaxCOD;
           this.minCOD = result.data.MinCOD;
+        }else{
+          this.$alertify.success("No Record Found");
+        }
+        }, error => {
+          console.error(error)
+        })
+    },
+
+    getMaxMinCODCollectionDataSearch() {
+      this.input = ({
+          hubids: this.hubArray[0],
+          fromdate: this.FromDate,
+          todate: this.ToDate
+      })
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'getMaxMinCODCollection',
+          data: this.input,
+          headers: {
+            'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+
+          if(result.data.code == 200){
+          this.maxCOD = result.data.MaxCOD;
+          this.minCOD = result.data.MinCOD;
+        }
+        if(result.data.code == 204){
+            this.maxCOD = [];
+            this.minCOD = [];
+        }
         }, error => {
           console.error(error)
         })
     },
 
     onSubmit: function(event) {
-      this.$validator.validateAll().then((result) => {
+      this.$validator.validate().then((result) => {
         if(result){
-          // this.state = this.hub =this.city=this.zone = "";
-           this.saveData(event);
-           this.$alertify.success("Data Submit Successfully");
+           this.getHubIdsArray(event);
          }
       }).catch(() => {
         console.log('errors exist', this.errors)
