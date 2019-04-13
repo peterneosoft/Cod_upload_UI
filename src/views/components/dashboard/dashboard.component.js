@@ -11,8 +11,7 @@ export default {
   components: {
       Paginate,
       VueElementLoading,
-      PieExample,
-      Chart
+      highcharts:Chart
   },
   data() {
     return {
