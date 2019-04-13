@@ -98,10 +98,7 @@ export default {
               type: 'category'
           },
           yAxis: {
-              // title: {
-              //     text: 'Total percent market share'
-              // }
-              labels: {
+            labels: {
             overflow: 'justify'
         }
           },
