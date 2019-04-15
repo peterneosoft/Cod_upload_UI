@@ -30,7 +30,9 @@ export default {
       localuserid: 0,
       hubarr:[],
       hubnamearr:[],
-      harr:'',
+      hubidname:[],
+      hubName:'',
+      values:'',
       editHubSetting: false,
       disableButton: true
     }
@@ -55,6 +57,16 @@ export default {
   },
 
   methods: {
+    handleSelect(event) {
+      if (event.HubID == '0') {
+        for (let item of this.hubList) {
+          if (item.HubID != '0' && this.HubId.some(obj => obj.HubID === item.HubID) === false) {
+            this.HubId.push(item);
+          }
+        }
+      }
+    },
+
     multiple(){
       return true;
     },
@@ -98,7 +110,10 @@ export default {
           }
         })
         .then(result => {
-          this.hubList = result.data.hub.data;
+          this.hubList = [{'HubCode':'Select All', 'HubID':"0", 'HubName':'Select All'}];
+          for (let item of result.data.hub.data) {
+            this.hubList.push(item);
+          }
         }, error => {
           console.error(error)
         })
@@ -125,11 +140,14 @@ export default {
           if(result.data.code == 200){
             this.listHubSettingsData  = result.data.data;
             this.hubnamearr           = result.data.data[0].hubnamearr;
-            this.harr                 = result.data.data[0].harr;
+            this.hubName              = result.data.data[0].harr;
             this.hubarr               = result.data.data[0].hubnamearr;
+            this.hubidname            = result.data.data[0].hubnamearr;
+
             this.isLoading            = false;
             let totalRows             = result.data.count;
             this.resultCount          = result.data.count;
+            console.log('hubnamearr==', this.hubnamearr);
             if (totalRows < 10) {
                 this.pagecount = 1
             } else {
@@ -154,12 +172,15 @@ export default {
     },
 
     addHubData(event) {
+
       this.editHubSetting = true,
       this.hubarr = this.HubId;
 
       let hData = [];
       this.HubId.forEach(function (val) {
-          hData.push({'HubID':val.HubID, 'HubName':val.HubName});
+        if (val.HubID != '0'){
+          hData.push({'HubID':val.HubID, 'HubCode': val.HubCode, 'HubName':val.HubName});
+        }
       });
       this.hubnamearr = [...new Set([...this.hubarr, ...hData])];
 
@@ -168,7 +189,9 @@ export default {
       let n = arr.length;
       for (i = 0, n; i < n; i++) {
         var item = arr[i];
-        arrResult[ item.HubID + " - " + item.HubName ] = item; // create associative array
+        if (item.HubID != '0'){
+          arrResult[ item.HubID + " - " + item.HubName ] = item; // create associative array
+        }
       }
 
       var i = 0;
@@ -183,11 +206,14 @@ export default {
       this.$validator.reset();
       this.errors.clear();
 
-      this.settingid  = data.settingid;
-      this.HubID      = data.hubid;
-      this.HubId      = this.hubnamearr;
+      this.zone           = "";
+      this.hubList        = [];
+      this.HubId          = [];
 
-      this.disableButton = false;
+      this.settingid      = data.settingid;
+      this.hubnamearr     = this.hubidname;
+      this.HubId          = this.hubidname;
+      this.disableButton  = false;
       this.getZoneData();
     },
 
@@ -243,7 +269,7 @@ export default {
     },
 
     resetForm() {
-      this.zone = this.HubId = '';
+      this.zone = ''; this.HubId = []; this.hubList = [];
       this.$validator.reset();
       this.errors.clear();
       this.editHubSetting = false;
