@@ -8454,7 +8454,7 @@ body.horizontal-icon-fixed .pcoded[pcoded-device-type="desktop"] .pcoded-navbar 
 }
 
 .btn {
-	border-radius: 2px;
+	border-radius: 8px;
 	text-transform: capitalize;
 	font-size: 15px;
 	padding: 10px 19px;
@@ -9165,7 +9165,7 @@ body.horizontal-icon-fixed .pcoded[pcoded-device-type="desktop"] .pcoded-navbar 
 .btn-sm {
 	padding: 8px 14px;
 	line-height: 16px;
-	font-size: 11px
+	font-size: 0.875rem;
 }
 
 .btn-mini {
@@ -11292,9 +11292,9 @@ body.horizontal-icon-fixed .pcoded[pcoded-device-type="desktop"] .pcoded-navbar 
 select.form-control,
 select.form-control:focus,
 select.form-control:hover {
-	border-top: none;
-	border-right: none;
-	border-left: none;
+	//border-top: none;
+	//border-right: none;
+	//border-left: none;
 	-webkit-box-shadow: none;
 	box-shadow: none
 }
@@ -12736,4 +12736,11 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>th:first-child:before {
 
 .pcoded[layout-type="dark"] .bg-c-purple {
 	background: #536dfe
+}
+
+.card-headerfrm {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: white;
+		border-bottom: 0px solid #c2cfd6;
 }

@@ -181,7 +181,6 @@ export default {
         })
         .then(result => {
           this.zoneList = result.data.zone.data;
-
         }, error => {
           console.error(error)
         })
@@ -317,6 +316,7 @@ export default {
     },
 
     getStateData() {
+      this.state = ''; this.city = '';
       if(this.zone==""){
         return false;
       }
