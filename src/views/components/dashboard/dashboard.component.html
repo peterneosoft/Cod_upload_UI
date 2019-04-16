@@ -45,13 +45,14 @@
               <div class="col-md-4">
                 <label>From Date</label>
                 <b-input-group left="<i class='fa fa-user'></i>">
-                  <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="FromDate"></b-form-input>
+                  <b-form-input id="FromDate" name="FromDate" type="date" placeholder=" Enter User Type" v-model="FromDate"></b-form-input>
                 </b-input-group>
+                <span id="fdate" class="text-danger"></span>
               </div>
               <div class="col-md-4">
                 <label>To Date</label>
                 <b-input-group left="<i class='fa fa-user'></i>">
-                  <b-form-input id="date-input" type="date" placeholder=" Enter User Type" v-model="ToDate"></b-form-input>
+                  <b-form-input id="ToDate" name="ToDate" type="date" placeholder=" Enter User Type" v-model="ToDate"></b-form-input>
                 </b-input-group>
               </div>
               <div class="col-md-4">

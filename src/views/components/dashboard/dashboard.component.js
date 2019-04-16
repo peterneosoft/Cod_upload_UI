@@ -158,6 +158,8 @@ export default {
     this.getMaxMinCODCollectionData();
     this.getPieShipmentPercent();
 
+    var date = new Date();
+    ToDate.max = FromDate.max = date.toISOString().split("T")[0];
   },
 
   methods: {
@@ -181,6 +183,7 @@ export default {
         })
         .then(result => {
           this.zoneList = result.data.zone.data;
+
         }, error => {
           console.error(error)
         })
@@ -271,6 +274,13 @@ export default {
 
     getHubIdsArray(event) {
 
+      if(this.FromDate > this.ToDate){
+         document.getElementById("fdate").innerHTML="From date should not be greater than To date.";
+         return false;
+      }else{
+        document.getElementById("fdate").innerHTML="";
+      }
+
       let filter ="";
       let id = 0;
       if(this.city){
@@ -316,7 +326,6 @@ export default {
     },
 
     getStateData() {
-      this.state = ''; this.city = '';
       if(this.zone==""){
         return false;
       }
