@@ -49,7 +49,6 @@ export default {
       modalShow:false,
       localhubid: 0,
       localusername: 0,
-      StaticUserToken: "sKB3uGF0qvklWhTLOgsIXDRJc",
       myStr:"",
       show:false,
       urltoken:""
@@ -166,9 +165,7 @@ export default {
                   console.error('exception is:::::::::', httpException)
               });
        }
-
      },
-
      resetData(event){
       this.DenominationList.map(data=>{
         let countVal = document.getElementById(data.Denomination);
@@ -215,8 +212,6 @@ export default {
          })
      },
      srChange(event){
-       //console.log("this.SR_Name",this.SR_Name);
-        //this.SR_Name = this.SR_Name.SRID
        this.SR_Name = event.target.value
        this.RightSRLedger = true;
        this.SRLedgerDetails = true;
@@ -240,8 +235,8 @@ export default {
            }
          })
          .then(result => {
-            this.getRightSRLedgerDetails()
-            this.GetSRLedgerDetails()
+           this.getRightSRLedgerDetails()
+           this.GetSRLedgerDetails()
             if(result.data.code == 200){
               this.Loading = false;
               this.assign = result.data.data.assign
@@ -253,7 +248,15 @@ export default {
               this.wallet = result.data.data.wallet
               this.getRightSRLedgerDetails()
               this.GetSRLedgerDetails()
-            }else{
+            }
+            if(result.data.code == 204){
+                this.assign = 0
+                this.card = 0
+                this.cash = 0
+                this.cod = 0
+                this.ndr = 0
+                this.prepaid = 0
+                this.wallet = 0
               this.Loading = false;
             }
 
@@ -295,6 +298,9 @@ export default {
         .then(result => {
           if(result.data.code == 200){
           this.SRLedgerList = result.data.data
+          }
+          if(result.data.code == 204){
+            this.SRLedgerList = [];
           }
         }, error => {
           console.error(error)

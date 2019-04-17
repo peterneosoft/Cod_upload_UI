@@ -189,14 +189,8 @@ export default {
         })
     },
     getPieShipmentPercent() {
-      let hubidArr = [];
-      this.hubList.forEach(function (val) {
-        hubidArr.push(val.HubID);
-      });
       this.input = ({
-          hubids: [this.localhubid],
-          fromdate: this.FromDate,
-          todate: this.ToDate,
+          hubids: [this.localhubid]
       })
       axios({
           method: 'POST',
@@ -228,6 +222,12 @@ export default {
     },
 
     getPieShipmentPercentSearch() {
+      if(this.FromDate == ""){
+       this.FromDate =  null
+      }
+      if(this.ToDate == ""){
+       this.ToDate =  null
+      }
       this.piechart.series.data = [];
       this.input = ({
           hubids: this.hubArray[0],
@@ -318,7 +318,17 @@ export default {
           this.getHubWiseCollectionDataSearch()
           this.getMaxMinCODCollectionDataSearch()
         }else{
-            this.$alertify.success("No Record Found");
+          this.hubCollectionList  = [];
+          this.resultHubCollCount  = 0;
+          this.maxCOD = [];
+          this.minCOD = [];
+          this.BarChart.series.map(chart=>{
+          chart.data = [];
+           })
+          this.resultdata = true;
+          this.piechart.series.data = [];
+          this.result = true;
+          this.$alertify.success("No Record Found");
         }
         }, error => {
           console.error(error)
@@ -436,6 +446,12 @@ export default {
     },
 
     getHubWiseCollectionDataSearch() {
+      if(this.FromDate == ""){
+       this.FromDate =  null
+      }
+      if(this.ToDate == ""){
+       this.ToDate =  null
+      }
       this.BarChart.series.map(chart=>{
       chart.data = [];
       })
@@ -489,9 +505,7 @@ export default {
     //to get Hub Collection
     getMaxMinCODCollectionData() {
       this.input = ({
-          hubids: [this.localhubid],
-          fromdate: this.FromDate,
-          todate: this.ToDate
+          hubids: [this.localhubid]
       })
       axios({
           method: 'POST',
@@ -515,6 +529,12 @@ export default {
     },
 
     getMaxMinCODCollectionDataSearch() {
+      if(this.FromDate == ""){
+       this.FromDate =  null
+      }
+      if(this.ToDate == ""){
+       this.ToDate =  null
+      }
       this.input = ({
           hubids: this.hubArray[0],
           fromdate: this.FromDate,
