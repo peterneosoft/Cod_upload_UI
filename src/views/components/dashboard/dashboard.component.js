@@ -97,15 +97,16 @@ export default {
               type: 'category'
           },
           yAxis: {
-            labels: {
-            overflow: 'justify'
-        }
+            title: {
+                text:null
+
+            }
           },
           credits: {
             enabled: false
           },
           legend: {
-              enabled: true
+              enabled: false
           },
           plotOptions: {
               series: {
@@ -172,6 +173,7 @@ export default {
     },
     //to get All Hub List
     getZoneData() {
+
       this.input = {}
       axios({
           method: 'POST',
@@ -336,7 +338,9 @@ export default {
     },
 
     getStateData() {
-      if(this.zone==""){
+      this.state = "";
+      this.city = "";
+      if(this.zone=="" ){
         return false;
       }
       this.input = ({
@@ -358,6 +362,7 @@ export default {
         })
     },
     getCityData() {
+      this.city = "";
       if(this.state==""){
         return false;
       }
