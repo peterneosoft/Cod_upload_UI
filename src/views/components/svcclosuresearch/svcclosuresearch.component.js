@@ -46,15 +46,11 @@ export default {
   },
 
   methods: {
-    searchSVCledgerData(){
-      this.pageno = 0;
-      this.GetSearchSVCledgerData();
-    },
 
     //to get pagination
     getPaginationData(pageNum) {
         this.pageno = (pageNum - 1) * 10
-        this.GetSVCledgerData()
+        this.GetSearchSVCledgerData()
     },
 
     GetSearchSVCledgerData() {
@@ -114,7 +110,7 @@ export default {
     },
 
     resetForm() {
-      this.fromDate = this.toDate = '';
+      this.fromDate = this.toDate = ''; this.listSearchSVCledgerData=[]; this.resultCount = this.pageno = 0;
       this.$validator.reset();
       this.errors.clear();
     },

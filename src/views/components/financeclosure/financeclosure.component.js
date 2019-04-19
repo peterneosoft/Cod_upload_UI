@@ -163,7 +163,7 @@ export default {
     //to get pagination
     getPaginationData(pageNum) {
         this.pageno = (pageNum - 1) * 10
-        this.GetSVCledgerData()
+        this.GetFinanceledgerData()
     },
 
     GetFinanceledgerData() {
@@ -317,7 +317,7 @@ export default {
     },
 
     resetForm() {
-      this.zone = this.HubId = this.status = '';
+      this.zone = this.HubId = this.status = ''; this.pageno = this.resultCount = 0; this.listFinanceledgerData = [];
       this.$validator.reset();
       this.errors.clear();
     },
