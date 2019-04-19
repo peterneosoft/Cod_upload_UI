@@ -46,18 +46,20 @@ export default {
       maxCOD:[],
       minCOD:[],
       resultHubCollCount:"",
-       zoneid:"",
-       stateid:"",
-       cityid:"",
-       localhubid:"",
-    piechart: {
-      chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false,
-        type: 'pie'
-      },
-      title: {
+      zoneid:"",
+      stateid:"",
+      cityid:"",
+      localhubid:"",
+      resultdate:"",
+      localhubid:"",
+      piechart: {
+        chart: {
+          plotBackgroundColor: null,
+          plotBorderWidth: null,
+          plotShadow: false,
+          type: 'pie'
+        },
+        title: {
            text: 'Total Orders'
         },
         tooltip: {
@@ -73,54 +75,54 @@ export default {
                   connectorColor: 'silver'
                 },showInLegend: true
               }
-            },
-            credits: {
-              enabled: false
-            },
-            series: {
-              name: 'Share',
-              colorByPoint: true,
-              data: []
-            },
-          },
-
-        BarChart: {
-          chart: {
-              type: 'bar',
-              inverted:true
-          },
-          title: {
-              text:""
-
-          },
-          xAxis: {
-              type: 'category'
-          },
-          yAxis: {
-            title: {
-                text:null
-
-            }
           },
           credits: {
             enabled: false
           },
-          legend: {
-              enabled: false
+          series: {
+            name: 'Share',
+            colorByPoint: true,
+            data: []
           },
-          plotOptions: {
-              series: {
-                  borderWidth: 0,
-                  dataLabels: {
-                      enabled: true,
-                      format: '{point.y:.1f}%'
-                  }
-              }
-          },
-          tooltip: {
-              headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-              pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
-          },
+      },
+
+      BarChart: {
+        chart: {
+            type: 'bar',
+            inverted:true
+        },
+        title: {
+            text:""
+
+        },
+        xAxis: {
+            type: 'category'
+        },
+        yAxis: {
+          title: {
+              text:null
+
+          }
+        },
+        credits: {
+          enabled: false
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.y:.1f}%'
+                }
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+        },
 
        series: [{
             name: "",
@@ -203,21 +205,22 @@ export default {
           }
         })
         .then(result => {
-              this.cardPer = result.data.cardPer
-              this.cashPer = result.data.cashPer
-              this.ndrPer = result.data.ndrPer
-              this.prepaidPer = result.data.prepaidPer
-              this.walletPer = result.data.walletPer
+          this.cardPer = result.data.cardPer
+          this.cashPer = result.data.cashPer
+          this.ndrPer = result.data.ndrPer
+          this.prepaidPer = result.data.prepaidPer
+          this.walletPer = result.data.walletPer
+          this.resultdate = result.data.fdate+" to "+result.data.tdate
 
-              let y = [this.prepaidPer,this.walletPer,this.cardPer,this.cashPer,this.ndrPer,]
-              let name = ["Prepaid","Wallet","Card","Cash","NDR"]
-              let chartDataObj = {};
-                  for(let i=0;i<y.length;i++){
-                    chartDataObj.y = parseFloat(y[i]);
-                    chartDataObj.name = name[i];
-                    this.piechart.series.data.push(chartDataObj)
-                    chartDataObj ={}
-                  }
+          let y = [this.prepaidPer,this.walletPer,this.cardPer,this.cashPer,this.ndrPer,]
+          let name = ["Prepaid","Wallet","Card","Cash","NDR"]
+          let chartDataObj = {};
+          for(let i=0;i<y.length;i++){
+            chartDataObj.y = parseFloat(y[i]);
+            chartDataObj.name = name[i];
+            this.piechart.series.data.push(chartDataObj)
+            chartDataObj ={}
+          }
         }, error => {
           console.error(error)
         })
@@ -251,6 +254,7 @@ export default {
               this.ndrPer = result.data.ndrPer
               this.prepaidPer = result.data.prepaidPer
               this.walletPer = result.data.walletPer
+              this.resultdate = result.data.fdate+" to "+result.data.tdate
 
               let y = [this.prepaidPer,this.walletPer,this.cardPer,this.cashPer,this.ndrPer,]
               let name = ["Prepaid","Wallet","Card","Cash","NDR"]
