@@ -220,7 +220,6 @@ export default {
         })
         .then(result => {
           if(result.data.code == 200){
-            console.log("this.listSVCledgerData",JSON.stringify(this.listSVCledgerData));
             this.listSVCledgerData = result.data.data;
             this.isLoading = false;
             let totalRows     = result.data.count;
@@ -392,7 +391,13 @@ export default {
       this.disableButton = true;
       this.selectedFile = event.target.files[0];
 
-      var name = this.selectedFile.name;
+      if ( /\.(jpe?g|png|gif|bmp|xls|xlsx|pdf|ods)$/i.test(this.selectedFile.name) ){
+        var name = this.selectedFile.name;
+      }else{
+        this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg, .jpeg, .gif, .bmp, .xls, .xlsx, .pdf, .ods");
+        this.disableButton = false;
+        return false;
+      }
 
       const fd = new FormData();
       fd.append('file', this.selectedFile, name);
@@ -408,7 +413,6 @@ export default {
       })
       .then(res => {
         this.getS3bucketFiles();
-         console.log(res);
       }, error => {
         console.error(error)
       });
@@ -469,5 +473,10 @@ export default {
       this.GetShipmentUpdate();
       this.GetSVCledgerData();
     },
+
+    showHideImages(index){
+      $('#'+index).show();
+      $('.'+index).hide();
+    }
   }
 }

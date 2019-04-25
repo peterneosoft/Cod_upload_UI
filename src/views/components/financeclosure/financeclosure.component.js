@@ -321,5 +321,10 @@ export default {
       this.$validator.reset();
       this.errors.clear();
     },
+
+    showHideImages(index){
+      $('#'+index).show();
+      $('.'+index).hide();
+    }
   }
 }
