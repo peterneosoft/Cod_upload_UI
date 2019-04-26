@@ -167,6 +167,8 @@ export default {
     },
 
     GetFinanceledgerData() {
+        $('span[id^="vri"]').hide();
+        $('span[id^="vrl"]').show();
 
         this.input = ({
             offset: this.pageno,
@@ -323,8 +325,8 @@ export default {
     },
 
     showHideImages(index){
-      $('#'+index).show();
-      $('.'+index).hide();
+      $('#vri'+index).show();
+      $('#vrl'+index).hide();
     }
   }
 }

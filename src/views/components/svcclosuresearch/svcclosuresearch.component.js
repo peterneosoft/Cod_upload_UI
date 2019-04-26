@@ -62,6 +62,9 @@ export default {
         document.getElementById("fdate").innerHTML="";
       }
 
+      $('span[id^="vri"]').hide();
+      $('span[id^="vrl"]').show();
+
       this.input = ({
           offset: this.pageno,
           limit: 10,
@@ -116,8 +119,8 @@ export default {
     },
 
     showHideImages(index){
-      $('#'+index).show();
-      $('.'+index).hide();
+      $('#vri'+index).show();
+      $('#vrl'+index).hide();
     }
   }
 }

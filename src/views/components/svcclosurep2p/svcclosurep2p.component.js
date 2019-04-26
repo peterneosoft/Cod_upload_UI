@@ -50,7 +50,8 @@ export default {
       p2pAmount: '0.00',
       myStr: '',
       resultdate: '',
-      disableButton: false
+      disableButton: false,
+      modalShow:false,
     }
   },
 
@@ -91,6 +92,17 @@ export default {
   },
 
   methods: {
+    showModal(Balanc){
+       this.$refs.myModalRef.show(Balanc)
+      this.RemainData = Balanc;
+    },
+    hideModal() {
+       this.$refs.myModalRef.hide()
+     },
+     closeStatusRoleModal() {
+         this.modalShow = false
+     },
+
     GetShipmentUpdate() {
 
       axios({
@@ -203,6 +215,8 @@ export default {
     },
 
     GetSVCledgerData() {
+        $('span[id^="vri"]').hide();
+        $('span[id^="vrl"]').show();
 
         this.input = ({
             offset: this.pageno,
@@ -315,9 +329,10 @@ export default {
         this.unmatchedAmt = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositAmount))).toFixed(2);
 
         if(DepositAmount < TolatCollection){
-          if(this.Reason==''){
-            this.$alertify.error("Remaining Amount is Rs."+this.unmatchedAmt);
-            return false;
+          this.showModal(this.unmatchedAmt);
+          return false;
+          if(this.Reason!=''){
+            this.hideModal();
           }
         }
       }
@@ -475,8 +490,8 @@ export default {
     },
 
     showHideImages(index){
-      $('#'+index).show();
-      $('.'+index).hide();
+      $('#vri'+index).show();
+      $('#vrl'+index).hide();
     }
   }
 }

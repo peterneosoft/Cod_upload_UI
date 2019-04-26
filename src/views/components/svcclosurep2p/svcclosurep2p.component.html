@@ -201,6 +201,25 @@
           </div>
         </div>
       </div>
+
+      <b-modal ref="myModalRef" v-model="modalShow"  id=#confirmationmodal title="Confirmation">
+        <div role="document">
+          <div class="modal-content">
+            <div class="modal-headerfrm">
+              <h5 class="modal-title">Confirmation</h5>
+              <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-bodyfrm">
+              <h5 style="font-size:1rem; color:red;">Remaining Amount is Rs. {{unmatchedAmt}}</h5>
+            </div>
+            <div class="modal-footerfrm">
+            <center><button type="button"  @click="modalShow = false" class="btn btn-success" style="background-color: #20a8d8;">OK</button></center>
+            </div>
+          </div>
+        </div>
+      </b-modal>
     </div>
 
     <div class="row">
@@ -241,8 +260,8 @@
                 <td>{{data.Reason}}</td>
                 <td>{{data.financereason}}</td>
                 <td>
-                  <span v-bind:class='`${index}`' v-if="data.createdby!='schedular@xpressbees.com'" @click="showHideImages(index)" style="color: blue; cursor: pointer;">View Receipts</span>
-                  <span v-bind:id='`${index}`' style="display: none;">
+                  <span v-bind:id='`${"vrl"+data.svcledgerid}`' v-if="data.createdby!='schedular@xpressbees.com'" @click="showHideImages(data.svcledgerid)" style="color: blue; cursor: pointer;">View Receipts</span>
+                  <span v-bind:id='`${"vri"+data.svcledgerid}`' style="display: none;">
                     <a v-bind:title='`${file.name}`' v-for="file in data.files" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
                   </span>
                 </td>
