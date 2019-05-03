@@ -48,7 +48,6 @@ export default {
       pagecount: 0,
       isLoading: false,
       resultCount: 0,
-      company:'',
       listClientCODRemittanceData:[]
     }
   },
@@ -67,6 +66,7 @@ export default {
     var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');
     this.GetClientData();
+    this.searchClientCODRemittanceData();
 
     this.RemittanceDayList = [
       {day:"Daily"},
@@ -276,10 +276,10 @@ export default {
     searchClientCODRemittanceData(event){
       this.isLoading = true;
       this.AddEditClientTAT = false;
-
+      let clientid = this.Client.ClientMasterID ? this.Client.ClientMasterID :0;
       axios({
           method: 'GET',
-          'url': apiUrl.api_url + 'clientcodremittancemaster?ClientId='+this.Client.ClientMasterID+'&offset='+this.pageno+'&limit=10',
+          'url': apiUrl.api_url + 'clientcodremittancemaster?ClientId='+clientid+'&offset='+this.pageno+'&limit=10',
           headers: {
               'Authorization': 'Bearer '+this.myStr
           }
@@ -287,7 +287,6 @@ export default {
       .then(result => {
         if(result.data.code == 200){
           this.listClientCODRemittanceData = result.data.data;
-          this.company      = this.Client.CompanyName;
           this.isLoading    = false;
           let totalRows     = result.data.count;
           this.resultCount  = result.data.count;
@@ -299,7 +298,6 @@ export default {
           }
         }else{
           this.listClientCODRemittanceData = [];
-          this.company      = '';
           this.resultCount  = 0;
           this.isLoading    = false;
         }
@@ -314,7 +312,7 @@ export default {
 
       let clientarr = [];
       if(data.ClientId!=""){
-        clientarr.push({"ClientMasterId":data.ClientId, "CompanyName":this.company});
+        clientarr.push({"ClientMasterId":data.ClientId, "CompanyName":data.CompanyName});
       }
 
       let dayarr = [];

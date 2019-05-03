@@ -147,7 +147,7 @@
 
     <div class="col-12">
       <div class="card-headerfrm" style="margin-bottom: 15px;">
-        <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Mapping Result</h4>
+        <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
         <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
         <table class="table-bordered table-hover tbl datatables" style="width:100%;">
           <thead>
@@ -168,7 +168,7 @@
               <td colspan="9" align="center">No record found</td>
             </tr>
             <tr v-for="(data,index) in listClientCODRemittanceData">
-              <td>{{company}}</td>
+              <td>{{data.CompanyName}}</td>
               <td>{{data.TAT}}</td>
               <td>{{data.RemittanceDayString}}</td>
               <td>{{data.RemittanceType}}</td>

@@ -1,0 +1,85 @@
+<section class="user">
+  <div class="animated fadeIn">
+    <div class="row">
+      <div class="col-md-12 mb-2">
+        <div class="card" >
+          <div v-if="AddEditBankHoliday==0" @click = "AddEditBankHoliday = '1'" class="card-header filter_main" style="cursor: pointer;">
+            <i class="fa fa-plus plus"></i>Add / Edit Bank Holiday List
+          </div>
+          <div v-if="AddEditBankHoliday==1" @click = "AddEditBankHoliday = '0'" class="card-header filter_main" style="cursor: pointer;">
+            <i class="fa fa-minus minus"></i>Add / Edit Bank Holiday List
+          </div>
+          <b-collapse v-bind:class="`${AddEditBankHoliday == '1' ? 'show' : 'hide'}`" id="collapse1">
+            <div class="card-body">
+              <form v-on:submit.prevent="onSubmit" id="formSubmit" name="formSubmit">
+                <div class="form-group row">
+                  <div class="col-md-4">
+                    <label>Date</label>
+                    <b-input-group left="<i class='fa fa-calendar'></i>">
+                      <b-form-input id="hollidayDate" type="date" name="hollidayDate" v-validate="{required: true}"
+                      v-model="hollidayDate" v-bind:class="{'form-control': true, 'error': errors.has('hollidayDate') }"></b-form-input>
+                    </b-input-group>
+                    <span v-show="errors.has('hollidayDate')" class="text-danger">Please select holliday date. </span>
+                    <span id="fdate" class="text-danger"></span>
+                  </div>
+
+                  <div class="col-md-4">
+                    <b-form-fieldset>
+                      <label>Occasion</label>
+                      <b-input-group left="<i class='fa fa-user'></i>">
+                        <b-form-input type="text" placeholder="Enter Occasion" name="occasion" id="occasion" v-model="occasion" v-validate="'required'"></b-form-input>
+                      </b-input-group>
+                      <span v-show="errors.has('occasion')" class="text-danger">Please enter holiday occasion. </span>
+                    </b-form-fieldset>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <button class="btn btn-sm btn-primary" name="submit" id="submit" type="submit"><i class="fa fa-dot-circle-o"></i> Submit</button>
+                  <button class="btn btn-sm btn-danger" @click="resetForm" type="reset"><i class="fa fa-ban"></i> Clear</button>
+                </div>
+              </form>
+            </div>
+          </b-collapse>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card-headerfrm" style="margin-bottom: 15px;">
+          <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
+          <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+          <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+            <thead>
+              <tr class="text-primary">
+                <th class="text-center tableheader"><b>#</b></th>
+                <th class="text-center tableheader"><b>Calendar Name</b></th>
+                <th class="text-center tableheader"><b>Day</b></th>
+                <th class="text-center tableheader"><b>Date</b></th>
+                <th class="text-center tableheader"><b>Occasion</b></th>
+                <th class="text-center tableheader"><b>Action</b></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="resultCount==0">
+                <td colspan="6" align="center">No record found</td>
+              </tr>
+              <tr v-for="(data,index) in listBankHolidayData">
+                <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
+                <td>Bank Holiday</td>
+                <td>Thursday</td>
+                <td>21-Mar-2019</td>
+                <td>Holi Rangapanchmi</td>
+                <td class="text-center">
+                  <b-link href="#foo" @click="AddEditBankHoliday='1'"><i @click.prevent="getHubSettingRowData(data, resultCount)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3"></i></b-link>
+                </td>
+              </tr>
+            </tbody>
+          </table><br>
+          <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+          </paginate>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

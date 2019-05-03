@@ -23,6 +23,7 @@ import SVCDepositExceptions from '@/views/components/svcdepositexceptions'
 import HubWiseCODReport from '@/views/components/hubwisecodreport'
 import MISP2PCODReport from '@/views/components/misp2preport'
 import SystemSettings from '@/views/components/settings'
+import BankHoliday from '@/views/components/bankholiday'
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -272,6 +273,23 @@ const router = new Router({
               },
               {
                 name: 'Hub Settings'
+              }
+            ]
+          },
+        },
+        {
+          path: 'bankholiday',
+          name: 'Bank Holiday',
+          component: BankHoliday,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'Bank Holiday Settings'
               }
             ]
           },
