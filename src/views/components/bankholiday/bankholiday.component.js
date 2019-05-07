@@ -16,17 +16,19 @@ export default {
   },
   data() {
     return {
-      pageno: 0,
-      pagecount: 0,
+      pageno: 1,
+      pagecount: 1,
       isLoading: false,
       resultCount: 0,
-      count: 0,
       myStr: '',
       localuserid: 0,
       AddEditBankHoliday:0,
-      hollidayDate:'',
-      occasion:'',
-      listBankHolidayData: []
+      holidayDate:'',
+      holidayid:'',
+      holidayname:'',
+      status:1,
+      listBankHolidayData: [],
+      listholidayData: []
     }
   },
 
@@ -44,41 +46,53 @@ export default {
     var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');
 
-    this.getBankHollidayData();
+    this.getHolidayList();
+    this.getBankHolidayData();
   },
 
   methods: {
 
-    //to get Bank Holiday List According to Year
-    getBankHollidayData() {
+    getHolidayList() {
+      axios({
+          method: 'GET',
+          url: apiUrl.api_url + 'external/getbankholidaylist',
+          data: {},
+          headers: {
+            'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+          this.listholidayData  = result.data.holiday.data;
+          this.listholidayData.push({
+            Description:'Second and Fourth Saturday',
+            HolidayMasterId:'-1',
+            HolidayName:'Non Working Saturday',
+          });
+        }, error => {
+          console.error(error)
+        })
+    },
 
-      this.input = ({
-          offset: this.pageno,
-          limit: 10
-      })
+    //to get Bank Holiday List According to Current Year
+    getBankHolidayData() {
       this.isLoading = true;
 
       axios({
-          method: 'POST',
-          url: apiUrl.api_url + 'gethubsettingsdata',
-          'data': this.input,
+          method: 'GET',
+          url: apiUrl.api_url + 'external/getbankholidaysaveddata',
+          'data': {},
           headers: {
             'Authorization': 'Bearer '+this.myStr
           }
         })
         .then(result => {
           if(result.data.code == 200){
-            this.listBankHolidayData  = result.data.data;
+            this.listBankHolidayData  = result.data.holidayList;
+            this.sundayDates          = result.data.sundayDates.join(', ');
+            this.year                 = '( Year - '+result.data.year+' )';
 
             this.isLoading            = false;
-            let totalRows             = result.data.count;
-            this.resultCount          = result.data.count;
-
-            if (totalRows < 10) {
-                this.pagecount = 1
-            } else {
-                this.pagecount = Math.ceil(totalRows / 10)
-            }
+            this.resultCount          = result.data.holidayList.length;
           }else{
             this.resultCount  = 0;
             this.isLoading = false;
@@ -92,32 +106,66 @@ export default {
       this.$validator.reset();
       this.errors.clear();
 
-      this.occasion = this.hollidayDate = "";
+      this.holidayid = this.holidayDate = "";
 
-      this.occasion      = data.occasion;
-      this.hollidayDate  = this.hollidayDate;
+      this.holidayid          = data.HolidayMasterId;
+      this.HolidayMasterName  = data.HolidayMasterName;
+      this.BankHolidayId      = data.BankHolidayId;
+      this.holidayDate        = data.HolidayDate;
+      this.CreatedBy          = data.CreatedBy;
+      this.status             = data.IsActive;
     },
 
-    //to get pagination
-    getPaginationData(pageNum) {
-        this.pageno = (pageNum - 1) * 10
-        this.getBankHollidayData();
-    },
-
-    saveBankHollidayData() {
+    saveBankHolidayData(event) {
 
       this.input = ({
-          hubid: hData,
+          holidayDate: this.holidayDate,
+          holidayid: String(this.holidayid),
+          holidayname: this.holidayname,
+          status: String(this.status),
           createdby: this.localuserid
       });
-      this.isLoading = true;
+
       axios({
-          method: 'POST',
-          'url': apiUrl.api_url + 'savehubsettings',
-          'data': this.input,
-          headers: {
-              'Authorization': 'Bearer '+this.myStr
-          }
+        method: 'POST',
+        'url': apiUrl.api_url + 'external/addbankholiday',
+        'data': this.input,
+        headers: {
+          'Authorization': 'Bearer '+this.myStr
+        }
+      })
+      .then(response => {
+        if (response.data.errorCode == 0) {
+          this.$alertify.success(response.data.msg);
+          this.resetForm(event);
+        } else if (response.data.errorCode == -1) {
+          this.$alertify.error(response.data.msg)
+        }
+      })
+      .catch((httpException) => {
+          console.error('exception is:::::::::', httpException)
+      });
+    },
+
+    updateBankHolidayData(event) {
+
+      this.input = ({
+          bankholidayid: String(this.BankHolidayId),
+          holidayDate: this.holidayDate,
+          holidayid: String(this.holidayid),
+          holidayname: this.holidayname,
+          status: String(this.status),
+          createdby: this.CreatedBy,
+          lastmodifiedby: this.localuserid,
+      });
+
+      axios({
+        method: 'POST',
+        'url': apiUrl.api_url + 'external/updatebankholiday',
+        'data': this.input,
+        headers: {
+          'Authorization': 'Bearer '+this.myStr
+        }
       })
       .then(response => {
         if (response.data.errorCode == 0) {
@@ -135,7 +183,13 @@ export default {
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
-          this.saveBankHollidayData();
+          if(this.BankHolidayId){
+            this.holidayname = event.target[0].selectedOptions[0].attributes.title.nodeValue;
+            this.updateBankHolidayData(event);
+          }else{
+            this.holidayname = event.target[0].selectedOptions[0].attributes.title.nodeValue;
+            this.saveBankHolidayData(event);
+          }
         }
       }).catch(() => {
         console.log('errors exist', this.errors)
@@ -143,10 +197,10 @@ export default {
     },
 
     resetForm() {
-      this.occasion = this.hollidayDate = "";
+      this.holidayid = this.holidayDate = ""; this.status=1;
       this.$validator.reset();
       this.errors.clear();
-      this.GetHubSettingsData();
+      this.getBankHolidayData();
     },
   }
 }

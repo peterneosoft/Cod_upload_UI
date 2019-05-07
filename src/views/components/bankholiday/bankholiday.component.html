@@ -14,23 +14,34 @@
               <form v-on:submit.prevent="onSubmit" id="formSubmit" name="formSubmit">
                 <div class="form-group row">
                   <div class="col-md-4">
+                    <label>Bank Holiday Occasion</label>
+                    <b-input-group left="<i class='fa fa-list'></i>">
+                      <select name="holidayid" id="holidayid" class="form-control" v-model="holidayid" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('holidayid') }">
+                        <option value="">--Select--</option>
+                        <option v-for="holiday_obj in listholidayData" v-bind:title="holiday_obj.HolidayName" v-bind:value="holiday_obj.HolidayMasterId" >{{holiday_obj.HolidayName}}</option>
+                      </select>
+                    </b-input-group>
+                    <span v-show="errors.has('holidayid')" class="text-danger">Please select bank holiday occasion.</span>
+                  </div>
+
+                  <div class="col-md-4">
                     <label>Date</label>
                     <b-input-group left="<i class='fa fa-calendar'></i>">
-                      <b-form-input id="hollidayDate" type="date" name="hollidayDate" v-validate="{required: true}"
-                      v-model="hollidayDate" v-bind:class="{'form-control': true, 'error': errors.has('hollidayDate') }"></b-form-input>
+                      <b-form-input id="holidayDate" type="date" name="holidayDate" v-validate="{required: true}"
+                      v-model="holidayDate" v-bind:class="{'form-control': true, 'error': errors.has('holidayDate') }"></b-form-input>
                     </b-input-group>
-                    <span v-show="errors.has('hollidayDate')" class="text-danger">Please select holliday date. </span>
+                    <span v-show="errors.has('holidayDate')" class="text-danger">Please select holiday date. </span>
                     <span id="fdate" class="text-danger"></span>
                   </div>
 
                   <div class="col-md-4">
-                    <b-form-fieldset>
-                      <label>Occasion</label>
-                      <b-input-group left="<i class='fa fa-user'></i>">
-                        <b-form-input type="text" placeholder="Enter Occasion" name="occasion" id="occasion" v-model="occasion" v-validate="'required'"></b-form-input>
-                      </b-input-group>
-                      <span v-show="errors.has('occasion')" class="text-danger">Please enter holiday occasion. </span>
-                    </b-form-fieldset>
+                    <label>Status</label>
+                    <b-input-group left="<i class='fa fa-list'></i>">
+                      <select name="status" id="status" class="form-control" v-model="status">
+                        <option value="1">Active</option>
+                        <option value="0">Inactive</option>
+                      </select>
+                    </b-input-group>
                   </div>
                 </div>
                 <div class="card-footer">
@@ -52,11 +63,9 @@
           <table class="table-bordered table-hover tbl datatables" style="width:100%;">
             <thead>
               <tr class="text-primary">
-                <th class="text-center tableheader"><b>#</b></th>
-                <th class="text-center tableheader"><b>Calendar Name</b></th>
+                <th class="text-center tableheader"><b>Bank Holiday Occasion</b></th>
                 <th class="text-center tableheader"><b>Day</b></th>
-                <th class="text-center tableheader"><b>Date</b></th>
-                <th class="text-center tableheader"><b>Occasion</b></th>
+                <th class="text-center tableheader"><b>Date {{year}}</b></th>
                 <th class="text-center tableheader"><b>Action</b></th>
               </tr>
             </thead>
@@ -64,19 +73,23 @@
               <tr v-if="resultCount==0">
                 <td colspan="6" align="center">No record found</td>
               </tr>
-              <tr v-for="(data,index) in listBankHolidayData">
-                <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
-                <td>Bank Holiday</td>
-                <td>Thursday</td>
-                <td>21-Mar-2019</td>
-                <td>Holi Rangapanchmi</td>
+              <tr v-if="resultCount>0">
+                <td class="text-center">Sunday</td>
+                <td class="text-center">Sunday</td>
+                <td class="text-center">{{sundayDates}}</td>
+                <td class="text-center">&nbsp;</td>
+              </tr>
+              <tr v-for="(data,index) in listBankHolidayData" v-if="data.HolidayMasterId!=0">
+                <td class="text-center">{{data.HolidayMasterName}}</td>
+                <td class="text-center">{{data.HolidayDay}}</td>
+                <td class="text-center">{{data.HolidayfDate}}</td>
                 <td class="text-center">
-                  <b-link href="#foo" @click="AddEditBankHoliday='1'"><i @click.prevent="getHubSettingRowData(data, resultCount)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3"></i></b-link>
+                  <b-link href="#foo" @click="AddEditBankHoliday='1'"><i @click.prevent="getBankHolidayRowData(data, resultCount)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3"></i></b-link>
                 </td>
               </tr>
             </tbody>
           </table><br>
-          <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+          <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
           </paginate>
         </div>
       </div>
