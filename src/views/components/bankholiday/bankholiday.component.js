@@ -27,6 +27,7 @@ export default {
       holidayid:'',
       holidayname:'',
       status:1,
+      year:'',
       listBankHolidayData: [],
       listholidayData: []
     }
@@ -89,6 +90,7 @@ export default {
           if(result.data.code == 200){
             this.listBankHolidayData  = result.data.holidayList;
             this.sundayDates          = result.data.sundayDates.join(', ');
+            this.saturdayDates        = result.data.saturdayDates.join(', ');
             this.year                 = '( Year - '+result.data.year+' )';
 
             this.isLoading            = false;

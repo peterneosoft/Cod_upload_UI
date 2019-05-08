@@ -63,6 +63,7 @@
           <table class="table-bordered table-hover tbl datatables" style="width:100%;">
             <thead>
               <tr class="text-primary">
+                <th class="text-center tableheader"><b>#</b></th>
                 <th class="text-center tableheader"><b>Bank Holiday Occasion</b></th>
                 <th class="text-center tableheader"><b>Day</b></th>
                 <th class="text-center tableheader"><b>Date {{year}}</b></th>
@@ -73,13 +74,22 @@
               <tr v-if="resultCount==0">
                 <td colspan="6" align="center">No record found</td>
               </tr>
-              <tr v-if="resultCount>0">
-                <td class="text-center">Sunday</td>
+              <tr v-if="resultCount>0 && saturdayDates">
+                <td scope="row" class="text-center"><strong>1</strong></td>
+                <td class="text-center">Non Working Saturday</td>
+                <td class="text-center">Saturday</td>
+                <td class="text-center">{{saturdayDates}}</td>
+                <td class="text-center">&nbsp;</td>
+              </tr>
+              <tr v-if="resultCount>0 && sundayDates">
+                <td scope="row" class="text-center"><strong>2</strong></td>
+                <td class="text-center">All Sunday</td>
                 <td class="text-center">Sunday</td>
                 <td class="text-center">{{sundayDates}}</td>
                 <td class="text-center">&nbsp;</td>
               </tr>
-              <tr v-for="(data,index) in listBankHolidayData" v-if="data.HolidayMasterId!=0">
+              <tr v-for="(data,index) in listBankHolidayData">
+                <td scope="row" class="text-center"><strong>{{index+3}}</strong></td>
                 <td class="text-center">{{data.HolidayMasterName}}</td>
                 <td class="text-center">{{data.HolidayDay}}</td>
                 <td class="text-center">{{data.HolidayfDate}}</td>
