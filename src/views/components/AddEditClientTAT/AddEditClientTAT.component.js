@@ -261,7 +261,6 @@ export default {
       .then((response) => {
         if (response.data.errorCode == 0) {
           this.AddEditClientTAT=0;
-          this.searchClientCODRemittanceData(event);
           this.$alertify.success(response.data.msg);
           this.resetForm(event);
         } else if (response.data.errorCode == -1) {
@@ -375,6 +374,7 @@ export default {
       this.ClientId = this.Bussinesstype = this.AccountName = this.tat = this.type = this.Beneficiary = this.BankName = this.BankAccount = this.rtgs = '';
       this.$validator.reset();
       this.errors.clear();
+      this.searchClientCODRemittanceData(event);
     },
   }
 }
