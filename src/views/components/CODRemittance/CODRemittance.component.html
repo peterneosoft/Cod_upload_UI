@@ -35,9 +35,8 @@
                 </div>
               </div>
               <div class="card-footer">
-                <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
-                <button class="btn btn-sm btn-danger" @click="resetForm" type="reset"><i class="fa fa-ban"></i> Clear</button>
-                <a v-bind:href="exportPath" v-if="resultCount>0"><button class="btn btn-sm btn-success" type="button"><i class="fa fa-download"></i> Export</button></a>
+                <button class="btn btn-sm btn-primary" type="submit" ><i class="fa fa-upload" ></i> Upload<vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="Loading" /></button>
+                <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> Clear</button>
               </div>
             </form>
           </div>

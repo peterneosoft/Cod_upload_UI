@@ -84,7 +84,7 @@ export default {
     uploadFile(){
       this.input = ({
           filename: this.filename,
-          username: this.localusername,
+          username: this.localuserid,
       })
       this.Loading = true;
       axios({
