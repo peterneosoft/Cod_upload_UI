@@ -17,17 +17,16 @@ export default {
 
   data() {
     return {
-      pageno: 0,
-      pagecount: 0,
+      exportPath:'',
+      exportFileTitle:'',
+      localusername: 0,
+      filename: "",
+      paymentfile: "",
+      s3link: "",
+      success: 0,
+      failed: 0,
       isLoading: false,
-      resultCount: '',
-      ClientId: '',
-      ClientList: [],
-      RemittanceDay: [],
-      RemittanceDayList: [],
-      listCODRemittanceData: [],
-      calcModal: false,
-      exportPath:''
+      Loading: false
     }
   },
 
@@ -42,194 +41,84 @@ export default {
     var userdetail        = JSON.parse(plaintext);
     this.localuserid      = userdetail.username;
 
-    var userToken = window.localStorage.getItem('accessuserToken')
-    this.myStr = userToken.replace(/"/g, '');
+    var userToken         = window.localStorage.getItem('accessuserToken');
+    this.myStr            = userToken.replace(/"/g, '');
 
-    this.GetClientData();
+    var today = new Date().toISOString().slice(0, 10);
 
-    this.RemittanceDayList = [
-      {day:"Daily"},
-      {day:"Sunday"},
-      {day:"Monday"},
-      {day:"Tuesday"},
-      {day:"Wednesday"},
-      {day:"Thursday"},
-      {day:"Friday"},
-      {day:"Saturday"}
-    ]
+    this.exportPath       = 'https://usermanegement.s3.ap-south-1.amazonaws.com/CODRemittance/codrem-'+today+'.csv';
+    this.exportFileTitle  = 'Click here to download current day COD Remittance file';
   },
 
   methods: {
-    handleSelect(event) {
-      if (event.day == 'Daily') {
-        for (let item of this.RemittanceDayList) {
-          if (item.day != 'Daily' && this.RemittanceDay.includes(item) === false) {
-            this.RemittanceDay.push(item);
+
+    //function is used for upload files on AWS s3bucket
+    onUpload(event){
+      this.selectedFile = event.target.files[0];
+      if ( /\.(csv)$/i.test(this.selectedFile.name) ){
+        var name = event.target.name + "." +this.selectedFile.name.split(".").pop();
+
+        const fd = new FormData();
+        fd.append('file', this.selectedFile, name);
+        this.isLoading = true;
+        axios.post(apiUrl.api_url + 'uploadRemittanceFile', fd,
+        {
+          headers: {
+            'Authorization': 'Bearer ' + this.myStr
           }
-        }
+        })
+        .then(res => {
+           if(res.data.errorCode == 0){
+             this.isLoading = false;
+             this.filename = res.data.filename
+           }else{
+             this.$alertify.error(".csv File does not Upload ");
+           }
+        }, error => {
+          console.error(error)
+        });
+      }else{
+        this.$alertify.error(event.target.placeholder + " Failed! Please Upload Only Valid Format: .csv");
       }
     },
-
-    multiple(){
-      return true;
-    },
-
-    setid(name, key){
-      return name+key;
-    },
-
-    GetClientData() {
-
-      axios({
-        method: 'GET',
-        url: apiUrl.api_url + 'external/getclientlist',
-        data: {},
-        headers: {
-          'Authorization': 'Bearer '+this.myStr
-        }
-      }).then(result => {
-        this.ClientList = result.data.clients.data;
-      }, error => {
-        console.error(error)
-      })
-    },
-
-    searchCODRemittanceData(event){
-      let cData = [];
-      this.ClientId.forEach(function (val) {
-        cData.push(val.ClientMasterID);
-      });
-
-      let dData = [];
-      this.RemittanceDay.forEach(function (val) {
-        if(val.day!='Daily'){
-          dData.push(val.day);
-        }
-      });
-
+    uploadFile(){
       this.input = ({
-          offset: this.pageno,
-          limit: 10,
-          RemittanceDay: dData,
-          ClientId: cData
+          filename: this.filename,
+          username: this.localusername,
       })
-      this.isLoading = true;
-
+      this.Loading = true;
       axios({
-          method: 'GET',
-          'url': apiUrl.api_url + 'codremittancemaster?RemittanceDay='+dData+'&ClientId='+cData+'&offset='+this.pageno+'&limit=10',
-          'data': this.input,
+          method: 'POST',
+          url: apiUrl.api_url + 'remittanceAutoClosure',
+          data: this.input,
           headers: {
-              'Authorization': 'Bearer '+this.myStr
+            'Authorization': 'Bearer '+this.myStr
           }
-      })
-      .then(result => {
-        if(result.data.code == 200){
-          this.listCODRemittanceData = result.data.data;
-          this.isLoading = false;
-          let totalRows     = result.data.count;
-          this.resultCount  = result.data.count;
+        })
+        .then(result => {
+          this.failed = result.data.failed;
+          this.success = result.data.success;
+          this.s3link = result.data.s3link;
+          if(result.data.code == 200){
+            this.Loading = false;
+            this.$alertify.success(result.data.message);
+            this.filename = ""
+          }
 
-          if (totalRows < 10) {
-              this.pagecount = 1
-          } else {
-              this.pagecount = Math.ceil(totalRows / 10)
-          }
-          this.exportCODRemittanceData();
-          //this.resetForm(event);
-        }else{
-          this.listCODRemittanceData = [];
-          this.resultCount  = 0;
-          this.isLoading = false;
-        }
-      }, error => {
+        }, error => {
           console.error(error)
-      })
+          this.Loading = false;
+        })
     },
-
-    exportCODRemittanceData(){
-      let cData = [];
-      this.ClientId.forEach(function (val) {
-        cData.push(val.ClientMasterID);
-      });
-
-      let dData = [];
-      this.RemittanceDay.forEach(function (val) {
-        dData.push(val.day);
-      });
-
-      this.input = ({
-          RemittanceDay: dData,
-          ClientId: cData
-      })
-
-      axios({
-          method: 'GET',
-          'url': apiUrl.api_url + 'exportcodremittance?RemittanceDay='+dData+'&ClientId='+cData,
-          'data': this.input,
-          headers: {
-              'Authorization': 'Bearer '+this.myStr
-          }
-      })
-      .then(result => {
-        if(result.data.code == 200){
-          this.exportPath = result.data.data;
-        }else{
-        }
-      }, error => {
-          console.error(error)
-      })
-    },
-
-    //to get pagination
-    getPaginationData(pageNum) {
-        this.pageno = (pageNum - 1) * 10
-        this.searchCODRemittanceData()
-    },
-
-    onSubmit: function(event) {
+    onSubmit: function(res) {
       this.$validator.validateAll().then((result) => {
         if(result){
-           this.searchCODRemittanceData(event);
-         }
+          this.uploadFile()
+        event.target.reset();
+       }
       }).catch(() => {
         console.log('errors exist', this.errors)
       });
-    },
-
-    resetForm(event) {
-      this.pageno = 0;
-      this.RemittanceDay = this.ClientId = '';
-      this.$validator.reset();
-      this.errors.clear();
-      event.target.reset();
-    },
-
-    checkAll(form) {
-      var myForm = document.forms[form];
-      let toggle = document.getElementById("checkAll").value;
-
-      for( var i=1; i < myForm.length; i++ ) {
-        if(toggle == 'on'){ document.getElementById("checkItem"+i).checked = true; }else{ document.getElementById("checkItem"+i).checked = false; }
-        //console.log('checkItem'+i, document.getElementById("checkItem"+i).value);
-      }
-      if(toggle=='on'){ document.getElementById("checkAll").value = 'off'; }else{ document.getElementById("checkAll").value = 'on'; }
-    },
-
-    calc() {
-      this.calcModal = true;
-      let RemittanceId = [];
-      $.each($("input[name='item']:checked"), function(){
-        RemittanceId.push($(this).val());
-      });
-
-      //alert("RemittanceDetailsId are: " + RemittanceId.join(", "));
-    },
-
-    closeCalcModal() {
-        this.calcModal = false,
-        this.$validator.reset();
-        this.errors.clear();
-    },
+    }
   }
 }

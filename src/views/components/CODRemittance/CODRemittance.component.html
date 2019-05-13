@@ -9,24 +9,29 @@
           <div class="card-body">
             <form v-on:submit.prevent="onSubmit">
               <div class="form-group row">
+
                 <div class="col-md-5">
-                  <label>Remittance Day</label>
-                  <b-input-group left="<i class='fa fa-list'></i>">
-                    <Multiselect :options="RemittanceDayList" name="RemittanceDay" id="RemittanceDay" v-model="RemittanceDay" placeholder="Select Remittance Day" label="day" track-by="day" :preselect-first="false" v-bind:multiple="multiple()" @select="handleSelect" v-validate="{required: true}" v-bind:class="{'error': errors.has('RemittanceDay') }" :max-height="150" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
-                     <template slot="noResult"><p>No Record Found.</p></template>
-                    </Multiselect>
+                  <label>Download File</label>
+                  <a target="_blank" v-bind:title="exportFileTitle" v-bind:href="exportPath">
+                  <b-input-group style="height: 45px;" left="<i class='fa fa-file-text'></i>">
+                    <span class="form-control">
+                      <span class="form-control" style="border: 0;">COD Remittance - 10 May, 2019
+                        <i class='fa fa-download' style="margin-left: 10px;font-size: 18px; color: #92969D"></i>
+                      </span>
+                    </span>
                   </b-input-group>
-                  <span v-show="errors.has('RemittanceDay')" class="text-danger">Please Select Remittance Day.</span>
+                  </a>
                 </div>
 
                 <div class="col-md-5">
-                  <label>Client Name</label>
-                  <b-input-group left="<i class='fa fa-list'></i>">
-                    <Multiselect :options="ClientList" name="ClientId" id="ClientId" v-model="ClientId" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID" v-bind:multiple="multiple()" v-validate="{required: true}" v-bind:class="{'error': errors.has('ClientId') }" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;">
-                     <template slot="noResult"><p>No Record Found.</p></template>
-                    </Multiselect>
+                  <label>Upload File</label>
+                  <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
+                  <b-input-group style="height: 45px;" left="<i class='fa fa-file-text'></i>">
+                    <input type="file"  @change="onUpload" placeholder="Upload File"  name="paymentfile" id="paymentfile" v-validate="{required: true}"
+                      v-bind:class="{'form-control': true, 'error': errors.has('paymentfile') }">
                   </b-input-group>
-                  <span v-show="errors.has('ClientId')" class="text-danger">Please select Client.</span>
+                  <small class="text-muted"><font color="red">Note: * Only .csv files allowed to upload.</font></small>
+                  <label v-show="errors.has('paymentfile')" class="text-danger">{{ "Please select File Upload " }}</label>
                 </div>
               </div>
               <div class="card-footer">
@@ -43,93 +48,24 @@
     <div class="row">
       <div class="col-12">
         <div class="card-headerfrm" style="margin-bottom: 15px;">
-          <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
-          <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
-          <form name="theForm">
-            <table class="table-bordered table-hover tbl datatables" style="width:100%;">
-              <thead>
-                <tr class="text-primary">
-                  <th class="text-center tableheader"><input type="checkbox" id="checkAll" @change="checkAll('theForm')"></th>
-                  <th class="text-center tableheader"><b>#</b></th>
-                  <th class="text-center tableheader"><b>Company Name</b></th>
-                  <th class="text-center tableheader"><b>Delivery Date</b></th>
-                  <th class="text-center tableheader"><b>Shipment Count</b></th>
-                  <th class="text-center tableheader"><b>COD Amount</b></th>
-                  <th class="text-center tableheader"><b>Exception Amount</b></th>
-                  <th class="text-center tableheader"><b>Exception Count</b></th>
-                  <th class="text-center tableheader"><b>Todays Revenue</b></th>
-                  <th class="text-center tableheader"><b>Total Revenue</b></th>
-                  <th class="text-center tableheader"><b>Status</b></th>
-                  <th class="text-center tableheader"><b>Remittance Day</b></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-if="resultCount==0">
-                  <td colspan="15" align="center">No record found</td>
-                </tr>
-                <tr v-for="(data,index) in listCODRemittanceData">
-                  <td><input type="checkbox" name="item" v-bind:id="setid('checkItem', index+1)" v-bind:value="data.RemittanceDetailsId"></td>
-                  <td scope="row" class="text-center"><strong>{{index+1}}</strong></td>
-                  <td>{{data.Company}}</td>
-                  <td>{{data.DeliveryDate}}</td>
-                  <td>{{data.ShipmentCount}}</td>
-                  <td>{{data.CODAmount}}</td>
-                  <td>{{data.ExceptionAmount}}</td>
-                  <td>{{data.ExceptionCount}}</td>
-                  <td>{{data.HoldingAmount}}</td>
-                  <td>{{data.TotalRevenue}}</td>
-                  <td>{{data.Status}}</td>
-                  <td>{{data.RemittanceDay}}</td>
-                </tr>
-              </tbody>
-            </table><br>
-          </form>
-          <div class="card-footer" v-if="resultCount>0">
-            <button class="btn btn-sm btn-primary" type="submit" @click="calc()"><i class="fa fa-calculator"></i> Calculate</button>
-          </div>
-          <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'" style="margin-left:120px; margin-top:-45px"></paginate>
-        </div>
-      </div>
-    </div>
+          <h4 class="header">Result</h4>
+          <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+            <thead>
+              <tr class="text-primary">
+                <th class="text-center tableheader"><b>Success</b></th>
+                <th class="text-center tableheader"><b>Failure</b></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><center><h6>{{success}}</h6></center></td>
+                <td><center><b-link v-bind:href='`${s3link}`'><h6>{{failed}}</h6></b-link></center></td>
+              </tr>
+            </tbody>
 
-    <b-modal size="vlg" v-model="calcModal" @ok="calcModal = false">
-      <b-card>
-        <div slot="header">
-          <span class="mdltitle">Calculated Details</span>
-          <button type="button" aria-label="Close" @click="closeCalcModal" class="close">×</button>
+          </table><br>
         </div>
-        <div class="card-headerfrm" style="margin-bottom: 15px;">
-          <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
-          <form name="theForm">
-            <table class="table-bordered table-hover tbl datatables" style="width:100%;">
-              <thead>
-                <tr class="text-primary">
-                  <th class="text-center tableheader"><b>#</b></th>
-                  <th class="text-center tableheader"><b>Company Name</b></th>
-                  <th class="text-center tableheader"><b>COD Amount</b></th>
-                  <th class="text-center tableheader"><b>Exception Amount</b></th>
-                  <th class="text-center tableheader"><b>Daily Fret Amount</b></th>
-                  <th class="text-center tableheader"><b>Payable Amount</b></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(data,index) in listCODRemittanceData">
-                  <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
-                  <td>{{data.Company}}</td>
-                  <td>{{data.CODAmount}}</td>
-                  <td>{{data.ExceptionAmount}}</td>
-                  <td>{{data.HoldingAmount}}</td>
-                  <td>{{data.TotalRevenue}}</td>
-                </tr>
-              </tbody>
-            </table><br>
-          </form>
-        </div>
-        <div class="departmentfooter form-actions">
-          <button type="button" size="vlg" class="btn btn-primary">Submit</button>&nbsp;
-          <button type="button" size="vlg" class="btn btn-danger" @click="closeCalcModal">Cancel</button>
-        </div>
-      </b-card>
-    </b-modal>
+       </div>
+    </div>
   </div>
 </section>
