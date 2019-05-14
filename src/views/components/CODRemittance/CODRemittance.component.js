@@ -19,6 +19,7 @@ export default {
     return {
       exportPath:'',
       exportFileTitle:'',
+      dMY:'',
       localusername: 0,
       filename: "",
       paymentfile: "",
@@ -44,10 +45,17 @@ export default {
     var userToken         = window.localStorage.getItem('accessuserToken');
     this.myStr            = userToken.replace(/"/g, '');
 
-    var today = new Date().toISOString().slice(0, 10);
+    var today             = new Date().toISOString().slice(0, 10);
 
     this.exportPath       = 'https://usermanegement.s3.ap-south-1.amazonaws.com/CODRemittance/codrem-'+today+'.csv';
-    this.exportFileTitle  = 'Click here to download current day COD Remittance file';
+    this.exportFileTitle  = 'Click here to download COD Remittance file';
+
+    var strArray=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var t = new Date();
+    var d = t.getDate();
+    var m = strArray[t.getMonth()];
+    var y = t.getFullYear();
+    this.dMY = '' + (d <= 9 ? '0' + d : d) + ' ' + m + ', ' + y;
   },
 
   methods: {
