@@ -127,7 +127,7 @@ export default {
     },
 
     resetForm() {
-      this.fromDate = this.toDate = ''; this.options=[]; this.resultCount = this.pageno = 0;
+      this.fromDate = this.toDate = ''; this.selected=""; this.ClientId=""; this.resultCount = this.pageno = 0;
       this.$validator.reset();
       this.errors.clear();
     },

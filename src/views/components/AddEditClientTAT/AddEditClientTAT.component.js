@@ -84,7 +84,7 @@ export default {
     handleSelect(event) {
       if (event.day == 'Daily') {
         for (let item of this.RemittanceDayList) {
-          if (item.day != 'Daily' && this.RemittanceDay.includes(item) === false) {
+          if (item.day != 'Daily'  && this.RemittanceDay.some(obj => obj.day === item.day) === false) {
             this.RemittanceDay.push(item);
           }
         }

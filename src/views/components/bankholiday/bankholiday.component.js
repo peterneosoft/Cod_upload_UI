@@ -94,7 +94,7 @@ export default {
             this.year                 = '( Year - '+result.data.year+' )';
 
             this.isLoading            = false;
-            this.resultCount          = result.data.holidayList.length;
+            this.resultCount          = result.data.count;
           }else{
             this.resultCount  = 0;
             this.isLoading = false;

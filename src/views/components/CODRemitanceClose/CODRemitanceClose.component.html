@@ -3,49 +3,45 @@
     <div class="col-lg-12">
       <b-card>
         <div slot="header">
-          Remittance Closed Details
+          <i class=" fa fa-filter filter"></i> Remittance Closed Details
         </div>
         <div class="card-body1">
           <form v-on:submit.prevent="onSubmit">
           <b-form-fieldset>
             <b-form-radio name="radioInline" :plain="true" :options="options" v-model="selected"></b-form-radio>
           </b-form-fieldset>
-            <div class="form-group row">
-             <div class="input-group">
-              <div class="col-md-4">
-                <label>From Date</label>
-                <b-input-group left="<i class='fa fa-user'></i>">
-                  <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}"
-                  v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
-                </b-input-group>
-                <span v-show="errors.has('fromDate')" class="text-danger">Please select from date.</span>
-                <span id="fdate" class="text-danger"></span>
-              </div>
-
-              <div class="col-md-4">
-                <label>To Date</label>
-                <b-input-group left="<i class='fa fa-user'></i>">
-                  <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}"
-                  v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
-                </b-input-group>
-                <span v-show="errors.has('toDate')" class="text-danger">Please select to date.</span>
-              </div>
-             </div>
+          <div class="form-group row">
+            <div class="col-md-4">
+              <label>From Date</label>
+              <b-input-group left="<i class='fa fa-user'></i>">
+                <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}"
+                v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
+              </b-input-group>
+              <span v-show="errors.has('fromDate')" class="text-danger">Please select from date.</span>
+              <span id="fdate" class="text-danger"></span>
             </div>
-            <div class="form-group row">
-              <div class="col-md-4">
-                  <label>Client Name</label>
-                  <b-input-group left="<i class='fa fa-list'></i>">
-                    <Multiselect :options="ClientList"  v-bind:multiple="true" name="ClientId" id="ClientId" v-model="ClientId" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID"  v-validate="{required: true}" v-bind:class="{'error': errors.has('ClientId') }" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
-                      <template slot="noResult"><p>No Record Found.</p></template>
-                    </Multiselect>
-                  </b-input-group>
-                  <span v-show="errors.has('ClientId')" class="text-danger">Please select Client.</span>
-                </div>
+
+            <div class="col-md-4">
+              <label>To Date</label>
+              <b-input-group left="<i class='fa fa-user'></i>">
+                <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}"
+                v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
+              </b-input-group>
+              <span v-show="errors.has('toDate')" class="text-danger">Please select to date.</span>
+            </div>
+            <div class="col-md-4">
+              <label>Client Name</label>
+                <b-input-group left="<i class='fa fa-list'></i>">
+                  <Multiselect :options="ClientList"  v-bind:multiple="true" name="ClientId" id="ClientId" v-model="ClientId" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID"  v-validate="{required: true}" v-bind:class="{'error': errors.has('ClientId') }" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                    <template slot="noResult"><p>No Record Found.</p></template>
+                  </Multiselect>
+                </b-input-group>
+                <span v-show="errors.has('ClientId')" class="text-danger">Please select Client.</span>
               </div>
+            </div>
             <div>
               <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
-              <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> Clear</button>
+              <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
             </div>
           </form>
         </div>
