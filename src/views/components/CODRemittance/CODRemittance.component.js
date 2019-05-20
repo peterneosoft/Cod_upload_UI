@@ -116,8 +116,7 @@ export default {
       this.remLoading = true;
       axios({
           method: 'GET',
-          url: apiUrl.api_url + 'realtimecodremittance',
-          data: {},
+          url: apiUrl.api_url + 'realtimecodremittance?CreatedBy='+this.localuserid,
           headers: {
             'Authorization': 'Bearer '+this.myStr
           }
