@@ -14,7 +14,8 @@ import Widgets from '@/views/Widgets'
 import SVCClosureP2P from '@/views/components/svcclosurep2p'
 import SVCClosureSearch from '@/views/components/svcclosuresearch'
 import AddEditClientTAT from '@/views/components/AddEditClientTAT'
-import CODRemittance from '@/views/components/CODRemittance'
+import AutoRemittance from '@/views/components/AutoRemittance'
+import ManualRemittance from '@/views/components/ManualRemittance'
 import MapBankHub from '@/views/components/mapbankhub'
 import BankFileToCloseBulkAccount from '@/views/components/bankfiletoclosebulkaccount'
 import FinanceClosure from '@/views/components/financeclosure'
@@ -142,9 +143,9 @@ const router = new Router({
           },
         },
         {
-          path: 'CODRemittance',
-          name: 'COD Remittance',
-          component: CODRemittance,
+          path: 'AutoRemittance',
+          name: 'Auto Remittance',
+          component: AutoRemittance,
           meta: {
             requiresAuth: true,
             adminAuth: true,
@@ -153,14 +154,31 @@ const router = new Router({
                 link: '/dashboard'
               },
               {
-                name: 'COD Remittance'
+                name: 'Auto COD Remittance'
+              }
+            ]
+          },
+        },
+        {
+          path: 'ManualRemittance',
+          name: 'Manual Remittance',
+          component: ManualRemittance,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'Manual COD Remittance'
               }
             ]
           },
         },
         {
           path: 'AddEditClientTAT',
-          name: 'Add EditClient TAT',
+          name: 'Add Edit Client TAT',
           component: AddEditClientTAT,
           meta: {
             requiresAuth: true,
@@ -194,7 +212,7 @@ const router = new Router({
         },
         {
           path: 'CODRemitanceClose',
-          name: 'COD Remittance Closed Details',
+          name: 'Closed Remittance',
           component: CODRemitanceClose,
           meta: {
             requiresAuth: true,
@@ -204,7 +222,7 @@ const router = new Router({
                 link: '/dashboard'
               },
               {
-                name: 'COD Remitance Close'
+                name: 'Closed Remittance'
               }
             ]
           },
