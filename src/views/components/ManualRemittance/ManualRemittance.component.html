@@ -13,21 +13,20 @@
                 <th class="text-center tableheader"><b>To / Delivery Date</b></th>
                 <th class="text-center tableheader"><b>Client</b></th>
                 <th class="text-center tableheader"><b>Remittance Type</b></th>
-                <th class="text-center tableheader"><b>Shipment</b></th>
+                <th class="text-center tableheader"><b>Shipment Count</b></th>
                 <th class="text-center tableheader"><b>COD Amount</b></th>
                 <th class="text-center tableheader"><b>Freight Amount</b></th>
-                <th class="text-center tableheader"><b>Exception Amount</b></th>
                 <th class="text-center tableheader"><b>Exception Count</b></th>
+                <th class="text-center tableheader"><b>Exception Amount</b></th>
                 <th class="text-center tableheader"><b>Paid Amount</b></th>
                 <th class="text-center tableheader"><b>Balance Amount</b></th>
                 <th class="text-center tableheader"><b>Hold Amount</b></th>
-                <th class="text-center tableheader"><b>Total Oustanding</b></th>
                 <th class="text-center tableheader"><b>Action</b></th>
               </tr>
             </thead>
             <tbody>
               <tr v-if="resultCount==0">
-                <td colspan="15" align="center">No record found</td>
+                <td colspan="14" align="center">No record found</td>
               </tr>
               <tr v-if="resultCount>0" v-for="(data,index) in listPendingRemittanceData">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
@@ -43,13 +42,12 @@
                 <td>{{data.ShipmentCount}}</td>
                 <td>{{data.CODAmount}}</td>
                 <td>{{data.FreightAmount}}</td>
-                <td>{{data.ExceptionAmount}}</td>
                 <td>{{data.ExceptionCount}}</td>
+                <td>{{data.ExceptionAmount}}</td>
                 <td>{{data.PaidAmount}}</td>
                 <td>{{data.BalanceAmount}}</td>
                 <td>{{data.HoldAmount}}</td>
-                <td>{{data.TotalOustanding}}</td>
-                <td><button class="btn btn-sm btn-primary" @click="onRemittance(data)"><i class="fa fa-dot-circle-o"></i> Remittance</button></td>
+                <td><button class="btn btn-sm btn-primary" @click="onRemittance(data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button></td>
               </tr>
             </tbody>
           </table><br>
