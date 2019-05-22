@@ -70,7 +70,7 @@ export default {
       this.isLoading = true;
       axios({
           method: 'GET',
-          url: apiUrl.api_url + 'manualcodremittance?CreatedBy='+this.localuserid+'&ClientId='+ClientId+'&fromDate='+fromDate+'&toDate='+toDate,
+          url: apiUrl.api_url + 'manualcodremittance?CreatedBy='+this.localuserid+'&ClientId='+ClientId+'&fromDate='+fromDate+'&toDate='+toDate+'&offset='+this.pageno+'&limit='+20,
           headers: {
             'Authorization': 'Bearer '+this.myStr
           }
@@ -117,7 +117,8 @@ export default {
 
     onRemittance(data){
       this.input = ({
-          DeliveryDate: data.DeliveryDate,
+          FromDate: data.FromDate,
+          ToDate: data.ToDate,
           ShipmentCount: data.ShipmentCount,
           ClientId: data.ClientId,
           CODAmount: data.CODAmount,
@@ -138,12 +139,12 @@ export default {
           headers: {
               'Authorization': 'Bearer '+this.myStr
           }
-      }).then(response => {
-        if (result.data.errorCode == 0) {
-          this.$alertify.success(response.data.msg);
+      }).then(result => {
+        if (result.data.code == 200) {
+          this.$alertify.success(result.data.msg);
           this.manualCODRemittance();
-        } else if (response.data.errorCode == -1) {
-          this.$alertify.error(response.data.msg)
+        } else {
+          this.$alertify.error(result.data.msg)
         }
       }, error => {
         console.error(error)
@@ -155,7 +156,7 @@ export default {
       this.isLoading = true;
       axios({
           method: 'GET',
-          url: apiUrl.api_url + 'manualcodremittance?CreatedBy='+this.localuserid+'&fromDate='+this.fromDate+'&toDate='+this.toDate,
+          url: apiUrl.api_url + 'manualcodremittance?CreatedBy='+this.localuserid+'&fromDate='+this.fromDate+'&toDate='+this.toDate+'&offset='+this.pageno+'&limit='+20,
           headers: {
             'Authorization': 'Bearer '+this.myStr
           }
@@ -166,10 +167,10 @@ export default {
             this.listPendingRemittanceData  = result.data.data;
             this.resultCount  = result.data.count;
             let totalRows     = result.data.count;
-            if (totalRows < 10) {
+            if (totalRows < 20) {
                 this.pagecount = 1
             } else {
-                this.pagecount = Math.ceil(totalRows / 10)
+                this.pagecount = Math.ceil(totalRows / 20)
             }
             result.data.data.forEach((val,key)=>{
               this.form.toDate[val.ClientId] = val.ToDate;
@@ -187,7 +188,7 @@ export default {
 
     //to get pagination
     getPaginationData(pageNum) {
-        this.pageno = (pageNum - 1) * 10
+        this.pageno = (pageNum - 1) * 20
         this.manualCODRemittance()
     }
   }
