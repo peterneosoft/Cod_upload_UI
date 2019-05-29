@@ -21,6 +21,7 @@ export default {
       localusername: 0,
       filename: "",
       s3link: "",
+      s3autolink:"",
       success: 0,
       failed: 0,
       isLoading: false,
@@ -124,11 +125,11 @@ export default {
         .then(result => {
           if(result.data.code == 200){
             this.remLoading = false;
-            this.s3link = result.data.s3link;
+            this.s3autolink = result.data.s3link;
             this.$alertify.success(result.data.message);
-            if(this.s3link){
-              window.open(this.s3link);
-            }
+             if(this.s3autolink){
+               window.open(this.s3autolink);
+             }
           }else{
             this.remLoading = false;
             this.$alertify.success(result.data.message);
