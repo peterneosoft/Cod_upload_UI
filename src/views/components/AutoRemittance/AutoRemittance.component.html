@@ -22,7 +22,7 @@
                   </a>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-4" title="Upload downloaded COD Remittance file">
                   <label>Upload File</label>
                   <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
                   <b-input-group style="height: 45px;" left="<i class='fa fa-file-text'></i>">
@@ -57,7 +57,7 @@
             <tbody>
               <tr>
                 <td><center><h6>{{success}}</h6></center></td>
-                <td><center><b-link v-bind:href='`${s3link}`'><h6>{{failed}}</h6></b-link></center></td>
+                <td><center><h6>{{failed}}</h6></center></td>
               </tr>
             </tbody>
 

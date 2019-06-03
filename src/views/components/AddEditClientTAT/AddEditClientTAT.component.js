@@ -360,7 +360,6 @@ export default {
         return false;
       }
       document.getElementById("clienterr").innerHTML="";
-      this.resetForm(event);
       this.searchClientCODRemittanceData(event);
     },
 
@@ -372,6 +371,13 @@ export default {
     resetForm(event) {
       this.RemittanceDay=[];
       this.ClientId = this.Bussinesstype = this.AccountName = this.tat = this.type = this.Beneficiary = this.BankName = this.BankAccount = this.rtgs = '';
+      this.$validator.reset();
+      this.errors.clear();
+      this.searchClientCODRemittanceData(event);
+    },
+
+    resetSearch(event) {
+      this.Client = '';
       this.$validator.reset();
       this.errors.clear();
       this.searchClientCODRemittanceData(event);

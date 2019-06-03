@@ -116,6 +116,7 @@ export default {
     },
 
     onRemittance(data){
+      this.isLoading = true;
       this.input = ({
           FromDate: data.FromDate,
           ToDate: data.ToDate,
@@ -144,11 +145,12 @@ export default {
           this.$alertify.success(result.data.msg);
           this.manualCODRemittance();
         } else {
+          this.isLoading = false;
           this.$alertify.error(result.data.msg)
         }
       }, error => {
         console.error(error)
-        this.Loading = false;
+        this.isLoading = false;
       })
     },
 
@@ -172,6 +174,7 @@ export default {
             } else {
                 this.pagecount = Math.ceil(totalRows / 20)
             }
+
             result.data.data.forEach((val,key)=>{
               this.form.toDate[val.ClientId] = val.ToDate;
             });
