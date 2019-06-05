@@ -56,11 +56,11 @@ export default {
       localhubid:"",
       localhubname:"",
       resultdate:"",
-      searchComponent: false,
-      barComponent: false,
-      pieComponent: false,
-      amountComponent: false,
-      collectionComponent: false,
+      searchComponent: true,
+      barComponent: true,
+      pieComponent: true,
+      amountComponent: true,
+      collectionComponent: true,
       piechart: {
         chart: {
           plotBackgroundColor: null,
