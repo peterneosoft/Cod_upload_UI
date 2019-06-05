@@ -70,9 +70,7 @@
                 <td scope="row" class="text-center"><strong>{{index+1}}</strong></td>
                 <td>{{hubName}}</td>
                 <td>{{data.lastmodifieddate}}</td>
-                <td class="text-center">
-                  <b-link href="#foo" @click="editHubSetting = 'true'"><i @click.prevent="getHubSettingRowData(data, resultCount)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3"></i></b-link>
-                </td>
+                <td class="text-center"><i @click.prevent="getHubSettingRowData(data, resultCount), editHubSetting = 'true'" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></td>
               </tr>
             </tbody>
           </table><br>

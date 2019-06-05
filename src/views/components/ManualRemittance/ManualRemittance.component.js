@@ -116,6 +116,7 @@ export default {
     },
 
     onRemittance(data){
+
       this.isLoading = true;
       this.input = ({
           FromDate: data.FromDate,
@@ -174,9 +175,9 @@ export default {
             } else {
                 this.pagecount = Math.ceil(totalRows / 20)
             }
-
             result.data.data.forEach((val,key)=>{
               this.form.toDate[val.ClientId] = val.ToDate;
+              $('#toDate'+val.ClientId).val(val.ToDate);
             });
           }else{
             this.listPendingRemittanceData=[];

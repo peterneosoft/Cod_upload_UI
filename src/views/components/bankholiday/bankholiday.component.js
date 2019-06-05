@@ -204,5 +204,9 @@ export default {
       this.errors.clear();
       this.getBankHolidayData();
     },
+
+    scrollWin() {
+      window.scrollBy(0, -1000);
+    }
   }
 }

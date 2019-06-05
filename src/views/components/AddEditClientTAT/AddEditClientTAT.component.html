@@ -3,10 +3,10 @@
     <div class="col-md-12 mb-2">
       <div class="card" >
         <div v-if="AddEditClientTAT==0" @click = "AddEditClientTAT = '1'" class="card-header filter_main" style="cursor: pointer;">
-          <i class="fa fa-plus plus"></i>Add Edit Client TAT
+          <i class="fa fa-plus plus"></i>Add / Edit Client TAT
         </div>
         <div v-if="AddEditClientTAT==1" @click = "AddEditClientTAT = '0'" class="card-header filter_main" style="cursor: pointer;">
-          <i class="fa fa-minus minus"></i>Add Edit Client TAT
+          <i class="fa fa-minus minus"></i>Add / Edit Client TAT
         </div>
         <b-collapse v-bind:class="`${AddEditClientTAT == '1' ? 'show' : 'hide'}`" id="collapse1">
           <div class="card-body">
@@ -177,9 +177,7 @@
               <td>{{data.ClientBankName}}</td>
               <td>{{data.ClientAccountNo}}</td>
               <td>{{data.NEFTNo}}</td>
-              <td class="text-center">
-                <b-link href="#foo" @click = "AddEditClientTAT = '1'"><i @click.prevent="getClientCODRemittanceRowData(data, resultCount)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3"></i></b-link>
-              </td>
+              <td class="text-center"><i @click.prevent="getClientCODRemittanceRowData(data, resultCount), AddEditClientTAT = '1', scrollWin()" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></td>
             </tr>
           </tbody>
         </table><br>

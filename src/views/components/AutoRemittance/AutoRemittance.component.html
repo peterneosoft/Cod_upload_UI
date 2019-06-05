@@ -9,11 +9,11 @@
           <div class="card-body">
             <form v-on:submit.prevent="onSubmit">
               <div class="form-group row">
-                <div class="col-md-4" style="cursor:pointer" @click="realTimeCODRemittance()" title="Generate & download COD Remittance file with real time data">
+                <div class="col-md-4">
                   <label>Generate Remittance File</label>
                   <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="remLoading" />
                   <b-input-group style="height: 45px;" left="<i class='fa fa-file-text'></i>">
-                    <span class="form-control">
+                    <span class="form-control" style="cursor:pointer" @click="realTimeCODRemittance()" title="Generate & download COD Remittance file with real time data">
                       <span class="form-control" style="border: 0;">COD Remittance - {{dMY}}
                         <i class='fa fa-download' style="margin-left: 10px;font-size: 18px; color: #92969D"></i>
                       </span>

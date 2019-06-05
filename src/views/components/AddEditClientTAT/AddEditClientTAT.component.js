@@ -382,5 +382,9 @@ export default {
       this.errors.clear();
       this.searchClientCODRemittanceData(event);
     },
+
+    scrollWin() {
+      window.scrollBy(0, -1000);
+    }
   }
 }

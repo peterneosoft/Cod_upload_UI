@@ -93,9 +93,7 @@
                 <td class="text-center">{{data.HolidayMasterName}}</td>
                 <td class="text-center">{{data.HolidayDay}}</td>
                 <td class="text-center">{{data.HolidayfDate}}</td>
-                <td class="text-center">
-                  <b-link href="#foo" @click="AddEditBankHoliday='1'"><i @click.prevent="getBankHolidayRowData(data, resultCount)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3"></i></b-link>
-                </td>
+                <td class="text-center"><i @click.prevent="getBankHolidayRowData(data, resultCount), AddEditBankHoliday='1', scrollWin()" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></td>
               </tr>
             </tbody>
           </table><br>
