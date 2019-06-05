@@ -1,5 +1,5 @@
 <section class="user">
-  <div class="animated fadeIn">
+  <div class="animated fadeIn" v-show="searchComponent">
     <!-- <div>
       <b-link style="text-align: right" @click="POPUP"><h4>Change Hub</h4> </b-link>
     </div> -->
@@ -65,7 +65,9 @@
           </form>
         </div>
       </b-card>
+    </div>
 
+    <div class="animated fadeIn">
       <div class="card-header">
         <i class=" fa fa-bars barcolor"></i> <strong>Graph&nbsp;&nbsp;({{resultdate}})</strong>
       </div>
@@ -73,18 +75,17 @@
         <div class="card">
           <div class="card-body">
             <div class="row">
-              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                 <center><div  style="height:15rem">
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-show="barComponent">
+                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="amountLoading" />
+                <center><div  style="height:15rem">
                   <div class="card-body">
-                    <div v-if="resultdata">
-                      <h6 colspan="6" align="middle" style="color:red;">No Record Found</h6>
-                    </div>
                     <highcharts :options="BarChart"></highcharts>
                   </div>
                  </div>
               </center>
             </div>
-            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-show="pieComponent">
+              <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="pieLoading" />
                <center>
                 <div  style="width: 20rem;height:15rem">
                  <div class="card-body">
@@ -99,56 +100,62 @@
           </div>
         </div>
 
-        <div class ="row" style="margin-top: 130px;">
-          <div class="col-6" style="margin-top: 35px;">
-            <div class="card-headerfrm" style="margin-bottom: 15px;">
-              <table class="table-bordered table-hover tbl datatables tableBodyScroll">
-                <thead>
-                  <tr class="text-primary">
-                    <th class="text-center tableheader"><b>Hub Name</b></th>
-                    <th class="text-center tableheader"><b>Receivable</b></th>
-                    <th class="text-center tableheader"><b>Pending</b></th>
-                    <th class="text-center tableheader"><b>Total Amount</b></th>
-                    <th class="text-center tableheader"><b>Received </b></th>
-                    <th class="text-center tableheader"><b>Outstanding</b></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-if="resultHubCollCount==0">
-                    <td colspan="6" align="center">No record found</td>
-                  </tr>
-                  <tr v-for="(data,index) in hubCollectionList">
-                    <td>{{data.hubname}}</td>
-                    <td><i class="fa fa-rupee"></i> {{data.receivable}}</td>
-                    <td><i class="fa fa-rupee"></i> {{data.pending}}</td>
-                    <td><i class="fa fa-rupee"></i> {{data.total}}</td>
-                    <td><i class="fa fa-rupee"></i> {{data.received}}</td>
-                    <td><i class="fa fa-rupee"></i> {{data.outstanding}}</td>
-                  </tr>
-                </tbody>
-              </table>
-             </div>
-            </div>
+        <div class ="clear" v-if="barComponent || pieComponent" style="margin-top: 130px;">&nbsp;</div>
 
-            <div class="col-5" style="margin-top: 20px;">
-             <b-card-group deck>
-              <div class="card text-dark bg-success mb-3  mt-4" style=" ">
-                 <div class="card-body">
-                   <b style="font-weight: bold;"><p>Top Collection</p><hr style="border-top: 1px solid rgb(0, 0, 0);">
-                   <p class="card-text">{{maxCOD.hubname}}</p>
-                   <p class="card-text"><i class="fa fa-rupee"></i> {{maxCOD.value}}</p></b>
-                 </div>
+        <div class="card-body">
+          <div class ="row">
+            <div class="col-6" v-show="amountComponent">
+              <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="amountLoading" />
+              <div class="card-headerfrm" style="margin-bottom: 15px;">
+                <table class="table-bordered table-hover tbl datatables tableBodyScroll">
+                  <thead>
+                    <tr class="text-primary">
+                      <th class="text-center tableheader"><b>Hub Name</b></th>
+                      <th class="text-center tableheader"><b>Receivable</b></th>
+                      <th class="text-center tableheader"><b>Pending</b></th>
+                      <th class="text-center tableheader"><b>Total Amount</b></th>
+                      <th class="text-center tableheader"><b>Received </b></th>
+                      <th class="text-center tableheader"><b>Outstanding</b></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-if="resultHubCollCount==0">
+                      <td colspan="6" align="center">No record found</td>
+                    </tr>
+                    <tr v-for="(data,index) in hubCollectionList">
+                      <td>{{data.hubname}}</td>
+                      <td><i class="fa fa-rupee"></i> {{data.receivable}}</td>
+                      <td><i class="fa fa-rupee"></i> {{data.pending}}</td>
+                      <td><i class="fa fa-rupee"></i> {{data.total}}</td>
+                      <td><i class="fa fa-rupee"></i> {{data.received}}</td>
+                      <td><i class="fa fa-rupee"></i> {{data.outstanding}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+               </div>
               </div>
 
-              <div class="card text-dark bg-danger mb-3 mt-4" style= "">
-                <div class="card-body">
-                  <b style="font-weight: bold;"><p>Least Collection</p><hr style="border-top: 1px solid rgb(0, 0, 0);">
-                  <p class="card-text">{{minCOD.hubname}}</p>
-                  <p class="card-text"><i class="fa fa-rupee"></i> {{minCOD.value}}</p></b>
+              <div class="col-5" v-show="collectionComponent">
+                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="collectionLoading" />
+               <b-card-group deck>
+                <div class="card text-dark bg-success mb-3  mt-4" style=" ">
+                   <div class="card-body">
+                     <b style="font-weight: bold;"><p>Top Collection</p><hr style="border-top: 1px solid rgb(0, 0, 0);">
+                     <p class="card-text">{{maxCOD.hubname}}</p>
+                     <p class="card-text"><i class="fa fa-rupee"></i> {{maxCOD.value}}</p></b>
+                   </div>
                 </div>
-              </div>
-            </b-card-group>
-           </div>
+
+                <div class="card text-dark bg-danger mb-3 mt-4" style= "">
+                  <div class="card-body">
+                    <b style="font-weight: bold;"><p>Least Collection</p><hr style="border-top: 1px solid rgb(0, 0, 0);">
+                    <p class="card-text">{{minCOD.hubname}}</p>
+                    <p class="card-text"><i class="fa fa-rupee"></i> {{minCOD.value}}</p></b>
+                  </div>
+                </div>
+              </b-card-group>
+             </div>
+          </div>
         </div>
       </div>
 
