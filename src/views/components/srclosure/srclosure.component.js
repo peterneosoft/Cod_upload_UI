@@ -51,7 +51,8 @@ export default {
       localusername: 0,
       myStr:"",
       show:false,
-      urltoken:""
+      urltoken:"",
+      denomLoading: false
     }
   },
 
@@ -308,6 +309,7 @@ export default {
     },
       //to get Denomination List
     GetDenominationData(){
+      this.denomLoading = true;
       axios({
           method: 'GET',
           url: apiUrl.api_url + 'getAllDenomination',
@@ -316,9 +318,10 @@ export default {
           }
         })
         .then(result => {
-
+          this.denomLoading = false;
           this.DenominationList = result.data.data;
         }, error => {
+          this.denomLoading = false;
           console.error(error)
         })
 

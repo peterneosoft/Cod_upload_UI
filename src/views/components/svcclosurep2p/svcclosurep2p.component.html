@@ -145,6 +145,7 @@
           <div class="card-header"><i class="fa fa-align-justify"></i> Denomination</div>
 
           <div class="card-body" style="height: 500px;">
+            <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="denomLoading" />
             <table class="table table-responsive-sm" height="10" id="denomlist">
               <thead>
                 <tr>
@@ -178,6 +179,7 @@
           <div class="card-header">
             <i class="fa fa-align-justify"></i> Amount</div>
           <div class="card-body">
+            <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="penAmtLoading" />
             <table class="table table-responsive-sm">
               <tbody>
                 <tr>

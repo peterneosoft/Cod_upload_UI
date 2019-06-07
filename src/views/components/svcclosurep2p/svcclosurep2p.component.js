@@ -52,6 +52,8 @@ export default {
       resultdate: '',
       disableButton: false,
       modalShow:false,
+      penAmtLoading: false,
+      denomLoading: false
     }
   },
 
@@ -117,6 +119,7 @@ export default {
           }
       })
       .then(result => {
+        this.penAmtLoading = true;
         if(result.data.rows.length > 0){
           this.yesterdayCODAmt = parseFloat(Math.round(0)).toFixed(2);
           this.GetPendingCODAmt();
@@ -146,12 +149,12 @@ export default {
           })
         }
       }, error => {
-          console.error(error)
+          this.penAmtLoading = false;
+          console.error(error);
       })
     },
 
     GetPendingCODAmt() {
-
       this.input = ({
           hubid: this.localhubid
       })
@@ -172,12 +175,15 @@ export default {
           if(result.data.rows[0].totalamtdeposit > result.data.rows[0].p2pamt){
             this.p2pAmount = '0.00';
           }
+          this.penAmtLoading = false;
         }else{
           this.pendingCODAmt = '0.00';
+          this.penAmtLoading = false;
         }
         this.TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)))).toFixed(2);
       }, error => {
-          console.error(error)
+        this.penAmtLoading = false;
+        console.error(error);
       })
     },
 
@@ -199,6 +205,7 @@ export default {
     },
 
     GetDenominationData(){
+      this.denomLoading = true;
       axios({
           method: 'GET',
           url: apiUrl.api_url + 'getAllDenomination',
@@ -207,8 +214,10 @@ export default {
           }
         })
         .then(result => {
+          this.denomLoading = false;
           this.DenominationList = result.data.data;
         }, error => {
+          this.denomLoading = false;
           console.error(error)
         })
 
