@@ -329,9 +329,11 @@ export default {
         this.unmatchedAmt = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositAmount))).toFixed(2);
 
         if(DepositAmount < TolatCollection){
-          this.showModal(this.unmatchedAmt);
-          return false;
-          if(this.Reason!=''){
+
+          if(this.Reason==''){
+            this.showModal(this.unmatchedAmt);
+            return false;
+          }else{
             this.hideModal();
           }
         }

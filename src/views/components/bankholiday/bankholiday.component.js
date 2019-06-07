@@ -105,10 +105,10 @@ export default {
     },
 
     getBankHolidayRowData(data) {
+
+      this.holidayid = ""; this.holidayDate = "";
       this.$validator.reset();
       this.errors.clear();
-
-      this.holidayid = this.holidayDate = "";
 
       this.holidayid          = data.HolidayMasterId;
       this.HolidayMasterName  = data.HolidayMasterName;
@@ -116,6 +116,8 @@ export default {
       this.holidayDate        = data.HolidayDate;
       this.CreatedBy          = data.CreatedBy;
       this.status             = data.IsActive;
+
+      $('#holidayDate').val(data.HolidayDate);
     },
 
     saveBankHolidayData(event) {
@@ -199,7 +201,7 @@ export default {
     },
 
     resetForm() {
-      this.holidayid = this.holidayDate = ""; this.status=1;
+      this.holidayid = ""; this.holidayDate = ""; this.status=1;
       this.$validator.reset();
       this.errors.clear();
       this.getBankHolidayData();
