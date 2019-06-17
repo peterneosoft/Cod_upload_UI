@@ -78,14 +78,14 @@
         <ul class="nav">
           <li class="nav-item" v-for="(item, index) in navItem">
 
-             <template v-if="item.children.length>0">
-                <SidebarNavDropdown :name="item.name" :url="item.url" :icon="item.icons">
-                  <template v-for="child in item.children">
-                    <SidebarNavLink :name="child.name"  :url="child.url" :icon="child.icons"/>
-                  </template>
-                </SidebarNavDropdown>
-             </template>
-              <template v-else>
+            <template v-if="item.children.length>0">
+              <SidebarNavDropdown :name="item.name" :url="item.url" :icon="item.icons">
+                <template v-for="child in item.children">
+                  <SidebarNavLink :name="child.name"  :url="child.url" :icon="child.icons"/>
+                </template>
+              </SidebarNavDropdown>
+            </template>
+            <template v-else>
               <SidebarNavLink :name="item.name" :icon="item.icons" :url="item.url"/>
             </template>
            </li>
@@ -121,6 +121,29 @@ export default {
           var bytes  = CryptoJS.AES.decrypt(permissionEncrypt.toString(), 'Key');
           var plaintext = bytes.toString(CryptoJS.enc.Utf8);
           this.navItem=JSON.parse(plaintext);
+
+          var newArr = [];
+          for (var i = 0; i < this.navItem.length; i++) {
+            if(this.navItem[i].ismenu===true){
+              newArr[i] = {
+                'children':[],
+                'icons':this.navItem[i].icons,
+                'id': this.navItem[i].id,
+                'ismenu':this.navItem[i].ismenu,
+                'name':this.navItem[i].name,
+                'parentid':this.navItem[i].parentid,
+                'sequence':this.navItem[i].sequence,
+                'url':this.navItem[i].url
+              };
+
+              for (var j = 0; j < this.navItem[i].children.length; j++) {
+                if(this.navItem[i].children[j].ismenu===true){
+                  newArr[i].children.push(this.navItem[i].children[j]);
+                }
+              }
+            }
+          }
+          this.navItem = newArr;
       },
 
   methods: {

@@ -475,7 +475,6 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth) && !isLoggedIn) {
     next({
       path: "/login",
-
     });
   } else {
 
@@ -485,19 +484,22 @@ router.beforeEach((to, from, next) => {
       const bytes = CryptoJS.AES.decrypt(permissionEncrypt.toString(), 'Key');
       const plaintext = bytes.toString(CryptoJS.enc.Utf8);
       const permissiondata = JSON.parse(plaintext);
-      //console.log("permissiondata",permissiondata);
+
       function isBigEnough(findURL) {
         if(findURL.children.length>0){
-          return findURL.children.some(isBigChildEnough);
+          for (var j = 0; j < findURL.children.length; j++) {
+            if(findURL.children[j].ismenu===true){
+              return findURL.children.some(isBigChildEnough);
+            }
+          }
         }
         return findURL.name == to.name;
       }
       function isBigChildEnough(findURL) {
         return findURL.name == to.name;
       }
-      //console.log(permissiondata);
-      const setroles = permissiondata.some(isBigEnough)
-      //console.log(setroles);
+
+      const setroles = permissiondata.some(isBigEnough);
       if (setroles) {
         next();
       } else {
@@ -509,6 +511,5 @@ router.beforeEach((to, from, next) => {
       next();
     }
   }
-
 });
 export default router;
