@@ -33,7 +33,7 @@ export default {
       wallet: 0,
       Reason:"",
       RemainData:0,
-      resultCount:"",
+      resultCount:0,
       pageno: 0,
       pagecount: 0,
       isLoading: false,
@@ -299,9 +299,11 @@ export default {
         .then(result => {
           if(result.data.code == 200){
           this.SRLedgerList = result.data.data
+          this.resultCount  = result.data.data.length;
           }
           if(result.data.code == 204){
             this.SRLedgerList = [];
+            this.resultCount  = 0;
           }
         }, error => {
           console.error(error)

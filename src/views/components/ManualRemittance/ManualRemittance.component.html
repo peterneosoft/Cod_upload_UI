@@ -1,6 +1,27 @@
 <section class="user">
   <div class="animated fadeIn">
     <div class="row">
+      <b-modal ref="myModalRef" v-model="modalShow" id=#confirmationmodal title="Confirmation">
+        <div role="document">
+          <div class="modal-content">
+            <div class="modal-headerfrm">
+              <h5 class="modal-title">Confirmation</h5>
+              <button type="button" class="close" @click="closeModal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-bodyfrm">
+              <h5 style="font-size:1rem; color:red;">For Remittance, From date should be: {{ofd}}</h5>
+            </div>
+            <div class="modal-footerfrm">
+            <center><button type="button"  @click="modalShow = false" class="btn btn-success" style="background-color: #20a8d8;">OK</button></center>
+            </div>
+          </div>
+        </div>
+      </b-modal>
+    </div>
+
+    <div class="row">
       <div class="col-12">
         <div class="card-headerfrm" style="margin-bottom: 15px;">
           <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
@@ -30,12 +51,18 @@
               </tr>
               <tr v-if="resultCount>0" v-for="(data,index) in listPendingRemittanceData">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
-                <td>{{data.FromDate}}</td>
+                <td>
+                  <b-form-input type="hidden" v-model="form.oldFromDate[data.ClientId]" v-bind:name="setid('oldFromDate', data.ClientId)" v-bind:id="setid('oldFromDate', data.ClientId)"></b-form-input>
+                  <b-input-group left="<i class='fa fa-calendar'></i>" title="Change From Date">
+                    <b-form-input @change="onChangeDate(form.FromDate[data.ClientId], form.toDate[data.ClientId], data.ClientId)" type="date" v-model="form.FromDate[data.ClientId]" v-bind:name="setid('FromDate', data.ClientId)" v-bind:id="setid('FromDate', data.ClientId)" class="form-control"></b-form-input>
+                  </b-input-group>
+                  <span v-bind:id="setid('fdate', data.ClientId)" class="text-danger"></span>
+                </td>
                 <td>
                   <b-input-group left="<i class='fa fa-calendar'></i>" title="Change To / Delivery Date">
                     <b-form-input @change="onChangeDate(data.FromDate, form.toDate[data.ClientId], data.ClientId)" type="date" v-model="form.toDate[data.ClientId]" v-bind:name="setid('toDate', data.ClientId)" v-bind:id="setid('toDate', data.ClientId)" class="form-control"></b-form-input>
                   </b-input-group>
-                  <span v-bind:id="setid('fdate', data.ClientId)" class="text-danger"></span>
+                  <span v-bind:id="setid('tdate', data.ClientId)" class="text-danger"></span>
                 </td>
                 <td>{{data.CompanyName}}</td>
                 <td>{{data.RemittanceType}}</td>

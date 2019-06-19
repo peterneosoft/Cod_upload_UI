@@ -27,8 +27,13 @@ export default {
       listPendingRemittanceDataToDate:[],
       fromDate:'',
       toDate:'',
+      modalShow:false,
+      dateTo:'',
+      ofd:'',
       form: {
-          toDate: []
+          toDate: [],
+          FromDate: [],
+          oldFromDate: []
       }
     }
   },
@@ -48,23 +53,38 @@ export default {
     this.myStr            = userToken.replace(/"/g, '');
 
     this.manualCODRemittance();
+
+    var date = new Date();
+    this.dateTo = date.toISOString().split("T")[0];
   },
 
   methods: {
+    showModal(){
+      this.modalShow = true;
+    },
+    closeModal() {
+      this.modalShow = false
+    },
     setid(name, key){
       return name+key;
     },
 
     onChangeDate(fromDate, toDate, ClientId){
-      if(!toDate){
+      if(!toDate || !fromDate){
+        this.$alertify.error('From date & To/ Delivery date should not be empty');
         return false;
-      }
-
-      if(fromDate > toDate){
-         document.getElementById("fdate"+ClientId).innerHTML="To / Delivery date should not be less than From date.";
-         return false;
+      }else if(fromDate > this.dateTo || toDate > this.dateTo){
+        this.$alertify.error('From date & To/ Delivery date should not be greater than current date.');
+        return false;
+      }else if(fromDate > toDate){
+        document.getElementById("fdate"+ClientId).innerHTML="From date should not be greater than To / Delivery date.";
+        return false;
+      }else if(toDate < fromDate){
+        document.getElementById("tdate"+ClientId).innerHTML="To / Delivery date should not be less than From date.";
+        return false;
       }else{
         document.getElementById("fdate"+ClientId).innerHTML="";
+        document.getElementById("tdate"+ClientId).innerHTML="";
       }
 
       this.isLoading = true;
@@ -87,6 +107,7 @@ export default {
               let obj = todatedata.find(el => el.ClientId === item.ClientId);
               if(obj){
                 item.ToDate           = obj.ToDate;
+                item.FromDate         = obj.FromDate;
                 item.DeliveryDate     = obj.DeliveryDate;
                 item.ShipmentCount    = obj.ShipmentCount;
                 item.CODAmount        = obj.CODAmount;
@@ -104,6 +125,7 @@ export default {
 
             alldata.forEach((val,key)=>{
               this.form.toDate[val.ClientId] = val.ToDate;
+              this.form.FromDate[val.ClientId] = val.FromDate;
             });
           }else{
             this.listPendingRemittanceDataToDate=[];
@@ -117,7 +139,20 @@ export default {
 
     onRemittance(data){
 
+      if(!data.FromDate || !data.ToDate){
+        this.$alertify.error('From date & To/ Delivery date should not be empty');
+        return false;
+      }
+
+      if(this.form.oldFromDate[data.ClientId]!=data.FromDate){
+        this.ofd = this.form.oldFromDate[data.ClientId];
+        this.showModal(); return false;
+      }else{
+        this.closeModal();
+      }
+
       this.isLoading = true;
+
       this.input = ({
           FromDate: data.FromDate,
           ToDate: data.ToDate,
@@ -177,6 +212,11 @@ export default {
             }
             result.data.data.forEach((val,key)=>{
               this.form.toDate[val.ClientId] = val.ToDate;
+              this.form.FromDate[val.ClientId] = val.FromDate;
+              if(this.form.oldFromDate[val.ClientId]==null){
+                this.form.oldFromDate[val.ClientId] = val.FromDate;
+              }
+              $('#FromDate'+val.ClientId).val(val.FromDate);
               $('#toDate'+val.ClientId).val(val.ToDate);
             });
           }else{

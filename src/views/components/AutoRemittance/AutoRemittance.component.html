@@ -22,6 +22,8 @@
                   </a>
                 </div>
 
+                <div class="col-md-1">&nbsp;</div>
+
                 <div class="col-md-4" title="Upload downloaded COD Remittance file">
                   <label>Upload File</label>
                   <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
@@ -46,7 +48,7 @@
     <div class="row">
       <div class="col-12">
         <div class="card-headerfrm" style="margin-bottom: 15px;">
-          <h4 class="header">Result</h4>
+          <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
           <table class="table-bordered table-hover tbl datatables" style="width:100%;">
             <thead>
               <tr class="text-primary">
@@ -57,7 +59,7 @@
             <tbody>
               <tr>
                 <td><center><h6>{{success}}</h6></center></td>
-                <td><center><h6>{{failed}}</h6></center></td>
+                <td><center><b-link v-bind:href='`${s3link}`'><h6>{{failed}}</h6></b-link></center></td>
               </tr>
             </tbody>
 

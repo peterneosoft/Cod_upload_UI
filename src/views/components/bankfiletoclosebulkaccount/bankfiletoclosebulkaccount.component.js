@@ -22,7 +22,9 @@ export default {
       success: 0,
       failed: 0,
       isLoading: false,
-      Loading: false
+      Loading: false,
+      downLoading:false,
+      myStr:""
     }
   },
 
@@ -36,6 +38,9 @@ export default {
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
     var userdetail        = JSON.parse(plaintext);
     this.localusername      = userdetail.username;
+
+    var userToken = window.localStorage.getItem('accessuserToken')
+    this.myStr = userToken.replace(/"/g, '');
   },
 
   methods: {
@@ -45,8 +50,6 @@ export default {
       this.selectedFile = event.target.files[0];
       if ( /\.(csv)$/i.test(this.selectedFile.name) ){
         var name = event.target.name + "." +this.selectedFile.name.split(".").pop();
-        var userToken = window.localStorage.getItem('accessuserToken')
-        var myStr = userToken.replace(/"/g, '');
 
         const fd = new FormData();
         fd.append('file', this.selectedFile, name);
@@ -54,7 +57,7 @@ export default {
         axios.post(apiUrl.api_url + 'uploadFile', fd,
         {
           headers: {
-            'Authorization': 'Bearer ' + myStr
+            'Authorization': 'Bearer ' + this.myStr
           }
         })
         .then(res => {
@@ -100,6 +103,31 @@ export default {
           this.Loading = false;
         })
     },
+
+    downloadsamplecsv(){
+      this.downLoading = true;
+      axios({
+          method: 'GET',
+          url: apiUrl.api_url + 'downloadsamplecsv?filename=sample&createdby='+this.localusername,
+          headers: {
+            'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+          if(result.data.code == 200){
+            this.downLoading = false;
+             if(result.data.s3link){
+               window.open(result.data.s3link);
+             }
+          }else{
+            this.downLoading = false;
+          }
+        }, error => {
+          console.error(error)
+          this.downLoading = false;
+        })
+    },
+
     onSubmit: function(res) {
       this.$validator.validateAll().then((result) => {
         if(result){
