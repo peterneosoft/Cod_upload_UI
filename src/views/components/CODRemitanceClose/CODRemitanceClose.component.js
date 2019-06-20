@@ -36,7 +36,9 @@ export default {
       isLoading: false,
       resultCount: '',
       localhubid: '',
-      localhubname: ''
+      localhubname: '',
+      exportPath:"",
+      exportf:false
     }
   },
 
@@ -113,6 +115,7 @@ export default {
           } else {
               this.pagecount = Math.ceil(totalRows / 10)
           }
+          this.exportCODRemittanceDetailsData();
         }else{
           this.listCODRemitanceData=[];
           this.resultCount  = 0;
@@ -123,11 +126,36 @@ export default {
       })
     },
 
+    exportCODRemittanceDetailsData(){
+      let cData = [];
+      this.ClientId.forEach(function (val) {
+        cData.push(val.ClientMasterID);
+      });
+
+      this.isLoading = true;
+      axios({
+          method: 'GET',
+          'url': apiUrl.api_url + 'exportCODRemittanceDetailsReport?ClientId='+cData+'&fromDate='+this.fromDate+'&toDate='+this.toDate+'&search='+this.selected,
+          headers: {
+              'Authorization': 'Bearer '+this.myStr
+          }
+      })
+      .then(result => {
+        if(result.data.code == 200){
+          this.exportf=true;
+          this.exportPath = result.data.data;
+        }else{
+          this.exportf=false;
+        }
+      }, error => {
+          console.error(error)
+      })
+    },
+
     onSubmit: function(event) {
       this.$validator.validateAll().then(() => {
-        this.pageno = 0;
+        this.pageno = 0; this.exportf = false; this.exportPath="";
         this.GetCODRemittanceDetailsData(event);
-        //event.target.reset();
       }).catch(() => {
         console.log('errors exist', this.errors)
       });

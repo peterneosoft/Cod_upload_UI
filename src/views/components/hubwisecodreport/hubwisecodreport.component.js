@@ -183,7 +183,7 @@ export default {
         if(result){
           this.zonename = event.target[0].selectedOptions[0].attributes.title.nodeValue;
           this.hubname = this.HubId.HubName;
-          this.exportf=false;
+          this.pageno = 0; this.exportf = false; this.exportPath="";
           this.getHubWiseCODLedgerReports()
         }
       //  event.target.reset();

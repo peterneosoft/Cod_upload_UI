@@ -105,6 +105,7 @@ export default {
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
+          this.pageno = 0;
           this.GetSearchSVCledgerData();
         }
       }).catch(() => {

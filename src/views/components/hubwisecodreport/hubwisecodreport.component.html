@@ -63,7 +63,6 @@
             </div>
               <div class="card-footer">
                 <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
-                <span v-show="exportf"><a v-bind:href="exportPath"><button class="btn btn-sm btn-success" type="button"><i class="fa fa-download"></i> Export</button></a></span>
               </div>
             </form>
           </div>
@@ -71,8 +70,10 @@
 
         <div class="col-12" v-if="HubWiseCODLedge">
           <div class="card-headerfrm" style="margin-bottom: 15px;">
-            <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result</h4>
-              <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+            <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result
+              <span v-show="exportf" style="margin-left: 85%;"><a v-bind:href="exportPath"><button class="btn btn-sm btn-success" type="button"><i class="fa fa-download"></i> Export</button></a></span>
+            </h4>
+            <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
             <table class="table-bordered table-hover tbl datatables" style="width:100%;">
               <thead>
                 <tr class="text-primary">
