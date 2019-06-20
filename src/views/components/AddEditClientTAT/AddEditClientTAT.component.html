@@ -115,7 +115,8 @@
                 </div>
               </div>
               <div class="card-footer">
-                <button class="btn btn-sm btn-primary" name="submit" id="submit" type="submit"><i class="fa fa-search"></i> Submit</button>
+                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="submitLoading" />
+                <button class="btn btn-sm btn-primary" name="submit" id="submit" type="submit"><i class="fa fa-dot-circle-o"></i> Submit</button>
                 <button class="btn btn-sm btn-danger" @click="resetForm" type="reset"><i class="fa fa-ban"></i> Clear</button>
               </div>
             </form>
@@ -153,6 +154,7 @@
         <table class="table-bordered table-hover tbl datatables" style="width:100%;">
           <thead>
             <tr class="text-primary">
+              <th class="text-center tableheader"><b>#</b></th>
               <th class="text-center tableheader"><b>Company Name</b></th>
               <th class="text-center tableheader"><b>TAT</b></th>
               <th class="text-center tableheader"><b>Remittance Day</b></th>
@@ -160,6 +162,7 @@
               <th class="text-center tableheader"><b>Beneficiary Name</b></th>
               <th class="text-center tableheader"><b>Client Bank Name</b></th>
               <th class="text-center tableheader"><b>Client Account No</b></th>
+              <th class="text-center tableheader"><b>Contact Mail Id</b></th>
               <th class="text-center tableheader"><b>NEFT No</b></th>
                 <th class="text-center tableheader"><b>Action</b></th>
             </tr>
@@ -169,6 +172,7 @@
               <td colspan="9" align="center">No record found</td>
             </tr>
             <tr v-for="(data,index) in listClientCODRemittanceData">
+              <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
               <td>{{data.CompanyName}}</td>
               <td>{{data.TAT}}</td>
               <td>{{data.RemittanceDayString}}</td>
@@ -176,6 +180,7 @@
               <td>{{data.BeneficiaryName}}</td>
               <td>{{data.ClientBankName}}</td>
               <td>{{data.ClientAccountNo}}</td>
+              <td>{{data.CustomerMailId}}</td>
               <td>{{data.NEFTNo}}</td>
               <td class="text-center"><i @click.prevent="getClientCODRemittanceRowData(data, resultCount), AddEditClientTAT = '1', scrollWin()" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></td>
             </tr>

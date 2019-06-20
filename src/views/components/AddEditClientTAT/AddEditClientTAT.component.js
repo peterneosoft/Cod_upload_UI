@@ -17,8 +17,6 @@ export default {
     Multiselect,
     VueElementLoading
   },
-  props: [],
-
   data() {
     return {
       ClientList:[],
@@ -36,6 +34,7 @@ export default {
       BankName:"",
       BankAccount:"",
       rtgs:"",
+      ContactEmailid:"",
       AccountName:"",
       BeneficiaryName:"",
       BankName:"",
@@ -48,7 +47,8 @@ export default {
       pagecount: 0,
       isLoading: false,
       resultCount: 0,
-      listClientCODRemittanceData:[]
+      listClientCODRemittanceData:[],
+      submitLoading: false
     }
   },
 
@@ -161,11 +161,12 @@ export default {
           }
         })
         .then(result => {
-          if(result.data.code==200){
-            this.Beneficiary = result.data.data.BeneficiaryName
-            this.BankName =  result.data.data.ClientBankName
-            this.BankAccount = result.data.data.ClientAccountNo
-            this.rtgs = result.data.data.ClientBankNeftIFSC
+          if(result.data.code == 200){
+            this.Beneficiary    = result.data.data.BeneficiaryName
+            this.BankName       =  result.data.data.ClientBankName
+            this.BankAccount    = result.data.data.ClientAccountNo
+            this.rtgs           = result.data.data.ClientBankNeftIFSC
+            this.ContactEmailid = result.data.data.ContactEmailid
           }
         }, error => {
           console.error(error)
@@ -195,6 +196,7 @@ export default {
           dData.push(val.day);
         }
       });
+      this.submitLoading = true;
 
       this.input = ({
           ClientId: this.ClientId.ClientMasterID,
@@ -205,6 +207,7 @@ export default {
           HoldingAmount: 0,
           BussinessType: this.Bussinesstype,
           AccountId: this.AccountName,
+          ContactEmailid: this.ContactEmailid,
           CreatedBy: this.localuserid
       })
       axios({
@@ -217,14 +220,17 @@ export default {
       })
       .then((response) => {
         if (response.data.errorCode == 0) {
+          this.submitLoading = false;
           this.AddEditClientTAT=0;
           this.$alertify.success(response.data.msg);
           this.resetForm(event);
         } else if (response.data.errorCode == -1) {
+          this.submitLoading = false;
           this.$alertify.error(response.data.msg)
         }
       })
       .catch((httpException) => {
+          this.submitLoading = false;
           console.error('exception is:::::::::', httpException)
       });
     },
@@ -237,6 +243,7 @@ export default {
           dData.push(val.day);
         }
       });
+      this.submitLoading = true;
 
       this.input = ({
           ClientCODRemmitanceId: this.ClientCODRemmitanceId,
@@ -248,6 +255,7 @@ export default {
           HoldingAmount: 0,
           BussinessType: this.Bussinesstype,
           AccountId: this.AccountName,
+          ContactEmailid: this.ContactEmailid,
           LastModifiedBy: this.localuserid
       })
       axios({
@@ -260,14 +268,17 @@ export default {
       })
       .then((response) => {
         if (response.data.errorCode == 0) {
+          this.submitLoading = false;
           this.AddEditClientTAT=0;
           this.$alertify.success(response.data.msg);
           this.resetForm(event);
         } else if (response.data.errorCode == -1) {
+          this.submitLoading = false;
           this.$alertify.error(response.data.msg)
         }
       })
       .catch((httpException) => {
+          this.submitLoading = false;
           console.error('exception is:::::::::', httpException)
       });
     },
@@ -335,6 +346,7 @@ export default {
       this.Bussinesstype            = data.BussinessType;
       this.BType                    = data.BussinessType;
       this.AccountName              = data.AccountId;
+      this.ContactEmailid           = data.CustomerMailId;
 
       this.GetClientBusinessConfigList();
       this.GetClientBusinessAccounts();

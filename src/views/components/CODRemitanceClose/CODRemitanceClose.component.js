@@ -76,11 +76,17 @@ export default {
 
     GetCODRemittanceDetailsData(event) {
 
-      if(this.fromDate > this.toDate){
-         document.getElementById("fdate").innerHTML="From date should not be greater than To date.";
-         return false;
+      if(this.selected){
+        if(this.fromDate > this.toDate){
+           document.getElementById("fdate").innerHTML="From date should not be greater than To date.";
+           return false;
+        }else{
+          document.getElementById("fdate").innerHTML="";
+        }
+        document.getElementById("opt").innerHTML="";
       }else{
-        document.getElementById("fdate").innerHTML="";
+        document.getElementById("opt").innerHTML="Please choose one option ( Delivery Date OR Transaction Date ).";
+        return false;
       }
 
       let cData = [];
@@ -119,6 +125,7 @@ export default {
 
     onSubmit: function(event) {
       this.$validator.validateAll().then(() => {
+        this.pageno = 0;
         this.GetCODRemittanceDetailsData(event);
         //event.target.reset();
       }).catch(() => {
