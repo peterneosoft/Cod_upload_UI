@@ -8,7 +8,6 @@
         <b-card>
           <div class="card-body1">
             <form  v-on:submit.prevent="onSubmit">
-
               <div class="form-group row">
                <div class="col-md-4">
                 <label>Zone</label>
@@ -63,59 +62,62 @@
             </div>
               <div class="card-footer">
                 <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+                <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
               </div>
             </form>
           </div>
         </b-card>
 
-        <div class="col-12" v-if="HubWiseCODLedge">
-          <div class="card-headerfrm" style="margin-bottom: 15px;">
-            <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result
-              <span v-show="exportf" style="margin-left: 85%;"><a v-bind:href="exportPath"><button class="btn btn-sm btn-success" type="button"><i class="fa fa-download"></i> Export</button></a></span>
-            </h4>
-            <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
-            <table class="table-bordered table-hover tbl datatables" style="width:100%;">
-              <thead>
-                <tr class="text-primary">
-                  <th class="text-center tableheader"><b>#</b></th>
-                  <th class="text-center tableheader"><b>Zone</b></th>
-                  <th class="text-center tableheader"><b>SVC/RSE Name</b></th>
-                  <th class="text-center tableheader"><b>Location Type</b></th>
-                  <th class="text-center tableheader"><b>Owner Name</b></th>
-                  <th class="text-center tableheader"><b>Delivery Date</b></th>
-                  <th class="text-center tableheader"><b>Opening Balance</b></th>
-                  <th class="text-center tableheader"><b>COD Receivable</b></th>
-                  <th class="text-center tableheader"><b>COD Received</b></th>
-                  <th class="text-center tableheader"><b>Balance O/s</b></th>
-                  <th class="text-center tableheader"><b>Status</b></th>
-                  <th class="text-center tableheader"><b>Closed by</b></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-if="resultCount==0">
-                  <td colspan="12" align="center">No record found</td>
-                </tr>
-                <tr v-for="(CODLedger_List,index) in CODLedgerReports ">
-                  <td>{{pageno+index+1}}</td>
-                  <td>{{zonename}}</td>
-                  <td>{{hubname}}</td>
-                  <td>{{CODLedger_List.hubLocationType}}</td>
-                  <td>{{CODLedger_List.lastmodifiedby}}</td>
-                  <td>{{CODLedger_List.deliverydate}}</td>
-                  <td>{{CODLedger_List.openingbalance}}</td>
-                  <td>{{CODLedger_List.receivable}}</td>
-                  <td>{{CODLedger_List.financeconfirmamount}}</td>
-                  <td>{{CODLedger_List.balanceLogic}}</td>
-                  <td>{{CODLedger_List.StatusVal}}</td>
-                  <td>{{CODLedger_List.Closedby}}</td>
-                </tr>
-              </tbody>
+        <div class="row">
+          <div class="col-12" v-if="HubWiseCODLedge">
+            <div class="card-headerfrm" style="margin-bottom: 15px;">
+              <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result
+                <span v-show="exportf" style="margin-left: 85%; cursor: pointer;" @click="exportHubWiswData()"><button class="btn btn-sm btn-success" type="button"><i class="fa fa-download"></i> Export</button></span>
+              </h4>
+              <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+              <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+                <thead>
+                  <tr class="text-primary">
+                    <th class="text-center tableheader"><b>#</b></th>
+                    <th class="text-center tableheader"><b>Zone</b></th>
+                    <th class="text-center tableheader"><b>SVC/RSE Name</b></th>
+                    <th class="text-center tableheader"><b>Location Type</b></th>
+                    <th class="text-center tableheader"><b>Owner Name</b></th>
+                    <th class="text-center tableheader"><b>Delivery Date</b></th>
+                    <th class="text-center tableheader"><b>Opening Balance</b></th>
+                    <th class="text-center tableheader"><b>COD Receivable</b></th>
+                    <th class="text-center tableheader"><b>COD Received</b></th>
+                    <th class="text-center tableheader"><b>Balance O/s</b></th>
+                    <th class="text-center tableheader"><b>Status</b></th>
+                    <th class="text-center tableheader"><b>Closed by</b></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-if="resultCount==0">
+                    <td colspan="12" align="center">No record found</td>
+                  </tr>
+                  <tr v-for="(CODLedger_List,index) in CODLedgerReports ">
+                    <td>{{pageno+index+1}}</td>
+                    <td>{{zonename}}</td>
+                    <td>{{hubname}}</td>
+                    <td>{{CODLedger_List.hubLocationType}}</td>
+                    <td>{{CODLedger_List.lastmodifiedby}}</td>
+                    <td>{{CODLedger_List.deliverydate}}</td>
+                    <td>{{CODLedger_List.openingbalance}}</td>
+                    <td>{{CODLedger_List.receivable}}</td>
+                    <td>{{CODLedger_List.financeconfirmamount}}</td>
+                    <td>{{CODLedger_List.balanceLogic}}</td>
+                    <td>{{CODLedger_List.StatusVal}}</td>
+                    <td>{{CODLedger_List.Closedby}}</td>
+                  </tr>
+                </tbody>
 
-            </table><br>
-            <paginate :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
-            </paginate>
-          </div>
+              </table><br>
+              <paginate :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+              </paginate>
+            </div>
          </div>
+       </div>
     </div>
   </div>
 </section>
