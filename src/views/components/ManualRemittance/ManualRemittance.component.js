@@ -145,7 +145,8 @@ export default {
       }
 
       if(this.form.oldFromDate[data.ClientId]!=data.FromDate){
-        this.ofd = this.form.oldFromDate[data.ClientId];
+        let fdate = new Date(this.form.oldFromDate[data.ClientId]);
+        this.ofd = (fdate.getDate() <= 9 ? '0' + fdate.getDate() : fdate.getDate()) + "/" + ((fdate.getMonth() + 1) <= 9 ? '0' + (fdate.getMonth() + 1) : (fdate.getMonth() + 1)) + "/" + fdate.getFullYear();
         this.showModal(); return false;
       }else{
         this.closeModal();
