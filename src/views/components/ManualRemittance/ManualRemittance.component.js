@@ -146,7 +146,14 @@ export default {
 
       if(this.form.oldFromDate[data.ClientId]!=data.FromDate){
         let fdate = new Date(this.form.oldFromDate[data.ClientId]);
-        this.ofd = (fdate.getDate() <= 9 ? '0' + fdate.getDate() : fdate.getDate()) + "/" + ((fdate.getMonth() + 1) <= 9 ? '0' + (fdate.getMonth() + 1) : (fdate.getMonth() + 1)) + "/" + fdate.getFullYear();
+        this.ofd = 'Before Remittance for Client '+data.CompanyName+', From date should be: '+(fdate.getDate() <= 9 ? '0' + fdate.getDate() : fdate.getDate()) + "/" + ((fdate.getMonth() + 1) <= 9 ? '0' + (fdate.getMonth() + 1) : (fdate.getMonth() + 1)) + "/" + fdate.getFullYear();
+        this.showModal(); return false;
+      }else if(data.ShipmentCount==0){
+        let fdate = new Date(data.FromDate);
+        fdate = (fdate.getDate() <= 9 ? '0' + fdate.getDate() : fdate.getDate()) + "/" + ((fdate.getMonth() + 1) <= 9 ? '0' + (fdate.getMonth() + 1) : (fdate.getMonth() + 1)) + "/" + fdate.getFullYear();
+        let tdate = new Date(data.ToDate);
+        tdate = (tdate.getDate() <= 9 ? '0' + tdate.getDate() : tdate.getDate()) + "/" + ((tdate.getMonth() + 1) <= 9 ? '0' + (tdate.getMonth() + 1) : (tdate.getMonth() + 1)) + "/" + tdate.getFullYear();
+        this.ofd = 'Remittance data not found for Client '+data.CompanyName+' & date from '+fdate+' to '+tdate;
         this.showModal(); return false;
       }else{
         this.closeModal();
