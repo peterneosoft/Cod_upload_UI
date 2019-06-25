@@ -19,11 +19,6 @@ export default {
       pieLoading: false,
       amountLoading: false,
       collectionLoading: false,
-      cardPer:'',
-      cashPer:'',
-      ndrPer:'',
-      prepaidPer:'',
-      walletPer:'',
       zone:'',
       state:'',
       FromDate:null,
@@ -234,21 +229,27 @@ export default {
           }
         })
         .then(result => {
-          this.cardPer = result.data.cardPer
-          this.cashPer = result.data.cashPer
-          this.ndrPer = result.data.ndrPer
-          this.prepaidPer = result.data.prepaidPer
-          this.walletPer = result.data.walletPer
           this.resultdate = result.data.fdate+" to "+result.data.tdate
 
-          let y = [this.prepaidPer,this.walletPer,this.cardPer,this.cashPer,this.ndrPer]
-          let name = ["Prepaid","Wallet","Card","Cash","NDR"]
-          let chartDataObj = {};
-          for(let i=0;i<y.length;i++){
-            chartDataObj.y = parseFloat(y[i]);
-            chartDataObj.name = name[i];
-            this.piechart.series.data.push(chartDataObj)
-            chartDataObj ={}
+          if((result.data.prepaidPer && result.data.walletPer && result.data.cardPer && result.data.cashPer && result.data.ndrPer)===0){
+
+            let chartDataObj  = {};
+            chartDataObj.y    = parseFloat(1);
+            chartDataObj.name = "No data to display";
+
+            this.piechart.series.data.push(chartDataObj);
+            this.piechart.tooltip.pointFormat = 'Series 1: <b>0%</b>';
+          }else{
+
+            let y = [result.data.prepaidPer,result.data.walletPer,result.data.cardPer,result.data.cashPer,result.data.ndrPer]
+            let name = ["Prepaid","Wallet","Card","Cash","NDR"]
+            let chartDataObj = {};
+            for(let i=0;i<y.length;i++){
+              chartDataObj.y    = parseFloat(y[i]);
+              chartDataObj.name = name[i];
+              this.piechart.series.data.push(chartDataObj)
+              chartDataObj = {}
+            }
           }
           this.pieLoading = false;
         }, error => {
@@ -281,33 +282,31 @@ export default {
           }
         })
         .then(result => {
+          this.resultdate = result.data.fdate+" to "+result.data.tdate;
+          this.hubArray   = [];
+
           if(result.data.code == 200){
-              this.cardPer = result.data.cardPer
-              this.cashPer = result.data.cashPer
-              this.ndrPer = result.data.ndrPer
-              this.prepaidPer = result.data.prepaidPer
-              this.walletPer = result.data.walletPer
-              this.resultdate = result.data.fdate+" to "+result.data.tdate
 
-              let y = [this.prepaidPer,this.walletPer,this.cardPer,this.cashPer,this.ndrPer,]
-              let name = ["Prepaid","Wallet","Card","Cash","NDR"]
-              let chartDataObj = {};
-              for(let i=0;i<y.length;i++){
-                chartDataObj.y = parseFloat(y[i]);
-                chartDataObj.name = name[i];
-                this.piechart.series.data.push(chartDataObj)
-                chartDataObj ={}
-              }
-            this.hubArray=[];
-            this.result = false;
-            this.pieLoading = false;
-          }
-          if(result.data.code == 204){
-            this.hubArray=[];
-            this.result = true;
-            this.pieLoading = false;
-          }
+            let y             = [result.data.prepaidPer,result.data.walletPer,result.data.cardPer,result.data.cashPer,result.data.ndrPer]
+            let name          = ["Prepaid","Wallet","Card","Cash","NDR"]
+            let chartDataObj  = {};
 
+            for(let i=0;i<y.length;i++){
+              chartDataObj.y    = parseFloat(y[i]);
+              chartDataObj.name = name[i];
+              this.piechart.series.data.push(chartDataObj)
+              chartDataObj = {}
+            }
+          }else{
+
+            let chartDataObj  = {};
+            chartDataObj.y    = parseFloat(1);
+            chartDataObj.name = "No data to display";
+
+            this.piechart.series.data.push(chartDataObj);
+            this.piechart.tooltip.pointFormat = 'Series 1: <b>0%</b>';
+          }
+          this.pieLoading = false;
         }, error => {
           this.pieLoading = false;
           console.error(error)
