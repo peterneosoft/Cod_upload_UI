@@ -62,12 +62,13 @@
             <tr class="text-primary">
               <th class="text-center tableheader"><b>#</b></th>
               <th class="text-center tableheader"><b>Company Name</b></th>
+              <th class="text-center tableheader"><b>Transaction Date</b></th>
               <th class="text-center tableheader"><b>From Date</b></th>
               <th class="text-center tableheader"><b>To / Delivery Date</b></th>
               <th class="text-center tableheader"><b>Shipment Count</b></th>
               <th class="text-center tableheader"><b>COD Amount</b></th>
+              <th class="text-center tableheader"><b>Exception Amount</b></th>
               <th class="text-center tableheader"><b>Remittance Type</b></th>
-              <th class="text-center tableheader"><b>Transaction Date</b></th>
               <th class="text-center tableheader"><b>Status</b></th>
             </tr>
           </thead>
@@ -78,12 +79,13 @@
             <tr v-for="(data,index) in listCODRemitanceData">
               <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
               <td>{{data.Company}}</td>
+              <td>{{data.LastModifiedDate}}</td>
               <td>{{data.FromDate}}</td>
               <td>{{data.DeliveryDate}}</td>
               <td>{{data.ShipmentCount}}</td>
               <td>{{data.CODAmount}}</td>
+              <td>{{data.ExceptionAmount}}</td>
               <td>{{data.RemittanceType}}</td>
-              <td>{{data.LastModifiedDate}}</td>
               <td>{{data.Status}}</td>
             </tr>
           </tbody>

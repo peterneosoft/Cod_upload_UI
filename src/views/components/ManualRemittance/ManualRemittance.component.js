@@ -33,7 +33,8 @@ export default {
       form: {
           toDate: [],
           FromDate: [],
-          oldFromDate: []
+          oldFromDate: [],
+          oldToDate: []
       }
     }
   },
@@ -70,8 +71,9 @@ export default {
     },
 
     onChangeDate(fromDate, toDate, ClientId){
+
       if(!toDate || !fromDate){
-        this.$alertify.error('From date & To/ Delivery date should not be empty');
+        this.$alertify.error('From date & To/ Delivery date should not be empty.');
         return false;
       }else if(fromDate > this.dateTo || toDate > this.dateTo){
         this.$alertify.error('From date & To/ Delivery date should not be greater than current date.');
@@ -139,23 +141,31 @@ export default {
 
     onRemittance(data){
 
-      if(!data.FromDate || !data.ToDate){
-        this.$alertify.error('From date & To/ Delivery date should not be empty');
-        return false;
-      }
+      if((!this.form.FromDate[data.ClientId] || !data.FromDate) || (!this.form.toDate[data.ClientId] || !data.ToDate)){
 
-      if(this.form.oldFromDate[data.ClientId]!=data.FromDate){
+        this.$alertify.error('From date & To / Delivery date should not be empty.');
+        return false;
+      }else if(this.form.oldFromDate[data.ClientId] != data.FromDate){
+
         let fdate = new Date(this.form.oldFromDate[data.ClientId]);
-        this.ofd = 'Before Remittance for Client '+data.CompanyName+', From date should be: '+(fdate.getDate() <= 9 ? '0' + fdate.getDate() : fdate.getDate()) + "/" + ((fdate.getMonth() + 1) <= 9 ? '0' + (fdate.getMonth() + 1) : (fdate.getMonth() + 1)) + "/" + fdate.getFullYear();
+        this.ofd = 'Remittance for client '+data.CompanyName+', From date should be: '+(fdate.getDate() <= 9 ? '0' + fdate.getDate() : fdate.getDate()) + "/" + ((fdate.getMonth() + 1) <= 9 ? '0' + (fdate.getMonth() + 1) : (fdate.getMonth() + 1)) + "/" + fdate.getFullYear();
+        this.showModal(); return false;
+      }else if(data.ToDate > this.form.oldToDate[data.ClientId]){
+
+        let tdate = new Date(this.form.oldToDate[data.ClientId]);
+        this.ofd = 'Remittance for client '+data.CompanyName+', To / Delivery date should be: '+(tdate.getDate() <= 9 ? '0' + tdate.getDate() : tdate.getDate()) + "/" + ((tdate.getMonth() + 1) <= 9 ? '0' + (tdate.getMonth() + 1) : (tdate.getMonth() + 1)) + "/" + tdate.getFullYear();
         this.showModal(); return false;
       }else if(data.ShipmentCount==0){
+
         let fdate = new Date(data.FromDate);
         fdate = (fdate.getDate() <= 9 ? '0' + fdate.getDate() : fdate.getDate()) + "/" + ((fdate.getMonth() + 1) <= 9 ? '0' + (fdate.getMonth() + 1) : (fdate.getMonth() + 1)) + "/" + fdate.getFullYear();
         let tdate = new Date(data.ToDate);
         tdate = (tdate.getDate() <= 9 ? '0' + tdate.getDate() : tdate.getDate()) + "/" + ((tdate.getMonth() + 1) <= 9 ? '0' + (tdate.getMonth() + 1) : (tdate.getMonth() + 1)) + "/" + tdate.getFullYear();
-        this.ofd = 'Remittance data not found for Client '+data.CompanyName+' & date from '+fdate+' to '+tdate;
+
+        this.ofd = 'Remittance COD amount for client '+data.CompanyName+' & date from '+fdate+' to '+tdate+' is 0.00';
         this.showModal(); return false;
       }else{
+
         this.closeModal();
       }
 
@@ -221,9 +231,14 @@ export default {
             result.data.data.forEach((val,key)=>{
               this.form.toDate[val.ClientId] = val.ToDate;
               this.form.FromDate[val.ClientId] = val.FromDate;
+
               if(this.form.oldFromDate[val.ClientId]==null){
                 this.form.oldFromDate[val.ClientId] = val.FromDate;
               }
+              if(this.form.oldToDate[val.ClientId]==null){
+                this.form.oldToDate[val.ClientId] = val.ToDate;
+              }
+
               $('#FromDate'+val.ClientId).val(val.FromDate);
               $('#toDate'+val.ClientId).val(val.ToDate);
             });
