@@ -22,6 +22,7 @@ import FinanceClosure from '@/views/components/financeclosure'
 import CSVReOpenDay from '@/views/components/csvreopenday'
 import SVCDepositExceptions from '@/views/components/svcdepositexceptions'
 import HubWiseCODReport from '@/views/components/hubwisecodreport'
+import PaymentReport from '@/views/components/paymentreport'
 import MISP2PCODReport from '@/views/components/misp2preport'
 import SystemSettings from '@/views/components/settings'
 import BankHoliday from '@/views/components/bankholiday'
@@ -127,7 +128,7 @@ const router = new Router({
         },
         {
           path: 'hubwisecodreport',
-          name: 'Hub Wise COD Report',
+          name: 'Hub Wise Report',
           component: HubWiseCODReport,
           meta: {
             requiresAuth: true,
@@ -138,6 +139,23 @@ const router = new Router({
               },
               {
                 name: 'Hub Wise COD Report'
+              }
+            ]
+          },
+        },
+        {
+          path: 'paymentreport',
+          name: 'Payment Report',
+          component: PaymentReport,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'Payment Report'
               }
             ]
           },
