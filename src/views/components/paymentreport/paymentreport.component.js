@@ -28,7 +28,6 @@ export default {
       isLoading: false,
       resultCount: '',
       createdby: '',
-      exportPath:'',
       exportf:false
     }
   },
@@ -196,7 +195,7 @@ export default {
     },
 
     resetForm() {
-      this.ClientId=""; this.pageno = 0;
+      this.ClientId = ""; this.pageno = this.resultCount = 0; this.listCODPaymentData = []; this.trDate = ''; this.exportf = false;
       this.$validator.reset();
       this.errors.clear();
     },

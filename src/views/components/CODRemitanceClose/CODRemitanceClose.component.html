@@ -30,7 +30,7 @@
               </b-input-group>
               <span v-show="errors.has('toDate')" class="text-danger">Please select to date.</span>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
               <label>Client Name</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <Multiselect :options="ClientList"  v-bind:multiple="true" name="ClientId" id="ClientId" v-model="ClientId" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID"  v-validate="{required: true}" v-bind:class="{'error': errors.has('ClientId') }" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
@@ -63,7 +63,7 @@
               <th class="text-center tableheader"><b>#</b></th>
               <th class="text-center tableheader"><b>Company Name</b></th>
               <th class="text-center tableheader"><b>Transaction Date</b></th>
-              <th class="text-center tableheader"><b>From Date</b></th>
+              <th class="text-center tableheader" v-if="selected=='TransactionDate'"><b>From Date</b></th>
               <th class="text-center tableheader"><b>To / Delivery Date</b></th>
               <th class="text-center tableheader"><b>Shipment Count</b></th>
               <th class="text-center tableheader"><b>COD Amount</b></th>
@@ -80,7 +80,7 @@
               <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
               <td>{{data.Company}}</td>
               <td>{{data.LastModifiedDate}}</td>
-              <td>{{data.FromDate}}</td>
+              <td v-if="selected=='TransactionDate'">{{data.FromDate}}</td>
               <td>{{data.DeliveryDate}}</td>
               <td>{{data.ShipmentCount}}</td>
               <td>{{data.CODAmount}}</td>

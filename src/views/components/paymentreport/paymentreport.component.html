@@ -48,32 +48,34 @@
           <thead>
             <tr class="text-primary">
               <th class="text-center tableheader"><b>#</b></th>
+              <th class="text-center tableheader"><b>Shipping Date</b></th>
+              <th class="text-center tableheader"><b>POID</b></th>
+              <th class="text-center tableheader"><b>Shipping Id</b></th>
               <th class="text-center tableheader"><b>Company Name</b></th>
+              <th class="text-center tableheader"><b>Hub Name</b></th>
+              <th class="text-center tableheader"><b>Service Type</b></th>
+              <th class="text-center tableheader"><b>Shipment Status</b></th>
+              <th class="text-center tableheader"><b>Delivery Date</b></th>
+              <th class="text-center tableheader"><b>Net Payment</b></th>
               <th class="text-center tableheader"><b>Transaction Date</b></th>
-              <th class="text-center tableheader"><b>From Date</b></th>
-              <th class="text-center tableheader"><b>To / Delivery Date</b></th>
-              <th class="text-center tableheader"><b>Shipment Count</b></th>
-              <th class="text-center tableheader"><b>COD Amount</b></th>
-              <th class="text-center tableheader"><b>Exception Amount</b></th>
-              <th class="text-center tableheader"><b>Remittance Type</b></th>
-              <th class="text-center tableheader"><b>Status</b></th>
             </tr>
           </thead>
           <tbody>
             <tr v-if="resultCount==0">
-              <td colspan="15" align="center">No record found</td>
+              <td colspan="11" align="center">No record found</td>
             </tr>
             <tr v-for="(data,index) in listCODPaymentData">
               <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
-              <td>{{data.Company}}</td>
-              <td>{{data.LastModifiedDate}}</td>
-              <td>{{data.FromDate}}</td>
+              <td>{{data.ShippingDate}}</td>
+              <td>{{data.POID}}</td>
+              <td>{{data.ShippingID}}</td>
+              <td>{{ClientId.CompanyName}}</td>
+              <td>{{data.HubName}}</td>
+              <td>COD</td>
+              <td>Delivered</td>
               <td>{{data.DeliveryDate}}</td>
-              <td>{{data.ShipmentCount}}</td>
-              <td>{{data.CODAmount}}</td>
-              <td>{{data.ExceptionAmount}}</td>
-              <td>{{data.RemittanceType}}</td>
-              <td>{{data.Status}}</td>
+              <td>{{data.NetPayment}}</td>
+              <td>{{data.RemittanceDate}}</td>
             </tr>
           </tbody>
         </table><br>

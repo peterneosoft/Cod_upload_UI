@@ -23,7 +23,7 @@ export default {
       myStr:"",
       ClientId:"",
       ClientList:[],
-      selected: 'DeliveryDate',
+      selected: 'TransactionDate',
       options: [
         { text: 'Delivery Date', value: 'DeliveryDate' },
         { text: 'Transaction Date', value: 'TransactionDate' }
