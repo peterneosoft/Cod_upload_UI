@@ -37,7 +37,6 @@ export default {
       resultCount: '',
       localhubid: '',
       localhubname: '',
-      exportPath:"",
       exportf:false
     }
   },
@@ -216,9 +215,9 @@ export default {
     },
 
     resetForm() {
-      this.fromDate = this.toDate = ''; this.selected=""; this.ClientId=""; this.pageno = 0;
-      this.$validator.reset();
-      this.errors.clear();
+      this.fromDate = this.toDate = ''; this.selected=""; this.ClientId=""; this.pageno = this.resultCount = 0;
+      this.listCODRemitanceData = []; this.exportf=false;
+      this.$validator.reset(); this.errors.clear();
     },
   }
 }

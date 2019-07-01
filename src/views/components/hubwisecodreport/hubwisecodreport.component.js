@@ -247,7 +247,8 @@ export default {
     },
 
     resetForm() {
-      this.fromDate = this.toDate = ''; this.zone=""; this.hubList=[]; this.HubId=""; this.pageno = 0; this.status="";
+      this.fromDate = this.toDate = ''; this.zone=""; this.hubList=[]; this.HubId=""; this.pageno = 0;
+      this.status=""; this.CODLedgerReports = []; this.exportf = false; this.resultCount = 0;
       this.$validator.reset();
       this.errors.clear();
     },
