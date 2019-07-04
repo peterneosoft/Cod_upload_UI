@@ -26,6 +26,7 @@ import PaymentReport from '@/views/components/paymentreport'
 import MISP2PCODReport from '@/views/components/misp2preport'
 import SystemSettings from '@/views/components/settings'
 import BankHoliday from '@/views/components/bankholiday'
+import EMailRemittance from '@/views/components/emailremittance'
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -326,6 +327,23 @@ const router = new Router({
               },
               {
                 name: 'Bank Holiday Settings'
+              }
+            ]
+          },
+        },
+        {
+          path: 'emailremittance',
+          name: 'E-Mail Remittance',
+          component: EMailRemittance,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'E-Mail Remittance'
               }
             ]
           },

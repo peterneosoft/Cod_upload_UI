@@ -1,0 +1,68 @@
+<section class="user">
+  <div class="animated fadeIn">
+    <div class="row">
+      <b-modal ref="myModalRef" v-model="modalShow" id=#confirmationmodal title="Confirmation">
+        <div role="document">
+          <div class="modal-content">
+            <div class="modal-headerfrm">
+              <h5 class="modal-title">Clients Remittance E-Mail Confirmation</h5>
+              <button type="button" class="close" @click="closeModal(false)" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+            </div>
+            <div class="modal-bodyfrm">
+              <h5 style="font-size:1rem; color:red; line-height: 1.5 !important;">Do you want to proceed to send an email to selected clients ?</h5>
+            </div>
+            <div class="modal-footerfrm">
+              <center>
+                <button type="button"  @click="closeModal(true)" class="btn btn-success" style="background-color: #28a745;">Proceed</button>
+                <button type="button"  @click="closeModal(false)" class="btn btn-danger" style="background-color: #dc3545;">Cancel</button>
+              </center>
+            </div>
+          </div>
+        </div>
+      </b-modal>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card-headerfrm" style="margin-bottom: 15px;">
+          <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result
+            <span style="margin-left: 85%; cursor: pointer;" @click="showModal()"><button class="btn btn-sm btn-success" type="button"><i class="fa fa-envelope"></i> Send</button></span>
+          </h4>
+          <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+          <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+            <thead>
+              <tr class="text-primary">
+                <th class="text-center tableheader"><b>#</b></th>
+                <th class="text-center tableheader">
+                  <input type="checkbox" v-model="checkAll" @click="check" style="margin-left: -10px;"> All
+                </th>
+                <th class="text-center tableheader"><b>Company Name</b></th>
+                <th class="text-center tableheader"><b>Company E-Mail</b></th>
+                <th class="text-center tableheader"><b>Remittance Date</b></th>
+                <th class="text-center tableheader"><b>Report</b></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="resultCount==0"><td colspan="6" align="center">No record found</td></tr>
+              <tr v-if="resultCount>0" v-for="(data,index) in listEmailRemittanceData">
+                <td>{{data.index}}</td>
+                <td><input type="checkbox" @change='updateCheck()' v-bind:name="setid('ClientId', data.ClientId)" v-bind:id="setid('ClientId', data.ClientId)" :value="data.ClientId" v-model="ClientArr" style="margin-left: 12px;"></td>
+                <td>{{data.CompanyName}}</td>
+                <td>{{data.EmailId}}</td>
+                <td>{{data.RemittanceDate}}</td>
+                <td>
+                  <span><a v-bind:title='`${data.FileName}`' v-bind:href='`${data.FileUrl}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a></span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <br>
+          <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+          </paginate>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
