@@ -24,7 +24,9 @@ export default {
       ClientArr: [],
 		  checkAll: false,
       currentdate: '',
-      modalShow:false
+      modalShow:false,
+      isSent:false,
+      disableButton: true
     }
   },
 
@@ -72,7 +74,10 @@ export default {
 				for (let i in this.listEmailRemittanceData) {
           this.ClientArr.push(this.listEmailRemittanceData[i].ClientId);
 				}
-			}
+        this.disableButton = false;
+			}else{
+        this.disableButton = true;
+      }
 		},
 
     updateCheck(){
@@ -81,10 +86,16 @@ export default {
       }else{
          this.checkAll = false;
       }
+
+      if(this.ClientArr.length>0){
+        this.disableButton = false;
+      }else{
+        this.disableButton = true;
+      }
     },
 
     getEmailRemittanceClients(){
-      this.isLoading = true;
+      this.isLoading = true; this.isSent = false;
       axios({
           method: 'GET',
           url: apiUrl.api_url + 'emailremittanceclients?CreatedBy='+this.localuserid+'&RemittanceDate='+this.currentdate+'&offset='+this.pageno+'&limit='+20,
@@ -95,7 +106,7 @@ export default {
         .then(result => {
           if(result.data.code == 200){
             this.isLoading = false;
-            this.sentEmail = true;
+            this.isSent = true;
             this.listEmailRemittanceData  = result.data.data;
             this.resultCount  = result.data.count;
             let totalRows     = result.data.count;
@@ -108,12 +119,12 @@ export default {
             this.listEmailRemittanceData=[];
             this.resultCount  = 0;
             this.isLoading = false;
-            this.sentEmail = false;
+            this.isSent = false;
           }
         }, error => {
           console.error(error)
           this.isLoading = false;
-          this.sentEmail = false;
+          this.isSent = false;
         })
     },
 
@@ -135,6 +146,7 @@ export default {
       }).then(result => {
         if (result.data.code == 200) {
           this.$alertify.success(result.data.msg);
+          this.ClientArr=[]; this.checkAll = false;
           this.getEmailRemittanceClients();
         } else {
           this.isLoading = false;
@@ -149,7 +161,7 @@ export default {
     getPaginationData(pageNum) {
         this.pageno = (pageNum - 1) * 20;
         this.listEmailRemittanceData=[]; this.ClientArr=[];
-        this.checkAll = false;
+        this.checkAll = false; this.disableButton = true;
         this.getEmailRemittanceClients();
     }
   }
