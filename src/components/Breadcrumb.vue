@@ -1,47 +1,122 @@
+<style>
+.nav-link {
+  background: transparent;
+}
+.dropdown-menu{
+  top: 20px;
+  left: 20px;
+}
+</style>
+
 <template>
   <div class="breadcrumb">
     <ul>
-      <li
-        v-for="(breadcrumb, idx) in breadcrumbList"
-        :key="idx"
-        @click="routeTo(idx)"
-        :class="{'linked': !!breadcrumb.link}">
-
-         {{ breadcrumb.name }}
-
+      <li v-for="(breadcrumb, idx) in breadcrumbList" :key="idx" @click="routeTo(idx)" :class="{'linked': !!breadcrumb.link}">
+        {{ breadcrumb.name }}
       </li>
 
-      <li style="right: 9px;position: absolute;">Logged In Hub : {{hub}}</li>
+      <li v-if="this.hubAccess.length<2" style="right: 15px;position: absolute;">Logged In Hub : {{hub}}</li>
+
+      <b-nav-item-dropdown right style="right: 0px; position: absolute;" v-if="this.hubAccess.length>1">
+        <template slot="button-content">
+          <span class="d-md-down-none" style="color: #000 !important">Change Hub : {{hub}}</span>
+        </template>
+        <b-dropdown-item @click="setHUBAccess(hub_obj)" v-for="hub_obj in hubAccess" v-bind:key="hub_obj.HubID"><i class="fa fa-map-marker"></i> {{hub_obj.HubName}}</b-dropdown-item>
+      </b-nav-item-dropdown>
     </ul>
   </div>
 </template>
 
 <script>
 import CryptoJS from 'crypto-js';
+import apiUrl from '../constants'
+import axios from 'axios'
 
 export default {
   name: 'Breadcrumb',
   data () {
     return {
       breadcrumbList: [],
-      hub:''
+      hub:'',
+      userToken:'',
+      userdetail:'',
+      hubAccess:[],
     }
   },
   mounted () {
     this.updateList();
 
-    var hubEncrypt = window.localStorage.getItem('accesshubdata')
-    var hubbytes  = CryptoJS.AES.decrypt(hubEncrypt.toString(), 'Key');
-    var hubtext = hubbytes.toString(CryptoJS.enc.Utf8);
-    var hubArr=JSON.parse(hubtext);
-    this.hub = hubArr[0].HubName;
+    var hubEncrypt  = window.localStorage.getItem('accesshubdata')
+    var hubbytes    = CryptoJS.AES.decrypt(hubEncrypt.toString(), 'Key');
+    var hubtext     = hubbytes.toString(CryptoJS.enc.Utf8);
+    var hubArr      = JSON.parse(hubtext);
+    this.hub        = hubArr[0].HubName;
+
+    this.userToken = window.localStorage.getItem('accessuserToken').replace(/"/g, '');
+
+    let userdetailEncrypt = window.localStorage.getItem('accessuserdata')
+    let bytes             = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
+    this.userdetail       = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+
+    this.getHUBAccess();
   },
   watch: { '$route' () { this.updateList() } },
   methods: {
     routeTo (pRouteTo) {
       if (this.breadcrumbList[pRouteTo].link) this.$router.push(this.breadcrumbList[pRouteTo].link)
     },
-    updateList () { this.breadcrumbList = this.$route.meta.breadcrumb }
+    updateList () { this.breadcrumbList = this.$route.meta.breadcrumb },
+
+    getHUBAccess() {
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'external/getHUBAccess',
+          data: { userid:this.userdetail.userid, username:this.userdetail.username },
+          headers: {
+            'Authorization': 'Bearer '+this.userToken
+          }
+        })
+        .then(result => {
+          if(result.data.code==200){
+            this.hubAccess = result.data.data;
+          }else{
+            this.hubAccess = [];
+          }
+        }, error => {
+          console.error(error)
+        })
+    },
+
+    setHUBAccess(HubObj) {
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'external/setHUBAccess',
+          data: { HubID: HubObj.HubID, userid:this.userdetail.userid, username:this.userdetail.username },
+          headers: {
+            'Authorization': 'Bearer '+this.userToken
+          }
+        })
+        .then(result => {
+          if(result.data.code==200){
+            this.$alertify.success(result.data.msg);
+
+            let newArr = []; newArr.push(HubObj);
+            let hubEncrypt = CryptoJS.AES.encrypt(JSON.stringify(newArr), "Key");
+            window.localStorage.setItem('accesshubdata', '');
+            window.localStorage.setItem('accesshubdata', hubEncrypt);
+
+            if(window.localStorage.getItem('accesshubdata')){
+              setTimeout(function() {
+                location.reload();
+              }, 2000);
+            }
+          }else{
+            this.$alertify.error(result.data.msg);
+          }
+        }, error => {
+          console.error(error)
+        })
+    },
   }
 }
 </script>
