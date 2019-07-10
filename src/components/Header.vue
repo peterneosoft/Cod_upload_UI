@@ -101,8 +101,8 @@
           <img src="static/img/avatars/default-img.png" class="img-avatar" alt="admin@bootstrapmaster.com">
           <span class="d-md-down-none" style="color: #000 !important">{{username}}</span>
         </template>
-      <b-dropdown-item @click="editProfile()"><i class="fa fa-user"></i> Profile</b-dropdown-item>
-      <b-dropdown-item @click="changepassword"><i class="fa fa-sign-out"></i> Change Password</b-dropdown-item>
+      <!-- <b-dropdown-item @click="editProfile()"><i class="fa fa-user"></i> Profile</b-dropdown-item>
+      <b-dropdown-item @click="changepassword"><i class="fa fa-sign-out"></i> Change Password</b-dropdown-item> -->
       <b-dropdown-item @click="logout"><i class="fa fa-lock"></i> Logout</b-dropdown-item>
     </b-nav-item-dropdown>
   </b-nav>
@@ -153,23 +153,20 @@ export default {
     var userdetail =JSON.parse(plaintext);
     this.username = userdetail.username;
 
-
-
-
     this.$nextTick(() => {
       $(document).ready(function(){
-      $(".menu_options_mn").on("mouseover",function(){
-        $(".menu_options_sub").slideDown("slow");
+        $(".menu_options_mn").on("mouseover",function(){
+          $(".menu_options_sub").slideDown("slow");
+        });
+        $(".menu_options_sub").on("mouseleave", function(){
+          $(this).slideUp("slow");
+        });
+        $("a").click(function(){
+           $("a.active").removeClass("active");
+           $(this).addClass("active");
+        });
       });
-      $(".menu_options_sub").on("mouseleave", function(){
-        $(this).slideUp("slow");
-      });
-      $("a").click(function(){
-   $("a.active").removeClass("active");
-   $(this).addClass("active");
-});
-    });
-      })
+    })
   },
   methods: {
     sidebarToggle(e) {
@@ -178,12 +175,34 @@ export default {
     },
 
     logout(e) {
-      e.preventDefault()
-      localStorage.removeItem('accesshubdata')
-      localStorage.removeItem('accesspermissiondata')
-      localStorage.removeItem('accessuserdata')
-      localStorage.removeItem('accessuserToken')
-      this.$router.push('/login')
+
+      e.preventDefault();
+
+      let userToken = window.localStorage.getItem('accessuserToken').replace(/"/g, '');
+
+      let userdetailEncrypt = window.localStorage.getItem('accessuserdata')
+      let bytes             = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
+      let userdetail        = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'userapp/logout',
+          data: { userid:userdetail.userid },
+          headers: {
+            'Authorization': 'Bearer '+userToken
+          }
+      })
+      .then((response) => {
+
+        localStorage.removeItem('accesshubdata')
+        localStorage.removeItem('accesspermissiondata')
+        localStorage.removeItem('accessuserdata')
+        localStorage.removeItem('accessuserToken')
+        this.$router.push('/login')
+      })
+      .catch((httpException) => {
+        console.error('exception is:::::::::', httpException)
+      })
     },
      changepassword() {
         this.$router.push('/changepassword')
