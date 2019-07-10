@@ -106,9 +106,7 @@ export default {
             window.localStorage.setItem('accesshubdata', hubEncrypt);
 
             if(window.localStorage.getItem('accesshubdata')){
-              setTimeout(function() {
-                location.reload();
-              }, 2000);
+              location.reload();
             }
           }else{
             this.$alertify.error(result.data.msg);
