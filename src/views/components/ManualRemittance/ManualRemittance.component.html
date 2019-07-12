@@ -1,86 +1,82 @@
 <section class="user">
   <div class="animated fadeIn">
-    <div class="row">
-      <b-modal ref="myModalRef" v-model="modalShow" id=#confirmationmodal title="Confirmation">
-        <div role="document">
-          <div class="modal-content">
-            <div class="modal-headerfrm">
-              <h5 class="modal-title">Remittance Alert</h5>
-              <button type="button" class="close" @click="closeModal" aria-label="Close">
-                <span aria-hidden="true">×</span>
-              </button>
-            </div>
-            <div class="modal-bodyfrm">
-              <h5 style="font-size:1rem; color:red; line-height: 1.5 !important;">{{ofd}}</h5>
-            </div>
-            <div class="modal-footerfrm">
-            <center><button type="button"  @click="modalShow = false" class="btn btn-success" style="background-color: #20a8d8;">OK</button></center>
-            </div>
+    <b-modal ref="myModalRef" v-model="modalShow" id=#confirmationmodal title="Confirmation">
+      <div role="document">
+        <div class="modal-content">
+          <div class="modal-headerfrm">
+            <h5 class="modal-title">Remittance Alert</h5>
+            <button type="button" class="close" @click="closeModal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-bodyfrm">
+            <h5 style="font-size:1rem; color:red; line-height: 1.5 !important;">{{ofd}}</h5>
+          </div>
+          <div class="modal-footerfrm">
+          <center><button type="button"  @click="modalShow = false" class="btn btn-success" style="background-color: #20a8d8;">OK</button></center>
           </div>
         </div>
-      </b-modal>
-    </div>
+      </div>
+    </b-modal>
 
-    <div class="row">
-      <div class="col-12">
-        <div class="card-headerfrm" style="margin-bottom: 15px;">
-          <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
-          <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
-          <table class="table-bordered table-hover tbl datatables scrolltb" style="width:100%;">
-            <thead>
-              <tr class="text-primary">
-                <th class="text-center tableheader"><b>#</b></th>
-                <th class="text-center tableheader"><b>From Date</b></th>
-                <th class="text-center tableheader"><b>To / Delivery Date</b></th>
-                <th class="text-center tableheader"><b>Client</b></th>
-                <th class="text-center tableheader"><b>Remittance Type</b></th>
-                <th class="text-center tableheader"><b>Shipment Count</b></th>
-                <th class="text-center tableheader"><b>COD Amount</b></th>
-                <th class="text-center tableheader"><b>Freight Amount</b></th>
-                <th class="text-center tableheader"><b>Exception Count</b></th>
-                <th class="text-center tableheader"><b>Exception Amount</b></th>
-                <th class="text-center tableheader"><b>Paid Amount</b></th>
-                <th class="text-center tableheader"><b>Balance Amount</b></th>
-                <th class="text-center tableheader"><b>Hold Amount</b></th>
-                <th class="text-center tableheader"><b>Action</b></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-if="resultCount==0">
-                <td colspan="14" align="center">No record found</td>
-              </tr>
-              <tr v-if="resultCount>0" v-for="(data,index) in listPendingRemittanceData">
-                <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
-                <td>
-                  <b-form-input type="hidden" v-model="form.oldFromDate[data.ClientId]" v-bind:name="setid('oldFromDate', data.ClientId)" v-bind:id="setid('oldFromDate', data.ClientId)"></b-form-input>
-                  <b-input-group left="<i class='fa fa-calendar'></i>" title="Change From Date">
-                    <b-form-input @change="onChangeDate(form.FromDate[data.ClientId], form.toDate[data.ClientId], data.ClientId)" type="date" v-model="form.FromDate[data.ClientId]" v-bind:name="setid('FromDate', data.ClientId)" v-bind:id="setid('FromDate', data.ClientId)" class="form-control"></b-form-input>
-                  </b-input-group>
-                  <span v-bind:id="setid('fdate', data.ClientId)" class="text-danger"></span>
-                </td>
-                <td>
-                  <b-input-group left="<i class='fa fa-calendar'></i>" title="Change To / Delivery Date">
-                    <b-form-input @change="onChangeDate(form.FromDate[data.ClientId], form.toDate[data.ClientId], data.ClientId)" type="date" v-model="form.toDate[data.ClientId]" v-bind:name="setid('toDate', data.ClientId)" v-bind:id="setid('toDate', data.ClientId)" class="form-control"></b-form-input>
-                  </b-input-group>
-                  <span v-bind:id="setid('tdate', data.ClientId)" class="text-danger"></span>
-                </td>
-                <td>{{data.CompanyName}}</td>
-                <td>{{data.RemittanceType}}</td>
-                <td>{{data.ShipmentCount}}</td>
-                <td>{{data.CODAmount}}</td>
-                <td>{{data.FreightAmount}}</td>
-                <td>{{data.ExceptionCount}}</td>
-                <td>{{data.ExceptionAmount}}</td>
-                <td>{{data.PaidAmount}}</td>
-                <td>{{data.BalanceAmount}}</td>
-                <td>{{data.HoldAmount}}</td>
-                <td><button class="btn btn-sm btn-primary" @click="onRemittance(data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button></td>
-              </tr>
-            </tbody>
-          </table><br>
-          <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
-          </paginate>
-        </div>
+    <div class="col-12">
+      <div class="card-headerfrm" style="margin-bottom: 15px;">
+        <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
+        <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+        <table class="table-bordered table-hover tbl datatables scrolltb" style="width:100%;">
+          <thead>
+            <tr class="text-primary">
+              <th class="text-center tableheader"><b>#</b></th>
+              <th class="text-center tableheader"><b>From Date</b></th>
+              <th class="text-center tableheader"><b>To / Delivery Date</b></th>
+              <th class="text-center tableheader"><b>Client</b></th>
+              <th class="text-center tableheader"><b>Remittance Type</b></th>
+              <th class="text-center tableheader"><b>Shipment Count</b></th>
+              <th class="text-center tableheader"><b>COD Amount</b></th>
+              <th class="text-center tableheader"><b>Freight Amount</b></th>
+              <th class="text-center tableheader"><b>Exception Count</b></th>
+              <th class="text-center tableheader"><b>Exception Amount</b></th>
+              <th class="text-center tableheader"><b>Paid Amount</b></th>
+              <th class="text-center tableheader"><b>Balance Amount</b></th>
+              <th class="text-center tableheader"><b>Hold Amount</b></th>
+              <th class="text-center tableheader"><b>Action</b></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="resultCount==0">
+              <td colspan="14" align="center">No record found</td>
+            </tr>
+            <tr v-if="resultCount>0" v-for="(data,index) in listPendingRemittanceData">
+              <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
+              <td>
+                <b-form-input type="hidden" v-model="form.oldFromDate[data.ClientId]" v-bind:name="setid('oldFromDate', data.ClientId)" v-bind:id="setid('oldFromDate', data.ClientId)"></b-form-input>
+                <b-input-group left="<i class='fa fa-calendar'></i>" title="Change From Date">
+                  <b-form-input @change="onChangeDate(form.FromDate[data.ClientId], form.toDate[data.ClientId], data.ClientId)" type="date" v-model="form.FromDate[data.ClientId]" v-bind:name="setid('FromDate', data.ClientId)" v-bind:id="setid('FromDate', data.ClientId)" class="form-control"></b-form-input>
+                </b-input-group>
+                <span v-bind:id="setid('fdate', data.ClientId)" class="text-danger"></span>
+              </td>
+              <td>
+                <b-input-group left="<i class='fa fa-calendar'></i>" title="Change To / Delivery Date">
+                  <b-form-input @change="onChangeDate(form.FromDate[data.ClientId], form.toDate[data.ClientId], data.ClientId)" type="date" v-model="form.toDate[data.ClientId]" v-bind:name="setid('toDate', data.ClientId)" v-bind:id="setid('toDate', data.ClientId)" class="form-control"></b-form-input>
+                </b-input-group>
+                <span v-bind:id="setid('tdate', data.ClientId)" class="text-danger"></span>
+              </td>
+              <td>{{data.CompanyName}}</td>
+              <td>{{data.RemittanceType}}</td>
+              <td>{{data.ShipmentCount}}</td>
+              <td>{{data.CODAmount}}</td>
+              <td>{{data.FreightAmount}}</td>
+              <td>{{data.ExceptionCount}}</td>
+              <td>{{data.ExceptionAmount}}</td>
+              <td>{{data.PaidAmount}}</td>
+              <td>{{data.BalanceAmount}}</td>
+              <td>{{data.HoldAmount}}</td>
+              <td><button class="btn btn-sm btn-primary" @click="onRemittance(data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button></td>
+            </tr>
+          </tbody>
+        </table><br>
+        <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+        </paginate>
       </div>
     </div>
   </div>

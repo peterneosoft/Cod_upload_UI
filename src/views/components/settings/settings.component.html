@@ -1,82 +1,78 @@
 <section class="user">
   <div class="animated fadeIn">
-    <div class="row">
-      <div class="col-md-12 mb-2">
-        <div class="card">
-          <div class="card-header filter_main">
-            <i class=" fa fa-filter filter"></i> Hub Settings
-          </div>
-          <div class="card-body">
-            <form v-on:submit.prevent="onSubmit" class="form-horizontal">
-              <div class="form-group row">
-                <div class="col-md-4">
-                  <label>Zone</label>
-                  <b-input-group left="<i class='fa fa-list'></i>">
-                    <select v-bind:disabled="disableButton" name="zone" id="zone" class="form-control" style="height: 46px;" v-model="zone" v-on:change="getHubData" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('zone') }">
-                      <option value="">--Select--</option>
-                      <option v-for="zone_obj in zoneList" v-bind:value="zone_obj.hubzoneid" >{{zone_obj.hubzonename}}</option>
-                    </select>
-                  </b-input-group>
-                  <span v-show="errors.has('zone')" class="text-danger">The Zone field is required.</span>
-                </div>
+    <div class="col-md-12 mb-2">
+      <div class="card">
+        <div class="card-header filter_main">
+          <i class=" fa fa-filter filter"></i> Hub Settings
+        </div>
+        <div class="card-body">
+          <form v-on:submit.prevent="onSubmit" class="form-horizontal">
+            <div class="form-group row">
+              <div class="col-md-4">
+                <label>Zone</label>
+                <b-input-group left="<i class='fa fa-list'></i>">
+                  <select v-bind:disabled="disableButton" name="zone" id="zone" class="form-control" style="height: 46px;" v-model="zone" v-on:change="getHubData" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('zone') }">
+                    <option value="">--Select--</option>
+                    <option v-for="zone_obj in zoneList" v-bind:value="zone_obj.hubzoneid" >{{zone_obj.hubzonename}}</option>
+                  </select>
+                </b-input-group>
+                <span v-show="errors.has('zone')" class="text-danger">The Zone field is required.</span>
+              </div>
 
-                <div class="col-md-4">
-                  <label>Hub</label>
-                  <b-input-group left="<i class='fa fa-list'></i>">
-                    <Multiselect v-bind:disabled="disableButton" :options="hubList" @select="handleSelect" @input="addHubData" name="HubId" id="HubId" v-model="HubId" v-validate="{required: true}" v-bind:class="{'error': errors.has('HubId') }" placeholder="Select Hub" label="HubName" track-by="HubID" :optionHeight="100" :preselect-first="false" v-bind:multiple="multiple()" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
-                       <template slot="noResult"><p>No Record Found.</p></template>
-                       <template slot="selection" slot-scope="{ HubId, search, isOpen }">
-                         <span class="multiselect__single" v-if="HubId.length">{{ HubId.length }} options selected</span>
-                       </template>
-                    </Multiselect>
-                  </b-input-group>
-                  <span v-show="errors.has('HubId')" class="text-danger">The Hub field is required.</span>
-                </div>
+              <div class="col-md-4">
+                <label>Hub</label>
+                <b-input-group left="<i class='fa fa-list'></i>">
+                  <Multiselect v-bind:disabled="disableButton" :options="hubList" @select="handleSelect" @input="addHubData" name="HubId" id="HubId" v-model="HubId" v-validate="{required: true}" v-bind:class="{'error': errors.has('HubId') }" placeholder="Select Hub" label="HubName" track-by="HubID" :optionHeight="100" :preselect-first="false" v-bind:multiple="multiple()" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                     <template slot="noResult"><p>No Record Found.</p></template>
+                     <template slot="selection" slot-scope="{ HubId, search, isOpen }">
+                       <span class="multiselect__single" v-if="HubId.length">{{ HubId.length }} options selected</span>
+                     </template>
+                  </Multiselect>
+                </b-input-group>
+                <span v-show="errors.has('HubId')" class="text-danger">The Hub field is required.</span>
               </div>
-              <div class="form-group row" v-show="editHubSetting" style="margin:10px 10px 10px 1px; max-height: 200px; overflow-y: scroll;">
-                <div v-for="(data, index) in hubnamearr" style="margin: 5px 5px 5px 1px;">
-                  <button class="btn btn-sm btn-primary" @click.prevent="removeHubData(data, index)">{{data.HubName}} <i class="fa fa-times"></i></button>
-                </div>
+            </div>
+            <div class="form-group row" v-show="editHubSetting" style="margin:10px 10px 10px 1px; max-height: 200px; overflow-y: scroll;">
+              <div v-for="(data, index) in hubnamearr" style="margin: 5px 5px 5px 1px;">
+                <button class="btn btn-sm btn-primary" @click.prevent="removeHubData(data, index)">{{data.HubName}} <i class="fa fa-times"></i></button>
               </div>
-              <div class="card-footer">
-                <button class="btn btn-sm btn-primary" v-bind:disabled="disableButton" type="submit"><i class="fa fa-dot-circle-o"></i> Submit</button>
-                <button class="btn btn-sm btn-danger" v-bind:disabled="disableButton" type="reset" @click="resetForm()"><i class="fa fa-ban"></i> Clear</button>
-              </div>
-            </form>
-          </div>
+            </div>
+            <div class="card-footer">
+              <button class="btn btn-sm btn-primary" v-bind:disabled="disableButton" type="submit"><i class="fa fa-dot-circle-o"></i> Submit</button>
+              <button class="btn btn-sm btn-danger" v-bind:disabled="disableButton" type="reset" @click="resetForm()"><i class="fa fa-ban"></i> Clear</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-12">
-        <div class="card-headerfrm" style="margin-bottom: 15px;">
-          <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
-          <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
-          <table class="table-bordered table-hover tbl datatables" style="width:100%;">
-            <thead>
-              <tr class="text-primary">
-                <th class="text-center tableheader"><b>#</b></th>
-                <th class="text-center tableheader"><b>Hub Name</b></th>
-                <th class="text-center tableheader"><b>Modified Date</b></th>
-                <th class="text-center tableheader"><b>Action</b></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-if="resultCount==0">
-                <td colspan="4" align="center">No record found</td>
-              </tr>
-              <tr v-for="(data,index) in listHubSettingsData">
-                <td scope="row" class="text-center"><strong>{{index+1}}</strong></td>
-                <td>{{hubName}}</td>
-                <td>{{data.lastmodifieddate}}</td>
-                <td class="text-center"><i @click.prevent="getHubSettingRowData(data, resultCount), editHubSetting = 'true'" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></td>
-              </tr>
-            </tbody>
-          </table><br>
-          <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
-          </paginate>
-        </div>
+    <div class="col-md-12 mb-2">
+      <div class="card-headerfrm" style="margin-bottom: 15px;">
+        <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
+        <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+        <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+          <thead>
+            <tr class="text-primary">
+              <th class="text-center tableheader"><b>#</b></th>
+              <th class="text-center tableheader"><b>Hub Name</b></th>
+              <th class="text-center tableheader"><b>Modified Date</b></th>
+              <th class="text-center tableheader"><b>Action</b></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="resultCount==0">
+              <td colspan="4" align="center">No record found</td>
+            </tr>
+            <tr v-for="(data,index) in listHubSettingsData">
+              <td scope="row" class="text-center"><strong>{{index+1}}</strong></td>
+              <td>{{hubName}}</td>
+              <td>{{data.lastmodifieddate}}</td>
+              <td class="text-center"><i @click.prevent="getHubSettingRowData(data, resultCount), editHubSetting = 'true'" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></td>
+            </tr>
+          </tbody>
+        </table><br>
+        <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+        </paginate>
       </div>
     </div>
   </div>

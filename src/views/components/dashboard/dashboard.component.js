@@ -198,7 +198,7 @@ export default {
     },
     //to get All Hub List
     getZoneData() {
-
+      this.zone = ""; this.stateList = [];
       this.input = {}
       axios({
           method: 'POST',
@@ -325,19 +325,16 @@ export default {
       let filter ="";
       let id = 0;
       if(this.city){
-        this.cityid = event.target[2].selectedOptions[0].attributes.label.nodeValue;
         filter = "city"
-        id = this.cityid
+        id = event.target[2].selectedOptions[0].attributes.isid.nodeValue;
         this.BarChart.title.text = this.city
       }else if(this.state){
-        this.stateid = event.target[1].selectedOptions[0].attributes.label.nodeValue;
         filter = "state"
-        id = this.stateid
+        id = event.target[1].selectedOptions[0].attributes.isid.nodeValue;
         this.BarChart.title.text = this.state
       }else {
-        this.zoneid = event.target[0].selectedOptions[0].attributes.label.nodeValue;
         filter = "zone"
-        id = this.zoneid
+        id = event.target[0].selectedOptions[0].attributes.isid.nodeValue;
         this.BarChart.title.text = this.zone
       }
       this.input = ({
@@ -377,8 +374,7 @@ export default {
     },
 
     getStateData() {
-      this.state = "";
-      this.city = "";
+      this.state = ""; this.cityList = [];
       if(this.zone=="" ){
         return false;
       }
