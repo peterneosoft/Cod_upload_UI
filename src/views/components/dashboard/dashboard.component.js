@@ -325,17 +325,17 @@ export default {
       let filter ="";
       let id = 0;
       if(this.city){
-        this.cityid = event.target[2].selectedOptions[0].attributes.title.nodeValue;
+        this.cityid = event.target[2].selectedOptions[0].attributes.label.nodeValue;
         filter = "city"
         id = this.cityid
         this.BarChart.title.text = this.city
       }else if(this.state){
-        this.stateid = event.target[1].selectedOptions[0].attributes.title.nodeValue;
+        this.stateid = event.target[1].selectedOptions[0].attributes.label.nodeValue;
         filter = "state"
         id = this.stateid
         this.BarChart.title.text = this.state
       }else {
-        this.zoneid = event.target[0].selectedOptions[0].attributes.title.nodeValue;
+        this.zoneid = event.target[0].selectedOptions[0].attributes.label.nodeValue;
         filter = "zone"
         id = this.zoneid
         this.BarChart.title.text = this.zone

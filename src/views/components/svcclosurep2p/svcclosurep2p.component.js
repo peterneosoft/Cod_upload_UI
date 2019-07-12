@@ -313,7 +313,6 @@ export default {
     },
 
     saveSvcClosure(event) {
-      console.log('tot_amt==', this.tot_amt);
       let d_amt = this.Deposit_Amount.split(".");
       let DepositAmount = parseInt(d_amt[0]);
 
@@ -321,7 +320,6 @@ export default {
       let p2pamt = parseInt(this.p2pAmount);
 
       if(DepositAmount !== parseInt(this.tot_amt)){
-        console.log('DepositAmount==', DepositAmount);
         this.$alertify.error("Denomination details & Deposit Amount is mismatch, Please Check.");
 
         let error = document.getElementById("d_a");
@@ -329,7 +327,6 @@ export default {
          error.style.display  = "block";
          return false;
       }else{
-        console.log('p2pamt==', p2pamt);
         if(p2pamt > 0){
           DepositAmount = DepositAmount - p2pamt;
         }
@@ -339,14 +336,11 @@ export default {
 
         this.unmatchedAmt = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositAmount))).toFixed(2);
 
-        if((DepositAmount < TolatCollection) && (this.unmatchedAmt!='0.00')){
-          console.log('unmatchedAmt==', this.unmatchedAmt, 'DepositAmount==', DepositAmount, 'TolatCollection==', TolatCollection);
+        if((DepositAmount < TolatCollection) && (this.unmatchedAmt!='0.00') && (this.unmatchedAmt!=0)){
           if(this.Reason==''){
-            console.log('Reason==', this.Reason);
             this.showModal(this.unmatchedAmt);
             return false;
           }else{
-            console.log('unmatchedAmt==', this.unmatchedAmt);
             this.hideModal();
           }
         }

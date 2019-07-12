@@ -16,7 +16,7 @@
                <b-input-group left="<i class='fa fa-list'></i>">
                  <select  name="zone" id="zone"  v-model="zone" v-on:change="getStateData" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('zone') }">
                    <option value="">--Select--</option>
-                   <option v-for="zone_obj in zoneList" v-bind:title="zone_obj.hubzonename" v-bind:value="zone_obj.hubzonename" >{{zone_obj.hubzonename}}</option>
+                   <option v-for="zone_obj in zoneList" v-bind:label="zone_obj.hubzoneid" v-bind:value="zone_obj.hubzonename" >{{zone_obj.hubzonename}}</option>
                  </select>
                </b-input-group>
                <span v-show="errors.has('zone')" class="text-danger">Please select zone. </span>
@@ -27,7 +27,7 @@
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <select name="state" id="state" class="form-control" v-model="state" v-on:change="getCityData">
                     <option value="">--Select--</option>
-                    <option v-for="state_obj in stateList" v-bind:title="state_obj.statename" v-bind:value="state_obj.statename" >{{state_obj.statename}}</option>
+                    <option v-for="state_obj in stateList" v-bind:label="state_obj.stateid" v-bind:value="state_obj.statename" >{{state_obj.statename}}</option>
                   </select>
                 </b-input-group>
               </div>
@@ -36,7 +36,7 @@
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <select name="city" id="city" class="form-control" v-model="city">
                     <option value="">--Select--</option>
-                    <option v-for="city_obj in cityList" v-bind:title="city_obj.cityname" v-bind:value="city_obj.cityname" >{{city_obj.cityname}}</option>
+                    <option v-for="city_obj in cityList" v-bind:label="city_obj.cityid" v-bind:value="city_obj.cityname" >{{city_obj.cityname}}</option>
                   </select>
                 </b-input-group>
               </div>
