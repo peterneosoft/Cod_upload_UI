@@ -252,7 +252,7 @@ export default {
         document.getElementById("finR"+ledgerid).innerHTML="";
         financeconfirmdate = document.getElementById('financeconfirmdate'+ledgerid).value;
 
-        if(finreasonid == 5){
+        if(finreasonid == 84){
 
           confirmamount = document.getElementById('confirmamount'+ledgerid).value;
 
