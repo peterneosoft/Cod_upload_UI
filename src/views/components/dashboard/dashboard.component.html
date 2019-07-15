@@ -1,14 +1,10 @@
 <section class="user">
-  <div class="animated fadeIn" v-show="searchComponent">
-    <!-- <div>
-      <b-link style="text-align: right" @click="POPUP"><h4>Change Hub</h4> </b-link>
-    </div> -->
-    <!--/.col-->
-      <div class="card-header filter_main">
-        <i class=" fa fa-filter filter"></i> <strong> Search </strong>
-      </div>
+  <div class="col-md-12 mb-2" v-show="searchComponent">
       <b-card>
-        <div class="card-body1">
+        <div slot="header">
+          <i class=" fa fa-filter filter"></i> <strong> Search </strong>
+        </div>
+        <div class="card-body">
           <form  v-on:submit.prevent="onSubmit">
             <div class="form-group row">
              <div class="col-md-4">
@@ -66,12 +62,11 @@
       </b-card>
     </div>
 
-    <div class="animated fadeIn">
-      <div class="card-header">
-        <i class=" fa fa-bars barcolor"></i> <strong>Graph&nbsp;&nbsp;({{resultdate}})</strong>
-      </div>
-      <div class="col-xs-12">
-        <div class="card">
+    <div class="col-md-12 mb-2">
+      <b-card>
+          <div slot="header">
+            <i class=" fa fa-bars barcolor"></i> <strong>Graph&nbsp;&nbsp;({{resultdate}})</strong>
+          </div>
           <div class="card-body">
             <div class="row">
               <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-show="barComponent">
@@ -100,7 +95,7 @@
 
         <div class="card-body">
           <div class ="row">
-            <div class="col-6" v-show="amountComponent">
+            <div class="col-7" v-show="amountComponent">
               <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="amountLoading" />
               <div class="card-headerfrm" style="margin-bottom: 15px;">
                 <table class="table-bordered table-hover tbl datatables tableBodyScroll">
@@ -153,7 +148,6 @@
              </div>
           </div>
         </div>
-      </div>
 
        <b-modal size="vlg" v-model="calcModal" @ok="calcModal = false">
          <b-card>
@@ -210,6 +204,6 @@
         </form>
        </b-card>
       </b-modal>
-    </div>
+    </b-card>
   </div>
 </section>

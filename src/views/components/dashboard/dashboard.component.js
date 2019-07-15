@@ -64,7 +64,7 @@ export default {
           type: 'pie'
         },
         title: {
-           text: 'Total Orders'
+           text: '<b>Total Orders</b>'
         },
         tooltip: {
           pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -159,7 +159,7 @@ export default {
     this.localhubid       = hubdetail[0].HubID;
     this.localhubname     = hubdetail[0].HubName;
 
-    this.BarChart.title.text =  hubdetail[0].HubName
+    this.BarChart.title.text =  '<b>'+hubdetail[0].HubName+'</b>';
 
     this.getZoneData();
     this.getHubWiseCollectionData();
@@ -327,15 +327,15 @@ export default {
       if(this.city){
         filter = "city"
         id = event.target[2].selectedOptions[0].attributes.isid.nodeValue;
-        this.BarChart.title.text = this.city
+        this.BarChart.title.text = '<b>'+this.city+'</b>'
       }else if(this.state){
         filter = "state"
         id = event.target[1].selectedOptions[0].attributes.isid.nodeValue;
-        this.BarChart.title.text = this.state
+        this.BarChart.title.text = '<b>'+this.state+'</b>'
       }else {
         filter = "zone"
         id = event.target[0].selectedOptions[0].attributes.isid.nodeValue;
-        this.BarChart.title.text = this.zone
+        this.BarChart.title.text = '<b>'+this.zone+'</b>'
       }
       this.input = ({
           filter: filter,
