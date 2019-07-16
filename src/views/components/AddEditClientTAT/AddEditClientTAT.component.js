@@ -198,6 +198,10 @@ export default {
       });
       this.submitLoading = true;
 
+      if(this.ContactEmailid==null){
+        this.ContactEmailid = "";
+      }
+
       this.input = ({
           ClientId: this.ClientId.ClientMasterID,
           RemittanceType: this.type,
@@ -244,6 +248,10 @@ export default {
         }
       });
       this.submitLoading = true;
+
+      if(this.ContactEmailid==null){
+        this.ContactEmailid = "";
+      }
 
       this.input = ({
           ClientCODRemmitanceId: this.ClientCODRemmitanceId,
@@ -385,6 +393,7 @@ export default {
       this.ClientId = this.Bussinesstype = this.AccountName = this.tat = this.type = this.Beneficiary = this.BankName = this.BankAccount = this.rtgs = '';
       this.$validator.reset();
       this.errors.clear();
+      this.ClientCODRemmitanceId="";
       this.searchClientCODRemittanceData(event);
     },
 
@@ -392,6 +401,7 @@ export default {
       this.Client = '';
       this.$validator.reset();
       this.errors.clear();
+      this.ClientCODRemmitanceId="";
       this.searchClientCODRemittanceData(event);
     },
 
