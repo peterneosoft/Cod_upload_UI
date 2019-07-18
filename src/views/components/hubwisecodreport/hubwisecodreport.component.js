@@ -95,7 +95,7 @@ export default {
       var yyyy    = today.getFullYear();
       var today   = dd + "" + mm + "" + yyyy;
       var data, filename, link;
-      filename = "CODRemitanceClosed_" + today + ".csv";
+      filename = "HubwiseCODreport_" + today + ".csv";
       var csv = this.convertArrayOfObjectsToCSV({
         data: csvData
       });

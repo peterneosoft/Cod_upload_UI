@@ -1,7 +1,7 @@
 <section class="user">
   <div class="animated fadeIn">
     <div class="row">
-      <div class="col-sm-3">
+      <div class="col-sm-4">
         <div class="card" style="height: 430px;">
           <div class="card-header"><i class="fa fa-filter filter"></i> Closure</div>
           <div class="card-body">
@@ -43,12 +43,13 @@
         </div>
       </div>
 
-      <div class="col-sm-9">
+      <div class="col-sm-8">
         <div class="card">
           <div class="card-header filter_main">
             <i class=" fa fa-align-justify"></i> Region&nbsp;&nbsp;<span style="font-size:13px;"><b>({{resultdate}})</b></span>
           </div>
           <div class="card-body" style="height: 388px;">
+            <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="zoneLoading" />
             <form action="" method="post" class="form-horizontal">
               <div class="form-group row">
                 <div class="col-md-4" v-for="zone_obj in zoneAmtList">
@@ -79,7 +80,6 @@
                 <th class="text-center tableheader"><b>COD Receivable</b></th>
                 <th class="text-center tableheader"><b>Bank Deposited Amount</b></th>
                 <th class="text-center tableheader"><b>Actual Received Amount</b></th>
-                <th class="text-center tableheader"><b>Discrepancy Amount</b></th>
                 <th class="text-center tableheader"><b>Balance Outstanding</b></th>
                 <th class="text-center tableheader"><b>Status</b></th>
                 <th class="text-center tableheader"><b>Finance Reason</b></th>
@@ -91,7 +91,7 @@
             </thead>
             <tbody>
               <tr v-if="resultCount==0">
-                <td colspan="15" align="center">No record found</td>
+                <td colspan="14" align="center">No record found</td>
               </tr>
               <tr v-for="(data,index) in listFinanceledgerData">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
@@ -101,7 +101,6 @@
                 <td>{{data.codamount}}</td>
                 <td>{{data.bankdeposit}}</td>
                 <td>{{data.actualrecamt}}</td>
-                <td>{{data.discrepancyamt}}</td>
                 <td>{{data.balanceoutstanding}}</td>
                 <td>{{StatusVal}}</td>
                 <td>

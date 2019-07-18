@@ -88,7 +88,7 @@ const router = new Router({
                 link: '/dashboard'
               },
               {
-                name: 'COD day Closure'
+                name: 'SVC Closure'
               }
             ]
           },
@@ -224,7 +224,7 @@ const router = new Router({
                 link: '/dashboard'
               },
               {
-                name: 'SVC Search'
+                name: 'SVC Closure Search'
               }
             ]
           },

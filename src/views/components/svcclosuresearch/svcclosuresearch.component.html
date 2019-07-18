@@ -1,99 +1,93 @@
 <section class="user">
   <div class="animated fadeIn">
-    <div class="row">
-      <div class="col-md-12 mb-2">
-        <div class="card">
-          <div class="card-header filter_main">
-            <i class=" fa fa-filter filter"></i>  SVC Search
-          </div>
-          <div class="card-body">
-            <form v-on:submit.prevent="onSubmit" class="form-horizontal">
-              <div class="form-group row">
-                <div class="col-md-4">
-                  <label>From Date</label>
-                  <b-input-group left="<i class='fa fa-calendar'></i>">
-                    <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}"
-                    v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
-                  </b-input-group>
-                  <span v-show="errors.has('fromDate')" class="text-danger">Please select from date. </span>
-                  <span id="fdate" class="text-danger"></span>
-                </div>
+    <div class="col-md-12 mb-2">
+      <div class="card">
+        <div class="card-header filter_main">
+          <i class=" fa fa-filter filter"></i> COD SVC Day Closure Search
+        </div>
+        <div class="card-body">
+          <form v-on:submit.prevent="onSubmit" class="form-horizontal">
+            <div class="form-group row">
+              <div class="col-md-4">
+                <label>From Date</label>
+                <b-input-group left="<i class='fa fa-calendar'></i>">
+                  <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}"
+                  v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
+                </b-input-group>
+                <span v-show="errors.has('fromDate')" class="text-danger">Please select from date. </span>
+                <span id="fdate" class="text-danger"></span>
+              </div>
 
-                <div class="col-md-4">
-                  <label>To Date</label>
-                  <b-input-group left="<i class='fa fa-calendar'></i>">
-                    <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}"
-                      v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
-                  </b-input-group>
-                  <span v-show="errors.has('toDate')" class="text-danger">Please select to date. </span>
-                </div>
+              <div class="col-md-4">
+                <label>To Date</label>
+                <b-input-group left="<i class='fa fa-calendar'></i>">
+                  <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}"
+                    v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
+                </b-input-group>
+                <span v-show="errors.has('toDate')" class="text-danger">Please select to date. </span>
               </div>
-              <div class="card-footer">
-                <button class="btn btn-sm btn-primary"><i class="fa fa-search"></i> Search</button>
-                <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
-              </div>
-            </form>
-          </div>
+            </div>
+            <div class="card-footer">
+              <button class="btn btn-sm btn-primary"><i class="fa fa-search"></i> Search</button>
+              <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-12">
-        <div class="card-headerfrm" style="margin-bottom: 15px;">
-          <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
-          <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
-          <table class="table-bordered table-hover tbl datatables" style="width:100%;">
-            <thead>
-              <tr class="text-primary">
-                <th class="text-center tableheader"><b>#</b></th>
-                <th class="text-center tableheader"><b>Hub</b></th>
-                <th class="text-center tableheader"><b>Deposit Date</b></th>
-                <th class="text-center tableheader"><b>Opening Amount</b></th>
-                <th class="text-center tableheader"><b>COD Receivable</b></th>
-                <th class="text-center tableheader"><b>Bank Deposited Amount</b></th>
-                <th class="text-center tableheader"><b>Actual Received Amount</b></th>
-                <th class="text-center tableheader"><b>Discrepancy Amount</b></th>
-                <th class="text-center tableheader"><b>Balance Outstanding</b></th>
-                <th class="text-center tableheader"><b>Status</b></th>
-                <th class="text-center tableheader"><b>Finance Reason</b></th>
-                <th class="text-center tableheader"><b>Deposit Type</b></th>
-                <th class="text-center tableheader"><b>Bank Name</b></th>
-                <th class="text-center tableheader"><b>Reason</b></th>
-                <th class="text-center tableheader"><b>Receipt</b></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-if="resultCount==0">
-                <td colspan="15" align="center">No record found</td>
-              </tr>
-              <tr v-for="(data,index) in listSearchSVCledgerData">
-                <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
-                <td>{{localhubname}}</td>
-                <td>{{data.depositdate}}</td>
-                <td>{{data.openingbalance}}</td>
-                <td>{{data.codamount}}</td>
-                <td>{{data.bankdeposit}}</td>
-                <td>{{data.actualrecamt}}</td>
-                <td>{{data.discrepancyamt}}</td>
-                <td>{{data.closingbalance}}</td>
-                <td>{{data.status}}</td>
-                <td>{{data.finreason}}</td>
-                <td>{{data.deposittype}}</td>
-                <td>{{data.bank}}</td>
-                <td>{{data.reason}}</td>
-                <td>
-                  <span v-bind:id='`${"vrl"+data.svcledgerid}`' @click="showHideImages(data.svcledgerid)" style="color: blue; cursor: pointer;">View Receipts</span>
-                  <span v-bind:id='`${"vri"+data.svcledgerid}`' style="display: none;">
-                    <a v-bind:title='`${file.name}`' v-for="file in data.files" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
-                  </span>
-                </td>
-              </tr>
-            </tbody>
-          </table><br>
-          <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
-          </paginate>
-        </div>
+    <div class="col-12">
+      <div class="card-headerfrm" style="margin-bottom: 15px;">
+        <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
+        <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+        <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+          <thead>
+            <tr class="text-primary">
+              <th class="text-center tableheader"><b>#</b></th>
+              <th class="text-center tableheader"><b>Hub</b></th>
+              <th class="text-center tableheader"><b>Deposit Date</b></th>
+              <th class="text-center tableheader"><b>Opening Amount</b></th>
+              <th class="text-center tableheader"><b>COD Receivable</b></th>
+              <th class="text-center tableheader"><b>Bank Deposited Amount</b></th>
+              <th class="text-center tableheader"><b>Actual Received Amount</b></th>
+              <th class="text-center tableheader"><b>Balance Outstanding</b></th>
+              <th class="text-center tableheader"><b>Status</b></th>
+              <th class="text-center tableheader"><b>Finance Reason</b></th>
+              <th class="text-center tableheader"><b>Deposit Type</b></th>
+              <th class="text-center tableheader"><b>Bank Name</b></th>
+              <th class="text-center tableheader"><b>Reason</b></th>
+              <th class="text-center tableheader"><b>Receipt</b></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="resultCount==0">
+              <td colspan="14" align="center">No record found</td>
+            </tr>
+            <tr v-for="(data,index) in listSearchSVCledgerData">
+              <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
+              <td>{{localhubname}}</td>
+              <td>{{data.depositdate}}</td>
+              <td>{{data.openingbalance}}</td>
+              <td>{{data.codamount}}</td>
+              <td>{{data.bankdeposit}}</td>
+              <td>{{data.actualrecamt}}</td>
+              <td>{{data.closingbalance}}</td>
+              <td>{{data.status}}</td>
+              <td>{{data.finreason}}</td>
+              <td>{{data.deposittype}}</td>
+              <td>{{data.bank}}</td>
+              <td>{{data.reason}}</td>
+              <td>
+                <span v-bind:id='`${"vrl"+data.svcledgerid}`' @click="showHideImages(data.svcledgerid)" style="color: blue; cursor: pointer;">View Receipts</span>
+                <span v-bind:id='`${"vri"+data.svcledgerid}`' style="display: none;">
+                  <a v-bind:title='`${file.name}`' v-for="file in data.files" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table><br>
+        <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+        </paginate>
       </div>
     </div>
   </div>

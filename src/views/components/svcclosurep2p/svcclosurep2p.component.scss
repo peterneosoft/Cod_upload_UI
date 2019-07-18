@@ -137,3 +137,9 @@ td{
 .scheduler {
 	background-color: #FFFF66;
 }
+
+.scrolltb {
+  display: block;
+  overflow-x: auto;
+	//white-space: nowrap;
+}

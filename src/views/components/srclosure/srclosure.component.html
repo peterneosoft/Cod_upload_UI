@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-sm-4">
         <div class="card">
-          <div class="card-header"> COD SR Day Closure</div>
+          <div class="card-header"><i class="fa fa-align-justify"></i> COD SR Day Closure</div>
           <div class="card-body">
 
             <form  v-on:submit.prevent="onSubmit">
@@ -67,7 +67,7 @@
 
       <div class="col-lg-4">
         <div class="card">
-          <div class="card-header"> Currency</div>
+          <div class="card-header"><i class="fa fa-align-justify"></i> Denomination</div>
           <div class="card-body" style="height: 500px;">
             <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="denomLoading" />
             <table class="table table-responsive-sm" height="10">
@@ -95,60 +95,60 @@
         </div>
       </div>
 
-        <div class="col-sm-4" v-show="RightSRLedger">
-          <b-card >
-            <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="Loading" />
-            <table class="table table-bordered table-striped table-sm">
-              <thead>
-                <tr>
-                  <th>Assign</th>
-                  <th>Prepaid</th>
-                  <th>Cash</th>
-                  <th>Card</th>
-                  <th>Wallet</th>
-                  <th>NDR</th>
-                </tr>
-              </thead>
+      <div class="col-sm-4" v-show="RightSRLedger">
+        <b-card >
+          <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="Loading" />
+          <table class="table table-bordered table-striped table-sm">
+            <thead>
+              <tr>
+                <th>Assign</th>
+                <th>Prepaid</th>
+                <th>Cash</th>
+                <th>Card</th>
+                <th>Wallet</th>
+                <th>NDR</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{assign}}</td>
+
+                <td>{{prepaid}}</td>
+
+                <td>{{cash}}</td>
+
+                <td>{{card}}</td>
+
+                <td>{{wallet}}</td>
+
+                <td>{{ndr}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </b-card>
+        <div class="card">
+          <div class="card-header"><i class="fa fa-align-justify"></i> Amount</div>
+          <div class="card-body">
+           <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
+            <table class="table table-responsive-sm">
               <tbody>
                 <tr>
-                  <td>{{assign}}</td>
-
-                  <td>{{prepaid}}</td>
-
-                  <td>{{cash}}</td>
-
-                  <td>{{card}}</td>
-
-                  <td>{{wallet}}</td>
-
-                  <td>{{ndr}}</td>
+                  <td>Today's COD Amount</td>
+                  <td>{{TodaysCOD}}</td>
+                </tr>
+                <tr>
+                  <td>Pending COD Amount</td>
+                  <td>{{PendingCOD}}</td>
+                </tr>
+                <tr>
+                  <td>Total Amount</td>
+                  <td id="Tot_Amt">{{TotalAmount}}</td>
                 </tr>
               </tbody>
             </table>
-          </b-card>
-          <div class="card">
-            <div class="card-header"> Amount</div>
-            <div class="card-body">
-             <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
-              <table class="table table-responsive-sm">
-                <tbody>
-                  <tr>
-                    <td>Today's COD Amount</td>
-                    <td>{{TodaysCOD}}</td>
-                  </tr>
-                  <tr>
-                    <td>Pending COD Amount</td>
-                    <td>{{PendingCOD}}</td>
-                  </tr>
-                  <tr>
-                    <td>Total Amount</td>
-                    <td id="Tot_Amt">{{TotalAmount}}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
           </div>
         </div>
+      </div>
 
       <b-modal ref="myModalRef" v-model="modalShow"  id=#confirmationmodal title="Confirmation">
         <div role="document">
@@ -168,44 +168,41 @@
           </div>
         </div>
       </b-modal>
+
+      <div class="col-12" v-show="SRLedgerDetails">
+        <div class="card-headerfrm" style="margin-bottom: 15px;">
+          <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
+
+          <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+            <thead>
+              <tr class="text-primary">
+                <th class="text-center tableheader"><b>Paid Amount</b></th>
+                <th class="text-center tableheader"><b>Pending Amount</b></th>
+                <th class="text-center tableheader"><b>Created Date</b></th>
+                <th class="text-center tableheader"><b>Delivery Date</b></th>
+                <th class="text-center tableheader"><b>Reason</b></th>
+                <th class="text-center tableheader"><b>Created By</b></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="resultCount==0">
+                <td colspan="6" align="center">No record found</td>
+              </tr>
+              <tr v-for="SL_List in SRLedgerList ">
+                <td>{{SL_List.creditamount}}</td>
+                <td>{{SL_List.debitamount}}</td>
+                <td>{{SL_List.createddate}}</td>
+                <td>{{SL_List.deliverydate}}</td>
+                <td>{{SL_List.Reason}}</td>
+                <td>{{SL_List.createdby}}</td>
+              </tr>
+            </tbody>
+
+          </table><br>
+          <!-- <paginate :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+          </paginate> -->
+        </div>
+       </div>
     </div>
-
-    <div class="col-12" v-show="SRLedgerDetails">
-      <div class="card-headerfrm" style="margin-bottom: 15px;">
-        <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
-
-        <table class="table-bordered table-hover tbl datatables" style="width:100%;">
-          <thead>
-            <tr class="text-primary">
-              <th class="text-center tableheader"><b>Paid Amount</b></th>
-              <th class="text-center tableheader"><b>Pending Amount</b></th>
-              <th class="text-center tableheader"><b>Created Date</b></th>
-              <th class="text-center tableheader"><b>Delivery Date</b></th>
-              <th class="text-center tableheader"><b>Reason</b></th>
-              <th class="text-center tableheader"><b>Created By</b></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="resultCount==0">
-              <td colspan="6" align="center">No record found</td>
-            </tr>
-            <tr v-for="SL_List in SRLedgerList ">
-              <td>{{SL_List.creditamount}}</td>
-              <td>{{SL_List.debitamount}}</td>
-              <td>{{SL_List.createddate}}</td>
-              <td>{{SL_List.deliverydate}}</td>
-              <td>{{SL_List.Reason}}</td>
-              <td>{{SL_List.createdby}}</td>
-            </tr>
-          </tbody>
-
-        </table><br>
-        <!-- <paginate :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
-        </paginate> -->
-      </div>
-     </div>
-    </div>
-   </div>
   </div>
- </div>
 </section>

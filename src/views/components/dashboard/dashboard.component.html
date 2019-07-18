@@ -98,13 +98,11 @@
             <div class="col-7" v-show="amountComponent">
               <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="amountLoading" />
               <div class="card-headerfrm" style="margin-bottom: 15px;">
-                <table class="table-bordered table-hover tbl datatables tableBodyScroll">
+                <table class="table-bordered table-hover tbl datatables tableBodyScroll" style="margin-left: 95px;">
                   <thead>
                     <tr class="text-primary">
                       <th class="text-center tableheader"><b>Hub Name</b></th>
-                      <th class="text-center tableheader"><b>Receivable</b></th>
-                      <th class="text-center tableheader"><b>Pending</b></th>
-                      <th class="text-center tableheader"><b>Total Amount</b></th>
+                      <th class="text-center tableheader"><b>Total COD Amount</b></th>
                       <th class="text-center tableheader"><b>Received </b></th>
                       <th class="text-center tableheader"><b>Outstanding</b></th>
                     </tr>
@@ -115,8 +113,6 @@
                     </tr>
                     <tr v-for="(data,index) in hubCollectionList">
                       <td>{{data.hubname}}</td>
-                      <td><i class="fa fa-rupee"></i> {{data.receivable}}</td>
-                      <td><i class="fa fa-rupee"></i> {{data.pending}}</td>
                       <td><i class="fa fa-rupee"></i> {{data.total}}</td>
                       <td><i class="fa fa-rupee"></i> {{data.received}}</td>
                       <td><i class="fa fa-rupee"></i> {{data.outstanding}}</td>

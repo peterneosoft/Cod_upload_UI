@@ -44,7 +44,8 @@ export default {
       zoneAmtList: [],
       totalzoneamt: '0.00',
       resultdate: '',
-      resultfdate: ''
+      resultfdate: '',
+      zoneLoading: false,
     }
   },
 
@@ -98,7 +99,7 @@ export default {
     //to get Hub List According to Zone
     GetSumOfZoneHubAmtData() {
       this.input = {}
-
+      this.zoneLoading = true;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'getsumofzonehubamt',
@@ -108,9 +109,11 @@ export default {
           }
         })
         .then(result => {
+          this.zoneLoading = false;
           this.zoneAmtList = result.data.data;
           this.resultdate  = result.data.date;
         }, error => {
+          this.zoneLoading = false;
           console.error(error)
         })
     },

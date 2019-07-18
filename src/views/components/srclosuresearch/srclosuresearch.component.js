@@ -5,13 +5,14 @@ import CryptoJS from 'crypto-js'
 import Paginate from 'vuejs-paginate';
 import Multiselect from 'vue-multiselect'
 import 'vue-multiselect/dist/vue-multiselect.min.css';
+import VueElementLoading from 'vue-element-loading';
 
 export default {
   name: 'srclosuresearch',
   components: {
     Paginate,
-    Multiselect
-
+    Multiselect,
+    VueElementLoading
   },
   props: [],
 
@@ -25,7 +26,7 @@ export default {
       SRList:[],
       SRLedgerList:[],
       localhubid:0,
-      SRLedgerDetails:false,
+      isLoading:false,
       pageno: 0,
       pagecount: 0
     }
@@ -86,7 +87,7 @@ export default {
     },
     getMonthlySRLedgerDetails(){
       this.SRLedgerList = [];
-      this.SRLedgerDetails = true
+      this.isLoading = true;
       this.input = ({
         srid: this.SR_Name.srid,
         hubid:this.localhubid,
@@ -105,6 +106,7 @@ export default {
         })
         .then(result => {
           if(result.data.code == 200){
+            this.isLoading = false;
             this.SRLedgerList = result.data.data.rows;
             let totalRows     = result.data.data.count
             this.resultCount  = result.data.data.count
@@ -116,9 +118,11 @@ export default {
             }
           }
           if(result.data.code == 204){
+            this.isLoading = false;
             this.resultCount  = 0
           }
         }, error => {
+          this.isLoading = false;
           console.error(error)
         })
     },

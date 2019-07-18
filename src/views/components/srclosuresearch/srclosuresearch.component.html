@@ -1,57 +1,58 @@
-<div class="row">
-  <div class="col-lg-12">
-    <b-card>
-      <div slot="header">
-        COD SR Day Closure Search
-      </div>
-      <div class="card-body1">
-        <form  v-on:submit.prevent="onSubmit">
-          <div class="form-group row">
-            <div class="col-md-5">
-              <label>SR Name</label>
-                <b-input-group left="<i class='fa fa-list'></i>">
-                    <Multiselect  :options="SRList" placeholder="Select SR Name" name="SR_Name" id="SR_Name" v-model="SR_Name" label="srname" track-by="srid"  v-validate="{required: true}" v-bind:class="{'error': errors.has('SR_Name') }" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6; z-index:999">
-                      <template slot="noResult"><p>No Record Found.</p></template>
-                    </Multiselect>
+<section class="user">
+  <div class="animated fadeIn">
+    <div class="col-md-12 mb-2">
+      <div class="card">
+        <div class="card-header filter_main">
+          <i class=" fa fa-filter filter"></i>  COD SR Day Closure Search
+        </div>
+        <div class="card-body">
+          <form  v-on:submit.prevent="onSubmit">
+            <div class="form-group row">
+              <div class="col-md-4">
+                <label>SR Name</label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                      <Multiselect  :options="SRList" placeholder="Select SR Name" name="SR_Name" id="SR_Name" v-model="SR_Name" label="srname" track-by="srid"  v-validate="{required: true}" v-bind:class="{'error': errors.has('SR_Name') }" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6; z-index:999">
+                        <template slot="noResult"><p>No Record Found.</p></template>
+                      </Multiselect>
+                  </b-input-group>
+                  <span v-show="errors.has('SR_Name')" class="text-danger">Please select SR name.</span>
+              </div>
+
+              <div class="col-md-4">
+                <label>From Date</label>
+                <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
+                  <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}"
+                  v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
                 </b-input-group>
-                <span v-show="errors.has('SR_Name')" class="text-danger">Please select SR name.</span>
-                </div>
-           </div>
+                <span v-show="errors.has('fromDate')" class="text-danger">Please select from date. </span>
+              </div>
 
-          <div class="form-group row">
-            <div class="col-md-4">
-              <label>From Date</label>
-              <b-input-group left="<i class='fa fa-calendar'></i>">
-                <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}"
-                v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
-              </b-input-group>
-              <span v-show="errors.has('fromDate')" class="text-danger">Please select from date. </span>
+              <div class="col-md-4">
+                <label>To Date</label>
+                <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
+                  <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}"
+                  v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
+                </b-input-group>
+                <span v-show="errors.has('toDate')" class="text-danger">Please select to date. </span>
+              </div>
             </div>
 
-            <div class="col-md-4">
-              <label>To Date</label>
-              <b-input-group left="<i class='fa fa-calendar'></i>">
-                <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}"
-                v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
-              </b-input-group>
-              <span v-show="errors.has('toDate')" class="text-danger">Please select to date. </span>
+            <div class="card-footer">
+              <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
             </div>
-          </div>
-
-          <div >
-            <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
+    </div>
 
-    </b-card>
-    <div class="col-12" v-show="SRLedgerDetails">
+    <div class="col-12">
       <div class="card-headerfrm" style="margin-bottom: 15px;">
-        <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Mapping Result</h4>
-
+        <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result</h4>
+        <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
         <table class="table-bordered table-hover tbl datatables" style="width:100%;">
           <thead>
             <tr class="text-primary">
+              <th class="text-center tableheader"><b>#</b></th>
               <th class="text-center tableheader"><b>Paid Amount</b></th>
               <th class="text-center tableheader"><b>Pending Amount</b></th>
               <th class="text-center tableheader"><b>Created Date</b></th>
@@ -64,7 +65,8 @@
             <tr v-if="resultCount==0">
               <td colspan="7" align="center">No record found</td>
             </tr>
-            <tr v-for="SL_List in SRLedgerList ">
+            <tr v-for="(SL_List,index) in SRLedgerList ">
+              <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
               <td>{{SL_List.creditamount}}</td>
               <td>{{SL_List.debitamount}}</td>
               <td>{{SL_List.createddate}}</td>
@@ -79,5 +81,5 @@
         </paginate>
       </div>
      </div>
-  </div><!--/.col-->
-</div><!--/.row-->
+  </div>
+</section>
