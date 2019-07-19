@@ -456,6 +456,7 @@ export default {
           }
         })
         .then(result => {
+          this.resultdate = result.data.fdate+" to "+result.data.tdate
           if(result.data.code == 200){
             this.hubCollectionList = result.data.data;
             this.pendPerc = result.data.pendPerc;
@@ -526,6 +527,7 @@ export default {
           }
         })
         .then(result => {
+          this.resultdate = result.data.fdate+" to "+result.data.tdate
           if(result.data.code == 200){
             this.hubCollectionList = result.data.data;
             this.pendPerc = result.data.pendPerc;
@@ -586,7 +588,7 @@ export default {
           }
         })
         .then(result => {
-
+          this.resultdate = result.data.fdate+" to "+result.data.tdate
           if(result.data.code == 200){
             this.maxCOD = result.data.MaxCOD;
             this.minCOD = result.data.MinCOD;
@@ -631,7 +633,7 @@ export default {
           }
         })
         .then(result => {
-
+          this.resultdate = result.data.fdate+" to "+result.data.tdate
           if(result.data.code == 200){
             this.maxCOD = result.data.MaxCOD;
             this.minCOD = result.data.MinCOD;

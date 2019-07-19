@@ -74,7 +74,7 @@
                 <span v-show="exportf" style="margin-left: 85%; cursor: pointer;" @click="exportHubWiswData()"><button class="btn btn-sm btn-success" type="button"><i class="fa fa-download"></i> Export</button></span>
               </h4>
               <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
-              <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+              <table class="table-bordered table-hover tbl datatables scrolltb" style="width:100%;">
                 <thead>
                   <tr class="text-primary">
                     <th class="text-center tableheader"><b>#</b></th>
@@ -94,7 +94,7 @@
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td colspan="12" align="center">No record found</td>
+                    <td colspan="13" align="center">No record found</td>
                   </tr>
                   <tr v-for="(CODLedger_List,index) in CODLedgerReports ">
                     <td>{{pageno+index+1}}</td>

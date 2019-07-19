@@ -53,7 +53,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">Deposit Type</span>
                   </div>
-                  <select class="form-control" id="DepositType" name="DepositType" v-validate="{required: true}"
+                  <select class="form-control" id="DepositType" name="DepositType" v-on:change="GetBankData" v-validate="{required: true}"
                   v-model="DepositType" v-bind:class="{'form-control': true, 'error': errors.has('DepositType') }">
                     <option value="">--Select--</option>
                     <option value="1">Bank (Self) Deposit</option>

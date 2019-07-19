@@ -138,16 +138,16 @@ code {
 	transition: all 0.3s ease-in-out
 }
 
-.card .card-footer {
-	border-top: none;
-	padding: 15px 20px;
-	border-radius: 0 0 10px 10px
-}
+// .card .card-footer {
+// 	border-top: none;
+// 	padding: 15px 20px;
+// 	border-radius: 0 0 10px 10px
+// }
 
 .card .card-header {
 	background-color: transparent;
 	border-bottom: none;
-	padding: 20px;
+	//padding: 20px;
 	position: relative
 }
 
@@ -327,9 +327,9 @@ code {
 	padding: 0.9375rem
 }
 
-.card-footer {
-	background: transparent
-}
+// .card-footer {
+// 	background: transparent
+// }
 
 .pcoded .card.full-card {
 	position: fixed;
@@ -9335,7 +9335,7 @@ body.horizontal-icon-fixed .pcoded[pcoded-device-type="desktop"] .pcoded-navbar 
 }
 
 .form-group {
-	margin-bottom: 1.25em
+	margin-bottom: 0rem !important;
 }
 
 .form-group .form-control-lg {

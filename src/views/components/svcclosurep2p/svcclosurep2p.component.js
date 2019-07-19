@@ -88,7 +88,7 @@ export default {
 
     await this.GetDenominationData();
     await this.GetShipmentUpdate();
-    await this.GetBankData();
+    //await this.GetBankData();
     await this.GetReasonList();
     await this.GetSVCledgerData();
   },
@@ -188,17 +188,37 @@ export default {
     },
 
     GetBankData() {
-      this.input = {}
+      this.BankList = []; this.BankMasterId = '';
+      if(this.DepositType=='' || this.DepositType==null){
+        return false;
+      }
+
+      let DepositType = '';
+      if(this.DepositType==1){
+        DepositType = 'SelfDeposit';
+      }else if(this.DepositType==2){
+        DepositType = 'CashPickup';
+      }else{
+        DepositType = 'NEFT';
+      }
+
+      this.input = ({
+        DepositType: DepositType
+      })
 
       axios({
         method: 'POST',
-        url: apiUrl.api_url + 'external/getBankList',
+        url: apiUrl.api_url + 'getdeposittypebank',
         data: this.input,
         headers: {
           'Authorization': 'Bearer '+this.myStr
         }
       }).then(result => {
-        this.BankList = result.data.result.data;
+        if(result.data.result.code==200){
+          this.BankList = result.data.result.data;
+        }else {
+          this.BankList=[];
+        }
       }, error => {
         console.error(error)
       })
@@ -487,7 +507,7 @@ export default {
       this.Loading = false;
       this.BatchID = Math.floor(Math.random() * (Math.pow(10,5)));
       this.pageno = this.tot_amt = this.unmatchedAmt = 0;
-      this.uploadFileList=[];
+      this.uploadFileList=[]; this.BankList = [];
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.Reason = '';
       $('#denomlist input[type="text"]').val(0);
       $('#denomlist input[type="number"]').val('');
