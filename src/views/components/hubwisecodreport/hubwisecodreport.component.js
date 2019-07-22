@@ -21,19 +21,21 @@ export default {
       zoneList:[],
       hubList:[],
       CODLedgerReports:[],
-      zone:"",
+      zone:[],
+      zoneIdArr:[],
       HubId:"",
       resultCount:'',
       toDate:"",
       fromDate:"",
       status:"",
-      zonename:"",
       hubname:"",
       pageno:0,
       pagecount:0,
       HubWiseCODLedge:false,
       isLoading:false,
-      exportf:false
+      excelLoading: false,
+      exportf:false,
+      disableHub:false
     }
   },
 
@@ -52,16 +54,39 @@ export default {
   },
 
   methods: {
+    multiple(){
+      return true;
+    },
+
+    addHubData(event) {
+      let zData = []; this.zoneIdArr = [];
+      this.zone.forEach(function (val) {
+        if (val.hubzoneid != '0'){
+          zData.push({'hubzoneid':val.hubzoneid, 'hubzonename':val.hubzonename});
+        }
+      });
+
+      if(zData.length===1){
+        this.disableHub = false;
+        this.zoneIdArr = zData;
+        this.getHubData(zData[0].hubzoneid);
+      }else{
+        this.hubList = []; this.HubId = "";
+        this.disableHub = true;
+        this.zoneIdArr = zData;
+      }
+    },
+
     getPaginationData(pageNum) {
         this.pageno = (pageNum - 1) * 10
         this.getHubWiseCODLedgerReports()
     },
 
     exportHubWiswData(){
+      this.excelLoading = true;
       this.input = ({
           hubid: this.HubId.HubID,
-          hubname: this.hubname,
-          zonename: this.zonename,
+          zoneid: this.zoneIdArr,
           status: this.status,
           fromdate: this.fromDate,
           todate: this.toDate
@@ -75,16 +100,15 @@ export default {
           }
       })
       .then(result => {
-        console.log('result==', result);
         if(result.data.code == 200){
           this.getDownloadCsvObject(result.data.data);
-          this.isLoading = false;
+          this.excelLoading = false;
         }else{
-          this.isLoading = false;
+          this.excelLoading = false;
         }
       }, error => {
-          this.isLoading = false;
-          console.error(error)
+        this.excelLoading = false;
+        console.error(error)
       })
     },
 
@@ -137,6 +161,7 @@ export default {
         });
         result += lineDelimiter;
       });
+      this.excelLoading = false;
       return result;
     },
 
@@ -152,6 +177,7 @@ export default {
 
       this.input = ({
           hubid: this.HubId.HubID,
+          zoneid: this.zoneIdArr,
           fromdate: this.fromDate,
           todate: this.toDate,
           status: this.status,
@@ -169,12 +195,10 @@ export default {
         })
         .then(result => {
           if(result.data.code == 200){
-            this.CODLedgerReports = result.data.data.rows;
-            this.isLoading = false;
-            this.exportf = true;
-            let totalRows     = result.data.data.count
-
-            this.resultCount  = result.data.data.count
+            this.CODLedgerReports = result.data.data;
+            this.isLoading = false; this.exportf = true;
+            let totalRows = result.data.count
+            this.resultCount = result.data.count
             if (totalRows < 10) {
                  this.pagecount = 1
              } else {
@@ -182,18 +206,17 @@ export default {
              }
            }else{
              this.CODLedgerReports = [];
-             this.isLoading    = false;
-             this.exportf = false;
-             this.resultCount  = 0;
+             this.isLoading = false; this.exportf = false;
+             this.resultCount = 0;
            }
           },
            error => {
-             this.exportf = false;
-             this.isLoading = false;
+             this.exportf = false; this.isLoading = false;
              console.error(error)
         })
     },
-    //to get All Hub List
+
+    //to get All Zone List
     getZoneData() {
       this.input = {}
       axios({
@@ -210,12 +233,14 @@ export default {
           console.error(error)
         })
     },
-    getHubData() {
-      if(this.zone==""){
+
+    //to get All Zone Wise Hub List
+    getHubData(zoneid) {
+      if(zoneid==""){
         return false;
       }
       this.input = ({
-          zoneid: this.zone
+          zoneid: zoneid
       })
       axios({
           method: 'POST',
@@ -236,8 +261,6 @@ export default {
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
-          this.zonename = event.target[0].selectedOptions[0].attributes.title.nodeValue;
-          this.hubname = this.HubId.HubName;
           this.pageno = 0; this.exportf = false;
           this.getHubWiseCODLedgerReports()
         }
@@ -248,7 +271,7 @@ export default {
 
     resetForm() {
       this.fromDate = this.toDate = ''; this.zone=""; this.hubList=[]; this.HubId=""; this.pageno = 0;
-      this.status=""; this.CODLedgerReports = []; this.exportf = false; this.resultCount = 0;
+      this.status=""; this.CODLedgerReports = []; this.exportf = false; this.disableHub = false; this.resultCount = 0;
       this.$validator.reset();
       this.errors.clear();
     },

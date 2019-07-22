@@ -8,57 +8,55 @@
           <div class="card-body">
             <form  v-on:submit.prevent="onSubmit">
               <div class="form-group row">
-               <div class="col-md-4">
-                <label>Zone</label>
-                <b-input-group left="<i class='fa fa-list'></i>">
-                  <select name="zone" id="zone" class="form-control" v-model="zone" v-on:change="getHubData"  v-validate="{required: true}" v-bind:class="{'error': errors.has('zone') }">
-                    <option value="" >--Select--</option>
-                    <option v-for="zone_obj in zoneList" v-bind:title="zone_obj.hubzonename" v-bind:value="zone_obj.hubzoneid" >{{zone_obj.hubzonename}}</option>
-                  </select>
-                </b-input-group>
-                <span v-show="errors.has('zone')" class="text-danger">Please select Zone.</span>
-              </div>
-
-              <div class="col-md-4">
-                <label>Hub / Svc</label>
-                <b-input-group left="<i class='fa fa-list'></i>">
-                  <Multiselect :options="hubList" placeholder="Select Hub / Svc" name="HubId" id="HubId" v-model="HubId"  label="HubName" track-by="HubID"  v-validate="{required: true}" v-bind:class="{'error': errors.has('HubId') }" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
-                   <template slot="noResult"><p>No Record Found.</p></template>
-                  </Multiselect>
-                </b-input-group>
-                <span v-show="errors.has('HubId')" class="text-danger">Please select Hub / Svc.</span>
-              </div>
                 <div class="col-md-4">
-                <label>Status</label>
-                <b-input-group left="<i class='fa fa-list'></i>">
-                  <select name="status" id="status"  class="form-control" v-model="status">
-                    <option value="">--Select--</option>
-                    <option value="1" title="Open">Open</option>
-                    <option value="6" title="Close">Close</option>
-                  </select>
-                </b-input-group>
-              </div>
-            </div>
-            <div class="form-group row">
-              <div class="col-md-4">
-                <label>From Date</label>
-                <b-input-group left="<i class='fa fa-calendar'></i>">
-                  <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}"
-                  v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
-                </b-input-group>
-                <span v-show="errors.has('fromDate')" class="text-danger">Please select From date. </span>
-                <span id="fdate" class="text-danger"></span>
-              </div>
+                  <label>Zone</label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                    <Multiselect :options="zoneList" name="zone" id="zone" v-model="zone" @input="addHubData" v-validate="{required: true}" v-bind:class="{'error': errors.has('zone') }" placeholder="Select Zone" label="hubzonename" track-by="hubzoneid" :optionHeight="100" :preselect-first="false" v-bind:multiple="multiple()" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                       <template slot="noResult"><p>No Record Found.</p></template>
+                    </Multiselect>
+                  </b-input-group>
+                  <span v-show="errors.has('zone')" class="text-danger">Please select zone.</span>
+                </div>
 
-              <div class="col-md-4">
-                <label>To Date</label>
-                <b-input-group left="<i class='fa fa-calendar'></i>">
-                  <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}"
-                  v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
-                </b-input-group>
-                <span v-show="errors.has('toDate')" class="text-danger">Please select To date. </span>
+                <div class="col-md-4">
+                  <label>Hub / SVC</label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                    <Multiselect :options="hubList" placeholder="Select Hub / Svc" v-bind:disabled="disableHub" name="HubId" id="HubId" v-model="HubId"  label="HubName" track-by="HubID" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
+                     <template slot="noResult"><p>No Record Found.</p></template>
+                    </Multiselect>
+                  </b-input-group>
+                </div>
+                <div class="col-md-4">
+                  <label>Status</label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                    <select name="status" id="status"  class="form-control" v-model="status" style="height:45px;">
+                      <option value="">Select All</option>
+                      <option value="1" title="Open">Open</option>
+                      <option value="6" title="Close">Close</option>
+                    </select>
+                  </b-input-group>
+                </div>
               </div>
-            </div>
+              <div class="form-group row">
+                <div class="col-md-4">
+                  <label>From Date</label>
+                  <b-input-group left="<i class='fa fa-calendar'></i>">
+                    <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}"
+                    v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
+                  </b-input-group>
+                  <span v-show="errors.has('fromDate')" class="text-danger">Please select From date. </span>
+                  <span id="fdate" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                  <label>To Date</label>
+                  <b-input-group left="<i class='fa fa-calendar'></i>">
+                    <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}"
+                    v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
+                  </b-input-group>
+                  <span v-show="errors.has('toDate')" class="text-danger">Please select To date. </span>
+                </div>
+              </div>
               <div class="card-footer">
                 <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
                 <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
@@ -71,7 +69,12 @@
           <div class="col-12" v-if="HubWiseCODLedge">
             <div class="card-headerfrm" style="margin-bottom: 15px;">
               <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result
-                <span v-show="exportf" style="margin-left: 85%; cursor: pointer;" @click="exportHubWiswData()"><button class="btn btn-sm btn-success" type="button"><i class="fa fa-download"></i> Export</button></span>
+                <span v-show="exportf" style="margin-left: 85%; cursor: pointer;" @click="exportHubWiswData()">
+                  <button class="btn btn-sm btn-success" type="button">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="excelLoading" />
+                    <i class="fa fa-download"></i> Export
+                  </button>
+                </span>
               </h4>
               <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
               <table class="table-bordered table-hover tbl datatables scrolltb" style="width:100%;">
@@ -84,9 +87,10 @@
                     <th class="text-center tableheader"><b>Owner Name</b></th>
                     <th class="text-center tableheader"><b>Delivery Date</b></th>
                     <th class="text-center tableheader"><b>Opening Balance</b></th>
+                    <th class="text-center tableheader"><b>Bank Deposit Amount</b></th>
                     <th class="text-center tableheader"><b>COD Receivable</b></th>
-                    <th class="text-center tableheader"><b>COD Received</b></th>
-                    <th class="text-center tableheader"><b>Closed Date</b></th>
+                    <th class="text-center tableheader"><b>Finance Confirmed Amount</b></th>
+                    <th class="text-center tableheader"><b>Finance Confirmed Date</b></th>
                     <th class="text-center tableheader"><b>Balance Outstanding</b></th>
                     <th class="text-center tableheader"><b>Status</b></th>
                     <th class="text-center tableheader"><b>Closed by</b></th>
@@ -94,16 +98,17 @@
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td colspan="13" align="center">No record found</td>
+                    <td colspan="14" align="center">No record found</td>
                   </tr>
                   <tr v-for="(CODLedger_List,index) in CODLedgerReports ">
                     <td>{{pageno+index+1}}</td>
-                    <td>{{zonename}}</td>
-                    <td>{{hubname}}</td>
+                    <td>{{CODLedger_List.zonename}}</td>
+                    <td>{{CODLedger_List.hubname}}</td>
                     <td>{{CODLedger_List.hubLocationType}}</td>
                     <td>{{CODLedger_List.createdby}}</td>
                     <td>{{CODLedger_List.deliverydate}}</td>
                     <td>{{CODLedger_List.openingbalance}}</td>
+                    <td>{{CODLedger_List.bankdeposit}}</td>
                     <td>{{CODLedger_List.receivable}}</td>
                     <td>{{CODLedger_List.financeconfirmamount}}</td>
                     <td>{{CODLedger_List.financeconfirmdate}}</td>
