@@ -134,7 +134,6 @@ export default {
       link.setAttribute("download", filename);
       document.body.appendChild(link);
       link.click();
-      this.isLoading = false;
       link.removeChild(link);
     },
 

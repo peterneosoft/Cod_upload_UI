@@ -37,7 +37,8 @@ export default {
       resultCount: '',
       localhubid: '',
       localhubname: '',
-      exportf:false
+      exportf:false,
+      excelLoading: false
     }
   },
 
@@ -132,7 +133,7 @@ export default {
       this.ClientId.forEach(function (val) {
         cData.push(val.ClientMasterID);
       });
-      this.isLoading = true;
+      this.excelLoading = true;
       axios({
           method: 'GET',
           'url': apiUrl.api_url + 'exportCODRemittanceDetailsReport?ClientId='+cData+'&fromDate='+this.fromDate+'&toDate='+this.toDate+'&search='+this.selected,
@@ -143,12 +144,12 @@ export default {
       .then(result => {
         if(result.data.code == 200){
           this.getDownloadCsvObject(result.data.data);
-          this.isLoading = false;
+          this.excelLoading = false;
         }else{
-          this.isLoading = false;
+          this.excelLoading = false;
         }
       }, error => {
-          this.isLoading = false;
+          this.excelLoading = false;
           console.error(error)
       })
     },
@@ -175,7 +176,6 @@ export default {
       link.setAttribute("download", filename);
       document.body.appendChild(link);
       link.click();
-      this.isLoading = false;
       link.removeChild(link);
     },
 
@@ -202,6 +202,7 @@ export default {
         });
         result += lineDelimiter;
       });
+      this.excelLoading = false;
       return result;
     },
 

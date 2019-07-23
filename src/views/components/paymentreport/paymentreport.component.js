@@ -28,7 +28,8 @@ export default {
       isLoading: false,
       resultCount: '',
       createdby: '',
-      exportf:false
+      exportf:false,
+      excelLoading: false
     }
   },
 
@@ -109,7 +110,7 @@ export default {
     },
 
     exportCODPaymentData(){
-      this.isLoading = true;
+      this.excelLoading = true;
 
       axios({
           method: 'GET',
@@ -121,12 +122,12 @@ export default {
       .then(result => {
         if(result.data.code == 200){
           this.getDownloadCsvObject(result.data.data);
-          this.isLoading = false;
+          this.excelLoading = false;
         }else{
-          this.isLoading = false;
+          this.excelLoading = false;
         }
       }, error => {
-          this.isLoading = false;
+          this.excelLoading = false;
           console.error(error)
       })
     },
@@ -153,7 +154,6 @@ export default {
       link.setAttribute("download", filename);
       document.body.appendChild(link);
       link.click();
-      this.isLoading = false;
       link.removeChild(link);
     },
 
@@ -180,6 +180,7 @@ export default {
         });
         result += lineDelimiter;
       });
+      this.excelLoading = false;
       return result;
     },
 
