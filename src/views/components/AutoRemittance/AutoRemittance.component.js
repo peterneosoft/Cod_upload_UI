@@ -132,7 +132,7 @@ export default {
              }
           }else{
             this.remLoading = false;
-            this.$alertify.success(result.data.message);
+            this.$alertify.error('Remittance data not found');
           }
         }, error => {
           console.error(error)

@@ -1,15 +1,17 @@
 import apiUrl from '../../../constants';
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
+import VueElementLoading from 'vue-element-loading';
 
 export default {
   name: 'login',
-  components: {},
+  components: {VueElementLoading},
   props: [],
   data() {
     return {
       username: '',
-      password: ''
+      password: '',
+      isLoading:false
     }
   },
   computed: {
@@ -23,7 +25,7 @@ export default {
     checklogin() {
       let projectID = CryptoJS.AES.encrypt('$#@COD&&Mang&*^%$$', "xb-cod-security");
       //let projectInfo = projectID.toString(CryptoJS.enc.Utf8);
-
+      this.isLoading = true;
       axios.post(apiUrl.api_url + 'userapp/auth', {
           'username': this.username,
           'password': this.password
@@ -51,19 +53,23 @@ export default {
             let permissiondata = JSON.parse(permissiondataplaintext);
             //console.log(permissiondata);
               if(response.data.code==200){
+                  this.isLoading = false;
                   this.$router.push(permissiondata[0].url);
               }else{
+                this.isLoading = false;
                 this.$alertify.success("Logging Failed");
               }
 
               let hubEncrypt = CryptoJS.AES.encrypt(JSON.stringify(response.data.hubData), "Key");
               window.localStorage.setItem('accesshubdata', hubEncrypt);
           }else{
+            this.isLoading = false;
             this.$alertify.success("Logging Failed");
           }
 
           })
         .catch((httpException) => {
+          this.isLoading = false;
           this.$alertify.success("Logging Failed");
           console.error('exception is:::::::::', httpException)
         })

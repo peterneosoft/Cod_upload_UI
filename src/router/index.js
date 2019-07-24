@@ -22,6 +22,7 @@ import FinanceClosure from '@/views/components/financeclosure'
 import CSVReOpenDay from '@/views/components/csvreopenday'
 import SVCDepositExceptions from '@/views/components/svcdepositexceptions'
 import HubWiseCODReport from '@/views/components/hubwisecodreport'
+import CODOutstandingReport from '@/views/components/codoutstandingreport'
 import PaymentReport from '@/views/components/paymentreport'
 import MISP2PCODReport from '@/views/components/misp2preport'
 import SystemSettings from '@/views/components/settings'
@@ -140,6 +141,23 @@ const router = new Router({
               },
               {
                 name: 'Hub Wise COD Report'
+              }
+            ]
+          },
+        },
+        {
+          path: 'codoutstandingreport',
+          name: 'COD Outstanding',
+          component: CODOutstandingReport,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'COD Outstanding Report'
               }
             ]
           },

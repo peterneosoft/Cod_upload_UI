@@ -9,25 +9,23 @@ import Multiselect from 'vue-multiselect'
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 
 export default {
-  name: 'hubwisecodreport',
-  components: {Paginate,
-  VueElementLoading,
-  Multiselect
-},
+  name: 'codoutstandingreport',
+  components: {
+    Paginate,
+    VueElementLoading,
+    Multiselect
+  },
   props: [],
 
   data() {
     return {
       zoneList:[],
       hubList:[],
-      CODLedgerReports:[],
+      CODOutstandingReport:[],
       zone:[],
       zoneIdArr:[],
       HubId:"",
       resultCount:'',
-      toDate:"",
-      fromDate:"",
-      status:"",
       hubname:"",
       pageno:0,
       pagecount:0,
@@ -43,9 +41,6 @@ export default {
   },
 
   mounted() {
-    var date = new Date();
-    toDate.max = fromDate.max = date.toISOString().split("T")[0];
-
     var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');
 
@@ -78,21 +73,18 @@ export default {
 
     getPaginationData(pageNum) {
         this.pageno = (pageNum - 1) * 10
-        this.getHubWiseCODLedgerReports()
+        this.getCODOutstandingReport()
     },
 
-    exportHubWiswData(){
+    exportCODOutstandingData(){
       this.excelLoading = true;
       this.input = ({
           hubid: this.HubId.HubID,
-          zoneid: this.zoneIdArr,
-          status: this.status,
-          fromdate: this.fromDate,
-          todate: this.toDate
+          zoneid: this.zoneIdArr
       })
       axios({
           method: 'POST',
-          'url': apiUrl.api_url + 'exportHubWiseCODReports',
+          'url': apiUrl.api_url + 'exportCODOutstandingReport',
           'data': this.input,
           headers: {
               'Authorization': 'Bearer '+this.myStr
@@ -118,7 +110,7 @@ export default {
       var yyyy    = today.getFullYear();
       var today   = dd + "" + mm + "" + yyyy;
       var data, filename, link;
-      filename = "HubwiseCODreport_" + today + ".csv";
+      filename = "OutstandingCODreport_" + today + ".csv";
       var csv = this.convertArrayOfObjectsToCSV({
         data: csvData
       });
@@ -163,14 +155,7 @@ export default {
       return result;
     },
 
-    getHubWiseCODLedgerReports(){
-      if(this.fromDate > this.toDate){
-         document.getElementById("fdate").innerHTML="From date should not be greater than To date.";
-         return false;
-      }else{
-        document.getElementById("fdate").innerHTML="";
-      }
-
+    getCODOutstandingReport(){
       this.input = ({
           hubid: this.HubId.HubID,
           zoneid: this.zoneIdArr,
@@ -183,7 +168,7 @@ export default {
       this.isLoading = true;
       axios({
           method: 'POST',
-          url: apiUrl.api_url + 'getHubWiseCODLedgerReports',
+          url: apiUrl.api_url + 'getCODOutstandingReport',
           'data': this.input,
           headers: {
             'Authorization': 'Bearer '
@@ -191,7 +176,7 @@ export default {
         })
         .then(result => {
           if(result.data.code == 200){
-            this.CODLedgerReports = result.data.data;
+            this.CODOutstandingReport = result.data.data;
             this.isLoading = false; this.exportf = true;
             let totalRows = result.data.count
             this.resultCount = result.data.count
@@ -201,7 +186,7 @@ export default {
                  this.pagecount = Math.ceil(totalRows / 10)
              }
            }else{
-             this.CODLedgerReports = [];
+             this.CODOutstandingReport = [];
              this.isLoading = false; this.exportf = false;
              this.resultCount = 0;
            }
@@ -258,7 +243,7 @@ export default {
       this.$validator.validateAll().then((result) => {
         if(result){
           this.pageno = 0; this.exportf = false;
-          this.getHubWiseCODLedgerReports()
+          this.getCODOutstandingReport()
         }
       }).catch(() => {
         console.log('errors exist', this.errors)
@@ -266,8 +251,8 @@ export default {
     },
 
     resetForm() {
-      this.fromDate = this.toDate = ''; this.zone=""; this.hubList=[]; this.HubId=""; this.pageno = 0;
-      this.status=""; this.CODLedgerReports = []; this.exportf = false; this.disableHub = false; this.resultCount = 0;
+      this.zone=""; this.hubList=[]; this.HubId=""; this.pageno = 0;
+      this.CODOutstandingReport = []; this.exportf = false; this.disableHub = false; this.resultCount = 0;
       this.$validator.reset();
       this.errors.clear();
     },
