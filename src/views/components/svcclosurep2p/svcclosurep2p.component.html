@@ -8,11 +8,11 @@
             <form v-on:submit.prevent="onSubmit">
               <div class="form-group">
                 <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Delivery Date</span>
+                  <div class="input-group-prepend" style="width: 125px;">
+                    <span class="input-group-text" style="width: 125px;">Delivery Date</span>
                   </div>
                   <b-form-input id="DeliveryDate" type="date" name="DeliveryDate" v-validate="{required: true}"
-                  v-model="DeliveryDate" v-bind:class="{'form-control': true, 'error': errors.has('DeliveryDate') }"></b-form-input>
+                  v-model="DeliveryDate" v-bind:class="{'form-control': true, 'error': errors.has('DeliveryDate') }" style="margin-right: -5px;"></b-form-input>
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                   </div>
@@ -22,11 +22,11 @@
 
               <div class="form-group">
                 <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Deposit Date</span>
+                  <div class="input-group-prepend" style="width: 125px;">
+                    <span class="input-group-text" style="width: 125px;">Deposit Date</span>
                   </div>
                   <b-form-input id="DepositDate" type="date" name="DepositDate" v-validate="{required: true}"
-                  v-model="DepositDate" v-bind:class="{'form-control': true, 'error': errors.has('DepositDate') }"></b-form-input>
+                  v-model="DepositDate" v-bind:class="{'form-control': true, 'error': errors.has('DepositDate') }" style="margin-right: -5px;"></b-form-input>
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                   </div>
@@ -36,11 +36,11 @@
 
               <div class="form-group">
                 <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Deposit Amount</span>
+                  <div class="input-group-prepend" style="width: 125px;">
+                    <span class="input-group-text" style="width: 125px;">Deposit Amount</span>
                   </div>
-                  <input class="form-control" id="Deposit_Amount" type="text" name="Deposit_Amount" placeholder="Enter Deposit Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-                    v-validate="{required: true}" v-model="Deposit_Amount" v-bind:class="{'form-control': true, 'error': errors.has('Deposit_Amount') }">
+                  <input class="form-control" id="Deposit_Amount" type="text" name="Deposit_Amount" placeholder="Enter Deposit Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8"
+                    v-validate="{required: true}" v-model="Deposit_Amount" v-bind:class="{'form-control': true, 'error': errors.has('Deposit_Amount') }" style="margin-right: 0px;">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-rupee"></i></span>
                   </div>
@@ -50,11 +50,11 @@
 
               <div class="form-group">
                 <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Deposit Type</span>
+                  <div class="input-group-prepend" style="width: 125px;">
+                    <span class="input-group-text" style="width: 125px;">Deposit Type</span>
                   </div>
                   <select class="form-control" id="DepositType" name="DepositType" v-on:change="GetBankData" v-validate="{required: true}"
-                  v-model="DepositType" v-bind:class="{'form-control': true, 'error': errors.has('DepositType') }">
+                  v-model="DepositType" v-bind:class="{'form-control': true, 'error': errors.has('DepositType') }" style="margin-right: -3px;">
                     <option value="">--Select--</option>
                     <option value="1">Bank (Self) Deposit</option>
                     <option value="2">CMS Deposit</option>
@@ -69,11 +69,11 @@
 
               <div class="form-group">
                 <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Bank Name</span>
+                  <div class="input-group-prepend" style="width: 125px;">
+                    <span class="input-group-text" style="width: 125px;">Bank Name</span>
                   </div>
                   <select class="form-control" id="BankMasterId" v-model="BankMasterId" name="BankMasterId" v-validate="{required: true}"
-                  v-bind:class="{'form-control': true, 'error': errors.has('BankMasterId') }">
+                  v-bind:class="{'form-control': true, 'error': errors.has('BankMasterId') }" style="margin-right: -8px;">
                     <option value="">--Select--</option>
                     <option v-for="Bank_obj in BankList" v-bind:value="Bank_obj.BankMasterId" >{{Bank_obj.BankName}}</option>
                   </select>
@@ -86,11 +86,11 @@
 
               <div class="form-group">
                 <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Transaction Id</span>
+                  <div class="input-group-prepend" style="width: 125px;">
+                    <span class="input-group-text" style="width: 125px;">Transaction Id</span>
                   </div>
                   <input class="form-control" id="TransactionID" type="text" name="TransactionID" placeholder="Enter Transaction Id" v-validate="{required: true}"
-                  v-model="TransactionID" v-bind:class="{'form-control': true, 'error': errors.has('TransactionID') }">
+                  v-model="TransactionID" v-bind:class="{'form-control': true, 'error': errors.has('TransactionID') }" style="margin-right: -5px;">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-exchange"></i></span>
                   </div>
@@ -101,11 +101,11 @@
               <div class="form-group" v-show="DepositType != ''">
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="Loading" />
                 <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Upload Deposit Slip</span>
+                  <div class="input-group-prepend" style="width: 125px;">
+                    <span class="input-group-text" style="width: 125px;">Upload Deposit Slip</span>
                   </div>
                   <input @change="onUpload" class="form-control" type="file" placeholder="Upload Deposit Slip"  v-validate="`${DepositType != '' ? 'required' : ''}`" name="DepositSlip" id="DepositSlip"
-                  v-bind:class="{'form-control': true, 'error': errors.has('DepositSlip')}">
+                  v-bind:class="{'form-control': true, 'error': errors.has('DepositSlip')}" style="margin-right: -5px;">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-file"></i></span>
                   </div>
@@ -116,11 +116,11 @@
 
               <div class="form-group" v-show="unmatchedAmt > 0">
                 <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Reason</span>
+                  <div class="input-group-prepend" style="width: 125px;">
+                    <span class="input-group-text" style="width: 125px;">Reason</span>
                   </div>
                   <select class="form-control" id="Reason" v-model="Reason" name="Reason" v-validate="`${unmatchedAmt > 0 ? 'required' : ''}`"
-                  v-bind:class="{'form-control': true, 'error': errors.has('Reason') }">
+                  v-bind:class="{'form-control': true, 'error': errors.has('Reason') }" style="margin-right: -5px;">
                     <option value="">--Select--</option>
                     <option v-for="Reason_obj in ReasonList" v-bind:value="Reason_obj.ReasonsID" >{{Reason_obj.Reason}}</option>
                   </select>
@@ -265,7 +265,7 @@
                 <td v-if="data.statusid==6">Close</td>
                 <td>{{data.Reason}}</td>
                 <td>{{data.financereason}}</td>
-                <td>
+                <td class="text-center">
                   <span v-bind:id='`${"vrl"+data.svcledgerid}`' v-if="data.createdby!='schedular@xpressbees.com'" @click="showHideImages(data.svcledgerid)" style="color: blue; cursor: pointer;">View Receipts</span>
                   <span v-bind:id='`${"vri"+data.svcledgerid}`' style="display: none;">
                     <a v-bind:title='`${file.name}`' v-for="file in data.files" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>

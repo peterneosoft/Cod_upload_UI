@@ -26,7 +26,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">Deposit Amount</span>
                   </div>
-                  <input class="form-control"  id="Deposit_Amount" v-model="Deposit_Amount" type="text" name="Deposit_Amount"
+                  <input class="form-control"  id="Deposit_Amount" placeholder="Deposit Amount" v-model="Deposit_Amount" type="text" name="Deposit_Amount"
                      onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8" v-validate="{required: true}"
                      v-bind:class="{'form-control': true, 'error': errors.has('Deposit_Amount') }" >
                   <div class="input-group-append">
@@ -176,6 +176,7 @@
           <table class="table-bordered table-hover tbl datatables" style="width:100%;">
             <thead>
               <tr class="text-primary">
+                <th class="text-center tableheader"><b>#</b></th>
                 <th class="text-center tableheader"><b>Paid Amount</b></th>
                 <th class="text-center tableheader"><b>Pending Amount</b></th>
                 <th class="text-center tableheader"><b>Created Date</b></th>
@@ -186,9 +187,10 @@
             </thead>
             <tbody>
               <tr v-if="resultCount==0">
-                <td colspan="6" align="center">No record found</td>
+                <td colspan="7" align="center">No record found</td>
               </tr>
-              <tr v-for="SL_List in SRLedgerList ">
+              <tr v-for="(SL_List,index) in SRLedgerList ">
+                <td scope="row" class="text-center"><strong>{{index+1}}</strong></td>
                 <td>{{SL_List.creditamount}}</td>
                 <td>{{SL_List.debitamount}}</td>
                 <td>{{SL_List.createddate}}</td>

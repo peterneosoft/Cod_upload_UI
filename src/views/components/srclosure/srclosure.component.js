@@ -95,12 +95,21 @@ export default {
          this.modalShow = false
      },
      saveSRClosure(event){
-       let statusAmount
+       let statusAmount = "";
        let TotalAmt = (document.getElementById("Tot_Amt")).textContent;
        let IntTotalAmt = parseInt(TotalAmt)
        let IntDeposit_Amount = parseInt(this.Deposit_Amount)
        let Balanc = 0;
        let insertflag= 0;
+
+       if(IntDeposit_Amount > TotalAmt){
+         this.$alertify.error("Deposit amount should not be greater than total amount, please check.");
+
+         let error            = document.getElementById("d_a");
+         error.innerHTML      = "Deposit amount should not be greater than total amount, please check.";
+         error.style.display  = "block"; return false;
+       }
+
        if(IntTotalAmt > IntDeposit_Amount){
          Balanc = TotalAmt - this.Deposit_Amount ;
          this.showModal(Balanc)
@@ -362,13 +371,13 @@ export default {
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
          if(result){
-          if((this.tot_amt != '0' && this.tot_amt != this.Deposit_Amount)||!this.tot_amt){
+          if((this.tot_amt != '0' && this.tot_amt != parseInt(this.Deposit_Amount))||!this.tot_amt){
             let error = document.getElementById("d_a");
-             error.innerHTML = " 	Enter denomination details. amount mismatches";
+             error.innerHTML = "Total denomination & deposit amount is should be same, please check.";
              error.style.display = "block";
           }else{
             let error = document.getElementById("d_a");
-             error.innerHTML = "The deposit amount field is required";
+             error.innerHTML = "Deposit amount field is required";
              error.style.display = "None";
              this.saveSRClosure(event)
           }
