@@ -29,7 +29,8 @@ export default {
       status:1,
       year:'',
       listBankHolidayData: [],
-      listholidayData: []
+      listholidayData: [],
+      holyLoading: false
     }
   },
 
@@ -54,6 +55,7 @@ export default {
   methods: {
 
     getHolidayList() {
+      this.holyLoading = true;
       axios({
           method: 'GET',
           url: apiUrl.api_url + 'external/getbankholidaylist',
@@ -63,6 +65,7 @@ export default {
           }
         })
         .then(result => {
+          this.holyLoading = false;
           this.listholidayData  = result.data.holiday.data;
           this.listholidayData.push({
             Description:'Second and Fourth Saturday',
@@ -70,6 +73,7 @@ export default {
             HolidayName:'Non Working Saturday',
           });
         }, error => {
+          this.holyLoading = false;
           console.error(error)
         })
     },

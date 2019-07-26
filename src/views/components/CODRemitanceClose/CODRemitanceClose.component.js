@@ -38,7 +38,8 @@ export default {
       localhubid: '',
       localhubname: '',
       exportf:false,
-      excelLoading: false
+      excelLoading: false,
+      clientLoading: false
     }
   },
 
@@ -57,6 +58,7 @@ export default {
 
   methods: {
     GetClientData() {
+      this.clientLoading = true;
       axios({
         method: 'GET',
         url: apiUrl.api_url + 'external/getclientlist',
@@ -65,8 +67,10 @@ export default {
           'Authorization': 'Bearer '+this.myStr
         }
       }).then(result => {
+        this.clientLoading = false;
         this.ClientList = result.data.clients.data;
       }, error => {
+        this.clientLoading = false;
         console.error(error)
       })
     },

@@ -172,7 +172,7 @@
       <div class="col-12" v-show="SRLedgerDetails">
         <div class="card-headerfrm" style="margin-bottom: 15px;">
           <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
-
+          <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="ledgerLoading" />
           <table class="table-bordered table-hover tbl datatables" style="width:100%;">
             <thead>
               <tr class="text-primary">

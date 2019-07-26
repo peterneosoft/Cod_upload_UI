@@ -41,6 +41,7 @@ export default {
       pendPerc:0,
       recPerc:0,
       totPerc:0,
+      Search:0,
       hubCollectionList:[],
       maxCOD:[],
       minCOD:[],
@@ -56,6 +57,9 @@ export default {
       pieComponent: false,
       amountComponent: false,
       collectionComponent: false,
+      zoneLoading: false,
+      stateLoading: false,
+      cityLoading: false,
       piechart: {
         chart: {
           plotBackgroundColor: null,
@@ -200,6 +204,7 @@ export default {
     getZoneData() {
       this.zone = ""; this.stateList = [];
       this.input = {}
+      this.zoneLoading = true;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/getallzones',
@@ -209,9 +214,10 @@ export default {
           }
         })
         .then(result => {
+          this.zoneLoading = false;
           this.zoneList = result.data.zone.data;
-
         }, error => {
+          this.zoneLoading = false;
           console.error(error)
         })
     },
@@ -314,14 +320,13 @@ export default {
     },
 
     getHubIdsArray(event) {
-
       if(this.FromDate > this.ToDate){
          document.getElementById("fdate").innerHTML="From date should not be greater than To date.";
          return false;
       }else{
         document.getElementById("fdate").innerHTML="";
       }
-
+      this.amountLoading = true; this.barLoading = true; this.pieLoading = true; this.collectionLoading = true;
       let filter ="";
       let id = 0;
       if(this.city){
@@ -351,24 +356,27 @@ export default {
         })
         .then(result => {
           if(result.data.code == 200){
-          this.hubArray.push(result.data.hubids)
-          this.getPieShipmentPercentSearch()
-          this.getHubWiseCollectionDataSearch()
-          this.getMaxMinCODCollectionDataSearch()
-        }else{
-          this.hubCollectionList  = [];
-          this.resultHubCollCount  = 0;
-          this.maxCOD = [];
-          this.minCOD = [];
-          this.BarChart.series.map(chart=>{
-          chart.data = [];
-           })
-          this.resultdata = true;
-          this.piechart.series.data = [];
-          this.result = true;
-          this.$alertify.success("No Record Found");
-        }
+            this.hubArray.push(result.data.hubids)
+            this.getPieShipmentPercentSearch()
+            this.getHubWiseCollectionDataSearch()
+            this.getMaxMinCODCollectionDataSearch()
+          }else{
+            this.hubCollectionList  = [];
+            this.resultHubCollCount  = 0;
+            this.maxCOD = [];
+            this.minCOD = [];
+            this.BarChart.series.map(chart=>{
+            chart.data = [];
+             })
+            this.resultdata = true;
+            this.piechart.series.data = [];
+            this.result = true;
+            this.$alertify.success("No Record Found");
+
+            this.amountLoading = false; this.barLoading = false; this.pieLoading = false; this.collectionLoading = false;
+          }
         }, error => {
+          this.amountLoading = false; this.barLoading = false; this.pieLoading = false; this.collectionLoading = false;
           console.error(error)
         })
     },
@@ -381,6 +389,7 @@ export default {
       this.input = ({
           statezonename: this.zone
       })
+      this.stateLoading = true;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/GetZoneStateList',
@@ -390,9 +399,10 @@ export default {
           }
         })
         .then(result => {
+          this.stateLoading = false;
           this.stateList = result.data.state.data;
-
         }, error => {
+          this.stateLoading = false;
           console.error(error)
         })
     },
@@ -404,6 +414,7 @@ export default {
       this.input = ({
           citystatename: this.state
       })
+      this.cityLoading = true;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/GetStateCityList',
@@ -413,8 +424,10 @@ export default {
           }
         })
         .then(result => {
+          this.cityLoading = false;
           this.cityList = result.data.city.data;
         }, error => {
+          this.cityLoading = false;
           console.error(error)
         })
     },
@@ -446,7 +459,7 @@ export default {
       this.input = ({
           hubids: [this.localhubid]
       })
-      this.amountLoading = true;
+      this.amountLoading = true; this.barLoading = true; this.pieLoading = true;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'gethubwisecollection',
@@ -467,16 +480,16 @@ export default {
             let y = [this.pendPerc,this.recPerc,this.totPerc]
             let name = ["Pending","Received","Total Amount"]
             let barDataObj = {};
-                for(let i=0;i<y.length;i++){
-                  barDataObj.y = parseFloat(y[i]);
-                  barDataObj.name = name[i];
-                  this.BarChart.series.map(chart=>{
-                    chart.data.push(barDataObj)
-                  })
-                  barDataObj ={}
-                }
-                this.hubArray=[];
-                this.amountLoading = false;
+            for(let i=0;i<y.length;i++){
+              barDataObj.y = parseFloat(y[i]);
+              barDataObj.name = name[i];
+              this.BarChart.series.map(chart=>{
+                chart.data.push(barDataObj)
+              })
+              barDataObj ={}
+            }
+            this.hubArray=[];
+            this.amountLoading = false; this.barLoading = false; this.pieLoading = false;
           }
           if(result.data.code == 204){
              this.hubCollectionList = [];
@@ -493,10 +506,10 @@ export default {
                barDataObj ={}
              }
              this.hubArray=[];
-             this.amountLoading = false;
+             this.amountLoading = false; this.barLoading = false; this.pieLoading = false;
           }
         }, error => {
-          this.amountLoading = false;
+          this.amountLoading = false; this.barLoading = false; this.pieLoading = false;
           console.error(error)
         })
     },
@@ -517,7 +530,7 @@ export default {
           fromdate: this.FromDate,
           todate: this.ToDate,
       })
-      this.amountLoading = true;
+      this.amountLoading = true; this.barLoading = true; this.pieLoading = true;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'gethubwisecollection',
@@ -538,16 +551,16 @@ export default {
             let y = [this.pendPerc,this.recPerc,this.totPerc]
             let name = ["Pending","Received","Total Amount"]
             let barDataObj = {};
-                for(let i=0;i<y.length;i++){
-                  barDataObj.y = parseFloat(y[i]);
-                  barDataObj.name = name[i];
-                  this.BarChart.series.map(chart=>{
-                  chart.data.push(barDataObj)
-                  })
-                  barDataObj ={}
-                }
-                this.resultdata = false;
-                this.amountLoading = false;
+            for(let i=0;i<y.length;i++){
+              barDataObj.y = parseFloat(y[i]);
+              barDataObj.name = name[i];
+              this.BarChart.series.map(chart=>{
+              chart.data.push(barDataObj)
+              })
+              barDataObj ={}
+            }
+            this.resultdata = false;
+            this.amountLoading = false; this.barLoading = false; this.pieLoading = false;
           }
           if(result.data.code == 204){
              this.resultdata = true;
@@ -565,10 +578,10 @@ export default {
                barDataObj ={}
              }
              this.hubArray=[];
-             this.amountLoading = false;
+             this.amountLoading = false; this.barLoading = false; this.pieLoading = false;
           }
         }, error => {
-          this.amountLoading = false;
+          this.amountLoading = false; this.barLoading = false; this.pieLoading = false;
           console.error(error)
         })
     },
@@ -659,7 +672,8 @@ export default {
     onSubmit: function(event) {
       this.$validator.validate().then((result) => {
         if(result){
-           this.getHubIdsArray(event);
+            this.Search = 0; this.amountLoading = true; this.barLoading = true; this.pieLoading = true; this.collectionLoading = true;
+            this.getHubIdsArray(event);
          }
       }).catch(() => {
         console.log('errors exist', this.errors)

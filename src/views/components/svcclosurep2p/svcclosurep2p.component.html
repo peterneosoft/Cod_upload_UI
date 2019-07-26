@@ -72,6 +72,7 @@
                   <div class="input-group-prepend" style="width: 125px;">
                     <span class="input-group-text" style="width: 125px;">Bank Name</span>
                   </div>
+                  <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankLoading" />
                   <select class="form-control" id="BankMasterId" v-model="BankMasterId" name="BankMasterId" v-validate="{required: true}"
                   v-bind:class="{'form-control': true, 'error': errors.has('BankMasterId') }" style="margin-right: -8px;">
                     <option value="">--Select--</option>
@@ -102,10 +103,10 @@
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="Loading" />
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 125px;">
-                    <span class="input-group-text" style="width: 125px;">Upload Deposit Slip</span>
+                    <span class="input-group-text" style="width: 125px;">Deposit Slip</span>
                   </div>
                   <input @change="onUpload" class="form-control" type="file" placeholder="Upload Deposit Slip"  v-validate="`${DepositType != '' ? 'required' : ''}`" name="DepositSlip" id="DepositSlip"
-                  v-bind:class="{'form-control': true, 'error': errors.has('DepositSlip')}" style="margin-right: -5px;">
+                  v-bind:class="{'form-control': true, 'error': errors.has('DepositSlip')}" style="margin: -5px 1px 0px 1px; height: 28px; border: 0;">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-file"></i></span>
                   </div>
@@ -114,7 +115,7 @@
                 <a v-bind:title='`${file.name}`' v-for="file in uploadFileList" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:25px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
               </div>
 
-              <div class="form-group" v-show="unmatchedAmt > 0">
+              <div class="form-group" v-show="unmatchedAmt > 0" style="margin-top: -10px;">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 125px;">
                     <span class="input-group-text" style="width: 125px;">Reason</span>

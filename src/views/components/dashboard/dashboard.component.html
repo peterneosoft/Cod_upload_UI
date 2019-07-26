@@ -1,61 +1,72 @@
 <section class="user">
   <div class="col-md-12 mb-2" v-show="searchComponent">
       <div class="card">
-        <div class="card-header filter_main">
+        <!-- <div class="card-header filter_main">
           <i class=" fa fa-filter filter"></i> Search
+        </div> -->
+        <div v-if="Search==0" @click = "Search = '1'" class="card-header filter_main" style="cursor: pointer;">
+          <i class="fa fa-plus plus"></i> Search
         </div>
-        <div class="card-body">
-          <form v-on:submit.prevent="onSubmit" class="form-horizontal">
-            <div class="form-group row">
-             <div class="col-md-4">
-               <label>Zone</label>
-               <b-input-group left="<i class='fa fa-list'></i>">
-                 <select  name="zone" id="zone"  v-model="zone" v-on:change="getStateData" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('zone') }">
-                   <option value="">--Select--</option>
-                   <option v-for="zone_obj in zoneList" v-bind:isid="zone_obj.hubzoneid" v-bind:title="zone_obj.hubzonename" v-bind:value="zone_obj.hubzonename" >{{zone_obj.hubzonename}}</option>
-                 </select>
-               </b-input-group>
-               <span v-show="errors.has('zone')" class="text-danger">Please select zone. </span>
-             </div>
-              <div class="col-md-4">
-                <label>State</label>
-                <b-input-group left="<i class='fa fa-list'></i>">
-                  <select name="state" id="state" class="form-control" v-model="state" v-on:change="getCityData">
-                    <option value="">--Select--</option>
-                    <option v-for="state_obj in stateList" v-bind:isid="state_obj.stateid" v-bind:title="state_obj.statename" v-bind:value="state_obj.statename" >{{state_obj.statename}}</option>
-                  </select>
-                </b-input-group>
-              </div>
-              <div class="col-md-4">
-                <label>City</label>
-                <b-input-group left="<i class='fa fa-list'></i>">
-                  <select name="city" id="city" class="form-control" v-model="city">
-                    <option value="">--Select--</option>
-                    <option v-for="city_obj in cityList" v-bind:isid="city_obj.cityid" v-bind:title="city_obj.cityname" v-bind:value="city_obj.cityname" >{{city_obj.cityname}}</option>
-                  </select>
-                </b-input-group>
-              </div>
-            </div>
-            <div class="form-group row">
-              <div class="col-md-4">
-                <label>From Date</label>
-                <b-input-group left="<i class='fa fa-user'></i>">
-                  <b-form-input id="FromDate" name="FromDate" type="date" placeholder=" Enter User Type" v-model="FromDate"></b-form-input>
-                </b-input-group>
-                <span id="fdate" class="text-danger"></span>
-              </div>
-              <div class="col-md-4">
-                <label>To Date</label>
-                <b-input-group left="<i class='fa fa-user'></i>">
-                  <b-form-input id="ToDate" name="ToDate" type="date" placeholder=" Enter User Type" v-model="ToDate"></b-form-input>
-                </b-input-group>
-              </div>
-            </div>
-            <div class="card-footer">
-              <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
-            </div>
-          </form>
+        <div v-if="Search==1" @click = "Search = '0'" class="card-header filter_main" style="cursor: pointer;">
+          <i class="fa fa-minus minus"></i> Search
         </div>
+        <b-collapse v-bind:class="`${Search == '1' ? 'show' : 'hide'}`" id="collapse1">
+          <div class="card-body">
+            <form v-on:submit.prevent="onSubmit" class="form-horizontal">
+              <div class="form-group row">
+               <div class="col-md-4">
+                 <label>Zone</label>
+                 <b-input-group left="<i class='fa fa-list'></i>">
+                   <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="zoneLoading" />
+                   <select  name="zone" id="zone"  v-model="zone" v-on:change="getStateData" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('zone') }">
+                     <option value="">--Select--</option>
+                     <option v-for="zone_obj in zoneList" v-bind:isid="zone_obj.hubzoneid" v-bind:title="zone_obj.hubzonename" v-bind:value="zone_obj.hubzonename" >{{zone_obj.hubzonename}}</option>
+                   </select>
+                 </b-input-group>
+                 <span v-show="errors.has('zone')" class="text-danger">Please select zone. </span>
+               </div>
+                <div class="col-md-4">
+                  <label>State</label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="stateLoading" />
+                    <select name="state" id="state" class="form-control" v-model="state" v-on:change="getCityData">
+                      <option value="">--Select--</option>
+                      <option v-for="state_obj in stateList" v-bind:isid="state_obj.stateid" v-bind:title="state_obj.statename" v-bind:value="state_obj.statename" >{{state_obj.statename}}</option>
+                    </select>
+                  </b-input-group>
+                </div>
+                <div class="col-md-4">
+                  <label>City</label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="cityLoading" />
+                    <select name="city" id="city" class="form-control" v-model="city">
+                      <option value="">--Select--</option>
+                      <option v-for="city_obj in cityList" v-bind:isid="city_obj.cityid" v-bind:title="city_obj.cityname" v-bind:value="city_obj.cityname" >{{city_obj.cityname}}</option>
+                    </select>
+                  </b-input-group>
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="col-md-4">
+                  <label>From Date</label>
+                  <b-input-group left="<i class='fa fa-user'></i>">
+                    <b-form-input id="FromDate" name="FromDate" type="date" placeholder=" Enter User Type" v-model="FromDate"></b-form-input>
+                  </b-input-group>
+                  <span id="fdate" class="text-danger"></span>
+                </div>
+                <div class="col-md-4">
+                  <label>To Date</label>
+                  <b-input-group left="<i class='fa fa-user'></i>">
+                    <b-form-input id="ToDate" name="ToDate" type="date" placeholder=" Enter User Type" v-model="ToDate"></b-form-input>
+                  </b-input-group>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+              </div>
+            </form>
+          </div>
+        </b-collapse>
       </div>
     </div>
 
@@ -67,19 +78,19 @@
           <div class="card-body">
             <div class="row">
               <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-show="barComponent">
-                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="amountLoading" />
-                <center><div  style="height:15rem">
+                <center><div style="height:15rem;">
                   <div class="card-body">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="barLoading" />
                     <highcharts :options="BarChart"></highcharts>
                   </div>
                  </div>
               </center>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-show="pieComponent">
-              <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="pieLoading" />
                <center>
-                <div  style="width: 20rem;height:15rem">
+                <div  style="width: 20rem; height:15rem">
                  <div class="card-body">
+                   <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="pieLoading" />
                    <highcharts :options="piechart"></highcharts>
                  </div>
                 </div>
@@ -92,10 +103,10 @@
 
         <div class="card-body">
           <div class ="row">
-            <div class="col-7" v-show="amountComponent">
-              <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="amountLoading" />
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-show="amountComponent">
               <div class="card-headerfrm" style="margin-bottom: 15px;">
-                <table class="table-bordered table-hover tbl datatables tableBodyScroll" width="500">
+                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="amountLoading" />
+                <table class="table-bordered table-hover tbl datatables tableBodyScroll" width="460">
                   <thead>
                     <tr class="text-primary">
                       <th class="text-center tableheader"><b>Hub Name</b></th>
@@ -119,9 +130,9 @@
                </div>
               </div>
 
-              <div class="col-5" v-show="collectionComponent">
-                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="collectionLoading" />
+              <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6" v-show="collectionComponent">
                <b-card-group deck>
+                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="collectionLoading" />
                 <div class="card text-dark bg-success my-2" style=" ">
                    <div class="card-body">
                      <b style="font-weight: bold;"><p>Top Collection</p><hr style="border-top: 1px solid rgb(0, 0, 0);">

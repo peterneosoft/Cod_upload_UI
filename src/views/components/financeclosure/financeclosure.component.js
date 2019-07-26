@@ -46,6 +46,8 @@ export default {
       resultdate: '',
       resultfdate: '',
       zoneLoading: false,
+      allZoneLoading: false,
+      hubLoading: false,
     }
   },
 
@@ -79,7 +81,7 @@ export default {
 
     //to get All Zone List
     getZoneData() {
-
+      this.allZoneLoading = true;
       this.input = {}
       axios({
           method: 'POST',
@@ -90,8 +92,10 @@ export default {
           }
         })
         .then(result => {
+          this.allZoneLoading = false;
           this.zoneList = result.data.zone.data;
         }, error => {
+          this.allZoneLoading = false;
           console.error(error)
         })
     },
@@ -120,11 +124,11 @@ export default {
 
     //to get Hub List According to Zone
     getHubData() {
-
       if(this.zone==""){
         return false;
       }
 
+      this.hubLoading = true;
       this.input = ({
           zoneid: this.zone
       })
@@ -138,8 +142,10 @@ export default {
           }
         })
         .then(result => {
+          this.hubLoading = false;
           this.hubList = result.data.hub.data;
         }, error => {
+          this.hubLoading = false;
           console.error(error)
         })
     },
@@ -330,6 +336,10 @@ export default {
     showHideImages(index){
       $('#vri'+index).show();
       $('#vrl'+index).hide();
+    },
+
+    scrollWin() {
+      window.scrollBy(0, 1000);
     }
   }
 }

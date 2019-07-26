@@ -32,7 +32,9 @@ export default {
       isLoading:false,
       excelLoading: false,
       exportf:false,
-      disableHub:false
+      disableHub:false,
+      zoneLoading:false,
+      hubLoading:false
     }
   },
 
@@ -200,6 +202,7 @@ export default {
     //to get All Zone List
     getZoneData() {
       this.input = {}
+      this.zoneLoading = true;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/getallzones',
@@ -209,8 +212,10 @@ export default {
           }
         })
         .then(result => {
+          this.zoneLoading = false;
           this.zoneList = result.data.zone.data;
         }, error => {
+          this.zoneLoading = false;
           console.error(error)
         })
     },
@@ -223,6 +228,7 @@ export default {
       this.input = ({
           zoneid: zoneid
       })
+      this.hubLoading = true;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/getzonehub',
@@ -232,9 +238,11 @@ export default {
           }
         })
         .then(result => {
+          this.hubLoading = false;
           this.HubId = "";
           this.hubList = result.data.hub.data;
         }, error => {
+          this.hubLoading = false;
           console.error(error)
         })
     },

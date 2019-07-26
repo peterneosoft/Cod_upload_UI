@@ -34,7 +34,9 @@ export default {
       hubName:'',
       values:'',
       editHubSetting: false,
-      disableButton: true
+      disableButton: true,
+      zoneLoading: false,
+      hubLoading: false
     }
   },
 
@@ -73,7 +75,7 @@ export default {
 
     //to get All Hub List
     getZoneData() {
-
+      this.zoneLoading=true;
       this.input = {}
       axios({
           method: 'POST',
@@ -84,8 +86,10 @@ export default {
           }
         })
         .then(result => {
+          this.zoneLoading=false;
           this.zoneList = result.data.zone.data;
         }, error => {
+          this.zoneLoading=false;
           console.error(error)
         })
     },
@@ -100,7 +104,7 @@ export default {
       this.input = ({
           zoneid: this.zone
       })
-
+      this.hubLoading=true;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/getzonehub',
@@ -110,11 +114,13 @@ export default {
           }
         })
         .then(result => {
+          this.hubLoading=false;
           this.hubList = [{'HubCode':'Select All', 'HubID':"0", 'HubName':'Select All'}];
           for (let item of result.data.hub.data) {
             this.hubList.push(item);
           }
         }, error => {
+          this.hubLoading=false;
           console.error(error)
         })
     },

@@ -40,6 +40,7 @@ export default {
       ReasonList: [],
       uploadFileList: [],
       isLoading: false,
+      bankLoading: false,
       Loading: false,
       resultCount: 0,
       pendingCODAmt: '0.00',
@@ -188,6 +189,7 @@ export default {
     },
 
     GetBankData() {
+      this.bankLoading = true;
       this.BankList = []; this.BankMasterId = '';
       if(this.DepositType=='' || this.DepositType==null){
         return false;
@@ -215,11 +217,14 @@ export default {
         }
       }).then(result => {
         if(result.data.result.code==200){
+          this.bankLoading = false;
           this.BankList = result.data.result.data;
         }else {
+          this.bankLoading = false;
           this.BankList=[];
         }
       }, error => {
+        this.bankLoading = false;
         console.error(error)
       })
     },
@@ -427,6 +432,7 @@ export default {
           this.uploadFileList=[];
           this.$alertify.success(response.data.msg);
           this.disableButton = false;
+          window.scrollBy(0, 1000);
           this.resetForm(event);
         } else if (response.data.errorCode == -1) {
           this.$alertify.error(response.data.msg)

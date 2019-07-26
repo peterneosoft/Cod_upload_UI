@@ -48,7 +48,11 @@ export default {
       isLoading: false,
       resultCount: 0,
       listClientCODRemittanceData:[],
-      submitLoading: false
+      submitLoading: false,
+      clientLoading: false,
+      businessLoading: false,
+      accountLoading: false,
+      bankDLoading: false
     }
   },
 
@@ -103,6 +107,7 @@ export default {
       if(this.ClientId.ClientMasterID == ""){
         return false;
       }
+      this.businessLoading = true;
       this.input = ({
         clientid: this.ClientId.ClientMasterID
       })
@@ -115,8 +120,10 @@ export default {
           }
         })
         .then(result => {
+          this.businessLoading = false;
           this.ClientBusinessList = result.data.client.data;
         }, error => {
+          this.businessLoading = false;
           console.error(error)
         })
     },
@@ -129,6 +136,7 @@ export default {
       if(this.Bussinesstype == ""){
         return false;
       }
+      this.accountLoading = true;
       this.input = ({
         clientid: this.ClientId.ClientMasterID,
         businessid:parseInt(this.Bussinesstype)
@@ -142,13 +150,18 @@ export default {
           }
         })
         .then(result => {
-           this.ClientAccountsList = result.data.Accounts.data;
+          this.accountLoading = false;
+          this.ClientAccountsList = result.data.Accounts.data;
         }, error => {
+          this.accountLoading = false;
           console.error(error)
         })
     },
 
     getAccountDetails(){
+      if(this.AccountName){
+        this.bankDLoading = true;
+      }
       this.input = ({
         ClientBusinessAccountId: this.AccountName
       })
@@ -162,6 +175,7 @@ export default {
         })
         .then(result => {
           if(result.data.code == 200){
+            this.bankDLoading = false;
             this.Beneficiary    = result.data.data.BeneficiaryName
             this.BankName       =  result.data.data.ClientBankName
             this.BankAccount    = result.data.data.ClientAccountNo
@@ -169,11 +183,13 @@ export default {
             this.ContactEmailid = result.data.data.ContactEmailid
           }
         }, error => {
+          this.bankDLoading = false;
           console.error(error)
         })
     },
 
     GetClientData() {
+      this.clientLoading = true;
       axios({
         method: 'GET',
         url: apiUrl.api_url + 'external/getclientlist',
@@ -182,8 +198,10 @@ export default {
           'Authorization': 'Bearer '+this.myStr
         }
       }).then(result => {
+        this.clientLoading = false;
         this.ClientList = result.data.clients.data;
       }, error => {
+        this.clientLoading = false;
         console.error(error)
       })
     },

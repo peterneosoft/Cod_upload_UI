@@ -38,6 +38,7 @@ export default {
       pagecount: 0,
       isLoading: false,
       Loading: false,
+      ledgerLoading: false,
       SRList:[],
       DenominationList:[],
       RightSRLedgerList:[],
@@ -150,26 +151,26 @@ export default {
               })
               .then((response) => {
                   if (response.data.code) {
-                      this.$alertify.success(response.data.data);
-                      this.GetSRLedgerDetails();
-                      this.getRightSRLedgerDetails()
-                      this.DenominationList.map(data=>{
-                        let countVal = document.getElementById(data.Denomination);
-                        let amountVal = document.getElementById("mo"+data.Denomination);
-                        countVal.value=""
-                        amountVal.value=0
-                      });
-                      this.Regionshow = false,
-                      this.RightSRLedger = true,
-                      this.SRLedgerDetails = true,
-                      this.Deposit_Amount = "",
-                      this.Reason = "",
-                      this.tot_amt = ""
-                      this.$validator.reset();
-                      this.errors.clear();
-                      event.target.reset();
-                    }
-
+                    window.scrollBy(0, 1000);
+                    this.$alertify.success(response.data.data);
+                    this.GetSRLedgerDetails();
+                    this.getRightSRLedgerDetails()
+                    this.DenominationList.map(data=>{
+                      let countVal = document.getElementById(data.Denomination);
+                      let amountVal = document.getElementById("mo"+data.Denomination);
+                      countVal.value=""
+                      amountVal.value=0
+                    });
+                    this.Regionshow = false,
+                    this.RightSRLedger = true,
+                    this.SRLedgerDetails = true,
+                    this.Deposit_Amount = "",
+                    this.Reason = "",
+                    this.tot_amt = ""
+                    this.$validator.reset();
+                    this.errors.clear();
+                    event.target.reset();
+                  }
               })
               .catch((httpException) => {
                   console.error('exception is:::::::::', httpException)
@@ -297,6 +298,7 @@ export default {
         srid: this.SR_Name,
         hubid:this.localhubid
       })
+      this.ledgerLoading = true;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'getSRLedgerDetails',
@@ -307,14 +309,17 @@ export default {
         })
         .then(result => {
           if(result.data.code == 200){
-          this.SRLedgerList = result.data.data
-          this.resultCount  = result.data.data.length;
+            this.ledgerLoading = false;
+            this.SRLedgerList = result.data.data
+            this.resultCount  = result.data.data.length;
           }
           if(result.data.code == 204){
+            this.ledgerLoading = false;
             this.SRLedgerList = [];
             this.resultCount  = 0;
           }
         }, error => {
+          this.ledgerLoading = false;
           console.error(error)
         })
     },

@@ -15,6 +15,7 @@
                 <div class="col-md-4">
                   <label>Client Name</label>
                   <b-input-group left="<i class='fa fa-list'></i>">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="clientLoading" />
                     <Multiselect :options="ClientList" name="ClientId" id="ClientId" @input="GetClientBusinessConfigList()" v-model="ClientId" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID"  v-validate="{required: true}" v-bind:class="{'error': errors.has('ClientId') }" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:1000">
                      <template slot="noResult"><p>No Record Found.</p></template>
                     </Multiselect>
@@ -24,7 +25,8 @@
                 <div class="col-md-4">
                   <label>Bussiness Service Type</label>
                   <b-input-group left="<i class='fa fa-list'></i>">
-                    <select name="Bussinesstype" id="Bussinesstype" class="form-control" v-on:change = "GetClientBusinessAccounts" v-model="Bussinesstype"  v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('Bussinesstype') }">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="businessLoading" />
+                    <select style="height:45px;" name="Bussinesstype" id="Bussinesstype" class="form-control" v-on:change = "GetClientBusinessAccounts" v-model="Bussinesstype"  v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('Bussinesstype') }">
                       <option value="">--Select--</option>
                       <option v-for="Client_obj in ClientBusinessList" v-bind:value="Client_obj.ClientBusinessDetailID" >{{Client_obj.BusinessConfig}}</option>
                     </select>
@@ -35,7 +37,8 @@
                 <div class="col-md-4">
                   <label>Account Name</label>
                   <b-input-group left="<i class='fa fa-list'></i>">
-                    <select name="AccountName" id="AccountName" class="form-control" v-model="AccountName" v-on:change="getAccountDetails" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('AccountName') }">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="accountLoading" />
+                    <select style="height:45px;" name="AccountName" id="AccountName" class="form-control" v-model="AccountName" v-on:change="getAccountDetails" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('AccountName') }">
                       <option value="">--Select--</option>
                       <option v-for="Client_obj in ClientAccountsList"  v-bind:value="Client_obj.ClientBusinessAccountId" >{{Client_obj.AccountName}}</option>
                   </select>
@@ -58,7 +61,7 @@
                 <div class="col-md-4">
                   <label>TAT</label>
                   <b-input-group left="<i class='fa fa-list'></i>">
-                    <select name="tat" id="tat" class="form-control" v-model="tat" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('tat') }">
+                    <select style="height:45px;" name="tat" id="tat" class="form-control" v-model="tat" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('tat') }">
                       <option value="">--Select--</option>
                       <option value="2">T+2</option>
                       <option value="3">T+3</option>
@@ -70,7 +73,7 @@
                 <div class="col-md-4">
                   <label>Type</label>
                   <b-input-group left="<i class='fa fa-list'></i>">
-                    <select name="type" id="type" class="form-control" v-model="type" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('type') }">
+                    <select style="height:45px;" name="type" id="type" class="form-control" v-model="type" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('type') }">
                       <option value="">--Select--</option>
                       <option value="Hybrid">Hybrid</option>
                       <option value="Non-Hybrid">Non-Hybrid</option>
@@ -85,6 +88,7 @@
                   <b-form-fieldset>
                     <label>Beneficiary Name</label>
                     <b-input-group left="<i class='fa fa-user'></i>">
+                      <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
                       <b-form-input disabled type="text" placeholder="Enter Beneficiary Name" name="Beneficiary" id="Beneficiary" v-model="Beneficiary" v-validate="'required'"></b-form-input>
                     </b-input-group>
                   </b-form-fieldset>
@@ -93,6 +97,7 @@
                   <b-form-fieldset>
                     <label>Bank Name</label>
                     <b-input-group left="<i class='fa fa-bank'></i>">
+                      <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
                       <b-form-input type="text" disabled placeholder="Enter Bank Name" name="BankName" id="BankName" v-model="BankName" v-validate="'required'"></b-form-input>
                     </b-input-group>
                   </b-form-fieldset>
@@ -101,6 +106,7 @@
                   <b-form-fieldset>
                     <label>Bank Account No</label>
                     <b-input-group left="<i class='fa fa-bank'></i>">
+                      <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
                       <b-form-input type="text" disabled placeholder="Enter Bank Account No" name="BankAccount" id="BankAccount" v-model="BankAccount" v-validate="'required'"></b-form-input>
                     </b-input-group>
                   </b-form-fieldset>
@@ -110,6 +116,7 @@
                 <div class="col-md-4">
                   <label>RTGS / IFSC</label>
                   <b-input-group left="<i class='fa fa-bank'></i>">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
                     <b-form-input disabled id="rtgs" type="text" placeholder="Enter RTGS/IFSC" name="rtgs" v-model="rtgs"></b-form-input>
                   </b-input-group>
                 </div>
