@@ -105,6 +105,7 @@ export default {
             this.Loading = false;
             this.$alertify.success(result.data.message);
             this.filename = ""
+            this.insertEmailRemittance();
           }
 
         }, error => {
@@ -149,6 +150,26 @@ export default {
       }).catch(() => {
         console.log('errors exist', this.errors)
       });
+    },
+
+    insertEmailRemittance(){
+      this.input = ({
+          CreatedBy: this.localuserid
+      })
+      axios({
+          method: 'POST',
+          'url': apiUrl.api_url + 'insertemailremittance',
+          'data': this.input,
+          headers: {
+              'Authorization': 'Bearer '+this.myStr
+          }
+      })
+      .then(result => {
+        if(result.data.code == 200){
+        }
+      }, error => {
+        console.error(error)
+      })
     }
   }
 }

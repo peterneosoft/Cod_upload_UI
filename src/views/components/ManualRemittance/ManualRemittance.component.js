@@ -213,6 +213,7 @@ export default {
         if (result.data.code == 200) {
           this.$alertify.success(result.data.msg);
           this.manualCODRemittance();
+          this.insertEmailRemittance();
         } else {
           this.isLoading = false;
           this.$alertify.error(result.data.msg)
@@ -272,6 +273,26 @@ export default {
     getPaginationData(pageNum) {
         this.pageno = (pageNum - 1) * 20
         this.manualCODRemittance()
+    },
+
+    insertEmailRemittance(){
+      this.input = ({
+          CreatedBy: this.localuserid
+      })
+      axios({
+          method: 'POST',
+          'url': apiUrl.api_url + 'insertemailremittance',
+          'data': this.input,
+          headers: {
+              'Authorization': 'Bearer '+this.myStr
+          }
+      })
+      .then(result => {
+        if(result.data.code == 200){
+        }
+      }, error => {
+        console.error(error)
+      })
     }
   }
 }
