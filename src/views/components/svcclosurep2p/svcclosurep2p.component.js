@@ -39,6 +39,10 @@ export default {
       ShipmentUpdateList: [],
       ReasonList: [],
       uploadFileList: [],
+      reasonFileList: [],
+      ReasonAmount: '',
+      AWBNo: '',
+      CardAmount: '',
       isLoading: false,
       bankLoading: false,
       Loading: false,
@@ -401,6 +405,9 @@ export default {
           BankDeposit: DepositAmount,
           TransactionID: this.TransactionID,
           ReasonID: (this.Reason)?this.Reason:null,
+          ReasonAmount: (this.ReasonAmount)?this.ReasonAmount:null,
+          AWBNo: (this.AWBNo)?JSON.stringify(this.AWBNo):null,
+          CardAmount: (this.CardAmount)?this.CardAmount:null,
           CreatedBy: this.localuserid,
           HubId: this.localhubid,
           HubZoneId: this.localhubzoneid,
@@ -429,7 +436,6 @@ export default {
       })
       .then((response) => {
         if (response.data.errorCode == 0) {
-          this.uploadFileList=[];
           this.$alertify.success(response.data.msg);
           this.disableButton = false;
           window.scrollBy(0, 1000);
@@ -448,8 +454,9 @@ export default {
       this.disableButton = true;
       this.selectedFile = event.target.files[0];
 
+      var name = '';
       if ( /\.(jpe?g|png|gif|bmp|xls|xlsx|pdf|ods)$/i.test(this.selectedFile.name) ){
-        var name = this.selectedFile.name;
+        name = this.selectedFile.name;
       }else{
         this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg, .jpeg, .gif, .bmp, .xls, .xlsx, .pdf, .ods");
         this.disableButton = false;
@@ -460,6 +467,10 @@ export default {
       fd.append('file', this.selectedFile, name);
       fd.append('s3bucketKey', 'SVC-'+this.BatchID);
 
+      if(event.target.id=="ReasonSlip"){
+        fd.append('reason', 'Reason');
+      }
+
       this.Loading = true;
 
       axios.post(apiUrl.api_url + 'uploadsvcfile', fd,
@@ -469,16 +480,22 @@ export default {
         }
       })
       .then(res => {
-        this.getS3bucketFiles();
+
+        if(event.target.id=="ReasonSlip"){
+          this.getS3bucketFiles();
+        }else{
+          this.getS3bucketFiles('Reason');
+        }
       }, error => {
         console.error(error)
       });
     },
 
-    getS3bucketFiles(){
+    getS3bucketFiles(Reason=null){
 
       this.input = ({
-        BatchID : this.BatchID
+        BatchID : this.BatchID,
+        Reason : Reason,
       });
 
       axios({
@@ -491,7 +508,11 @@ export default {
       })
       .then(result => {
         this.Loading = false;
-        this.uploadFileList = result.data.data;
+        if(Reason){
+          this.reasonFileList = result.data.data;
+        }else{
+          this.uploadFileList = result.data.data;
+        }
         this.disableButton = false;
       }, error => {
         console.error(error)
@@ -520,7 +541,7 @@ export default {
       this.Loading = false;
       this.BatchID = Math.floor(Math.random() * (Math.pow(10,5)));
       this.pageno = this.tot_amt = this.unmatchedAmt = 0;
-      this.uploadFileList=[]; this.BankList = [];
+      this.uploadFileList=[]; this.reasonFileList=[]; this.BankList = [];
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.Reason = '';
       $('#denomlist input[type="text"]').val(0);
       $('#denomlist input[type="number"]').val('');
