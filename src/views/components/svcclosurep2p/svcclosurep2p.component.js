@@ -45,7 +45,8 @@ export default {
       CardAmount: '',
       isLoading: false,
       bankLoading: false,
-      Loading: false,
+      DepositLoading: false,
+      ReasonLoading: false,
       resultCount: 0,
       pendingCODAmt: '0.00',
       closingBalance: '0.00',
@@ -347,14 +348,6 @@ export default {
       let TolatCollection = parseFloat((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt))).toFixed(2);
       let p2pamt = parseInt(this.p2pAmount);
 
-      if(DepositAmount > TolatCollection){
-        this.$alertify.error("Deposit amount should not be greater than total amount, please check.");
-
-        let error            = document.getElementById("d_a");
-        error.innerHTML      = "Deposit amount should not be greater than total amount, please check.";
-        error.style.display  = "block"; return false;
-      }
-
       if(DepositAmount !== parseInt(this.tot_amt)){
         this.$alertify.error("Denomination details & Deposit amount is should be same, please check.");
 
@@ -388,6 +381,15 @@ export default {
           NoteCountArr.push(parseInt(document.getElementById("mo"+denomi).value) / parseInt(denomi));
           DenominationIDArr.push(parseInt(document.getElementById("moi"+denomi).value));
         });
+      }
+
+      DepositAmount = parseFloat(DepositAmount)+parseFloat((this.ReasonAmount)?this.ReasonAmount:0)+parseFloat((this.CardAmount)?this.CardAmount:0);
+      if(DepositAmount > TolatCollection){
+        this.$alertify.error("Deposit amount should not be greater than total amount, please check.");
+
+        let error            = document.getElementById("d_a");
+        error.innerHTML      = "Deposit amount should not be greater than total amount, please check.";
+        error.style.display  = "block"; return false;
       }
 
       let OpeningBalance = parseFloat(this.closingBalance);
@@ -469,9 +471,10 @@ export default {
 
       if(event.target.id=="ReasonSlip"){
         fd.append('reason', 'Reason');
+        this.ReasonLoading = true;
+      }else{
+        this.DepositLoading = true;
       }
-
-      this.Loading = true;
 
       axios.post(apiUrl.api_url + 'uploadsvcfile', fd,
       {
@@ -507,10 +510,12 @@ export default {
         }
       })
       .then(result => {
-        this.Loading = false;
+
         if(Reason){
+          this.ReasonLoading = false;
           this.reasonFileList = result.data.data;
         }else{
+          this.DepositLoading = false;
           this.uploadFileList = result.data.data;
         }
         this.disableButton = false;
@@ -538,7 +543,7 @@ export default {
     },
 
     resetForm(event) {
-      this.Loading = false;
+      this.DepositLoading = false; this.ReasonLoading = false;
       this.BatchID = Math.floor(Math.random() * (Math.pow(10,5)));
       this.pageno = this.tot_amt = this.unmatchedAmt = 0;
       this.uploadFileList=[]; this.reasonFileList=[]; this.BankList = [];

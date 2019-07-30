@@ -100,7 +100,7 @@
               </div>
 
               <div class="form-group" v-show="DepositType != ''">
-                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="Loading" />
+                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="DepositLoading" />
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 125px;">
                     <span class="input-group-text" style="width: 125px;">Deposit Slip</span>
@@ -147,6 +147,7 @@
               </div>
 
               <div class="form-group" v-if="Reason==65">
+                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="ReasonLoading" />
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 125px;">
                     <span class="input-group-text" style="width: 125px;">Reason Slip</span>
