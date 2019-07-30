@@ -482,9 +482,9 @@ export default {
       .then(res => {
 
         if(event.target.id=="ReasonSlip"){
-          this.getS3bucketFiles();
-        }else{
           this.getS3bucketFiles('Reason');
+        }else{
+          this.getS3bucketFiles();
         }
       }, error => {
         console.error(error)
