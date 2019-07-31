@@ -20,6 +20,7 @@ export default {
       BankMasterId: '',
       TransactionID: '',
       DepositSlip: '',
+      ReasonSlip: '',
       Reason: '',
       unmatchedAmt: 0,
       CODAmount: 0,
@@ -41,7 +42,7 @@ export default {
       uploadFileList: [],
       reasonFileList: [],
       ReasonAmount: '',
-      AWBNo: [],
+      AWBNo: null,
       CardAmount: '',
       isLoading: false,
       bankLoading: false,
@@ -397,6 +398,9 @@ export default {
       let CODAmount = parseFloat(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)).toFixed(2);
 
       this.disableButton = true;
+      if(this.AWBNo){
+        this.AWBNo = this.AWBNo.split(',');
+      }
 
       this.input = ({
           DepositDate: this.DepositDate,
@@ -408,7 +412,7 @@ export default {
           TransactionID: this.TransactionID,
           ReasonID: (this.Reason)?this.Reason:null,
           ReasonAmount: (this.ReasonAmount)?this.ReasonAmount:null,
-          AWBNo: (this.AWBNo)?this.AWBNo.split(','):null,
+          AWBNo: this.AWBNo,
           CardAmount: (this.CardAmount)?this.CardAmount:null,
           CreatedBy: this.localuserid,
           HubId: this.localhubid,
@@ -526,14 +530,13 @@ export default {
 
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
+         document.getElementById("d_a").style.display = "none";
          if(result){
-           document.getElementById("d_a").style.display = "none";
            if((this.tot_amt != '0' && this.tot_amt != parseInt(this.Deposit_Amount))||!this.tot_amt){
               let error = document.getElementById("d_a");
               error.innerHTML = "Total denomination & deposit amount is should be same, please check.";
               error.style.display = "block";
           }else{
-            document.getElementById("d_a").style.display = "none";
             this.saveSvcClosure(event);
           }
         }
@@ -547,12 +550,11 @@ export default {
       this.BatchID = Math.floor(Math.random() * (Math.pow(10,5)));
       this.pageno = this.tot_amt = this.unmatchedAmt = 0;
       this.uploadFileList=[]; this.reasonFileList=[]; this.BankList = [];
-      this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.Reason = '';
-      $('#denomlist input[type="text"]').val(0);
-      $('#denomlist input[type="number"]').val('');
-      this.$validator.reset();
-      this.errors.clear();
-      event.target.reset();
+      this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = '';
+      this.DepositSlip = this.ReasonSlip = this.Reason = this.ReasonAmount = this.CardAmount = ''; this.AWBNo = null;
+      $('#denomlist input[type="text"]').val(0); $('#denomlist input[type="number"]').val('');
+      document.getElementById("d_a").style.display = "none";
+      this.$validator.reset(); this.errors.clear(); event.target.reset();
       this.GetShipmentUpdate();
       this.GetSVCledgerData();
     },

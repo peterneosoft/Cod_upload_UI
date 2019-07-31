@@ -138,12 +138,12 @@
                     <span class="input-group-text" style="width: 125px;">Reason Amount</span>
                   </div>
                   <input class="form-control" id="ReasonAmount" type="text" name="ReasonAmount" title="Enter amount used for tax payment/ other purpose" placeholder="Enter amount used for tax payment/ other purpose" v-validate="`${Reason==65 ? 'required' : ''}`"
-                  v-model="ReasonAmount" v-bind:class="{'form-control': true, 'error': errors.has('ReasonAmount') }" style="margin-right: -5px;">
+                  v-model="ReasonAmount" v-bind:class="{'form-control': true, 'error': errors.has('ReasonAmount') }" style="margin-right: -5px;" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-rupee"></i></span>
                   </div>
                 </div>
-                <span v-show="errors.has('ReasonAmount')" class="text-danger">Please amount used for tax payment/ other purpose.</span>
+                <span v-show="errors.has('ReasonAmount')" class="text-danger">Please enter amount used for tax payment/ other purpose.</span>
               </div>
 
               <div class="form-group" v-if="Reason==65">
@@ -152,13 +152,13 @@
                   <div class="input-group-prepend" style="width: 125px;">
                     <span class="input-group-text" style="width: 125px;">Reason Slip</span>
                   </div>
-                  <input @change="onUpload" class="form-control" type="file" placeholder="Upload Reason Slip"  v-validate="`${Reason==65 ? 'required' : ''}`" name="ReasonSlip" id="ReasonSlip"
+                  <input @change="onUpload" class="form-control" type="file" placeholder="Upload Reason Slip" v-validate="{required: true}" name="ReasonSlip" id="ReasonSlip"
                   v-bind:class="{'form-control': true, 'error': errors.has('ReasonSlip')}" style="margin: -5px 1px 0px 1px; height: 28px; border: 0;">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-file"></i></span>
                   </div>
                 </div>
-                <span v-show="errors.has('ReasonSlip')" class="text-danger">Please upload deposit slip.</span>
+                <span v-show="errors.has('ReasonSlip')" class="text-danger">Please upload slip used for tax payment/ other purpose.</span>
                 <a v-bind:title='`${file.name}`' v-for="file in reasonFileList" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:25px; color:#4b8cbb; margin: 10px 15px 1px 10px;"></i></a>
               </div>
 
@@ -182,8 +182,8 @@
                   <div class="input-group-prepend" style="width: 125px;">
                     <span class="input-group-text" style="width: 125px;">Card Amount</span>
                   </div>
-                  <input class="form-control" id="CardAmount" type="text" name="CardAmount" title="Enter total card amount" placeholder="Enter amount used for tax payment/ other purpose" v-validate="`${Reason==78 ? 'required' : ''}`"
-                  v-model="CardAmount" v-bind:class="{'form-control': true, 'error': errors.has('CardAmount') }" style="margin-right: -5px;">
+                  <input class="form-control" id="CardAmount" type="text" name="CardAmount" title="Enter total card amount" placeholder="Enter total card amount" v-validate="`${Reason==78 ? 'required' : ''}`"
+                  v-model="CardAmount" v-bind:class="{'form-control': true, 'error': errors.has('CardAmount') }" style="margin-right: -5px;" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-rupee"></i></span>
                   </div>
