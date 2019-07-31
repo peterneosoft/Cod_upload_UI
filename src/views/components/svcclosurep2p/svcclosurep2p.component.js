@@ -559,9 +559,14 @@ export default {
       this.GetSVCledgerData();
     },
 
-    showHideImages(index){
-      $('#vri'+index).show();
-      $('#vrl'+index).hide();
+    showHideImages(index, elem){
+      if(elem=='vrrl'){
+        $('#vrri'+index).show();
+        $('#vrrl'+index).hide();
+      }else{
+        $('#vri'+index).show();
+        $('#vrl'+index).hide();
+      }
     }
   }
 }
