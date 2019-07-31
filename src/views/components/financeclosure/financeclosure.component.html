@@ -88,7 +88,7 @@
                 <th class="text-center tableheader"><b>Deposit Type</b></th>
                 <th class="text-center tableheader"><b>Bank Name</b></th>
                 <th class="text-center tableheader"><b>Reason</b></th>
-                <th class="text-center tableheader"><b>View</b></th>
+                <th class="text-center tableheader"><b>Receipts</b></th>
               </tr>
             </thead>
             <tbody>
@@ -125,9 +125,14 @@
                 <td>{{data.bank}}</td>
                 <td>{{data.reason}}</td>
                 <td>
-                  <span v-bind:id='`${"vrl"+data.svcledgerid}`' @click="showHideImages(data.svcledgerid)" style="color: blue; cursor: pointer;">View Receipts</span>
+                  <span v-bind:id='`${"vrl"+data.svcledgerid}`' @click="showHideImages(data.svcledgerid, 'vrl')" style="color: blue; cursor: pointer;"><u>Deposit</u></span>
                   <span v-bind:id='`${"vri"+data.svcledgerid}`' style="display: none;">
                     <a v-bind:title='`${file.name}`' v-for="file in data.files" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
+                  </span>
+
+                  <br><span v-bind:id='`${"vrrl"+data.svcledgerid}`' v-if="data.reasonfiles" @click="showHideImages(data.svcledgerid, 'vrrl')" style="color: blue; cursor: pointer;"><u>Other</u></span>
+                  <span v-bind:id='`${"vrri"+data.svcledgerid}`' style="display: none;">
+                    <a v-bind:title='`${file.name}`' v-for="file in data.reasonfiles" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
                   </span>
                 </td>
               </tr>
