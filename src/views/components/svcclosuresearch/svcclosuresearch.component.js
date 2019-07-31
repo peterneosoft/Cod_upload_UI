@@ -119,9 +119,20 @@ export default {
       this.errors.clear();
     },
 
-    showHideImages(index){
-      $('#vri'+index).show();
-      $('#vrl'+index).hide();
+    showHideImages(index, elem){
+      if(elem=='vrrl'){
+        $('#vrl'+index).show();
+        $('#vri'+index).hide();
+
+        $('#vrri'+index).show();
+        $('#vrrl'+index).hide();
+      }else{
+        $('#vrri'+index).hide();
+        $('#vrrl'+index).show();
+
+        $('#vri'+index).show();
+        $('#vrl'+index).hide();
+      }
     }
   }
 }
