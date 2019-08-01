@@ -384,7 +384,7 @@ export default {
         });
       }
 
-      DepositAmount = parseFloat(DepositAmount)+parseFloat((this.ReasonAmount)?this.ReasonAmount:0)+parseFloat((this.CardAmount)?this.CardAmount:0);
+      //DepositAmount = parseFloat(DepositAmount)+parseFloat((this.ReasonAmount)?this.ReasonAmount:0)+parseFloat((this.CardAmount)?this.CardAmount:0);
       if(DepositAmount > TolatCollection){
         this.$alertify.error("Deposit amount should not be greater than total amount, please check.");
 
@@ -394,7 +394,7 @@ export default {
       }
 
       let OpeningBalance = parseFloat(this.closingBalance);
-      let ClosingBalance = parseFloat(parseFloat(OpeningBalance)+parseFloat(this.yesterdayCODAmt)-parseFloat(DepositAmount)).toFixed(2);
+      let ClosingBalance = parseFloat(parseFloat(OpeningBalance)+parseFloat(this.yesterdayCODAmt)-parseFloat(parseFloat(DepositAmount)+parseFloat((this.ReasonAmount)?this.ReasonAmount:0)+parseFloat((this.CardAmount)?this.CardAmount:0))).toFixed(2);
       let CODAmount = parseFloat(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)).toFixed(2);
 
       this.disableButton = true;

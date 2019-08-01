@@ -81,6 +81,8 @@
                 <th class="text-center tableheader"><b>Opening Amount</b></th>
                 <th class="text-center tableheader"><b>COD Receivable</b></th>
                 <th class="text-center tableheader"><b>Bank Deposited Amount</b></th>
+                <th class="text-center tableheader"><b>Other Charges</b></th>
+                <!-- <th class="text-center tableheader"><b>Card Issue Amount</b></th> -->
                 <th class="text-center tableheader"><b>Actual Received Amount</b></th>
                 <th class="text-center tableheader"><b>Balance Outstanding</b></th>
                 <th class="text-center tableheader"><b>Status</b></th>
@@ -88,12 +90,13 @@
                 <th class="text-center tableheader"><b>Deposit Type</b></th>
                 <th class="text-center tableheader"><b>Bank Name</b></th>
                 <th class="text-center tableheader"><b>Reason</b></th>
+                <!-- <th class="text-center tableheader"><b>AWB No.</b></th> -->
                 <th class="text-center tableheader"><b>Receipts</b></th>
               </tr>
             </thead>
             <tbody>
               <tr v-if="resultCount==0">
-                <td colspan="14" align="center">No record found</td>
+                <td colspan="15" align="center">No record found</td>
               </tr>
               <tr v-for="(data,index) in listFinanceledgerData">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
@@ -102,6 +105,8 @@
                 <td>{{data.openingbalance}}</td>
                 <td>{{data.codamount}}</td>
                 <td>{{data.bankdeposit}}</td>
+                <td>{{data.othercharges}}</td>
+                <!-- <td>{{data.cardissueamt}}</td> -->
                 <td>{{data.actualrecamt}}</td>
                 <td>{{data.balanceoutstanding}}</td>
                 <td>{{StatusVal}}</td>
@@ -124,6 +129,7 @@
                 <td>{{data.deposittype}}</td>
                 <td>{{data.bank}}</td>
                 <td>{{data.reason}}</td>
+                <!-- <td>{{data.awbno}}</td> -->
                 <td>
                   <span v-bind:id='`${"vrl"+data.svcledgerid}`' @click="showHideImages(data.svcledgerid, 'vrl')" style="color: blue; cursor: pointer;"><u>Deposit</u></span>
                   <span v-bind:id='`${"vri"+data.svcledgerid}`' style="display: none;">
