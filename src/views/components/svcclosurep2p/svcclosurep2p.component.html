@@ -8,8 +8,8 @@
             <form v-on:submit.prevent="onSubmit">
               <div class="form-group">
                 <div class="input-group">
-                  <div class="input-group-prepend" style="width: 125px;">
-                    <span class="input-group-text" style="width: 125px;">Delivery Date</span>
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">Delivery Date</span>
                   </div>
                   <b-form-input id="DeliveryDate" type="date" name="DeliveryDate" v-validate="{required: true}"
                   v-model="DeliveryDate" v-bind:class="{'form-control': true, 'error': errors.has('DeliveryDate') }" style="margin-right: -5px;"></b-form-input>
@@ -22,8 +22,8 @@
 
               <div class="form-group">
                 <div class="input-group">
-                  <div class="input-group-prepend" style="width: 125px;">
-                    <span class="input-group-text" style="width: 125px;">Deposit Date</span>
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">Deposit Date</span>
                   </div>
                   <b-form-input id="DepositDate" type="date" name="DepositDate" v-validate="{required: true}"
                   v-model="DepositDate" v-bind:class="{'form-control': true, 'error': errors.has('DepositDate') }" style="margin-right: -5px;"></b-form-input>
@@ -36,8 +36,8 @@
 
               <div class="form-group">
                 <div class="input-group">
-                  <div class="input-group-prepend" style="width: 125px;">
-                    <span class="input-group-text" style="width: 125px;">Deposit Amount</span>
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">Deposit Amount</span>
                   </div>
                   <input class="form-control" id="Deposit_Amount" type="text" name="Deposit_Amount" placeholder="Enter Deposit Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8"
                     v-validate="{required: true}" v-model="Deposit_Amount" v-bind:class="{'form-control': true, 'error': errors.has('Deposit_Amount') }" style="margin-right: 0px;">
@@ -50,8 +50,8 @@
 
               <div class="form-group">
                 <div class="input-group">
-                  <div class="input-group-prepend" style="width: 125px;">
-                    <span class="input-group-text" style="width: 125px;">Deposit Type</span>
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">Deposit Type</span>
                   </div>
                   <select class="form-control" id="DepositType" name="DepositType" v-on:change="GetBankData" v-validate="{required: true}"
                   v-model="DepositType" v-bind:class="{'form-control': true, 'error': errors.has('DepositType') }" style="margin-right: -3px;">
@@ -69,8 +69,8 @@
 
               <div class="form-group">
                 <div class="input-group">
-                  <div class="input-group-prepend" style="width: 125px;">
-                    <span class="input-group-text" style="width: 125px;">Bank Name</span>
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">Bank Name</span>
                   </div>
                   <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankLoading" />
                   <select class="form-control" id="BankMasterId" v-model="BankMasterId" name="BankMasterId" v-validate="{required: true}"
@@ -87,8 +87,8 @@
 
               <div class="form-group">
                 <div class="input-group">
-                  <div class="input-group-prepend" style="width: 125px;">
-                    <span class="input-group-text" style="width: 125px;">Transaction Id</span>
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">Transaction Id</span>
                   </div>
                   <input class="form-control" id="TransactionID" type="text" name="TransactionID" placeholder="Enter Transaction Id" v-validate="{required: true}"
                   v-model="TransactionID" v-bind:class="{'form-control': true, 'error': errors.has('TransactionID') }" style="margin-right: -5px;">
@@ -99,11 +99,39 @@
                 <span v-show="errors.has('TransactionID')" class="text-danger">Please enter transaction id.</span>
               </div>
 
+              <div class="form-group" v-if="exceptionList.length>0">
+                <div class="input-group">
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">Exception Ids</span>
+                  </div>
+                  <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="exceptionLoading" />
+                  <Multiselect :options="exceptionList" name="exception" id="exception" v-model="exception" @input="addExceptionData" placeholder="Select Shipping Id" label="ShippingID" track-by="ShippingID" :optionHeight="100" :preselect-first="false" v-bind:multiple="multiple()" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                     <template slot="noResult"><p>No Record Found.</p></template>
+                  </Multiselect>
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-align-justify"></i></span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group" v-if="exceptionList.length>0">
+                <div class="input-group">
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">Exception Amount</span>
+                  </div>
+                  <input disabled class="form-control" id="exceptionAmount" type="text" name="exceptionAmount" placeholder="Enter Exception Amount"
+                  v-model="exceptionAmount" v-bind:class="{'form-control': true}" style="margin-right: 1px;">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-rupee"></i></span>
+                  </div>
+                </div>
+              </div>
+
               <div class="form-group" v-show="DepositType != ''">
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="DepositLoading" />
                 <div class="input-group">
-                  <div class="input-group-prepend" style="width: 125px;">
-                    <span class="input-group-text" style="width: 125px;">Deposit Slip</span>
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">Deposit Slip</span>
                   </div>
                   <input @change="onUpload" class="form-control" type="file" placeholder="Upload Deposit Slip"  v-validate="`${DepositType != '' ? 'required' : ''}`" name="DepositSlip" id="DepositSlip"
                   v-bind:class="{'form-control': true, 'error': errors.has('DepositSlip')}" style="margin: -5px 1px 0px 1px; height: 28px; border: 0;">
@@ -117,8 +145,8 @@
 
               <div class="form-group" v-show="unmatchedAmt > 0" style="margin-top: -10px;">
                 <div class="input-group">
-                  <div class="input-group-prepend" style="width: 125px;">
-                    <span class="input-group-text" style="width: 125px;">Reason</span>
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">Reason</span>
                   </div>
                   <select class="form-control" id="Reason" v-model="Reason" name="Reason" v-validate="`${unmatchedAmt > 0 ? 'required' : ''}`"
                   v-bind:class="{'form-control': true, 'error': errors.has('Reason') }" style="margin-right: -5px;">
@@ -134,8 +162,8 @@
 
               <div class="form-group" v-if="Reason==65">
                 <div class="input-group">
-                  <div class="input-group-prepend" style="width: 125px;">
-                    <span class="input-group-text" style="width: 125px;">Reason Amount</span>
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">Reason Amount</span>
                   </div>
                   <input class="form-control" id="ReasonAmount" type="text" name="ReasonAmount" title="Enter amount used for tax payment/ other purpose" placeholder="Enter amount used for tax payment/ other purpose" v-validate="`${Reason==65 ? 'required' : ''}`"
                   v-model="ReasonAmount" v-bind:class="{'form-control': true, 'error': errors.has('ReasonAmount') }" style="margin-right: -5px;" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8">
@@ -149,8 +177,8 @@
               <div class="form-group" v-if="Reason==65">
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="ReasonLoading" />
                 <div class="input-group">
-                  <div class="input-group-prepend" style="width: 125px;">
-                    <span class="input-group-text" style="width: 125px;">Reason Slip</span>
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">Reason Slip</span>
                   </div>
                   <input @change="onUpload" class="form-control" type="file" placeholder="Upload Reason Slip" v-validate="{required: true}" name="ReasonSlip" id="ReasonSlip"
                   v-bind:class="{'form-control': true, 'error': errors.has('ReasonSlip')}" style="margin: -5px 1px 0px 1px; height: 28px; border: 0;">
@@ -164,8 +192,8 @@
 
               <!-- <div class="form-group" v-if="Reason==78">
                 <div class="input-group">
-                  <div class="input-group-prepend" style="width: 125px;">
-                    <span class="input-group-text" style="width: 125px;">AWB Number</span>
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">AWB Number</span>
                   </div>
                   <input class="form-control" id="AWBNo" type="text" name="AWBNo" title="Enter AWB number" placeholder="Enter AWB number" v-validate="`${Reason==78 ? 'required' : ''}`"
                   v-model="AWBNo" v-bind:class="{'form-control': true, 'error': errors.has('AWBNo') }" style="margin-right: -5px;">
@@ -179,8 +207,8 @@
 
               <div class="form-group" v-if="Reason==78">
                 <div class="input-group">
-                  <div class="input-group-prepend" style="width: 125px;">
-                    <span class="input-group-text" style="width: 125px;">Card Amount</span>
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">Card Amount</span>
                   </div>
                   <input class="form-control" id="CardAmount" type="text" name="CardAmount" title="Enter total card amount" placeholder="Enter total card amount" v-validate="`${Reason==78 ? 'required' : ''}`"
                   v-model="CardAmount" v-bind:class="{'form-control': true, 'error': errors.has('CardAmount') }" style="margin-right: -5px;" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8">

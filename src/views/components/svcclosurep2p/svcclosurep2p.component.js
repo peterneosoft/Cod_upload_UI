@@ -4,12 +4,15 @@ import CryptoJS from 'crypto-js';
 import {Validator} from 'vee-validate'
 import Paginate from 'vuejs-paginate'
 import VueElementLoading from 'vue-element-loading';
+import Multiselect from 'vue-multiselect'
+import 'vue-multiselect/dist/vue-multiselect.min.css';
 
 export default {
   name: 'svcclosurep2p',
   components: {
       Paginate,
-      VueElementLoading
+      VueElementLoading,
+      Multiselect
   },
   data() {
     return {
@@ -30,6 +33,7 @@ export default {
       pagecount: 0,
       localuserid: 0,
       localhubid: 0,
+      localhubname: '',
       localhubzoneid: 0,
       DenominationList: [],
       StatusID: 0,
@@ -60,7 +64,12 @@ export default {
       disableButton: false,
       modalShow:false,
       penAmtLoading: false,
-      denomLoading: false
+      denomLoading: false,
+      exceptionLoading: false,
+      exception:[],
+      exceptionList:[],
+      exceptionArr:[],
+      exceptionAmount:0
     }
   },
 
@@ -82,6 +91,7 @@ export default {
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
     var hubdetail         = JSON.parse(plaintext);
     this.localhubid       = hubdetail[0].HubID;
+    this.localhubname       = hubdetail[0].HubName;
     this.localhubzoneid   = hubdetail[0].HubZoneId;
 
     var userToken = window.localStorage.getItem('accessuserToken')
@@ -98,9 +108,14 @@ export default {
     //await this.GetBankData();
     await this.GetReasonList();
     await this.GetSVCledgerData();
+    await this.GetSVCExceptionData();
   },
 
   methods: {
+    multiple(){
+      return true;
+    },
+
     showModal(Balanc){
        this.$refs.myModalRef.show(Balanc)
       this.RemainData = Balanc;
@@ -187,7 +202,7 @@ export default {
           this.pendingCODAmt = '0.00';
           this.penAmtLoading = false;
         }
-        this.TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)))).toFixed(2);
+        this.TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount)))).toFixed(2);
       }, error => {
         this.penAmtLoading = false;
         console.error(error);
@@ -346,7 +361,7 @@ export default {
     saveSvcClosure(event) {
       let DepositAmount = parseInt(this.Deposit_Amount);
 
-      let TolatCollection = parseFloat((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt))).toFixed(2);
+      let TolatCollection = parseFloat((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))).toFixed(2);
       let p2pamt = parseInt(this.p2pAmount);
 
       if(DepositAmount !== parseInt(this.tot_amt)){
@@ -430,7 +445,9 @@ export default {
           totalAmtdeposit: DepositAmount + p2pamt,
           Denomination: this.DenominationArr,
           NoteCount: NoteCountArr,
-          DenominationID: DenominationIDArr
+          DenominationID: DenominationIDArr,
+          exceptionId: this.exception,
+          exceptionAmount: this.exceptionAmount
       })
       axios({
           method: 'POST',
@@ -526,6 +543,53 @@ export default {
       }, error => {
         console.error(error)
       })
+    },
+
+    GetSVCExceptionData() {
+      if( !this.localhubname ){
+        this.$alertify.error("Hub Name does not exist.");
+        return false;
+      }
+      this.exceptionLoading = true;
+
+      axios({
+          method: 'POST',
+          'url': apiUrl.api_url + 'getSVCException',
+          'data': {
+            hubname: this.localhubname,
+            hubid: this.localhubid
+          },
+          headers: {
+              'Authorization': 'Bearer '+this.myStr
+          }
+      })
+      .then(result => {
+        if (result.data.code == 200) {
+          this.exceptionLoading = false;
+          this.exceptionList = result.data.data;
+          this.exception = result.data.data;
+
+          var obj = 0;
+          for(var i=0; i < this.exceptionList.length; i++) {
+             obj += parseFloat(this.exceptionList[i].NetPayment);
+          }
+          this.exceptionAmount = parseFloat(obj).toFixed(2);
+        }else {
+          this.exceptionLoading = false;
+        }
+      }, error => {
+          this.exceptionLoading = false;
+          console.error(error);
+      })
+    },
+
+    addExceptionData(event) {
+      var obj = 0;
+      for(var i=0; i < this.exception.length; i++) {
+         obj += parseFloat(this.exception[i].NetPayment);
+      }
+      this.exceptionAmount = parseFloat(obj).toFixed(2);
+      this.TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount)))).toFixed(2);
     },
 
     onSubmit: function(event) {
