@@ -11,7 +11,7 @@
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Delivery Date</span>
                   </div>
-                  <b-form-input id="DeliveryDate" type="date" name="DeliveryDate" v-validate="{required: true}"
+                  <b-form-input disabled id="DeliveryDate" type="date" name="DeliveryDate" v-validate="{required: true}"
                   v-model="DeliveryDate" v-bind:class="{'form-control': true, 'error': errors.has('DeliveryDate') }" style="margin-right: -5px;"></b-form-input>
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
@@ -330,10 +330,11 @@
                 <th class="text-center tableheader"><b>Bank Deposited Amount</b></th>
                 <th class="text-center tableheader"><b>Other Charges</b></th>
                 <!-- <th class="text-center tableheader"><b>Card Issue Amount</b></th> -->
+                <th class="text-center tableheader"><b>Exception Amount</b></th>
                 <th class="text-center tableheader"><b>Balance Outstanding</b></th>
+                <th class="text-center tableheader"><b>AWB No.</b></th>
                 <th class="text-center tableheader"><b>Status</b></th>
                 <th class="text-center tableheader"><b>Reason</b></th>
-                <!-- <th class="text-center tableheader"><b>AWB No.</b></th> -->
                 <th class="text-center tableheader"><b>Finance Reason</b></th>
                 <th class="text-center tableheader"><b>Receipts</b></th>
               </tr>
@@ -353,11 +354,12 @@
                 <td>{{data.bankdeposit}}</td>
                 <td>{{data.othercharges}}</td>
                 <!-- <td>{{data.cardissueamt}}</td> -->
+                <td>{{data.exceptionamt}}</td>
                 <td>{{data.closingbalance}}</td>
+                <td>{{data.awbno}}</td>
                 <td v-if="data.statusid==1">Open</td>
                 <td v-if="data.statusid==6">Close</td>
                 <td>{{data.Reason}}</td>
-                <!-- <td>{{data.awbno}}</td> -->
                 <td>{{data.financereason}}</td>
                 <td class="text-center">
                   <span v-bind:id='`${"vrl"+data.svcledgerid}`' v-if="data.createdby!='schedular@xpressbees.com'" @click="showHideImages(data.svcledgerid, 'vrl')" style="color: blue; cursor: pointer;"><u>Deposit</u></span>

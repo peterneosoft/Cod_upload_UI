@@ -621,6 +621,7 @@ export default {
       this.$validator.reset(); this.errors.clear(); event.target.reset();
       this.GetShipmentUpdate();
       this.GetSVCledgerData();
+      this.GetSVCExceptionData();
     },
 
     showHideImages(index, elem){

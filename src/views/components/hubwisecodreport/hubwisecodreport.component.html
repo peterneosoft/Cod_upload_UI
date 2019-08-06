@@ -91,11 +91,12 @@
                     <th class="text-center tableheader"><b>Bank Deposit Amount</b></th>
                     <th class="text-center tableheader"><b>Other Charges</b></th>
                     <!-- <th class="text-center tableheader"><b>Card Issue Amount</b></th> -->
+                    <th class="text-center tableheader"><b>Exception Amount</b></th>
                     <th class="text-center tableheader"><b>COD Receivable</b></th>
                     <th class="text-center tableheader"><b>Finance Confirmed Amount</b></th>
                     <th class="text-center tableheader"><b>Finance Confirmed Date</b></th>
                     <th class="text-center tableheader"><b>Balance Outstanding</b></th>
-                    <!-- <th class="text-center tableheader"><b>AWB No.</b></th> -->
+                    <th class="text-center tableheader"><b>AWB No.</b></th>
                     <th class="text-center tableheader"><b>Status</b></th>
                     <th class="text-center tableheader"><b>Owner Name</b></th>
                     <th class="text-center tableheader"><b>Closed by</b></th>
@@ -103,7 +104,7 @@
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td colspan="15" align="center">No record found</td>
+                    <td colspan="17" align="center">No record found</td>
                   </tr>
                   <tr v-for="(CODLedger_List,index) in CODLedgerReports ">
                     <td>{{pageno+index+1}}</td>
@@ -114,12 +115,13 @@
                     <td>{{CODLedger_List.openingbalance}}</td>
                     <td>{{CODLedger_List.bankdeposit}}</td>
                     <td>{{CODLedger_List.othercharges}}</td>
+                    <td>{{CODLedger_List.exceptionamt}}</td>
                     <!-- <td>{{CODLedger_List.cardissueamt}}</td> -->
                     <td>{{CODLedger_List.receivable}}</td>
                     <td>{{CODLedger_List.financeconfirmamount}}</td>
                     <td>{{CODLedger_List.financeconfirmdate}}</td>
                     <td>{{CODLedger_List.balanceLogic}}</td>
-                    <!-- <td>{{CODLedger_List.awbno}}</td> -->
+                    <td>{{CODLedger_List.awbno}}</td>
                     <td>{{CODLedger_List.StatusVal}}</td>
                     <td>{{CODLedger_List.createdby}}</td>
                     <td>{{CODLedger_List.lastmodifiedby}}</td>
