@@ -102,7 +102,7 @@
               <div class="form-group" v-if="exceptionList.length>0">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
-                    <span class="input-group-text" style="width: 140px;">Exception Ids</span>
+                    <span class="input-group-text" style="width: 140px;">AWB No.</span>
                   </div>
                   <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="exceptionLoading" />
                   <Multiselect :options="exceptionList" name="exception" id="exception" v-model="exception" @input="addExceptionData" placeholder="Select Shipping Id" label="ShippingID" track-by="ShippingID" :optionHeight="100" :preselect-first="false" v-bind:multiple="multiple()" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
@@ -277,6 +277,10 @@
                 <tr>
                   <td>Pending COD Amount</td>
                   <td id="CODAmount">{{pendingCODAmt}}</td>
+                </tr>
+                <tr>
+                  <td>Exception Amount</td>
+                  <td id="ExceptionAmount">{{exceptionAmount}}</td>
                 </tr>
                 <tr>
                   <td>Total Amount</td>

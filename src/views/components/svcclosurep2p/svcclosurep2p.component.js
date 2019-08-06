@@ -117,14 +117,14 @@ export default {
     },
 
     showModal(Balanc){
-       this.$refs.myModalRef.show(Balanc)
+      this.$refs.myModalRef.show(Balanc)
       this.RemainData = Balanc;
     },
     hideModal() {
        this.$refs.myModalRef.hide()
      },
      closeStatusRoleModal() {
-         this.modalShow = false
+       this.modalShow = false
      },
 
     GetShipmentUpdate() {
@@ -409,7 +409,7 @@ export default {
       }
 
       let OpeningBalance = parseFloat(this.closingBalance);
-      let ClosingBalance = parseFloat(parseFloat(OpeningBalance)+parseFloat(this.yesterdayCODAmt)-parseFloat(parseFloat(DepositAmount)+parseFloat((this.ReasonAmount)?this.ReasonAmount:0)+parseFloat((this.CardAmount)?this.CardAmount:0))).toFixed(2);
+      let ClosingBalance = parseFloat(parseFloat(OpeningBalance)+parseFloat(this.yesterdayCODAmt)-parseFloat(parseFloat(DepositAmount)+parseFloat(this.exceptionAmount)+parseFloat((this.ReasonAmount)?this.ReasonAmount:0)+parseFloat((this.CardAmount)?this.CardAmount:0))).toFixed(2);
       let CODAmount = parseFloat(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)).toFixed(2);
 
       this.disableButton = true;
@@ -446,7 +446,7 @@ export default {
           Denomination: this.DenominationArr,
           NoteCount: NoteCountArr,
           DenominationID: DenominationIDArr,
-          exceptionId: this.exception,
+          exceptionId: this.exceptionArr,
           exceptionAmount: this.exceptionAmount
       })
       axios({
@@ -569,12 +569,14 @@ export default {
           this.exceptionList = result.data.data;
           this.exception = result.data.data;
 
-          var obj = 0;
+          var obj = 0; this.exceptionArr = [];
           for(var i=0; i < this.exceptionList.length; i++) {
              obj += parseFloat(this.exceptionList[i].NetPayment);
+             this.exceptionArr.push(this.exception[i].ShippingID);
           }
           this.exceptionAmount = parseFloat(obj).toFixed(2);
         }else {
+          this.exceptionAmount = '0.00';
           this.exceptionLoading = false;
         }
       }, error => {
@@ -584,9 +586,10 @@ export default {
     },
 
     addExceptionData(event) {
-      var obj = 0;
+      var obj = 0; this.exceptionArr = [];
       for(var i=0; i < this.exception.length; i++) {
          obj += parseFloat(this.exception[i].NetPayment);
+         this.exceptionArr.push(this.exception[i].ShippingID);
       }
       this.exceptionAmount = parseFloat(obj).toFixed(2);
       this.TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount)))).toFixed(2);
