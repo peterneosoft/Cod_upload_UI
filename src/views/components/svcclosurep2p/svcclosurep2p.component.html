@@ -345,7 +345,7 @@
             </thead>
             <tbody>
               <tr v-if="resultCount==0">
-                <td colspan="14" align="center">No record found</td>
+                <td colspan="16" align="center">No record found</td>
               </tr>
               <tr v-for="(data,index) in listSVCledgerData" v-bind:class="`${data.createdby == 'schedular@xpressbees.com' ? 'scheduler' : ''}`">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
