@@ -133,6 +133,11 @@ export default {
         $('#vri'+index).show();
         $('#vrl'+index).hide();
       }
+    },
+
+    showAWBNo(index){
+      var popup = document.getElementById("awb"+index);
+      popup.classList.toggle("show");
     }
   }
 }

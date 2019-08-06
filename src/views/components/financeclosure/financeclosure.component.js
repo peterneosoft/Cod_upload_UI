@@ -351,6 +351,11 @@ export default {
 
     scrollWin() {
       window.scrollBy(0, 1000);
+    },
+
+    showAWBNo(index){
+      var popup = document.getElementById("awb"+index);
+      popup.classList.toggle("show");
     }
   }
 }

@@ -40,7 +40,7 @@
       <div class="card-headerfrm" style="margin-bottom: 15px;">
         <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
         <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
-        <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+        <table class="table-bordered table-hover tbl datatables scrolltb" style="width:100%;">
           <thead>
             <tr class="text-primary">
               <th class="text-center tableheader"><b>#</b></th>
@@ -49,8 +49,9 @@
               <th class="text-center tableheader"><b>Opening Amount</b></th>
               <th class="text-center tableheader"><b>COD Receivable</b></th>
               <th class="text-center tableheader"><b>Bank Deposited Amount</b></th>
-              <th class="text-center tableheader"><b>Other Charges</b></th>
+              <th class="text-center tableheader"><b>Exception Amount</b></th>
               <!-- <th class="text-center tableheader"><b>Card Issue Amount</b></th> -->
+              <th class="text-center tableheader"><b>Other Charges</b></th>
               <th class="text-center tableheader"><b>Actual Received Amount</b></th>
               <th class="text-center tableheader"><b>Balance Outstanding</b></th>
               <th class="text-center tableheader"><b>Status</b></th>
@@ -58,13 +59,13 @@
               <th class="text-center tableheader"><b>Deposit Type</b></th>
               <th class="text-center tableheader"><b>Bank Name</b></th>
               <th class="text-center tableheader"><b>Reason</b></th>
-              <!-- <th class="text-center tableheader"><b>AWB No.</b></th> -->
               <th class="text-center tableheader"><b>Receipt</b></th>
+              <th class="text-center tableheader"><b>AWB No.</b></th>
             </tr>
           </thead>
           <tbody>
             <tr v-if="resultCount==0">
-              <td colspan="15" align="center">No record found</td>
+              <td colspan="17" align="center">No record found</td>
             </tr>
             <tr v-for="(data,index) in listSearchSVCledgerData">
               <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
@@ -73,8 +74,9 @@
               <td>{{data.openingbalance}}</td>
               <td>{{data.codamount}}</td>
               <td>{{data.bankdeposit}}</td>
-              <td>{{data.othercharges}}</td>
+              <td>{{data.exceptionamt}}</td>
               <!-- <td>{{data.cardissueamt}}</td> -->
+              <td>{{data.othercharges}}</td>
               <td>{{data.actualrecamt}}</td>
               <td>{{data.closingbalance}}</td>
               <td>{{data.status}}</td>
@@ -82,7 +84,6 @@
               <td>{{data.deposittype}}</td>
               <td>{{data.bank}}</td>
               <td>{{data.reason}}</td>
-              <!-- <td>{{data.awbno}}</td> -->
               <td>
                 <span v-bind:id='`${"vrl"+data.svcledgerid}`' @click="showHideImages(data.svcledgerid, 'vrl')" style="color: blue; cursor: pointer;"><u>Deposit</u></span>
                 <span v-bind:id='`${"vri"+data.svcledgerid}`' style="display: none;">
@@ -94,6 +95,7 @@
                   <a v-bind:title='`${file.name}`' v-for="file in data.reasonfiles" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
                 </span>
               </td>
+              <td class="popup" @click="showAWBNo(data.svcledgerid, 'awb')">{{data.awbnocount}} <span class="popuptext" v-bind:id='`${"awb"+data.svcledgerid}`'><b>{{data.awbno}}</b></span></td>
             </tr>
           </tbody>
         </table><br>
