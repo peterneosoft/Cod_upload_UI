@@ -162,10 +162,8 @@ export default {
             if(result.data.code==200){
               this.yesterdayCODAmt = (result.data.shipmentupdate) ? parseFloat(result.data.shipmentupdate).toFixed(2) : '0.00';
             }
+            this.GetPendingCODAmt();
 
-            //if(this.yesterdayCODAmt > 0){
-              this.GetPendingCODAmt();
-            //}
           }, error => {
             console.error(error)
           })
@@ -360,10 +358,11 @@ export default {
 
     saveSvcClosure(event) {
       let DepositAmount = parseInt(this.Deposit_Amount);
+      let DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat((this.ReasonAmount)?this.ReasonAmount:0)+parseFloat((this.CardAmount)?this.CardAmount:0)+parseFloat(this.exceptionAmount)));
 
-      let TolatCollection = parseFloat((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))).toFixed(2);
+      let TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))));
+
       let p2pamt = parseInt(this.p2pAmount);
-
       if(DepositAmount !== parseInt(this.tot_amt)){
         this.$alertify.error("Denomination details & Deposit amount is should be same, please check.");
 
@@ -379,13 +378,17 @@ export default {
         let error = document.getElementById("d_a");
         error.style.display  = "none";
 
-        this.unmatchedAmt = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositAmount))).toFixed(2);
+        this.unmatchedAmt = parseFloat(parseFloat(TolatCollection)-parseFloat(DepositReasonExcepAmount)).toFixed(2);
 
-        if((DepositAmount < TolatCollection) && (this.unmatchedAmt!='0.00') && (this.unmatchedAmt!=0)){
+        if((DepositReasonExcepAmount < TolatCollection) && (this.unmatchedAmt!='0.00') && (this.unmatchedAmt!=0)){
           if(this.Reason==''){
             this.showModal(this.unmatchedAmt);
             return false;
           }else{
+            if(this.ReasonAmount && this.ReasonAmount>0){
+              this.$alertify.error("Total pending amount and deposit amount including other charges is should be same, please check.");
+              return false;
+            }
             this.hideModal();
           }
         }
@@ -399,24 +402,23 @@ export default {
         });
       }
 
-      //DepositAmount = parseFloat(DepositAmount)+parseFloat((this.ReasonAmount)?this.ReasonAmount:0)+parseFloat((this.CardAmount)?this.CardAmount:0);
-      if(DepositAmount > TolatCollection){
-        this.$alertify.error("Deposit amount should not be greater than total amount, please check.");
+      if(DepositReasonExcepAmount > TolatCollection){
+        this.$alertify.error("Deposit amount including other charges should not be greater than total pending amount, please check.");
 
         let error            = document.getElementById("d_a");
-        error.innerHTML      = "Deposit amount should not be greater than total amount, please check.";
+        error.innerHTML      = "Deposit amount including other charges should not be greater than total pending amount, please check.";
         error.style.display  = "block"; return false;
       }
 
       let OpeningBalance = parseFloat(this.closingBalance);
-      let ClosingBalance = parseFloat(parseFloat(OpeningBalance)+parseFloat(this.yesterdayCODAmt)-parseFloat(parseFloat(DepositAmount)+parseFloat(this.exceptionAmount)+parseFloat((this.ReasonAmount)?this.ReasonAmount:0)+parseFloat((this.CardAmount)?this.CardAmount:0))).toFixed(2);
+      let ClosingBalance = parseFloat(parseFloat(TolatCollection)-parseFloat(DepositReasonExcepAmount)).toFixed(2);
       let CODAmount = parseFloat(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)).toFixed(2);
 
-      this.disableButton = true;
       if(this.AWBNo){
         this.AWBNo = this.AWBNo.split(',');
       }
 
+      this.disableButton = true;
       this.input = ({
           DepositDate: this.DepositDate,
           DeliveryDate: this.DeliveryDate,
@@ -618,13 +620,13 @@ export default {
       this.pageno = this.tot_amt = this.unmatchedAmt = 0;
       this.uploadFileList=[]; this.reasonFileList=[]; this.BankList = [];
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = '';
-      this.DepositSlip = this.ReasonSlip = this.Reason = this.ReasonAmount = this.CardAmount = ''; this.AWBNo = null;
+      this.DepositSlip = this.ReasonSlip = this.Reason = this.ReasonAmount = this.CardAmount = ''; this.AWBNo = null; this.exception = []; this.exceptionList=[];
       $('#denomlist input[type="text"]').val(0); $('#denomlist input[type="number"]').val('');
       document.getElementById("d_a").style.display = "none";
-      this.$validator.reset(); this.errors.clear(); event.target.reset();
       this.GetShipmentUpdate();
       this.GetSVCledgerData();
       this.GetSVCExceptionData();
+      this.$validator.reset(); this.errors.clear(); event.target.reset();
     },
 
     showHideImages(index, elem){
