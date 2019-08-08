@@ -57,8 +57,7 @@ export default {
        var hubArr=JSON.parse(hubtext);
 
        this.input = ({
-           hubid: [hubArr[0].HubID],
-           appkey: '$#@COD&&Mang&*^%$$'
+           hubid: [hubArr[0].HubID]
        })
 
        axios({

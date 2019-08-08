@@ -265,26 +265,26 @@
       <div class="col-lg-3">
         <div class="card">
           <div class="card-header">
-            <i class="fa fa-align-justify"></i> Amount</div>
+            <i class="fa fa-align-justify"></i> COD Amount</div>
           <div class="card-body">
             <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="penAmtLoading" />
             <table class="table table-responsive-sm">
               <tbody>
                 <tr>
-                  <td>Yesterday's COD Amount</td>
-                  <td id="ClosingBalance">{{yesterdayCODAmt}}</td>
+                  <td>Yesterday</td>
+                  <td id="ClosingBalance"><i class="fa fa-rupee"></i> {{yesterdayCODAmt}}</td>
                 </tr>
                 <tr>
-                  <td>Pending COD Amount</td>
-                  <td id="CODAmount">{{pendingCODAmt}}</td>
+                  <td>Pending</td>
+                  <td id="CODAmount"><i class="fa fa-rupee"></i> {{pendingCODAmt}}</td>
                 </tr>
                 <tr>
-                  <td>Exception Amount</td>
-                  <td id="ExceptionAmount">{{exceptionAmount}}</td>
+                  <td>Exception</td>
+                  <td id="ExceptionAmount"><i class="fa fa-rupee"></i> {{exceptionAmount}}</td>
                 </tr>
                 <tr>
-                  <td>Total Amount</td>
-                  <td id="TolatCollection">{{TolatCollection}}</td>
+                  <td>Total</td>
+                  <td id="TolatCollection"><i class="fa fa-rupee"></i> {{TolatCollection}}</td>
                 </tr>
                 <!-- <tr>
                   <td>Total P2P Amount</td>

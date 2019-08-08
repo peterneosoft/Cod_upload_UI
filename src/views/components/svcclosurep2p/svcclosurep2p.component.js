@@ -53,12 +53,12 @@ export default {
       DepositLoading: false,
       ReasonLoading: false,
       resultCount: 0,
-      pendingCODAmt: '0.00',
-      closingBalance: '0.00',
-      yestClosingbalance: '0.00',
-      yesterdayCODAmt: '0.00',
-      TolatCollection: '0.00',
-      p2pAmount: '0.00',
+      pendingCODAmt: 0,
+      closingBalance: 0,
+      yestClosingbalance: 0,
+      yesterdayCODAmt: 0,
+      TolatCollection: 0,
+      p2pAmount: 0,
       myStr: '',
       resultdate: '',
       disableButton: false,
@@ -143,7 +143,7 @@ export default {
       .then(result => {
         this.penAmtLoading = true;
         if(result.data.rows.length > 0){
-          this.yesterdayCODAmt = parseFloat(Math.round(0)).toFixed(2);
+          this.yesterdayCODAmt = parseFloat(Math.round(0));
           this.GetPendingCODAmt();
         }else{
 
@@ -160,7 +160,7 @@ export default {
           }).then(result => {
             var data = []; let yDayCODAmt = 0;
             if(result.data.code==200){
-              this.yesterdayCODAmt = (result.data.shipmentupdate) ? parseFloat(result.data.shipmentupdate).toFixed(2) : '0.00';
+              this.yesterdayCODAmt = (result.data.shipmentupdate) ? parseFloat(Math.round(result.data.shipmentupdate)) : 0;
             }
             this.GetPendingCODAmt();
 
@@ -189,18 +189,18 @@ export default {
       })
       .then(result => {
         if(result.data.rows.length > 0){
-          this.pendingCODAmt = result.data.rows[0].closingbalance;
+          this.pendingCODAmt = parseFloat(Math.round(result.data.rows[0].closingbalance));
           this.closingBalance = result.data.rows[0].closingbalance;
 
           if(result.data.rows[0].totalamtdeposit > result.data.rows[0].p2pamt){
-            this.p2pAmount = '0.00';
+            this.p2pAmount = 0;
           }
           this.penAmtLoading = false;
         }else{
-          this.pendingCODAmt = '0.00';
+          this.pendingCODAmt = 0;
           this.penAmtLoading = false;
         }
-        this.TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount)))).toFixed(2);
+        this.TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))));
       }, error => {
         this.penAmtLoading = false;
         console.error(error);
@@ -378,7 +378,7 @@ export default {
         let error = document.getElementById("d_a");
         error.style.display  = "none";
 
-        this.unmatchedAmt = parseFloat(parseFloat(TolatCollection)-parseFloat(DepositReasonExcepAmount)).toFixed(2);
+        this.unmatchedAmt = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositReasonExcepAmount)));
 
         if((DepositReasonExcepAmount < TolatCollection) && (this.unmatchedAmt!='0.00') && (this.unmatchedAmt!=0)){
           if(this.Reason==''){
@@ -411,8 +411,8 @@ export default {
       }
 
       let OpeningBalance = parseFloat(this.closingBalance);
-      let ClosingBalance = parseFloat(parseFloat(TolatCollection)-parseFloat(DepositReasonExcepAmount)).toFixed(2);
-      let CODAmount = parseFloat(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)).toFixed(2);
+      let ClosingBalance = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositReasonExcepAmount)));
+      let CODAmount = parseFloat(Math.round(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)));
 
       if(this.AWBNo){
         this.AWBNo = this.AWBNo.split(',');
@@ -576,9 +576,9 @@ export default {
              obj += parseFloat(this.exceptionList[i].NetPayment);
              this.exceptionArr.push(this.exception[i].ShippingID);
           }
-          this.exceptionAmount = parseFloat(obj).toFixed(2);
+          this.exceptionAmount = parseFloat(Math.round(obj));
         }else {
-          this.exceptionAmount = '0.00';
+          this.exceptionAmount = 0;
           this.exceptionLoading = false;
         }
       }, error => {
@@ -593,15 +593,15 @@ export default {
          obj += parseFloat(this.exception[i].NetPayment);
          this.exceptionArr.push(this.exception[i].ShippingID);
       }
-      this.exceptionAmount = parseFloat(obj).toFixed(2);
-      this.TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount)))).toFixed(2);
+      this.exceptionAmount = parseFloat(Math.round(obj));
+      this.TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))));
     },
 
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
          document.getElementById("d_a").style.display = "none";
          if(result){
-           if((this.tot_amt != '0' && this.tot_amt != parseInt(this.Deposit_Amount))||!this.tot_amt){
+           if((this.tot_amt != 0 && this.tot_amt != parseInt(this.Deposit_Amount))||!this.tot_amt){
               let error = document.getElementById("d_a");
               error.innerHTML = "Total denomination & deposit amount is should be same, please check.";
               error.style.display = "block";

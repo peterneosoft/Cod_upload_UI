@@ -353,8 +353,7 @@ export default {
       this.input = ({
           usertype: "3",
           hubid: [hubArr[0].HubID],
-          hubname: hubArr[0].HubName,
-          appkey: '$#@COD&&Mang&*^%$$'
+          hubname: hubArr[0].HubName
       })
 
       axios({
