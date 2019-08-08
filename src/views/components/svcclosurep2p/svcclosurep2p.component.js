@@ -385,7 +385,7 @@ export default {
             this.showModal(this.unmatchedAmt);
             return false;
           }else{
-            if(this.ReasonAmount && this.ReasonAmount>0){
+            if((this.Reason==65) && (this.ReasonAmount) && (this.ReasonAmount>0)){
               this.$alertify.error("Total pending amount and deposit amount including other charges is should be same, please check.");
               return false;
             }
