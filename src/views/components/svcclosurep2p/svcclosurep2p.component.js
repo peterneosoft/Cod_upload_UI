@@ -388,6 +388,8 @@ export default {
             if((this.Reason==65) && (this.ReasonAmount) && (this.ReasonAmount>0)){
               this.$alertify.error("Total pending amount and deposit amount including other charges is should be same, please check.");
               return false;
+            }else{
+              this.ReasonAmount=0;
             }
             this.hideModal();
           }
