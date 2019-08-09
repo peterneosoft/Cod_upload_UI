@@ -45,9 +45,9 @@ export default {
       ReasonList: [],
       uploadFileList: [],
       reasonFileList: [],
-      ReasonAmount: '',
+      ReasonAmount: 0,
       AWBNo: null,
-      CardAmount: '',
+      CardAmount: 0,
       isLoading: false,
       bankLoading: false,
       DepositLoading: false,
@@ -358,7 +358,13 @@ export default {
 
     saveSvcClosure(event) {
       let DepositAmount = parseInt(this.Deposit_Amount);
-      let DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat((this.ReasonAmount)?this.ReasonAmount:0)+parseFloat((this.CardAmount)?this.CardAmount:0)+parseFloat(this.exceptionAmount)));
+      let DepositReasonExcepAmount = '';
+      if(this.Reason==65){
+        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.ReasonAmount)+parseFloat(this.CardAmount)+parseFloat(this.exceptionAmount)));
+      }else{
+        this.ReasonAmount = 0;
+        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.CardAmount)+parseFloat(this.exceptionAmount)));
+      }
 
       let TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))));
 
@@ -385,13 +391,13 @@ export default {
             this.showModal(this.unmatchedAmt);
             return false;
           }else{
-            if((this.Reason==65) && (this.ReasonAmount) && (this.ReasonAmount>0)){
+            if(this.Reason==65){
               this.$alertify.error("Total pending amount and deposit amount including other charges is should be same, please check.");
               return false;
             }else{
-              this.ReasonAmount=0;
+              this.reasonFileList=[];
+              this.hideModal();
             }
-            this.hideModal();
           }
         }
       }
@@ -430,9 +436,9 @@ export default {
           BankDeposit: DepositAmount,
           TransactionID: this.TransactionID,
           ReasonID: (this.Reason)?this.Reason:null,
-          ReasonAmount: (this.ReasonAmount)?this.ReasonAmount:null,
+          ReasonAmount: this.ReasonAmount,
           AWBNo: this.AWBNo,
-          CardAmount: (this.CardAmount)?this.CardAmount:null,
+          CardAmount: this.CardAmount,
           CreatedBy: this.localuserid,
           HubId: this.localhubid,
           HubZoneId: this.localhubzoneid,
@@ -440,7 +446,7 @@ export default {
           TolatCollection: TolatCollection,
           StatusID: 1,
           OpeningBalance: OpeningBalance,
-          ClosingBalance: ClosingBalance,
+          ClosingBalance: (ClosingBalance)?ClosingBalance:0,
           FinanceConfirmAmount: 0,
           CODAmount: CODAmount,
           IsActive: true,
@@ -472,6 +478,8 @@ export default {
         }
       })
       .catch((httpException) => {
+          this.disableButton = false;
+          this.$alertify.error('Error occured')
           console.error('exception is:::::::::', httpException)
       });
     },
@@ -619,10 +627,10 @@ export default {
     resetForm(event) {
       this.DepositLoading = false; this.ReasonLoading = false;
       this.BatchID = Math.floor(Math.random() * (Math.pow(10,5)));
-      this.pageno = this.tot_amt = this.unmatchedAmt = 0;
-      this.uploadFileList=[]; this.reasonFileList=[]; this.BankList = [];
-      this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = '';
-      this.DepositSlip = this.ReasonSlip = this.Reason = this.ReasonAmount = this.CardAmount = ''; this.AWBNo = null; this.exception = []; this.exceptionList=[];
+      this.pageno = this.tot_amt = this.unmatchedAmt = this.ReasonAmount = this.CardAmount = 0;
+      this.uploadFileList = []; this.reasonFileList = []; this.BankList = []; this.exception = []; this.exceptionList = [];
+      this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.ReasonSlip = this.Reason = '';
+      this.AWBNo = null;
       $('#denomlist input[type="text"]').val(0); $('#denomlist input[type="number"]').val('');
       document.getElementById("d_a").style.display = "none";
       this.GetShipmentUpdate();
