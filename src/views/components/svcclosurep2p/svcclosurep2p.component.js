@@ -386,7 +386,6 @@ export default {
         error.style.display  = "none";
 
         this.unmatchedAmt = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositReasonExcepAmount)));
-        alert(this.unmatchedAmt);
 
         if((DepositReasonExcepAmount < TolatCollection) && (this.unmatchedAmt!='0.00') && (this.unmatchedAmt!=0)){
           if(this.Reason==''){
