@@ -27,52 +27,48 @@ export default {
       //let projectInfo = projectID.toString(CryptoJS.enc.Utf8);
       this.isLoading = true;
       axios.post(apiUrl.api_url + 'userapp/auth', {
-          'username': this.username,
-          'password': this.password
-        })
-        .then((response) => {
-          //console.log(response);
-          // response.data.accessurl=[{
-          //   'name':'Dashboard',
-          //   'url':'/dashboard'
-          // }];
-          window.localStorage.setItem('accesspermissiondata', '');
-          window.localStorage.setItem('accessuserdata', '');
-          window.localStorage.setItem('isLoggedIn',false);
-          window.localStorage.setItem('accessuserToken', '');
-          if(response.data.token!=''){
-            let permissionEncrypt = CryptoJS.AES.encrypt(JSON.stringify(response.data.urlDetails), "Key");
-            let usersEncrupt = CryptoJS.AES.encrypt(JSON.stringify(response.data.userinfo), "Key");
-            window.localStorage.setItem('accesspermissiondata', permissionEncrypt);
-            window.localStorage.setItem('accessuserdata', usersEncrupt);
-            window.localStorage.setItem('isLoggedIn',true);
-            window.localStorage.setItem('accessuserToken', response.data.token);
-            permissionEncrypt = window.localStorage.getItem('accesspermissiondata')
-            let permissiondatabytes = CryptoJS.AES.decrypt(permissionEncrypt.toString(), 'Key');
-            let permissiondataplaintext = permissiondatabytes.toString(CryptoJS.enc.Utf8);
-            let permissiondata = JSON.parse(permissiondataplaintext);
-            //console.log(permissiondata);
-              if(response.data.code==200){
-                  this.isLoading = false;
-                  this.$router.push(permissiondata[0].url);
-              }else{
-                this.isLoading = false;
-                this.$alertify.success("Logging Failed");
-              }
+        'username': this.username,
+        'password': this.password
+      })
+      .then((response) => {
+        window.localStorage.setItem('accesspermissiondata', '');
+        window.localStorage.setItem('accessuserdata', '');
+        window.localStorage.setItem('isLoggedIn',false);
+        window.localStorage.setItem('accessuserToken', '');
 
-              let hubEncrypt = CryptoJS.AES.encrypt(JSON.stringify(response.data.hubData), "Key");
-              window.localStorage.setItem('accesshubdata', hubEncrypt);
+        if(response.data.token!=''){
+          let permissionEncrypt = CryptoJS.AES.encrypt(JSON.stringify(response.data.urlDetails), "Key");
+          let usersEncrupt = CryptoJS.AES.encrypt(JSON.stringify(response.data.userinfo), "Key");
+          window.localStorage.setItem('accesspermissiondata', permissionEncrypt);
+          window.localStorage.setItem('accessuserdata', usersEncrupt);
+          window.localStorage.setItem('isLoggedIn',true);
+          window.localStorage.setItem('accessuserToken', response.data.token);
+          permissionEncrypt = window.localStorage.getItem('accesspermissiondata')
+          let permissiondatabytes = CryptoJS.AES.decrypt(permissionEncrypt.toString(), 'Key');
+          let permissiondataplaintext = permissiondatabytes.toString(CryptoJS.enc.Utf8);
+          let permissiondata = JSON.parse(permissiondataplaintext);
+
+          if(response.data.code==200){
+              this.isLoading = false;
+              this.$router.push(permissiondata[0].url);
           }else{
             this.isLoading = false;
             this.$alertify.success("Logging Failed");
           }
 
-          })
-        .catch((httpException) => {
+          let hubEncrypt = CryptoJS.AES.encrypt(JSON.stringify(response.data.hubData), "Key");
+          window.localStorage.setItem('accesshubdata', hubEncrypt);
+        }else{
           this.isLoading = false;
           this.$alertify.success("Logging Failed");
-          console.error('exception is:::::::::', httpException)
-        })
+        }
+
+      })
+      .catch((httpException) => {
+        this.isLoading = false;
+        this.$alertify.success("Logging Failed");
+        console.error('exception is:::::::::', httpException)
+      })
     }
   }
 }

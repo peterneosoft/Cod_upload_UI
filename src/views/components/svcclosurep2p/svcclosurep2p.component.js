@@ -91,8 +91,9 @@ export default {
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
     var hubdetail         = JSON.parse(plaintext);
     this.localhubid       = hubdetail[0].HubID;
-    this.localhubname       = hubdetail[0].HubName;
+    this.localhubname     = hubdetail[0].HubName;
     this.localhubzoneid   = hubdetail[0].HubZoneId;
+    this.localhubIsRSC    = hubdetail[0].IsRSC;
 
     var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');
@@ -360,10 +361,10 @@ export default {
       let DepositAmount = parseInt(this.Deposit_Amount);
       let DepositReasonExcepAmount = '';
       if(this.Reason==65){
-        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.ReasonAmount)+parseFloat(this.CardAmount)+parseFloat(this.exceptionAmount)));
+        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.ReasonAmount)+parseFloat(this.CardAmount)-parseFloat(this.exceptionAmount)));
       }else{
         this.ReasonAmount = 0;
-        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.CardAmount)+parseFloat(this.exceptionAmount)));
+        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.CardAmount)-parseFloat(this.exceptionAmount)));
       }
 
       let TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))));
@@ -457,7 +458,8 @@ export default {
           NoteCount: NoteCountArr,
           DenominationID: DenominationIDArr,
           exceptionId: this.exceptionArr,
-          exceptionAmount: this.exceptionAmount
+          exceptionAmount: this.exceptionAmount,
+          hubIsRSC: this.localhubIsRSC
       })
       axios({
           method: 'POST',
