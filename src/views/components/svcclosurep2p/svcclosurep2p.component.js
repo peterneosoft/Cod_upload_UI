@@ -361,10 +361,10 @@ export default {
       let DepositAmount = parseInt(this.Deposit_Amount);
       let DepositReasonExcepAmount = '';
       if(this.Reason==65){
-        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.ReasonAmount)+parseFloat(this.CardAmount)-parseFloat(this.exceptionAmount)));
+        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.ReasonAmount)+parseFloat(this.CardAmount)));
       }else{
         this.ReasonAmount = 0;
-        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.CardAmount)-parseFloat(this.exceptionAmount)));
+        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.CardAmount)));
       }
 
       let TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))));
@@ -386,6 +386,7 @@ export default {
         error.style.display  = "none";
 
         this.unmatchedAmt = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositReasonExcepAmount)));
+        alert(this.unmatchedAmt);
 
         if((DepositReasonExcepAmount < TolatCollection) && (this.unmatchedAmt!='0.00') && (this.unmatchedAmt!=0)){
           if(this.Reason==''){
