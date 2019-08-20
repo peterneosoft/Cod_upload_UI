@@ -248,7 +248,7 @@ export default {
       });
     },
 
-    updateSVCFinanceledger(elem) {
+    updateSVCFinanceledger(elem, findata) {
 
       let insertflag= 0; let ledgerid = elem; let financeconfirmdate = ''; let confirmamount = 0;
 
@@ -288,7 +288,9 @@ export default {
             financeconfirmdate: financeconfirmdate,
             confirmamount: confirmamount,
             hubid: this.HubID,
-            username: this.localuserid
+            username: this.localuserid,
+            deliverydate: findata.deliverydate,
+            bankid: findata.bankid
         })
         axios({
             method: 'POST',
@@ -318,9 +320,9 @@ export default {
       }
     },
 
-    onUpdate: function(elem) {
+    onUpdate: function(elem, findata) {
       if(elem){
-        this.updateSVCFinanceledger(elem);
+        this.updateSVCFinanceledger(elem, findata);
       }else{
         console.log('errors exist', elem)
         return false;

@@ -113,7 +113,7 @@
                 <td>{{data.balanceoutstanding}}</td>
                 <td>{{StatusVal}}</td>
                 <td>
-                  <form v-on:submit.prevent="onUpdate(data.svcledgerid)">
+                  <form v-on:submit.prevent="onUpdate(data.svcledgerid, data)">
                     <select style="width: 210px;" v-model="form.finreason[data.svcledgerid]"  v-bind:name="setid('finreason', data.svcledgerid)" v-bind:id="setid('finreason', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('finreason'+data.svcledgerid) }" :disabled="data.statusid == 6 ? true : false">
                       <option value="">--Select--</option>
                       <option v-for="finreason_obj in FinanceReasonList" v-bind:value="finreason_obj.ReasonsID" >{{finreason_obj.Reason}}</option>
