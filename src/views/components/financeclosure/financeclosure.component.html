@@ -77,6 +77,7 @@
               <tr class="text-primary">
                 <th class="text-center tableheader"><b>#</b></th>
                 <th class="text-center tableheader"><b>Hub</b></th>
+                <th class="text-center tableheader"><b>RSC Name</b></th>
                 <th class="text-center tableheader"><b>Deposite Date</b></th>
                 <th class="text-center tableheader"><b>Opening Amount</b></th>
                 <th class="text-center tableheader"><b>COD Receivable</b></th>
@@ -102,6 +103,7 @@
               <tr v-for="(data,index) in listFinanceledgerData">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
                 <td>{{HubName}}</td>
+                <td>{{data.rscowner}}</td>
                 <td>{{data.depositdate}}</td>
                 <td>{{data.openingbalance}}</td>
                 <td>{{data.codamount}}</td>
