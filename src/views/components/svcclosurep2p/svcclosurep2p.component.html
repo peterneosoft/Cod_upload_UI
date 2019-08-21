@@ -365,17 +365,17 @@
                 <td>{{data.Reason}}</td>
                 <td>{{data.financereason}}</td>
                 <td class="text-center">
-                  <span v-bind:id='`${"vrl"+data.svcledgerid}`' v-if="data.createdby!='schedular@xpressbees.com'" @click="showHideImages(data.svcledgerid, 'vrl')" style="color: blue; cursor: pointer;"><u>Deposit</u></span>
+                  <span v-bind:id='`${"vrl"+data.svcledgerid}`' v-if="data.createdby!='schedular@xpressbees.com'" @click="showHideImages(data.svcledgerid, 'vrl')" style="color: blue; cursor: pointer;">Deposit</span>
                   <span v-bind:id='`${"vri"+data.svcledgerid}`' style="display: none;">
                     <a v-bind:title='`${file.name}`' v-for="file in data.files" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
                   </span>
 
-                  <br><span v-bind:id='`${"vrrl"+data.svcledgerid}`' v-if="data.reasonfiles.length>0 && data.createdby!='schedular@xpressbees.com'" @click="showHideImages(data.svcledgerid, 'vrrl')" style="color: blue; cursor: pointer;"><u>Other</u></span>
+                  <br><span v-bind:id='`${"vrrl"+data.svcledgerid}`' v-if="data.reasonfiles.length>0 && data.createdby!='schedular@xpressbees.com'" @click="showHideImages(data.svcledgerid, 'vrrl')" style="color: blue; cursor: pointer;">Other</span>
                   <span v-bind:id='`${"vrri"+data.svcledgerid}`' style="display: none;">
                     <a v-bind:title='`${file.name}`' v-for="file in data.reasonfiles" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
                   </span>
                 </td>
-                <td class="popup" @click="showAWBNo(data.svcledgerid, 'awb')">{{data.awbnocount}} <span v-if="data.awbnocount!=''" class="popuptext" v-bind:id='`${"awb"+data.svcledgerid}`'><b>{{data.awbno}}</b></span></td>
+                <td @click="showAWBNo(data.awbno)" style="cursor:pointer; color:blue;">{{data.awbnocount}}</td>
               </tr>
             </tbody>
           </table><br>

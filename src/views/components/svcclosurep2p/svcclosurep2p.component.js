@@ -657,9 +657,8 @@ export default {
       }
     },
 
-    showAWBNo(index){
-      var popup = document.getElementById("awb"+index);
-      popup.classList.toggle("show");
+    showAWBNo(ele){
+      alert(ele);
     }
   }
 }
