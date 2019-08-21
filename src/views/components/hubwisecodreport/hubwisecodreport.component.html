@@ -124,7 +124,7 @@
                     <td>{{CODLedger_List.balanceLogic}}</td>
                     <td>{{CODLedger_List.StatusVal}}</td>
                     <td>{{CODLedger_List.lastmodifiedby}}</td>
-                    <td class="popup" @click="showAWBNo(CODLedger_List.svcledgerid, 'awb')">{{CODLedger_List.awbnocount}} <span v-if="CODLedger_List.awbnocount!=''" class="popuptext" v-bind:id='`${"awb"+CODLedger_List.svcledgerid}`'><b>{{CODLedger_List.awbno}}</b></span></td>
+                    <td @click="showAWBNo(CODLedger_List.awbno)" style="cursor:pointer; color:blue;">{{CODLedger_List.awbnocount}}</td>
                   </tr>
                 </tbody>
 
