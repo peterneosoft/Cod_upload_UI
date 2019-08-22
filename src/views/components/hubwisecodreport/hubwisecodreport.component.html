@@ -124,7 +124,7 @@
                     <td>{{CODLedger_List.balanceLogic}}</td>
                     <td>{{CODLedger_List.StatusVal}}</td>
                     <td>{{CODLedger_List.lastmodifiedby}}</td>
-                    <td @click="showAWBNo(CODLedger_List.awbno)" style="cursor:pointer; color:blue;">{{CODLedger_List.awbnocount}}</td>
+                    <td><span v-if="CODLedger_List.awbnocount!=''" @click="showAWBNo(CODLedger_List.awbno)" style="cursor:pointer; color:blue;">{{CODLedger_List.awbnocount}}</span></td>
                   </tr>
                 </tbody>
 

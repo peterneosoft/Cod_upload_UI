@@ -45,6 +45,7 @@
             <tr class="text-primary">
               <th class="text-center tableheader"><b>#</b></th>
               <th class="text-center tableheader"><b>Hub</b></th>
+              <th class="text-center tableheader"><b>Delivery Date</b></th>
               <th class="text-center tableheader"><b>Deposit Date</b></th>
               <th class="text-center tableheader"><b>Opening Amount</b></th>
               <th class="text-center tableheader"><b>COD Receivable</b></th>
@@ -65,11 +66,12 @@
           </thead>
           <tbody>
             <tr v-if="resultCount==0">
-              <td colspan="17" align="center">No record found</td>
+              <td colspan="18" align="center">No record found</td>
             </tr>
             <tr v-for="(data,index) in listSearchSVCledgerData">
               <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
               <td>{{localhubname}}</td>
+              <td>{{data.deliverydate}}</td>
               <td>{{data.depositdate}}</td>
               <td>{{data.openingbalance}}</td>
               <td>{{data.codamount}}</td>
@@ -95,7 +97,7 @@
                   <a v-bind:title='`${file.name}`' v-for="file in data.reasonfiles" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
                 </span>
               </td>
-              <td class="popup" @click="showAWBNo(data.svcledgerid, 'awb')">{{data.awbnocount}} <span v-if="data.awbnocount!=''" class="popuptext" v-bind:id='`${"awb"+data.svcledgerid}`'><b>{{data.awbno}}</b></span></td>
+              <td><span v-if="data.awbnocount!=''" @click="showAWBNo(data.awbno)" style="cursor:pointer; color:blue;">{{data.awbnocount}}</span></td>
             </tr>
           </tbody>
         </table><br>
