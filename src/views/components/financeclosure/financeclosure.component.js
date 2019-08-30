@@ -290,6 +290,7 @@ export default {
             hubid: this.HubID,
             username: this.localuserid,
             deliverydate: findata.deliverydate,
+            formatdeldate: findata.formatdeldate,
             bankid: findata.bankid
         })
         axios({
