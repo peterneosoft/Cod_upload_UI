@@ -13,7 +13,7 @@ export default {
       password: '',
       isLoading:false,
       tokenid:'',
-      loginShow:true
+      loginShow:false
     }
   },
   computed: {
