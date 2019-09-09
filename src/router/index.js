@@ -470,7 +470,7 @@ const router = new Router({
     },
 
     {
-      path: '/login',
+      path: '/login/:id?',
       name: 'login',
       component: Login
     },
