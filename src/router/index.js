@@ -79,7 +79,7 @@ const router = new Router({
         },
         {
           path: 'svcclosurep2p',
-          name: 'SVC Closure P2P',
+          name: 'SVC Closure',
           component: SVCClosureP2P,
           meta: {
             requiresAuth: true,
