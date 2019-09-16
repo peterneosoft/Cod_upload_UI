@@ -87,9 +87,12 @@
                     <th class="text-center tableheader"><b>Hub/SVC Name</b></th>
                     <th class="text-center tableheader"><b>RSC Name</b></th>
                     <th class="text-center tableheader"><b>Location Type</b></th>
+                    <th class="text-center tableheader"><b>Deposit Date</b></th>
+                    <th class="text-center tableheader"><b>Deposit Type</b></th>
                     <th class="text-center tableheader"><b>Delivery Date</b></th>
                     <th class="text-center tableheader"><b>Opening Balance</b></th>
                     <th class="text-center tableheader"><b>Bank Deposit Amount</b></th>
+                    <th class="text-center tableheader"><b>Bank Name</b></th>
                     <th class="text-center tableheader"><b>Exception Amount</b></th>
                     <!-- <th class="text-center tableheader"><b>Card Issue Amount</b></th> -->
                     <th class="text-center tableheader"><b>Other Charges</b></th>
@@ -104,7 +107,7 @@
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td colspan="17" align="center">No record found</td>
+                    <td colspan="20" align="center">No record found</td>
                   </tr>
                   <tr v-for="(CODLedger_List,index) in CODLedgerReports ">
                     <td>{{pageno+index+1}}</td>
@@ -112,9 +115,12 @@
                     <td>{{CODLedger_List.hubname}}</td>
                     <td>{{CODLedger_List.rscowner}}</td>
                     <td>{{CODLedger_List.hubLocationType}}</td>
+                    <td>{{CODLedger_List.depositdate}}</td>
+                    <td>{{CODLedger_List.deposittype}}</td>
                     <td>{{CODLedger_List.deliverydate}}</td>
                     <td>{{CODLedger_List.openingbalance}}</td>
                     <td>{{CODLedger_List.bankdeposit}}</td>
+                    <td>{{CODLedger_List.bank}}</td>
                     <td>{{CODLedger_List.exceptionamt}}</td>
                     <!-- <td>{{CODLedger_List.cardissueamt}}</td> -->
                     <td>{{CODLedger_List.othercharges}}</td>
