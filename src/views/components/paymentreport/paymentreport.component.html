@@ -8,7 +8,7 @@
         <form v-on:submit.prevent="onSubmit">
           <div class="form-group row">
             <div class="col-md-4">
-              <label>Client / Company Name</label>
+              <label>Client / Company Name <font color="red">*</font></label>
               <b-input-group left="<i class='fa fa-list'></i>">
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="clientLoading" />
                 <Multiselect :options="ClientList" name="ClientId" id="ClientId" v-model="ClientId" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID"  v-validate="{required: true}" v-bind:class="{'error': errors.has('ClientId') }" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
@@ -19,7 +19,7 @@
             </div>
 
             <div class="col-md-4">
-              <label>Transaction Date</label>
+              <label>Transaction Date <font color="red">*</font></label>
               <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
                 <b-form-input id="trDate" type="date" name="trDate" v-validate="{required: true}"
                 v-model="trDate" v-bind:class="{'form-control': true, 'error': errors.has('trDate') }"></b-form-input>

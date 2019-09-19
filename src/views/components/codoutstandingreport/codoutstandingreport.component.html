@@ -9,7 +9,7 @@
             <form  v-on:submit.prevent="onSubmit">
               <div class="form-group row">
                 <div class="col-md-4">
-                  <label>Zone</label>
+                  <label>Zone <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="zoneLoading" />
                     <Multiselect :options="zoneList" name="zone" id="zone" v-model="zone" @input="addHubData" v-validate="{required: true}" v-bind:class="{'error': errors.has('zone') }" placeholder="Select Zone" label="hubzonename" track-by="hubzoneid" :optionHeight="100" :preselect-first="false" v-bind:multiple="multiple()" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
@@ -23,7 +23,17 @@
                   <label>Hub / SVC</label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="hubLoading" />
-                    <Multiselect :options="hubList" placeholder="Select Hub / SVC" v-bind:disabled="disableHub" name="HubId" id="HubId" v-model="HubId"  label="HubName" track-by="HubID" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
+                    <Multiselect :options="hubList" placeholder="Select Hub / SVC" v-bind:multiple="multipleHub()" v-bind:disabled="disableHub" name="HubId" id="HubId" v-model="HubId"  label="HubName" track-by="HubID" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
+                     <template slot="noResult"><p>No Record Found.</p></template>
+                    </Multiselect>
+                  </b-input-group>
+                </div>
+
+                <div class="col-md-4">
+                  <label>RSC / SVC</label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="RSCLoading" />
+                    <Multiselect :options="RSCList" placeholder="Select RSC / SVC" v-bind:multiple="multipleRSC()" v-bind:disabled="disableHub" name="RSCName" id="RSCName" v-model="RSCName" label="HubName" track-by="HubName" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
                      <template slot="noResult"><p>No Record Found.</p></template>
                     </Multiselect>
                   </b-input-group>

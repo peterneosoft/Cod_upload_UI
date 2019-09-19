@@ -21,8 +21,9 @@ export default {
       fromDate:"",
       toDate:"",
       myStr:"",
-      ClientId:"",
+      ClientId:[],
       ClientList:[],
+      SearchClientIds:[],
       selected: 'TransactionDate',
       options: [
         { text: 'Delivery Date', value: 'DeliveryDate' },
@@ -57,6 +58,23 @@ export default {
   },
 
   methods: {
+    multiple(){
+      let key = this.ClientId.length-1;
+      if(this.ClientId.length>0 && this.ClientId[key].ClientMasterID == 0){
+        this.SearchClientIds = [];
+        this.ClientId = this.ClientId[key];
+
+        for (let item of this.ClientList) {
+          if (item.ClientMasterID != 0) {
+            this.SearchClientIds.push(item.ClientMasterID);
+          }
+        }
+      }
+
+      if(this.ClientId.ClientMasterID == 0){ return false; }
+      else{ this.SearchClientIds = []; return true; }
+    },
+
     GetClientData() {
       this.clientLoading = true;
       axios({
@@ -68,7 +86,7 @@ export default {
         }
       }).then(result => {
         this.clientLoading = false;
-        this.ClientList = result.data.clients.data;
+        this.ClientList = [{ClientMasterID:'0', CompanyName:'All Client'}].concat(result.data.clients.data);
       }, error => {
         this.clientLoading = false;
         console.error(error)
@@ -96,9 +114,17 @@ export default {
       }
 
       let cData = [];
-      this.ClientId.forEach(function (val) {
-        cData.push(val.ClientMasterID);
-      });
+      if(this.SearchClientIds.length>0){
+        cData = this.SearchClientIds;
+      }else{
+        if($.isArray(this.ClientId) === false){
+          this.ClientId = new Array(this.ClientId);
+        }
+
+        this.ClientId.forEach(function (val) {
+          cData.push(val.ClientMasterID);
+        });
+      }
 
       this.isLoading = true;
       axios({
@@ -134,9 +160,18 @@ export default {
 
     exportCODRemittanceDetailsData(){
       let cData = [];
-      this.ClientId.forEach(function (val) {
-        cData.push(val.ClientMasterID);
-      });
+      if(this.SearchClientIds.length>0){
+        cData = this.SearchClientIds;
+      }else{
+        if($.isArray(this.ClientId) === false){
+          this.ClientId = new Array(this.ClientId);
+        }
+
+        this.ClientId.forEach(function (val) {
+          cData.push(val.ClientMasterID);
+        });
+      }
+
       this.excelLoading = true;
       axios({
           method: 'GET',

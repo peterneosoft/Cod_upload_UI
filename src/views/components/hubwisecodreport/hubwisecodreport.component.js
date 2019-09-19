@@ -23,7 +23,7 @@ export default {
       CODLedgerReports:[],
       zone:[],
       zoneIdArr:[],
-      HubId:"",
+      HubId:[],
       resultCount:'',
       toDate:"",
       fromDate:"",
@@ -36,7 +36,12 @@ export default {
       exportf:false,
       disableHub:false,
       zoneLoading:false,
-      hubLoading:false
+      hubLoading:false,
+      RSCLoading:false,
+      RSCList:[],
+      RSCName:[],
+      SearchHubIds:[],
+      SearchRSCIds:[]
     }
   },
 
@@ -59,6 +64,40 @@ export default {
       return true;
     },
 
+    multipleHub(){
+      let key = this.HubId.length-1;
+      if(this.HubId.length>0 && this.HubId[key].HubID == 0){
+        this.SearchHubIds = [];
+        this.HubId = this.HubId[key];
+
+        for (let item of this.hubList) {
+          if (item.HubID != 0) {
+            this.SearchHubIds.push(item.HubID);
+          }
+        }
+      }
+
+      if(this.HubId.HubID == 0){ return false; }
+      else{ this.SearchHubIds = []; return true; }
+    },
+
+    multipleRSC(){
+      let key = this.RSCName.length-1;
+      if(this.RSCName.length>0 && this.RSCName[key].HubID == 0){
+        this.SearchRSCIds = [];
+        this.RSCName = this.RSCName[key];
+
+        for (let item of this.RSCList) {
+          if (item.HubID != 0) {
+            this.SearchRSCIds.push(item.HubID);
+          }
+        }
+      }
+
+      if(this.RSCName.HubID == 0){ return false; }
+      else{ this.SearchRSCIds = []; return true; }
+    },
+
     addHubData(event) {
       let zData = []; this.zoneIdArr = [];
       this.zone.forEach(function (val) {
@@ -71,8 +110,9 @@ export default {
         this.disableHub = false;
         this.zoneIdArr = zData;
         this.getHubData(zData[0].hubzoneid);
+        this.getRSCData(zData[0].hubzoneid);
       }else{
-        this.hubList = []; this.HubId = "";
+        this.hubList = []; this.HubId = []; this.RSCList = []; this.RSCName = [];
         this.disableHub = true;
         this.zoneIdArr = zData;
       }
@@ -85,8 +125,36 @@ export default {
 
     exportHubWiswData(){
       this.excelLoading = true;
+
+      let hubArr = []; let RSCArr = [];
+      if(this.SearchHubIds.length>0){
+        hubArr = this.SearchHubIds;
+      }else{
+        if($.isArray(this.HubId) === false){
+          this.HubId = new Array(this.HubId);
+        }
+
+        this.HubId.forEach(function (val) {
+          hubArr.push(val.HubID);
+        });
+      }
+
+      if(this.SearchRSCIds.length>0){
+        RSCArr = this.SearchRSCIds;
+      }else{
+        if($.isArray(this.RSCName) === false){
+          this.RSCName = new Array(this.RSCName);
+        }
+
+        this.RSCName.forEach(function (val) {
+          RSCArr.push(val.HubID);
+        });
+      }
+
+      let hubIdArr = [...new Set([].concat(...hubArr.concat(RSCArr)))];
+
       this.input = ({
-          hubid: this.HubId.HubID,
+          hubid: hubIdArr,
           zoneid: this.zoneIdArr,
           status: this.status,
           fromdate: this.fromDate,
@@ -173,8 +241,37 @@ export default {
         document.getElementById("fdate").innerHTML="";
       }
 
+      this.isLoading = true;
+
+      let hubArr = []; let RSCArr = [];
+      if(this.SearchHubIds.length>0){
+        hubArr = this.SearchHubIds;
+      }else{
+        if($.isArray(this.HubId) === false){
+          this.HubId = new Array(this.HubId);
+        }
+
+        this.HubId.forEach(function (val) {
+          hubArr.push(val.HubID);
+        });
+      }
+
+      if(this.SearchRSCIds.length>0){
+        RSCArr = this.SearchRSCIds;
+      }else{
+        if($.isArray(this.RSCName) === false){
+          this.RSCName = new Array(this.RSCName);
+        }
+
+        this.RSCName.forEach(function (val) {
+          RSCArr.push(val.HubID);
+        });
+      }
+
+      let hubIdArr = [...new Set([].concat(...hubArr.concat(RSCArr)))];
+
       this.input = ({
-          hubid: this.HubId.HubID,
+          hubid: hubIdArr,
           zoneid: this.zoneIdArr,
           fromdate: this.fromDate,
           todate: this.toDate,
@@ -182,7 +279,6 @@ export default {
           offset:this.pageno,
           limit:10
       })
-      this.isLoading = true;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'getHubWiseCODLedgerReports',
@@ -254,10 +350,37 @@ export default {
         })
         .then(result => {
           this.hubLoading = false;
-          this.HubId = "";
-          this.hubList = result.data.hub.data;
+          this.HubId = [];
+          this.hubList = [{HubID:'0', HubName:'All Hub', HubCode:'All Hub'}].concat(result.data.hub.data);
         }, error => {
           this.hubLoading = false;
+          console.error(error)
+        })
+    },
+
+    //to get All Zone Wise RSC List
+    getRSCData(zoneid) {
+      if(zoneid==""){
+        return false;
+      }
+      this.input = ({
+          zoneid: zoneid
+      })
+      this.RSCLoading = true;
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'external/getzonersc',
+          'data': this.input,
+          headers: {
+            'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+          this.RSCLoading = false;
+          this.RSCName=[];
+          this.RSCList = [{HubID:'0', HubName:'All RSC', HubCode:'All RSC'}].concat(result.data.rsc.data);
+        }, error => {
+          this.RSCLoading = false;
           console.error(error)
         })
     },
@@ -274,8 +397,8 @@ export default {
     },
 
     resetForm() {
-      this.fromDate = this.toDate = ''; this.zone=""; this.hubList=[]; this.HubId=""; this.pageno = 0;
-      this.status=""; this.CODLedgerReports = []; this.exportf = false; this.disableHub = false; this.resultCount = 0;
+      this.fromDate = this.toDate = ''; this.zone=""; this.hubList=[]; this.HubId=[]; this.RSCList = []; this.RSCName = [];
+      this.pageno = 0; this.status=""; this.CODLedgerReports = []; this.exportf = false; this.disableHub = false; this.resultCount = 0;
       this.$validator.reset();
       this.errors.clear();
     },

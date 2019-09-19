@@ -71,7 +71,7 @@
               <td>{{data.PaidAmount}}</td>
               <!-- <td>{{data.BalanceAmount}}</td>
               <td>{{data.HoldAmount}}</td> -->
-              <td><button class="btn btn-sm btn-primary" @click="onRemittance(data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button></td>
+              <td><button class="btn btn-sm btn-primary" @click="onRemittance(form.FromDate[data.ClientId], form.toDate[data.ClientId], data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button></td>
             </tr>
           </tbody>
         </table><br>

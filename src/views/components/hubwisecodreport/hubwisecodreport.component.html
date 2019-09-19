@@ -9,7 +9,7 @@
             <form  v-on:submit.prevent="onSubmit">
               <div class="form-group row">
                 <div class="col-md-4">
-                  <label>Zone</label>
+                  <label>Zone <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="zoneLoading" />
                     <Multiselect :options="zoneList" name="zone" id="zone" v-model="zone" @input="addHubData" v-validate="{required: true}" v-bind:class="{'error': errors.has('zone') }" placeholder="Select Zone" label="hubzonename" track-by="hubzoneid" :optionHeight="100" :preselect-first="false" v-bind:multiple="multiple()" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
@@ -23,25 +23,26 @@
                   <label>Hub / SVC</label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="hubLoading" />
-                    <Multiselect :options="hubList" placeholder="Select Hub / Svc" v-bind:disabled="disableHub" name="HubId" id="HubId" v-model="HubId"  label="HubName" track-by="HubID" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
+                    <Multiselect :options="hubList" placeholder="Select Hub / Svc" v-bind:multiple="multipleHub()" v-bind:disabled="disableHub" name="HubId" id="HubId" v-model="HubId"  label="HubName" track-by="HubID" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
                      <template slot="noResult"><p>No Record Found.</p></template>
                     </Multiselect>
                   </b-input-group>
                 </div>
+
                 <div class="col-md-4">
-                  <label>Status</label>
+                  <label>RSC / SVC</label>
                   <b-input-group left="<i class='fa fa-list'></i>">
-                    <select name="status" id="status"  class="form-control" v-model="status" style="height:45px;">
-                      <option value="">Select All</option>
-                      <option value="1" title="Open">Open</option>
-                      <option value="6" title="Close">Close</option>
-                    </select>
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="RSCLoading" />
+                    <Multiselect :options="RSCList" placeholder="Select RSC / SVC" v-bind:multiple="multipleRSC()" v-bind:disabled="disableHub" name="RSCName" id="RSCName" v-model="RSCName" label="HubName" track-by="HubName" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
+                     <template slot="noResult"><p>No Record Found.</p></template>
+                    </Multiselect>
                   </b-input-group>
                 </div>
               </div>
+
               <div class="form-group row">
                 <div class="col-md-4">
-                  <label>From Date</label>
+                  <label>From Date <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-calendar'></i>">
                     <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}"
                     v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
@@ -51,12 +52,23 @@
                 </div>
 
                 <div class="col-md-4">
-                  <label>To Date</label>
+                  <label>To Date <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-calendar'></i>">
                     <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}"
                     v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
                   </b-input-group>
                   <span v-show="errors.has('toDate')" class="text-danger">Please select To date. </span>
+                </div>
+
+                <div class="col-md-4">
+                  <label>Status</label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                    <select name="status" id="status"  class="form-control" v-model="status">
+                      <option value="">Select All</option>
+                      <option value="1" title="Open">Open</option>
+                      <option value="6" title="Close">Close</option>
+                    </select>
+                  </b-input-group>
                 </div>
               </div>
               <div class="card-footer">

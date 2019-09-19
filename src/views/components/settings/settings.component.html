@@ -12,7 +12,7 @@
                 <label>Zone</label>
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="zoneLoading" />
-                  <select v-bind:disabled="disableButton" name="zone" id="zone" class="form-control" style="height: 46px;" v-model="zone" v-on:change="getHubData" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('zone') }">
+                  <select v-bind:disabled="disableButton" name="zone" id="zone" class="form-control" style="height: 44px;" v-model="zone" v-on:change="getHubData" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('zone') }">
                     <option value="">--Select--</option>
                     <option v-for="zone_obj in zoneList" v-bind:value="zone_obj.hubzoneid" >{{zone_obj.hubzonename}}</option>
                   </select>

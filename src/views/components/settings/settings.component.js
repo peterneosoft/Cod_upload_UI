@@ -115,7 +115,7 @@ export default {
         })
         .then(result => {
           this.hubLoading=false;
-          this.hubList = [{'HubCode':'Select All', 'HubID':"0", 'HubName':'Select All'}];
+          this.hubList = [{'HubCode':'All Hub', 'HubID':"0", 'HubName':'All Hub'}];
           for (let item of result.data.hub.data) {
             this.hubList.push(item);
           }

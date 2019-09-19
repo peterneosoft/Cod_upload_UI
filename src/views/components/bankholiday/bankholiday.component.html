@@ -13,7 +13,7 @@
             <form v-on:submit.prevent="onSubmit" id="formSubmit" name="formSubmit">
               <div class="form-group row">
                 <div class="col-md-4">
-                  <label>Bank Holiday Occasion</label>
+                  <label>Bank Holiday Occasion <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="holyLoading" />
                     <select name="holidayid" id="holidayid" class="form-control" v-model="holidayid" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('holidayid') }">
@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="col-md-4">
-                  <label>Date</label>
+                  <label>Date <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-calendar'></i>">
                     <b-form-input id="holidayDate" type="date" name="holidayDate" v-validate="{required: true}"
                     v-model="holidayDate" v-bind:class="{'form-control': true, 'error': errors.has('holidayDate') }"></b-form-input>

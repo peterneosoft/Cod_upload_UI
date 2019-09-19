@@ -10,7 +10,7 @@
               <div class="form-group" >
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <span class="input-group-text">SR Name</span>
+                    <span class="input-group-text">SR Name <font color="red">&nbsp;*</font></span>
                   </div>
                   <select class="form-control" id="SR_Name" v-model="SR_Name" name="SR_Name" v-on:input="srChange"
                      v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('SR_Name') }">
@@ -24,7 +24,7 @@
               <div class="form-group">
                 <div class="input-group">
                   <div class="input-group-prepend">
-                    <span class="input-group-text">Deposit Amount</span>
+                    <span class="input-group-text">Deposit Amount <font color="red">&nbsp;*</font></span>
                   </div>
                   <input class="form-control"  id="Deposit_Amount" placeholder="Deposit Amount" v-model="Deposit_Amount" type="text" name="Deposit_Amount"
                      onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8" v-validate="{required: true}"
@@ -43,7 +43,7 @@
                 <div class="input-group">
 
                   <div class="input-group-prepend">
-                    <span class="input-group-text">Reason</span>
+                    <span class="input-group-text">Reason <font color="red">&nbsp;*</font></span>
                   </div>
                   <select class="form-control" id="Reason" name="Reason" v-validate="`${Regionshow ? 'required' : ''}`"
                    v-model="Reason"v-bind:class="{'form-control': true, 'error': errors.has('Reason') }">

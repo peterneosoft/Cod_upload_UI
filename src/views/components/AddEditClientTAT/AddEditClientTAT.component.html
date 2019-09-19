@@ -13,7 +13,7 @@
             <form v-on:submit.prevent="onSubmit" id="formSubmit" name="formSubmit">
               <div class="form-group row">
                 <div class="col-md-4">
-                  <label>Client Name</label>
+                  <label>Client Name <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="clientLoading" />
                     <Multiselect :options="ClientList" name="ClientId" id="ClientId" @input="GetClientBusinessConfigList()" v-model="ClientId" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID"  v-validate="{required: true}" v-bind:class="{'error': errors.has('ClientId') }" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:1000">
@@ -23,7 +23,7 @@
                   <span v-show="errors.has('ClientId')" class="text-danger">Please select Client.</span>
                 </div>
                 <div class="col-md-4">
-                  <label>Bussiness Service Type</label>
+                  <label>Bussiness Service Type <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="businessLoading" />
                     <select style="height:45px;" name="Bussinesstype" id="Bussinesstype" class="form-control" v-on:change = "GetClientBusinessAccounts" v-model="Bussinesstype"  v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('Bussinesstype') }">
@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="col-md-4">
-                  <label>Account Name</label>
+                  <label>Account Name <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="accountLoading" />
                     <select style="height:45px;" name="AccountName" id="AccountName" class="form-control" v-model="AccountName" v-on:change="getAccountDetails" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('AccountName') }">
@@ -49,7 +49,7 @@
 
               <div class="form-group row">
                 <div class="col-md-4">
-                  <label>Remittance Day</label>
+                  <label>Remittance Day <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                   <Multiselect :options="RemittanceDayList" name="RemittanceDay" id="RemittanceDay" v-model="RemittanceDay" placeholder="Select Remittance Day" label="day" track-by="day" :preselect-first="false" v-bind:multiple="multiple()" @select="handleSelect" v-validate="{required: true}" v-bind:class="{'error': errors.has('RemittanceDay') }" :max-height="150" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
                    <template slot="noResult"><p>No Record Found.</p></template>
@@ -59,7 +59,7 @@
                 </div>
 
                 <div class="col-md-4">
-                  <label>TAT</label>
+                  <label>TAT <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <select style="height:45px;" name="tat" id="tat" class="form-control" v-model="tat" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('tat') }">
                       <option value="">--Select--</option>
@@ -71,7 +71,7 @@
                 </div>
 
                 <div class="col-md-4">
-                  <label>Type</label>
+                  <label>Type <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <select style="height:45px;" name="type" id="type" class="form-control" v-model="type" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('type') }">
                       <option value="">--Select--</option>
@@ -136,7 +136,7 @@
           <form>
             <div class="form-group row">
               <div class="col-md-4">
-                <label>Client </label>
+                <label>Client  <font color="red">*</font></label>
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <Multiselect :options="ClientList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
                     <template slot="noResult"><p>No Record Found.</p></template>

@@ -102,10 +102,9 @@ export default {
 
         document.getElementById("fdate"+ClientId).innerHTML="";
         document.getElementById("tdate"+ClientId).innerHTML="";
-      }
 
-      this.isLoading = true;
-      axios({
+        this.isLoading = true;
+        axios({
           method: 'GET',
           url: apiUrl.api_url + 'manualcodremittance?CreatedBy='+this.localuserid+'&ClientId='+ClientId+'&oldFromDate='+this.form.oldFromDate[ClientId]+'&fromDate='+fromDate+'&toDate='+toDate+'&offset='+this.pageno+'&limit='+20,
           headers: {
@@ -152,20 +151,20 @@ export default {
           console.error(error)
           this.isLoading = false;
         })
+      }
     },
 
-    onRemittance(data){
+    onRemittance(fromDate, toDate, data){
 
-      if((!this.form.FromDate[data.ClientId] || !data.FromDate) || (!this.form.toDate[data.ClientId] || !data.ToDate)){
+      if((!fromDate || !this.form.oldFromDate[data.ClientId]) || (!toDate || !this.form.oldToDate[data.ClientId])){
 
-        this.$alertify.error('From date & To / Delivery date should not be empty.');
-        return false;
-      }else if(this.form.oldFromDate[data.ClientId] != data.FromDate){
+        this.$alertify.error('From date & To / Delivery date should not be empty.'); return false;
+      }else if(fromDate != this.form.oldFromDate[data.ClientId]){
 
         let fdate = new Date(this.form.oldFromDate[data.ClientId]);
         this.ofd = 'Remittance for client '+data.CompanyName+', From date should be: '+(fdate.getDate() <= 9 ? '0' + fdate.getDate() : fdate.getDate()) + "/" + ((fdate.getMonth() + 1) <= 9 ? '0' + (fdate.getMonth() + 1) : (fdate.getMonth() + 1)) + "/" + fdate.getFullYear();
         this.showModal(); return false;
-      }else if(data.ToDate > this.form.oldToDate[data.ClientId]){
+      }else if(toDate > this.form.oldToDate[data.ClientId]){
 
         let tdate = new Date(this.form.oldToDate[data.ClientId]);
         this.ofd = 'Remittance for client '+data.CompanyName+', To / Delivery date should be: '+(tdate.getDate() <= 9 ? '0' + tdate.getDate() : tdate.getDate()) + "/" + ((tdate.getMonth() + 1) <= 9 ? '0' + (tdate.getMonth() + 1) : (tdate.getMonth() + 1)) + "/" + tdate.getFullYear();
@@ -182,46 +181,44 @@ export default {
       }else{
 
         this.closeModal();
-      }
 
-      this.isLoading = true;
-
-      this.input = ({
-          FromDate: data.FromDate,
-          ToDate: data.ToDate,
-          ShipmentCount: data.ShipmentCount,
-          ClientId: data.ClientId,
-          CODAmount: data.CODAmount,
-          PaidAmount: data.PaidAmount,
-          BalanceAmount: data.BalanceAmount,
-          HoldAmount: data.HoldAmount,
-          TotalOustanding: data.TotalOustanding,
-          ExceptionAmount: data.ExceptionAmount,
-          ExceptionCount: data.ExceptionCount,
-          TotalRevenue: data.TotalRevenue,
-          FreightAmount: data.FreightAmount,
-          CreatedBy: this.localuserid
-      })
-      axios({
-          method: 'POST',
-          'url': apiUrl.api_url + 'remittanceManualClosure',
-          'data': this.input,
-          headers: {
-              'Authorization': 'Bearer '+this.myStr
+        this.input = ({
+            FromDate: this.form.oldFromDate[data.ClientId],
+            ToDate: data.ToDate,
+            ShipmentCount: data.ShipmentCount,
+            ClientId: data.ClientId,
+            CODAmount: data.CODAmount,
+            PaidAmount: data.PaidAmount,
+            BalanceAmount: data.BalanceAmount,
+            HoldAmount: data.HoldAmount,
+            TotalOustanding: data.TotalOustanding,
+            ExceptionAmount: data.ExceptionAmount,
+            ExceptionCount: data.ExceptionCount,
+            TotalRevenue: data.TotalRevenue,
+            FreightAmount: data.FreightAmount,
+            CreatedBy: this.localuserid
+        })
+        axios({
+            method: 'POST',
+            'url': apiUrl.api_url + 'remittanceManualClosure',
+            'data': this.input,
+            headers: {
+                'Authorization': 'Bearer '+this.myStr
+            }
+        }).then(result => {
+          if (result.data.code == 200) {
+            this.$alertify.success(result.data.msg);
+            this.manualCODRemittance();
+            this.insertEmailRemittance();
+          } else {
+            this.isLoading = false;
+            this.$alertify.error(result.data.msg)
           }
-      }).then(result => {
-        if (result.data.code == 200) {
-          this.$alertify.success(result.data.msg);
-          this.manualCODRemittance();
-          this.insertEmailRemittance();
-        } else {
+        }, error => {
+          console.error(error)
           this.isLoading = false;
-          this.$alertify.error(result.data.msg)
-        }
-      }, error => {
-        console.error(error)
-        this.isLoading = false;
-      })
+        })
+      }
     },
 
     manualCODRemittance(){
