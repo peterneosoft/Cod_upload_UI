@@ -22,6 +22,10 @@ export default {
       pagecount: 0,
       pageno: 0,
       count: 0,
+      Search:0,
+      Client:"",
+      clientLoading:false,
+      ClientList:[],
       isLoading: false,
       listPendingRemittanceData:[],
       listPendingRemittanceDataToDate:[],
@@ -53,6 +57,7 @@ export default {
     var userToken         = window.localStorage.getItem('accessuserToken');
     this.myStr            = userToken.replace(/"/g, '');
 
+    this.GetClientData();
     this.manualCODRemittance();
 
     var date = new Date();
@@ -245,6 +250,8 @@ export default {
               this.form.toDate[val.ClientId] = val.ToDate;
               this.form.FromDate[val.ClientId] = val.FromDate;
 
+              this.form.oldToDate[val.ClientId] = null; this.form.oldFromDate[val.ClientId] = null;
+
               if(this.form.oldFromDate[val.ClientId]==null){
                 this.form.oldFromDate[val.ClientId] = val.FromDate;
               }
@@ -290,6 +297,107 @@ export default {
       }, error => {
         console.error(error)
       })
+    },
+
+    GetClientData() {
+      this.clientLoading = true;
+      axios({
+        method: 'GET',
+        url: apiUrl.api_url + 'external/getclientlist',
+        data: {},
+        headers: {
+          'Authorization': 'Bearer '+this.myStr
+        }
+      }).then(result => {
+        this.clientLoading = false;
+        this.ClientList = result.data.clients.data;
+      }, error => {
+        this.clientLoading = false;
+        console.error(error)
+      })
+    },
+
+    onClientSearch(ClientId, CompanyName){
+
+      if(!ClientId){
+
+        this.$alertify.error('Client Name is mandatory.');
+        return false;
+      }else{
+
+        this.isLoading = true;
+        axios({
+          method: 'GET',
+          url: apiUrl.api_url + 'adhocCODRemiitance?ClientId='+ClientId+'&ClientName='+CompanyName,
+          headers: {
+            'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+
+          if(result.data.code == 200){
+
+            this.adhocDate(result.data.data.FromDate, result.data.data.ToDate, ClientId);
+          }else{
+            this.resultCount = 0; this.pageno = 0;
+            this.listPendingRemittanceData=[]; this.listPendingRemittanceDataToDate=[];
+            this.isLoading = false;
+          }
+        }, error => {
+          console.error(error)
+          this.isLoading = false;
+        })
+      }
+    },
+
+    adhocDate(fromDate, toDate, ClientId){
+
+      if(!toDate || !fromDate){
+
+        this.$alertify.error('From date & To/ Delivery date should not be empty.');
+        this.isLoading = false;
+        return false;
+      }else{
+
+        axios({
+          method: 'GET',
+          url: apiUrl.api_url + 'manualcodremittance?CreatedBy='+this.localuserid+'&ClientId='+ClientId+'&oldFromDate='+fromDate+'&fromDate='+fromDate+'&toDate='+toDate+'&offset=0&limit='+20,
+          headers: {
+            'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+          if(result.data.code == 200){
+            this.listPendingRemittanceData=[]; this.pagecount = 1;
+            this.listPendingRemittanceData  = result.data.data;
+            this.form.oldToDate[ClientId]   = this.form.toDate[ClientId] = result.data.data[0].ToDate;
+            this.form.oldFromDate[ClientId] = this.form.FromDate[ClientId] = result.data.data[0].FromDate;
+            this.resultCount                = result.data.data.length;
+            this.isLoading = false;
+          }else{
+            this.listPendingRemittanceData=[];
+            this.isLoading = false;
+          }
+        }, error => {
+          console.error(error)
+          this.isLoading = false;
+        })
+      }
+    },
+
+    onSearch() {
+      if(this.Client.ClientMasterID==null || this.Client.ClientMasterID=='undefined'){
+        document.getElementById("clienterr").innerHTML="Please select Client";
+        return false;
+      }
+      document.getElementById("clienterr").innerHTML="";
+      this.onClientSearch(this.Client.ClientMasterID, this.Client.CompanyName);
+    },
+
+    resetSearch() {
+      this.Client=[]; this.pageno = this.resultCount = 0;
+      this.manualCODRemittance();
+      document.getElementById("clienterr").innerHTML="";
     }
   }
 }

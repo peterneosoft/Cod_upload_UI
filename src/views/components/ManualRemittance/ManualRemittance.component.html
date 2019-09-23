@@ -1,4 +1,35 @@
 <section class="user">
+  <div class="col-md-12 mb-2">
+    <div class="card">
+      <div v-if="Search==0" @click = "Search = '1'" class="card-header filter_main" style="cursor: pointer;">
+        <i class="fa fa-plus plus"></i>Ad Hoc COD Remittance
+      </div>
+      <div v-if="Search==1" @click = "Search = '0'" class="card-header filter_main" style="cursor: pointer;">
+        <i class="fa fa-minus minus"></i>Ad Hoc COD Remittance
+      </div>
+      <b-collapse v-bind:class="`${Search == '1' ? 'show' : 'hide'}`" id="collapse1">
+        <div class="card-body">
+          <div class="form-group row">
+            <div class="col-md-5">
+              <label>Client Name <font color="red">*</font></label>
+              <b-input-group left="<i class='fa fa-list'></i>">
+                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="clientLoading" />
+                <Multiselect :options="ClientList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                  <template slot="noResult"><p>No Record Found.</p></template>
+                </Multiselect>
+              </b-input-group>
+              <span id="clienterr" class="text-danger"></span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-sm btn-primary" @click="onSearch" type="submit"><i class="fa fa-search"></i> Search</button>
+            <button class="btn btn-sm btn-danger" @click="resetSearch" type="reset"><i class="fa fa-ban"></i> Clear</button>
+          </div>
+        </div>
+      </b-collapse>
+    </div>
+  </div>
+
   <div class="animated fadeIn">
     <b-modal ref="myModalRef" v-model="modalShow" id=#confirmationmodal title="Confirmation">
       <div role="document">
@@ -51,7 +82,7 @@
               <td>
                 <b-form-input type="hidden" v-model="form.oldFromDate[data.ClientId]" v-bind:name="setid('oldFromDate', data.ClientId)" v-bind:id="setid('oldFromDate', data.ClientId)"></b-form-input>
                 <b-input-group left="<i class='fa fa-calendar'></i>" title="Change From Date">
-                  <b-form-input @change="onChangeDate(form.FromDate[data.ClientId], form.toDate[data.ClientId], data.ClientId)" type="date" v-model="form.FromDate[data.ClientId]" v-bind:name="setid('FromDate', data.ClientId)" v-bind:id="setid('FromDate', data.ClientId)" class="form-control"></b-form-input>
+                  <b-form-input disabled @change="onChangeDate(form.FromDate[data.ClientId], form.toDate[data.ClientId], data.ClientId)" type="date" v-model="form.FromDate[data.ClientId]" v-bind:name="setid('FromDate', data.ClientId)" v-bind:id="setid('FromDate', data.ClientId)" class="form-control"></b-form-input>
                 </b-input-group>
                 <span v-bind:id="setid('fdate', data.ClientId)" class="text-danger"></span>
               </td>

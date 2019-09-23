@@ -394,7 +394,7 @@ export default {
 
     onSearch: function(event) {
       if(this.Client.ClientMasterID==null || this.Client.ClientMasterID=='undefined'){
-        document.getElementById("clienterr").innerHTML="Please Select Client";
+        document.getElementById("clienterr").innerHTML="Please select Client";
         return false;
       }
       document.getElementById("clienterr").innerHTML="";
@@ -421,6 +421,7 @@ export default {
       this.errors.clear();
       this.ClientCODRemmitanceId="";
       this.searchClientCODRemittanceData(event);
+      document.getElementById("clienterr").innerHTML="";
     },
 
     scrollWin() {
