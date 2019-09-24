@@ -180,7 +180,7 @@
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Reason Slip <font color="red">&nbsp;*</font></span>
                   </div>
-                  <input @change="onUpload" class="form-control" type="file" placeholder="Upload Reason Slip" v-validate="{required: true}" name="ReasonSlip" id="ReasonSlip"
+                  <input @change="onUpload" class="form-control" type="file" placeholder="Upload Reason Slip" v-validate="`${Reason==65 ? 'required' : ''}`" name="ReasonSlip" id="ReasonSlip"
                   v-bind:class="{'form-control': true, 'error': errors.has('ReasonSlip')}" style="margin: -5px 1px 0px 1px; height: 28px; border: 0;">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-file"></i></span>
@@ -188,6 +188,21 @@
                 </div>
                 <span v-show="errors.has('ReasonSlip')" class="text-danger">Please upload slip is used for tax payment or other purpose.</span>
                 <a v-bind:title='`${file.name}`' v-for="file in reasonFileList" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:25px; color:#4b8cbb; margin: 10px 15px 1px 10px;"></i></a>
+              </div>
+
+              <div class="form-group" v-if="Reason==78">
+                <div class="input-group">
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">AWB Number <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="AWBNo" type="text" name="AWBNo" title="Enter AWB number" placeholder="Enter AWB number" v-validate="`${Reason==78 ? 'required' : ''}`"
+                  v-model="AWBNo" v-bind:class="{'form-control': true, 'error': errors.has('AWBNo') }" style="margin-right: -5px;">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-truck"></i></span>
+                  </div>
+                </div>
+                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Please enter comma (,) seperated AWB number.</span>
+                <span v-show="errors.has('AWBNo')" class="text-danger"><br>Please enter AWB number.</span>
               </div>
 
               <!-- <div class="form-group" v-if="Reason==78">
@@ -230,7 +245,7 @@
 
       <div class="col-lg-4">
         <div class="card">
-          <div class="card-header"><i class="fa fa-align-justify"></i> Denomination</div>
+          <div class="card-header"><i class="fa fa-align-justify"></i> Denomination <font color="red">&nbsp;*</font></div>
 
           <div class="card-body" style="height: 500px;">
             <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="denomLoading" />

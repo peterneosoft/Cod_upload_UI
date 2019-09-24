@@ -340,7 +340,7 @@ export default {
             this.adhocDate(result.data.data.FromDate, result.data.data.ToDate, ClientId);
           }else{
             this.resultCount = 0; this.pageno = 0;
-            this.listPendingRemittanceData=[]; this.listPendingRemittanceDataToDate=[];
+            this.listPendingRemittanceData=[];
             this.isLoading = false;
           }
         }, error => {
@@ -351,6 +351,11 @@ export default {
     },
 
     adhocDate(fromDate, toDate, ClientId){
+
+      this.form.oldToDate[ClientId] = this.form.toDate[ClientId] = [];
+      this.form.oldFromDate[ClientId] = this.form.FromDate[ClientId] = [];
+
+      this.listPendingRemittanceData=[]; this.pagecount = 1;
 
       if(!toDate || !fromDate){
 
@@ -368,14 +373,12 @@ export default {
         })
         .then(result => {
           if(result.data.code == 200){
-            this.listPendingRemittanceData=[]; this.pagecount = 1;
-            this.listPendingRemittanceData  = result.data.data;
             this.form.oldToDate[ClientId]   = this.form.toDate[ClientId] = result.data.data[0].ToDate;
             this.form.oldFromDate[ClientId] = this.form.FromDate[ClientId] = result.data.data[0].FromDate;
+            this.listPendingRemittanceData  = result.data.data;
             this.resultCount                = result.data.data.length;
             this.isLoading = false;
           }else{
-            this.listPendingRemittanceData=[];
             this.isLoading = false;
           }
         }, error => {
@@ -390,12 +393,12 @@ export default {
         document.getElementById("clienterr").innerHTML="Please select Client";
         return false;
       }
-      document.getElementById("clienterr").innerHTML="";
+      document.getElementById("clienterr").innerHTML=""; this.Search = 0;
       this.onClientSearch(this.Client.ClientMasterID, this.Client.CompanyName);
     },
 
     resetSearch() {
-      this.Client=[]; this.pageno = this.resultCount = 0;
+      this.Client=[]; this.pageno = this.resultCount = 0; this.Search = 0;
       this.manualCODRemittance();
       document.getElementById("clienterr").innerHTML="";
     }

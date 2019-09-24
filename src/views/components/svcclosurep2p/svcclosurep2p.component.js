@@ -45,8 +45,8 @@ export default {
       ReasonList: [],
       uploadFileList: [],
       reasonFileList: [],
-      ReasonAmount: 0,
-      AWBNo: null,
+      ReasonAmount: '',
+      AWBNo: '',
       CardAmount: 0,
       isLoading: false,
       bankLoading: false,
@@ -357,13 +357,13 @@ export default {
       }
     },
 
-    saveSvcClosure(event) {
+    async saveSvcClosure(event) {
       let DepositAmount = parseInt(this.Deposit_Amount);
-      let DepositReasonExcepAmount = '';
+      let DepositReasonExcepAmount = ''; let err = 0;
       if(this.Reason==65){
         DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.ReasonAmount)+parseFloat(this.CardAmount)));
       }else{
-        this.ReasonAmount = 0;
+        this.ReasonAmount = '';
         DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.CardAmount)));
       }
 
@@ -423,67 +423,98 @@ export default {
       let ClosingBalance = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositReasonExcepAmount)));
       let CODAmount = parseFloat(Math.round(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)));
 
-      if(this.AWBNo){
-        this.AWBNo = this.AWBNo.split(',');
+      if(this.AWBNo && (this.Reason==78)){
+        err = 1; this.AWBNo = this.AWBNo.replace(/,\s*$/, "").replace(/ /g,'').split(',');
+
+        err = await axios({
+            method: 'POST',
+            'url': apiUrl.api_url + 'getAWBNo',
+            'data': ({AWBNo: this.AWBNo}),
+            headers: {
+                'Authorization': 'Bearer '+this.myStr
+            }
+        })
+        .then((awbres) => {
+          if (awbres.data.code == 200) {
+            if(awbres.data.invalidAwbNo){
+              this.$alertify.error("Some of AWB numbers are invalid, please check: "+awbres.data.invalidAwbNo);
+              return 1;
+            }else{
+              return 0;
+            }
+          } else{
+            this.$alertify.error("AWB No not found");
+            return 1;
+          }
+        })
+        .catch((httpException) => {
+            this.$alertify.error('Error occured');
+            return 1;
+        });
+      }else{
+        this.AWBNo='';
       }
 
-      this.disableButton = true;
-      this.input = ({
-          DepositDate: this.DepositDate,
-          DeliveryDate: this.DeliveryDate,
-          Deposit_Amount: DepositAmount,
-          DepositType: this.DepositType,
-          BankID: this.BankMasterId,
-          BankDeposit: DepositAmount,
-          TransactionID: this.TransactionID,
-          ReasonID: (this.Reason)?this.Reason:null,
-          ReasonAmount: this.ReasonAmount,
-          AWBNo: this.AWBNo,
-          CardAmount: this.CardAmount,
-          CreatedBy: this.localuserid,
-          HubId: this.localhubid,
-          HubZoneId: this.localhubzoneid,
-          DifferenceAmount: 0,
-          TolatCollection: TolatCollection,
-          StatusID: 1,
-          OpeningBalance: OpeningBalance,
-          ClosingBalance: (ClosingBalance)?ClosingBalance:0,
-          FinanceConfirmAmount: 0,
-          CODAmount: CODAmount,
-          IsActive: true,
-          BatchID: this.BatchID,
-          p2pamt: p2pamt,
-          totalAmtdeposit: DepositAmount + p2pamt,
-          Denomination: this.DenominationArr,
-          NoteCount: NoteCountArr,
-          DenominationID: DenominationIDArr,
-          exceptionId: this.exceptionArr,
-          exceptionAmount: this.exceptionAmount,
-          hubIsRSC: this.localhubIsRSC
-      })
-      axios({
-          method: 'POST',
-          'url': apiUrl.api_url + 'submitSVCClosure',
-          'data': this.input,
-          headers: {
-              'Authorization': 'Bearer '+this.myStr
+      if(err == 0){
+        this.disableButton = true;
+        this.input = ({
+            DepositDate: this.DepositDate,
+            DeliveryDate: this.DeliveryDate,
+            Deposit_Amount: DepositAmount,
+            DepositType: this.DepositType,
+            BankID: this.BankMasterId,
+            BankDeposit: DepositAmount,
+            TransactionID: this.TransactionID,
+            ReasonID: (this.Reason)?this.Reason:null,
+            ReasonAmount: (this.ReasonAmount)?this.ReasonAmount:0,
+            AWBNo: (this.AWBNo)?this.AWBNo:new Array(),
+            CardAmount: this.CardAmount,
+            CreatedBy: this.localuserid,
+            HubId: this.localhubid,
+            HubZoneId: this.localhubzoneid,
+            DifferenceAmount: 0,
+            TolatCollection: TolatCollection,
+            StatusID: 1,
+            OpeningBalance: OpeningBalance,
+            ClosingBalance: (ClosingBalance)?ClosingBalance:0,
+            FinanceConfirmAmount: 0,
+            CODAmount: CODAmount,
+            IsActive: true,
+            BatchID: this.BatchID,
+            p2pamt: p2pamt,
+            totalAmtdeposit: DepositAmount + p2pamt,
+            Denomination: this.DenominationArr,
+            NoteCount: NoteCountArr,
+            DenominationID: DenominationIDArr,
+            exceptionId: this.exceptionArr,
+            exceptionAmount: this.exceptionAmount,
+            hubIsRSC: this.localhubIsRSC
+        })
+
+        await axios({
+            method: 'POST',
+            'url': apiUrl.api_url + 'submitSVCClosure',
+            'data': this.input,
+            headers: {
+                'Authorization': 'Bearer '+this.myStr
+            }
+        })
+        .then((response) => {
+          if (response.data.errorCode == 0) {
+            this.$alertify.success(response.data.msg);
+            this.disableButton = false;
+            window.scrollBy(0, 1000);
+            this.resetForm(event);
+          } else if (response.data.errorCode == -1) {
+            this.$alertify.error(response.data.msg)
           }
-      })
-      .then((response) => {
-        if (response.data.errorCode == 0) {
-          this.$alertify.success(response.data.msg);
-          this.disableButton = false;
-          window.scrollBy(0, 1000);
-          this.resetForm(event);
-        } else if (response.data.errorCode == -1) {
-          this.$alertify.error(response.data.msg)
-        }
-      })
-      .catch((httpException) => {
-          this.disableButton = false;
-          this.$alertify.error('Error occured')
-          console.error('exception is:::::::::', httpException)
-      });
+        })
+        .catch((httpException) => {
+            this.disableButton = false;
+            this.$alertify.error('Error occured')
+            console.error('exception is:::::::::', httpException)
+        });
+      }
     },
 
     //function is used for upload files on AWS s3bucket
@@ -629,10 +660,10 @@ export default {
     resetForm(event) {
       this.DepositLoading = false; this.ReasonLoading = false;
       this.BatchID = Math.floor(Math.random() * (Math.pow(10,5)));
-      this.pageno = this.tot_amt = this.unmatchedAmt = this.ReasonAmount = this.CardAmount = 0;
+      this.pageno = this.tot_amt = this.unmatchedAmt = this.CardAmount = 0; this.ReasonAmount = '';
       this.uploadFileList = []; this.reasonFileList = []; this.BankList = []; this.exception = []; this.exceptionList = [];
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.ReasonSlip = this.Reason = '';
-      this.AWBNo = null;
+      this.AWBNo = '';
       $('#denomlist input[type="text"]').val(0); $('#denomlist input[type="number"]').val('');
       document.getElementById("d_a").style.display = "none";
       this.GetShipmentUpdate();
