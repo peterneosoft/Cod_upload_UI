@@ -360,14 +360,44 @@ export default {
     async saveSvcClosure(event) {
       let DepositAmount = parseInt(this.Deposit_Amount);
       let DepositReasonExcepAmount = ''; let err = 0;
+      DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount));
+
       if(this.Reason==65){
-        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.ReasonAmount)+parseFloat(this.CardAmount)));
+        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.ReasonAmount)));
+      }else if(this.AWBNo && (this.Reason==78)){
+        err = 1; this.AWBNo = this.AWBNo.replace(/,\s*$/, "").replace(/ /g,'').split(',');
+
+        err = await axios({
+            method: 'POST',
+            'url': apiUrl.api_url + 'getAWBNo',
+            'data': ({AWBNo: this.AWBNo}),
+            headers: {
+                'Authorization': 'Bearer '+this.myStr
+            }
+        })
+        .then((awbres) => {
+          if (awbres.data.code == 200) {
+            if(awbres.data.invalidAwbNo){
+              this.$alertify.error("Some of AWB numbers are invalid, please check: "+awbres.data.invalidAwbNo);
+              return 1;
+            }else{
+              this.CardAmount = awbres.data.shipment_amount;
+              return 0;
+            }
+          } else{
+            this.$alertify.error("AWB number not found");
+            return 1;
+          }
+        })
+        .catch((httpException) => {
+            this.$alertify.error('Error occured');
+            return 1;
+        });
       }else{
-        this.ReasonAmount = '';
-        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.CardAmount)));
+        this.ReasonAmount = ''; this.AWBNo=''; this.CardAmount=0;
       }
 
-      let TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))));
+      let TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount)-parseFloat(this.CardAmount))));
 
       let p2pamt = parseInt(this.p2pAmount);
       if(DepositAmount !== parseInt(this.tot_amt)){
@@ -393,7 +423,7 @@ export default {
             return false;
           }else{
             if(this.Reason==65){
-              this.$alertify.error("Total pending amount and deposit amount including other charges is should be same, please check.");
+              this.$alertify.error("Total outstanding COD amount and deposit amount including other charges is should be same, please check.");
               return false;
             }else{
               this.reasonFileList=[];
@@ -412,48 +442,16 @@ export default {
       }
 
       if(DepositReasonExcepAmount > TolatCollection){
-        this.$alertify.error("Deposit amount including other charges should not be greater than total pending amount, please check.");
+        this.$alertify.error("Deposit amount including other charges should not be greater than total outstanding COD amount, please check.");
 
         let error            = document.getElementById("d_a");
-        error.innerHTML      = "Deposit amount including other charges should not be greater than total pending amount, please check.";
+        error.innerHTML      = "Deposit amount including other charges should not be greater than total outstanding COD amount, please check.";
         error.style.display  = "block"; return false;
       }
 
       let OpeningBalance = parseFloat(this.closingBalance);
       let ClosingBalance = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositReasonExcepAmount)));
       let CODAmount = parseFloat(Math.round(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)));
-
-      if(this.AWBNo && (this.Reason==78)){
-        err = 1; this.AWBNo = this.AWBNo.replace(/,\s*$/, "").replace(/ /g,'').split(',');
-
-        err = await axios({
-            method: 'POST',
-            'url': apiUrl.api_url + 'getAWBNo',
-            'data': ({AWBNo: this.AWBNo}),
-            headers: {
-                'Authorization': 'Bearer '+this.myStr
-            }
-        })
-        .then((awbres) => {
-          if (awbres.data.code == 200) {
-            if(awbres.data.invalidAwbNo){
-              this.$alertify.error("Some of AWB numbers are invalid, please check: "+awbres.data.invalidAwbNo);
-              return 1;
-            }else{
-              return 0;
-            }
-          } else{
-            this.$alertify.error("AWB No not found");
-            return 1;
-          }
-        })
-        .catch((httpException) => {
-            this.$alertify.error('Error occured');
-            return 1;
-        });
-      }else{
-        this.AWBNo='';
-      }
 
       if(err == 0){
         this.disableButton = true;
