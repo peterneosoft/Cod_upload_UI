@@ -48,6 +48,7 @@ export default {
       ReasonAmount: '',
       AWBNo: '',
       CardAmount: 0,
+      cardM: 1,
       isLoading: false,
       bankLoading: false,
       DepositLoading: false,
@@ -63,6 +64,7 @@ export default {
       resultdate: '',
       disableButton: false,
       modalShow:false,
+      cardModalShow:false,
       penAmtLoading: false,
       denomLoading: false,
       exceptionLoading: false,
@@ -122,11 +124,23 @@ export default {
       this.RemainData = Balanc;
     },
     hideModal() {
-       this.$refs.myModalRef.hide()
-     },
-     closeStatusRoleModal() {
-       this.modalShow = false
-     },
+      this.$refs.myModalRef.hide()
+    },
+    showCardModal(CardAmount){
+      this.$refs.myCardModalRef.show(CardAmount)
+    },
+    hideCardModal(ele) {
+      if(ele == 0){
+        this.$refs.myCardModalRef.hide()
+        this.saveSvcClosure(event);
+      }else{
+        this.$refs.myCardModalRef.hide()
+      }
+    },
+    closeStatusRoleModal() {
+      this.modalShow = false
+      this.cardModalShow = false
+    },
 
     GetShipmentUpdate() {
 
@@ -357,17 +371,15 @@ export default {
       }
     },
 
-    async saveSvcClosure(event) {
-      let DepositAmount = parseInt(this.Deposit_Amount);
-      let DepositReasonExcepAmount = ''; let err = 0;
-      DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount));
+    cardawbno(event){
+      if(this.AWBNo && (this.Reason==78)){
+        if(/\s/g.test(this.AWBNo) == true || this.AWBNo.indexOf(',') > -1){
+          this.AWBNo = this.AWBNo.replace(/,\s*$/, "").replace(/ /g,'').split(',');
+        }else{
+          this.AWBNo = new Array(this.AWBNo);
+        }
 
-      if(this.Reason==65){
-        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.ReasonAmount)));
-      }else if(this.AWBNo && (this.Reason==78)){
-        err = 1; this.AWBNo = this.AWBNo.replace(/,\s*$/, "").replace(/ /g,'').split(',');
-
-        err = await axios({
+        axios({
             method: 'POST',
             'url': apiUrl.api_url + 'getAWBNo',
             'data': ({AWBNo: this.AWBNo}),
@@ -378,25 +390,32 @@ export default {
         .then((awbres) => {
           if (awbres.data.code == 200) {
             if(awbres.data.invalidAwbNo){
-              this.$alertify.error("Some of AWB numbers are invalid, please check: "+awbres.data.invalidAwbNo);
-              return 1;
+              this.$alertify.error("Some of AWB numbers are invalid, please check: "+awbres.data.invalidAwbNo); return false;
             }else{
               this.CardAmount = awbres.data.shipment_amount;
-              return 0;
+              this.showCardModal(this.CardAmount);
             }
           } else{
-            this.$alertify.error("AWB number not found");
-            return 1;
+            this.$alertify.error("AWB numbers are invalid, please check."); return false;
           }
         })
         .catch((httpException) => {
-            this.$alertify.error('Error occured');
-            return 1;
+          console.log('httpException==', httpException);
+          this.$alertify.error('Error occured'); return false;
         });
-      }else{
-        this.ReasonAmount = ''; this.AWBNo=''; this.CardAmount=0;
       }
+    },
 
+    saveSvcClosure(event) {
+      let DepositAmount = parseInt(this.Deposit_Amount);
+      let DepositReasonExcepAmount = '';
+      DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount));
+
+      if(this.Reason==65){
+        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.ReasonAmount)));
+      }else{
+        this.ReasonAmount = '';
+      }
       let TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount)-parseFloat(this.CardAmount))));
 
       let p2pamt = parseInt(this.p2pAmount);
@@ -453,66 +472,63 @@ export default {
       let ClosingBalance = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositReasonExcepAmount)));
       let CODAmount = parseFloat(Math.round(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)));
 
-      if(err == 0){
-        this.disableButton = true;
-        this.input = ({
-            DepositDate: this.DepositDate,
-            DeliveryDate: this.DeliveryDate,
-            Deposit_Amount: DepositAmount,
-            DepositType: this.DepositType,
-            BankID: this.BankMasterId,
-            BankDeposit: DepositAmount,
-            TransactionID: this.TransactionID,
-            ReasonID: (this.Reason)?this.Reason:null,
-            ReasonAmount: (this.ReasonAmount)?this.ReasonAmount:0,
-            AWBNo: (this.AWBNo)?this.AWBNo:new Array(),
-            CardAmount: this.CardAmount,
-            CreatedBy: this.localuserid,
-            HubId: this.localhubid,
-            HubZoneId: this.localhubzoneid,
-            DifferenceAmount: 0,
-            TolatCollection: TolatCollection,
-            StatusID: 1,
-            OpeningBalance: OpeningBalance,
-            ClosingBalance: (ClosingBalance)?ClosingBalance:0,
-            FinanceConfirmAmount: 0,
-            CODAmount: CODAmount,
-            IsActive: true,
-            BatchID: this.BatchID,
-            p2pamt: p2pamt,
-            totalAmtdeposit: DepositAmount + p2pamt,
-            Denomination: this.DenominationArr,
-            NoteCount: NoteCountArr,
-            DenominationID: DenominationIDArr,
-            exceptionId: this.exceptionArr,
-            exceptionAmount: this.exceptionAmount,
-            hubIsRSC: this.localhubIsRSC
-        })
+      this.disableButton = true;
+      this.input = ({
+          DepositDate: this.DepositDate,
+          DeliveryDate: this.DeliveryDate,
+          Deposit_Amount: DepositAmount,
+          DepositType: this.DepositType,
+          BankID: this.BankMasterId,
+          BankDeposit: DepositAmount,
+          TransactionID: this.TransactionID,
+          ReasonID: (this.Reason)?this.Reason:null,
+          ReasonAmount: (this.ReasonAmount)?this.ReasonAmount:0,
+          AWBNo: (this.AWBNo)?this.AWBNo:new Array(),
+          CardAmount: this.CardAmount,
+          CreatedBy: this.localuserid,
+          HubId: this.localhubid,
+          HubZoneId: this.localhubzoneid,
+          DifferenceAmount: 0,
+          TolatCollection: TolatCollection,
+          StatusID: 1,
+          OpeningBalance: OpeningBalance,
+          ClosingBalance: (ClosingBalance)?ClosingBalance:0,
+          FinanceConfirmAmount: 0,
+          CODAmount: CODAmount,
+          IsActive: true,
+          BatchID: this.BatchID,
+          p2pamt: p2pamt,
+          totalAmtdeposit: DepositAmount + p2pamt,
+          Denomination: this.DenominationArr,
+          NoteCount: NoteCountArr,
+          DenominationID: DenominationIDArr,
+          exceptionId: this.exceptionArr,
+          exceptionAmount: this.exceptionAmount,
+          hubIsRSC: this.localhubIsRSC
+      })
 
-        await axios({
-            method: 'POST',
-            'url': apiUrl.api_url + 'submitSVCClosure',
-            'data': this.input,
-            headers: {
-                'Authorization': 'Bearer '+this.myStr
-            }
-        })
-        .then((response) => {
-          if (response.data.errorCode == 0) {
-            this.$alertify.success(response.data.msg);
-            this.disableButton = false;
-            window.scrollBy(0, 1000);
-            this.resetForm(event);
-          } else if (response.data.errorCode == -1) {
-            this.$alertify.error(response.data.msg)
+      axios({
+          method: 'POST',
+          'url': apiUrl.api_url + 'submitSVCClosure',
+          'data': this.input,
+          headers: {
+              'Authorization': 'Bearer '+this.myStr
           }
-        })
-        .catch((httpException) => {
-            this.disableButton = false;
-            this.$alertify.error('Error occured')
-            console.error('exception is:::::::::', httpException)
-        });
-      }
+      })
+      .then((response) => {
+        if (response.data.errorCode == 0) {
+          this.$alertify.success(response.data.msg);
+          this.disableButton = false;
+          window.scrollBy(0, 1000);
+          this.resetForm(event);
+        } else if (response.data.errorCode == -1) {
+          this.$alertify.error(response.data.msg)
+        }
+      })
+      .catch((httpException) => {
+          this.disableButton = false;
+          this.$alertify.error('Error occured')
+      });
     },
 
     //function is used for upload files on AWS s3bucket
@@ -647,7 +663,11 @@ export default {
               error.innerHTML = "Total denomination & deposit amount is should be same, please check.";
               error.style.display = "block";
           }else{
-            this.saveSvcClosure(event);
+            if(this.AWBNo && (this.Reason==78)){
+              this.cardawbno(event);
+            }else{
+              this.saveSvcClosure(event);
+            }
           }
         }
       }).catch(() => {
@@ -667,7 +687,7 @@ export default {
       this.GetShipmentUpdate();
       this.GetSVCledgerData();
       this.GetSVCExceptionData();
-      this.$validator.reset(); this.errors.clear(); event.target.reset();
+      this.$validator.reset(); this.errors.clear(); document.getElementById('svcform').reset();
     },
 
     showHideImages(index, elem){
