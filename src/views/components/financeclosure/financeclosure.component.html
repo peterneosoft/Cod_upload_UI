@@ -101,7 +101,7 @@
               <tr v-if="resultCount==0">
                 <td colspan="19" align="center">No record found</td>
               </tr>
-              <tr v-for="(data,index) in listFinanceledgerData">
+              <tr v-for="(data,index) in listFinanceledgerData" v-bind:class="`${data.reasonid == 84 ? 'mismatched' : 'mismatched'}`">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
                 <td>{{HubName}}</td>
                 <td>{{data.rscowner}}</td>
