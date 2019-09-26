@@ -369,7 +369,7 @@
               <tr v-if="resultCount==0">
                 <td colspan="17" align="center">No record found</td>
               </tr>
-              <tr v-for="(data,index) in listSVCledgerData" v-bind:class="`${data.createdby == 'schedular@xpressbees.com' ? 'scheduler' : '' || data.reasonid == 65 ? 'other' : ''}`">
+              <tr v-for="(data,index) in listSVCledgerData" v-bind:class="`${data.createdby == 'schedular@xpressbees.com' ? 'scheduler' : '' || data.reasonid == 65 ? 'other' : '' || data.financereasonid == 84 ? 'mismatched' : ''}`">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
                 <td>{{data.deliverydate}}</td>
                 <td>{{data.bankdepositdate}}</td>
