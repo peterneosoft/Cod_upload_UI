@@ -408,7 +408,8 @@ export default {
 
     saveSvcClosure(event) {
       let DepositAmount = parseInt(this.Deposit_Amount);
-      let DepositReasonExcepAmount = '';
+      let DepositReasonExcepAmount = ''; this.unmatchedAmt = 0;
+      console.log('this.unmatchedAmt==', this.unmatchedAmt);
       DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount));
 
       if(this.Reason==65){
@@ -435,100 +436,103 @@ export default {
         error.style.display  = "none";
 
         this.unmatchedAmt = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositReasonExcepAmount)));
+        let ClosingBalance = 0;
 
-        if((DepositReasonExcepAmount < TolatCollection) && (this.unmatchedAmt!='0.00') && (this.unmatchedAmt!=0)){
-          if(this.Reason==''){
-            this.showModal(this.unmatchedAmt);
-            return false;
-          }else{
-            if(this.Reason==65){
-              this.$alertify.error("Total outstanding COD amount and deposit amount including other charges is should be same, please check.");
+        if(this.unmatchedAmt > 0 && this.unmatchedAmt <= 5){
+          ClosingBalance = 0; this.unmatchedAmt = 0;
+        }else{
+          if((DepositReasonExcepAmount < TolatCollection) && (this.unmatchedAmt>0)){
+            if(this.Reason==''){
+              this.showModal(this.unmatchedAmt);
               return false;
             }else{
-              this.reasonFileList=[];
-              this.hideModal();
+              if(this.Reason==65){
+                this.$alertify.error("Total outstanding COD amount and deposit amount including other charges is should be same, please check.");
+                return false;
+              }else{
+                this.reasonFileList=[];
+                this.hideModal();
+              }
             }
-          }
-        }
-      }
+          }else if(DepositReasonExcepAmount > TolatCollection){
+            this.$alertify.error("Deposit amount including other charges should not be greater than total outstanding COD amount, please check.");
 
-      let NoteCountArr = []; let DenominationIDArr = [];
-      if(this.DenominationArr.length > 0){
-        this.DenominationArr.forEach(function (denomi) {
-          NoteCountArr.push(parseInt(document.getElementById("mo"+denomi).value) / parseInt(denomi));
-          DenominationIDArr.push(parseInt(document.getElementById("moi"+denomi).value));
+            let error            = document.getElementById("d_a");
+            error.innerHTML      = "Deposit amount including other charges should not be greater than total outstanding COD amount, please check.";
+            error.style.display  = "block"; return false;
+          }
+          ClosingBalance = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositReasonExcepAmount)));
+        }
+
+        let NoteCountArr = []; let DenominationIDArr = [];
+        if(this.DenominationArr.length > 0){
+          this.DenominationArr.forEach(function (denomi) {
+            NoteCountArr.push(parseInt(document.getElementById("mo"+denomi).value) / parseInt(denomi));
+            DenominationIDArr.push(parseInt(document.getElementById("moi"+denomi).value));
+          });
+        }
+
+        let OpeningBalance = parseFloat(this.closingBalance);
+        let CODAmount = parseFloat(Math.round(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)));
+
+        this.disableButton = true;
+        this.input = ({
+            DepositDate: this.DepositDate,
+            DeliveryDate: this.DeliveryDate,
+            Deposit_Amount: DepositAmount,
+            DepositType: this.DepositType,
+            BankID: this.BankMasterId,
+            BankDeposit: DepositAmount,
+            TransactionID: this.TransactionID,
+            ReasonID: (this.Reason)?this.Reason:null,
+            ReasonAmount: (this.ReasonAmount)?this.ReasonAmount:0,
+            AWBNo: (this.AWBNo)?this.AWBNo:new Array(),
+            CardAmount: this.CardAmount,
+            CreatedBy: this.localuserid,
+            HubId: this.localhubid,
+            HubZoneId: this.localhubzoneid,
+            DifferenceAmount: 0,
+            TolatCollection: TolatCollection,
+            StatusID: 1,
+            OpeningBalance: OpeningBalance,
+            ClosingBalance: (ClosingBalance)?ClosingBalance:0,
+            FinanceConfirmAmount: 0,
+            CODAmount: CODAmount,
+            IsActive: true,
+            BatchID: this.BatchID,
+            p2pamt: p2pamt,
+            totalAmtdeposit: DepositAmount + p2pamt,
+            Denomination: this.DenominationArr,
+            NoteCount: NoteCountArr,
+            DenominationID: DenominationIDArr,
+            exceptionId: this.exceptionArr,
+            exceptionAmount: this.exceptionAmount,
+            hubIsRSC: this.localhubIsRSC
+        })
+
+        axios({
+            method: 'POST',
+            'url': apiUrl.api_url + 'submitSVCClosure',
+            'data': this.input,
+            headers: {
+                'Authorization': 'Bearer '+this.myStr
+            }
+        })
+        .then((response) => {
+          if (response.data.errorCode == 0) {
+            this.$alertify.success(response.data.msg);
+            this.disableButton = false;
+            window.scrollBy(0, 1000);
+            this.resetForm(event);
+          } else if (response.data.errorCode == -1) {
+            this.$alertify.error(response.data.msg)
+          }
+        })
+        .catch((httpException) => {
+            this.disableButton = false;
+            this.$alertify.error('Error occured')
         });
       }
-
-      if(DepositReasonExcepAmount > TolatCollection){
-        this.$alertify.error("Deposit amount including other charges should not be greater than total outstanding COD amount, please check.");
-
-        let error            = document.getElementById("d_a");
-        error.innerHTML      = "Deposit amount including other charges should not be greater than total outstanding COD amount, please check.";
-        error.style.display  = "block"; return false;
-      }
-
-      let OpeningBalance = parseFloat(this.closingBalance);
-      let ClosingBalance = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositReasonExcepAmount)));
-      let CODAmount = parseFloat(Math.round(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)));
-
-      this.disableButton = true;
-      this.input = ({
-          DepositDate: this.DepositDate,
-          DeliveryDate: this.DeliveryDate,
-          Deposit_Amount: DepositAmount,
-          DepositType: this.DepositType,
-          BankID: this.BankMasterId,
-          BankDeposit: DepositAmount,
-          TransactionID: this.TransactionID,
-          ReasonID: (this.Reason)?this.Reason:null,
-          ReasonAmount: (this.ReasonAmount)?this.ReasonAmount:0,
-          AWBNo: (this.AWBNo)?this.AWBNo:new Array(),
-          CardAmount: this.CardAmount,
-          CreatedBy: this.localuserid,
-          HubId: this.localhubid,
-          HubZoneId: this.localhubzoneid,
-          DifferenceAmount: 0,
-          TolatCollection: TolatCollection,
-          StatusID: 1,
-          OpeningBalance: OpeningBalance,
-          ClosingBalance: (ClosingBalance)?ClosingBalance:0,
-          FinanceConfirmAmount: 0,
-          CODAmount: CODAmount,
-          IsActive: true,
-          BatchID: this.BatchID,
-          p2pamt: p2pamt,
-          totalAmtdeposit: DepositAmount + p2pamt,
-          Denomination: this.DenominationArr,
-          NoteCount: NoteCountArr,
-          DenominationID: DenominationIDArr,
-          exceptionId: this.exceptionArr,
-          exceptionAmount: this.exceptionAmount,
-          hubIsRSC: this.localhubIsRSC
-      })
-
-      axios({
-          method: 'POST',
-          'url': apiUrl.api_url + 'submitSVCClosure',
-          'data': this.input,
-          headers: {
-              'Authorization': 'Bearer '+this.myStr
-          }
-      })
-      .then((response) => {
-        if (response.data.errorCode == 0) {
-          this.$alertify.success(response.data.msg);
-          this.disableButton = false;
-          window.scrollBy(0, 1000);
-          this.resetForm(event);
-        } else if (response.data.errorCode == -1) {
-          this.$alertify.error(response.data.msg)
-        }
-      })
-      .catch((httpException) => {
-          this.disableButton = false;
-          this.$alertify.error('Error occured')
-      });
     },
 
     //function is used for upload files on AWS s3bucket

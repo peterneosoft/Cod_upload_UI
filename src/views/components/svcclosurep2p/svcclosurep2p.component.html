@@ -39,7 +39,7 @@
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Deposit Amount <font color="red">&nbsp;*</font></span>
                   </div>
-                  <input class="form-control" id="Deposit_Amount" type="text" name="Deposit_Amount" placeholder="Enter Deposit Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8"
+                  <input class="form-control" @change = "unmatchedAmt = 0" id="Deposit_Amount" type="text" name="Deposit_Amount" placeholder="Enter Deposit Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8"
                     v-validate="{required: true}" v-model="Deposit_Amount" v-bind:class="{'form-control': true, 'error': errors.has('Deposit_Amount') }" style="margin-right: 0px;">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-rupee"></i></span>
@@ -306,7 +306,7 @@
               </button>
             </div>
             <div class="modal-bodyfrm">
-              <h5 style="font-size:1rem; color:red;">Need a reason because Rs. {{unmatchedAmt}} is still remaining.</h5>
+              <h5 style="font-size:1rem; color:red;">Please select a reason because Rs. {{unmatchedAmt}} is still remaining.</h5>
             </div>
             <div class="modal-footerfrm">
             <center><button type="button"  @click="modalShow = false" class="btn btn-success" style="background-color: #20a8d8;">Ok</button></center>
