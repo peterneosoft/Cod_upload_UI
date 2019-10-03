@@ -39,7 +39,8 @@ export default {
       RSCList:[],
       RSCName:[],
       SearchHubIds:[],
-      SearchRSCIds:[]
+      SearchRSCIds:[],
+      reportlink:''
     }
   },
 
@@ -119,8 +120,8 @@ export default {
     },
 
     exportCODOutstandingData(){
-      this.excelLoading = true;
-      let hubArr = []; let RSCArr = [];
+
+      let hubArr = []; let RSCArr = []; this.reportlink = '';
 
       if(this.SearchHubIds.length>0){
         hubArr = this.SearchHubIds;
@@ -162,18 +163,29 @@ export default {
       })
       .then(result => {
         if(result.data.code == 200){
-          this.getDownloadCsvObject(result.data.data);
-          this.excelLoading = false;
+          // this.getDownloadCsvObject(result.data.data);
+          this.exportf=true;
+          this.reportlink = result.data.data;
         }else{
-          this.excelLoading = false;
+          this.exportf=false; this.reportlink = '';
         }
       }, error => {
-        this.excelLoading = false;
+        this.exportf=false; this.reportlink = '';
         console.error(error)
       })
     },
 
-    getDownloadCsvObject(csvData) {
+    exportreport(){
+      this.excelLoading = true;
+      if(this.reportlink){
+        window.open(this.reportlink);
+        this.excelLoading = false;
+      }else{
+        this.excelLoading = false;
+      }
+    },
+
+    /** getDownloadCsvObject(csvData) {
       var today   = new Date();
       var dd      = today.getDate();
       var mm      = today.getMonth() + 1;
@@ -223,7 +235,7 @@ export default {
       });
       this.excelLoading = false;
       return result;
-    },
+    }, **/
 
     getCODOutstandingReport(){
       this.isLoading = true;
@@ -275,7 +287,7 @@ export default {
         .then(result => {
           if(result.data.code == 200){
             this.CODOutstandingReport = result.data.data;
-            this.isLoading = false; this.exportf = true;
+            this.isLoading = false;
             let totalRows = result.data.count
             this.resultCount = result.data.count
             if (totalRows < 10) {
@@ -283,14 +295,16 @@ export default {
              } else {
                  this.pagecount = Math.ceil(totalRows / 10)
              }
+
+             this.exportCODOutstandingData();
            }else{
              this.CODOutstandingReport = [];
-             this.isLoading = false; this.exportf = false;
+             this.isLoading = false;
              this.resultCount = 0;
            }
           },
            error => {
-             this.exportf = false; this.isLoading = false;
+             this.isLoading = false;
              console.error(error)
         })
     },

@@ -40,7 +40,8 @@ export default {
       localhubname: '',
       exportf:false,
       excelLoading: false,
-      clientLoading: false
+      clientLoading: false,
+      reportlink:''
     }
   },
 
@@ -138,7 +139,7 @@ export default {
         if(result.data.code == 200){
           this.listCODRemitanceData = result.data.data;
           this.isLoading = false;
-          this.exportf=true;
+
           let totalRows     = result.data.count;
           this.resultCount  = result.data.count;
           if (totalRows < 10) {
@@ -146,20 +147,19 @@ export default {
           } else {
               this.pagecount = Math.ceil(totalRows / 10)
           }
+          this.exportCODRemittanceDetailsData();
         }else{
           this.listCODRemitanceData=[];
           this.resultCount  = 0;
           this.isLoading = false;
-          this.exportf=false;
         }
       }, error => {
-          this.exportf=false;
           console.error(error)
       })
     },
 
     exportCODRemittanceDetailsData(){
-      let cData = [];
+      let cData = []; this.reportlink = '';
       if(this.SearchClientIds.length>0){
         cData = this.SearchClientIds;
       }else{
@@ -172,7 +172,6 @@ export default {
         });
       }
 
-      this.excelLoading = true;
       axios({
           method: 'GET',
           'url': apiUrl.api_url + 'exportCODRemittanceDetailsReport?ClientId='+cData+'&fromDate='+this.fromDate+'&toDate='+this.toDate+'&search='+this.selected,
@@ -182,18 +181,29 @@ export default {
       })
       .then(result => {
         if(result.data.code == 200){
-          this.getDownloadCsvObject(result.data.data);
-          this.excelLoading = false;
+          // this.getDownloadCsvObject(result.data.data);
+          this.exportf=true;
+          this.reportlink = result.data.data;
         }else{
-          this.excelLoading = false;
+          this.exportf=false; this.reportlink = '';
         }
       }, error => {
-          this.excelLoading = false;
-          console.error(error)
+        this.exportf=false; this.reportlink = '';
+        console.error(error)
       })
     },
 
-    getDownloadCsvObject(csvData) {
+    exportreport(){
+      this.excelLoading = true;
+      if(this.reportlink){
+        window.open(this.reportlink);
+        this.excelLoading = false;
+      }else{
+        this.excelLoading = false;
+      }
+    },
+
+    /** getDownloadCsvObject(csvData) {
       var today   = new Date();
       var dd      = today.getDate();
       var mm      = today.getMonth() + 1;
@@ -243,12 +253,14 @@ export default {
       });
       this.excelLoading = false;
       return result;
-    },
+    }, **/
 
     onSubmit: function(event) {
       this.$validator.validateAll().then(() => {
         this.pageno = 0; this.exportf = false;
-        this.GetCODRemittanceDetailsData(event);
+        if(this.fromDate && this.toDate){
+          this.GetCODRemittanceDetailsData(event);
+        }
       }).catch(() => {
         console.log('errors exist', this.errors)
       });

@@ -215,7 +215,7 @@ export default {
         })
         .then(result => {
           this.zoneLoading = false;
-          this.zoneList = result.data.zone.data;
+          this.zoneList = [{hubzoneid:'0', hubzonename:'All Zone', hubzonecode:'All Zone'}].concat(result.data.zone.data);
         }, error => {
           this.zoneLoading = false;
           console.error(error)
@@ -274,7 +274,7 @@ export default {
       }
       this.piechart.series.data = [];
       this.input = ({
-          hubids: this.hubArray[0],
+          hubids: (this.hubArray[0])?this.hubArray[0]:0,
           fromdate: this.FromDate,
           todate: this.ToDate,
       })
@@ -346,13 +346,19 @@ export default {
           filter: filter,
           id: id
       })
-      axios({
-          method: 'POST',
-          url: apiUrl.api_url + 'getHubIdsArray',
-          data: this.input,
-          headers: {
-            'Authorization': 'Bearer '+this.myStr
-          }
+
+      if(filter == 'zone' && id == 0){
+        this.getPieShipmentPercentSearch()
+        this.getHubWiseCollectionDataSearch()
+        this.getMaxMinCODCollectionDataSearch()
+      }else{
+        axios({
+            method: 'POST',
+            url: apiUrl.api_url + 'getHubIdsArray',
+            data: this.input,
+            headers: {
+              'Authorization': 'Bearer '+this.myStr
+            }
         })
         .then(result => {
           if(result.data.code == 200){
@@ -379,6 +385,7 @@ export default {
           this.amountLoading = false; this.barLoading = false; this.pieLoading = false; this.collectionLoading = false;
           console.error(error)
         })
+      }
     },
 
     getStateData() {
@@ -526,7 +533,7 @@ export default {
       })
 
       this.input = ({
-          hubids: this.hubArray[0],
+          hubids: (this.hubArray[0])?this.hubArray[0]:0,
           fromdate: this.FromDate,
           todate: this.ToDate,
       })
@@ -632,7 +639,7 @@ export default {
        this.ToDate =  null
       }
       this.input = ({
-          hubids: this.hubArray[0],
+          hubids: (this.hubArray[0])?this.hubArray[0]:0,
           fromdate: this.FromDate,
           todate: this.ToDate
       })
@@ -678,6 +685,12 @@ export default {
       }).catch(() => {
         console.log('errors exist', this.errors)
       });
+    },
+
+    resetForm() {
+      this.FromDate = this.ToDate = ''; this.zone = this.state = this.city =[];
+      this.$validator.reset();
+      this.errors.clear();
     },
   }
 }

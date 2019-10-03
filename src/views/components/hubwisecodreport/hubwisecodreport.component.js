@@ -41,7 +41,8 @@ export default {
       RSCList:[],
       RSCName:[],
       SearchHubIds:[],
-      SearchRSCIds:[]
+      SearchRSCIds:[],
+      reportlink:''
     }
   },
 
@@ -124,7 +125,7 @@ export default {
     },
 
     exportHubWiswData(){
-      this.excelLoading = true;
+      this.reportlink = '';
 
       let hubArr = []; let RSCArr = [];
       if(this.SearchHubIds.length>0){
@@ -170,18 +171,29 @@ export default {
       })
       .then(result => {
         if(result.data.code == 200){
-          this.getDownloadCsvObject(result.data.data);
-          this.excelLoading = false;
+          //this.getDownloadCsvObject(result.data.data);
+          this.exportf=true;
+          this.reportlink = result.data.data;
         }else{
-          this.excelLoading = false;
+           this.exportf = false; this.reportlink = '';
         }
       }, error => {
-        this.excelLoading = false;
+         this.exportf = false; this.reportlink = '';
         console.error(error)
       })
     },
 
-    getDownloadCsvObject(csvData) {
+    exportreport(){
+      this.excelLoading = true;
+      if(this.reportlink){
+        window.open(this.reportlink);
+        this.excelLoading = false;
+      }else{
+        this.excelLoading = false;
+      }
+    },
+
+    /** getDownloadCsvObject(csvData) {
       var today   = new Date();
       var dd      = today.getDate();
       var mm      = today.getMonth() + 1;
@@ -231,7 +243,7 @@ export default {
       });
       this.excelLoading = false;
       return result;
-    },
+    }, **/
 
     getHubWiseCODLedgerReports(){
       if(this.fromDate > this.toDate){
@@ -290,7 +302,7 @@ export default {
         .then(result => {
           if(result.data.code == 200){
             this.CODLedgerReports = result.data.data;
-            this.isLoading = false; this.exportf = true;
+            this.isLoading = false;
             let totalRows = result.data.count
             this.resultCount = result.data.count
             if (totalRows < 10) {
@@ -298,14 +310,15 @@ export default {
              } else {
                  this.pagecount = Math.ceil(totalRows / 10)
              }
+             this.exportHubWiswData();
            }else{
              this.CODLedgerReports = [];
-             this.isLoading = false; this.exportf = false;
+             this.isLoading = false;
              this.resultCount = 0;
            }
           },
            error => {
-             this.exportf = false; this.isLoading = false;
+             this.isLoading = false;
              console.error(error)
         })
     },
