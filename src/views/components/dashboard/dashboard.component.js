@@ -348,9 +348,21 @@ export default {
       })
 
       if(filter == 'zone' && id == 0){
-        this.getPieShipmentPercentSearch()
-        this.getHubWiseCollectionDataSearch()
-        this.getMaxMinCODCollectionDataSearch()
+
+        let date1 = new Date(this.FromDate);
+        let date2 = new Date(this.ToDate);
+        let diffTime = Math.abs(date2 - date1);
+        let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if(diffDays > 30){
+          document.getElementById("fdate").innerHTML="Difference between From date & To date should not be greater than 30 days.";
+          this.amountLoading = false; this.barLoading = false; this.pieLoading = false; this.collectionLoading = false; this.Search = 1;
+          return false;
+        }else{
+          this.getPieShipmentPercentSearch()
+          this.getHubWiseCollectionDataSearch()
+          this.getMaxMinCODCollectionDataSearch()
+        }
       }else{
         axios({
             method: 'POST',

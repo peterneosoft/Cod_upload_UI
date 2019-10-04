@@ -42,7 +42,7 @@
 
               <div class="form-group row">
                 <div class="col-md-4">
-                  <label>From Date <font color="red">*</font></label>
+                  <label>From ( Delivery ) Date <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-calendar'></i>">
                     <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}"
                     v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="col-md-4">
-                  <label>To Date <font color="red">*</font></label>
+                  <label>To ( Delivery ) Date <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-calendar'></i>">
                     <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}"
                     v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
