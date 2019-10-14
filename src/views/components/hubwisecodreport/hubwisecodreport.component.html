@@ -142,7 +142,11 @@
                     <td>{{CODLedger_List.balanceLogic}}</td>
                     <td>{{CODLedger_List.StatusVal}}</td>
                     <td>{{CODLedger_List.lastmodifiedby}}</td>
-                    <td><span v-if="CODLedger_List.awbnocount!=''" @click="showAWBNo(CODLedger_List.awbno)" style="cursor:pointer; color:blue;">{{CODLedger_List.awbnocount}}</span></td>
+                    <td>
+                      <span v-if="CODLedger_List.awbnocount!=''" @click="showAWBNo('Exception', CODLedger_List.awbno)" style="cursor:pointer; color: rgb(25,25,112);">Exception</span>
+                      <br v-if="CODLedger_List.awbnocount!='' && CODLedger_List.cardawbnocount!=''">
+                      <span v-if="CODLedger_List.cardawbnocount!=''" @click="showAWBNo('Card Issue', CODLedger_List.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">Card</span>
+                    </td>
                   </tr>
                 </tbody>
 
