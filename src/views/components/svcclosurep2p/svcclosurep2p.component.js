@@ -711,7 +711,7 @@ export default {
     },
 
     showAWBNo(typ, ele){
-      alert(typ+' AWB No.: '+ele);
+      alert(typ+' AWB No: '+ele);
     }
   }
 }

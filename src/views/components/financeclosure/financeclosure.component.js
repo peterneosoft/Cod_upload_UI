@@ -356,8 +356,8 @@ export default {
       window.scrollBy(0, 1000);
     },
 
-    showAWBNo(ele){
-      alert(ele);
+    showAWBNo(typ, ele){
+      alert(typ+' AWB No: '+ele);
     }
   }
 }
