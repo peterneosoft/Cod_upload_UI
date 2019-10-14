@@ -135,8 +135,8 @@ export default {
       }
     },
 
-    showAWBNo(ele){
-      alert(ele);
+    showAWBNo(typ, ele){
+      alert(typ+' AWB No: '+ele);
     }
   }
 }

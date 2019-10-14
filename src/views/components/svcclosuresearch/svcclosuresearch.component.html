@@ -97,7 +97,11 @@
                   <a v-bind:title='`${file.name}`' v-for="file in data.reasonfiles" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
                 </span>
               </td>
-              <td><span v-if="data.awbnocount!=''" @click="showAWBNo(data.awbno)" style="cursor:pointer; color:blue;">{{data.awbnocount}}</span></td>
+              <td>
+                <span v-if="data.awbnocount!=''" @click="showAWBNo('Exception', data.awbno)" style="cursor:pointer; color: rgb(25,25,112);">Exception</span>
+                <br v-if="data.awbnocount!='' && data.cardawbnocount!=''">
+                <span v-if="data.cardawbnocount!=''" @click="showAWBNo('Card Issue', data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">Card</span>
+              </td>
             </tr>
           </tbody>
         </table><br>

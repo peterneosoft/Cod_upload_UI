@@ -375,7 +375,8 @@ export default {
       if(this.AWBNo && (this.Reason==78)){
         if(/\s/g.test(this.AWBNo) == true || this.AWBNo.indexOf(',') > -1){
           this.AWBNo = this.AWBNo.replace(/,\s*$/, "").replace(/ /g,'').split(',');
-        }else{
+        }
+        if(Array.isArray(this.AWBNo) == false){
           this.AWBNo = new Array(this.AWBNo);
         }
 
@@ -400,7 +401,6 @@ export default {
           }
         })
         .catch((httpException) => {
-          console.log('httpException==', httpException);
           this.$alertify.error('Error occured'); return false;
         });
       }
@@ -409,7 +409,6 @@ export default {
     saveSvcClosure(event) {
       let DepositAmount = parseInt(this.Deposit_Amount);
       let DepositReasonExcepAmount = ''; this.unmatchedAmt = 0;
-      console.log('this.unmatchedAmt==', this.unmatchedAmt);
       DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount));
 
       if(this.Reason==65){
