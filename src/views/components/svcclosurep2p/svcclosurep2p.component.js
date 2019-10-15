@@ -682,7 +682,7 @@ export default {
       this.DepositLoading = false; this.ReasonLoading = false;
       this.BatchID = Math.floor(Math.random() * (Math.pow(10,5)));
       this.pageno = this.tot_amt = this.unmatchedAmt = this.CardAmount = 0; this.ReasonAmount = '';
-      this.uploadFileList = []; this.reasonFileList = []; this.BankList = []; this.exception = []; this.exceptionList = [];
+      this.uploadFileList = []; this.reasonFileList = []; this.BankList = []; this.exception = []; this.exceptionList = []; this.exceptionArr = [];
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.ReasonSlip = this.Reason = '';
       this.AWBNo = '';
       $('#denomlist input[type="text"]').val(0); $('#denomlist input[type="number"]').val('');
