@@ -387,7 +387,7 @@
                 <td>{{data.Reason}}</td>
                 <td>{{data.financereason}}</td>
                 <td class="text-center">
-                  <span v-bind:id='`${"vrl"+data.svcledgerid}`' v-if="data.createdby!='schedular@xpressbees.com' && data.othercharges == '0.00'" @click="showHideImages(data.svcledgerid, 'vrl')" style="color: blue; cursor: pointer;">Deposit</span>
+                  <span v-bind:id='`${"vrl"+data.svcledgerid}`' v-if="data.files.length>0 && data.createdby!='schedular@xpressbees.com' && data.othercharges == '0.00'" @click="showHideImages(data.svcledgerid, 'vrl')" style="color: blue; cursor: pointer;">Deposit</span>
                   <span v-bind:id='`${"vri"+data.svcledgerid}`' style="display: none;">
                     <a v-bind:title='`${file.name}`' v-for="file in data.files" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
                   </span>
