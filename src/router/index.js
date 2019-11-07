@@ -28,6 +28,8 @@ import MISP2PCODReport from '@/views/components/misp2preport'
 import SystemSettings from '@/views/components/settings'
 import BankHoliday from '@/views/components/bankholiday'
 import EMailRemittance from '@/views/components/emailremittance'
+import Invoice from '@/views/components/invoice'
+import InvoiceReport from '@/views/components/invoicereport'
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -141,6 +143,40 @@ const router = new Router({
               },
               {
                 name: 'Hub Wise COD Report'
+              }
+            ]
+          },
+        },
+        {
+          path: 'invoice',
+          name: 'Invoice',
+          component: Invoice,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'Invoice'
+              }
+            ]
+          },
+        },
+        {
+          path: 'invoicereport',
+          name: 'Invoice Report',
+          component: InvoiceReport,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'Invoice Summary Report'
               }
             ]
           },

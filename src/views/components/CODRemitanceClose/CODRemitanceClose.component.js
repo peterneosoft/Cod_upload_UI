@@ -110,7 +110,7 @@ export default {
         }
         document.getElementById("opt").innerHTML="";
       }else{
-        document.getElementById("opt").innerHTML="Please choose one option ( Delivery Date OR Transaction Date ).";
+        document.getElementById("opt").innerHTML="Please choose atleast one option ( Delivery Date OR Transaction Date ).";
         return false;
       }
 

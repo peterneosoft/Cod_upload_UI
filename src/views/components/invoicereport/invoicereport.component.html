@@ -1,0 +1,188 @@
+<section class="user">
+  <div class="animated fadeIn">
+    <div class="col-md-12 mb-2">
+        <div class="card">
+          <div class="card-header filter_main">
+            <i class=" fa fa-filter filter"></i> Invoice Summary
+          </div>
+          <div class="card-body">
+            <form  v-on:submit.prevent="onSubmit">
+              <div class="form-group row">
+                <div class="col-md-4">
+                  <label>Category <font color="red">*</font></label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                    <select name="category" id="category" @change="addHubData" class="form-control" v-model="category" style="height: 42px;">
+                      <option value="RSC" title="RSC">RSC</option>
+                      <option value="Agent" title="Agent">Agent</option>
+                      <option value="INHAgent" title="INH Agent">INH Agent</option>
+                    </select>
+                  </b-input-group>
+                </div>
+
+                <div class="col-md-4">
+                  <label>Zone <font color="red">*</font></label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="zoneLoading" />
+                    <Multiselect :options="zoneList" name="zone" id="zone" v-model="zone" @input="addHubData" v-validate="{required: true}" v-bind:class="{'error': errors.has('zone') }" placeholder="Select Zone" label="hubzonename" track-by="hubzoneid" :optionHeight="100" :preselect-first="false" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
+                       <template slot="noResult"><p>No Record Found.</p></template>
+                    </Multiselect>
+                  </b-input-group>
+                  <span v-show="errors.has('zone')" class="text-danger">Please select zone.</span>
+                </div>
+
+                <div class="col-md-4">
+                  <label>Hub Name</label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="hubLoading" />
+                    <Multiselect :options="HubRSCList" placeholder="Select Hub Name" name="HubName" id="HubName" v-model="HubName" label="HubName" track-by="HubID" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
+                     <template slot="noResult"><p>No Record Found.</p></template>
+                    </Multiselect>
+                  </b-input-group>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <div class="col-md-4">
+                  <label v-if="category=='Agent'">Company Name</label>
+                  <label v-else-if="category=='INHAgent'">Agency Name</label>
+                  <label v-else>Company Name</label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="RSCLoading" />
+                    <Multiselect :options="HubRSCList" placeholder="Select RSC" name="RSCName" id="RSCName" v-model="RSCName" label="CompanyName" track-by="HubID" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
+                     <template slot="noResult"><p>No Record Found.</p></template>
+                    </Multiselect>
+                  </b-input-group>
+                </div>
+
+                <div class="col-md-4">
+                  <label>Invoice No</label>
+                  <b-input-group left="<i class='fa fa-file-pdf-o'></i>">
+                    <input class="form-control" id="invoiceno" placeholder="Invoice Number" v-model="invoiceno" type="text" name="invoiceno" style="height:42px">
+                  </b-input-group>
+                </div>
+
+                <div class="col-md-4">
+                  <label>SR Name</label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="srLoading" />
+                    <select name="srname" id="srname" class="form-control" v-model="srname" style="height:42px">
+                      <option value="" title="--Select--">--Select--</option>
+                    </select>
+                  </b-input-group>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <div class="col-md-4">
+                  <label>From Date <font color="red">*</font></label>
+                  <b-input-group left="<i class='fa fa-calendar'></i>">
+                    <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}"
+                    v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
+                  </b-input-group>
+                  <span v-show="errors.has('fromDate')" class="text-danger">Please select From date. </span>
+                  <span id="fdate" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                  <label>To Date <font color="red">*</font></label>
+                  <b-input-group left="<i class='fa fa-calendar'></i>">
+                    <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}"
+                    v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
+                  </b-input-group>
+                  <span v-show="errors.has('toDate')" class="text-danger">Please select To date. </span>
+                </div>
+
+                <div class="col-md-4">
+                  <label>Shipment Type</label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="shipmentLoading" />
+                    <select name="shipmenttype" id="shipmenttype" class="form-control" v-model="shipmenttype">
+                      <option value="">--Select--</option>
+                      <option v-for="type_obj in shipmentList" v-bind:value="type_obj.businessconfigurationid" v-bind:title="type_obj.businessconfig">{{type_obj.businessconfig}}</option>
+                    </select>
+                  </b-input-group>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Show</button>
+                <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card-headerfrm" style="margin-bottom: 15px;">
+              <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result
+                <span v-show="exportf" style="margin-left: 60%; cursor: pointer;" @click="exportreport()">
+                  <button class="btn btn-sm btn-success" type="button">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="excelLoading" />
+                    <i class="fa fa-download"></i> Export Summary
+                  </button>
+                </span>
+
+                <span v-show="exportf" style="margin-left: 1%; cursor: pointer;" @click="exportreport()">
+                  <button class="btn btn-sm btn-success" type="button">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="excelLoading" />
+                    <i class="fa fa-download"></i> Export Shipment List
+                  </button>
+                </span>
+              </h4>
+              <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+              <table class="table-bordered table-hover tbl datatables scrolltb" style="width:100%;">
+                <thead>
+                  <tr class="text-primary">
+                    <th class="text-center tableheader"><b>#</b></th>
+                    <th class="text-center tableheader"><b>Zone</b></th>
+                    <th class="text-center tableheader"><b>Hub/SVC</b></th>
+                    <th class="text-center tableheader"><b>Invoice No</b></th>
+                    <th class="text-center tableheader"><b>Date</b></th>
+                    <th class="text-center tableheader"><b>Employee No</b></th>
+                    <th class="text-center tableheader"><b>SR ID</b></th>
+                    <th class="text-center tableheader"><b>SR Name</b></th>
+                    <th class="text-center tableheader"><b>OFD Count</b></th>
+                    <th class="text-center tableheader"><b>Delivere Count</b></th>
+                    <th class="text-center tableheader"><b>Rate</b></th>
+                    <th class="text-center tableheader"><b>Payable AddWt</b></th>
+                    <th class="text-center tableheader"><b>Payable Amount</b></th>
+                    <th class="text-center tableheader"><b>COD to be collected</b></th>
+                    <th class="text-center tableheader"><b>SR Agency Name</b></th>
+                    <th class="text-center tableheader"><b>RSC Company Name</b></th>
+                    <th class="text-center tableheader"><b>GST No</b></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-if="resultCount==0">
+                    <td colspan="17" align="center">No record found</td>
+                  </tr>
+                  <tr v-for="(CODLedger_List,index) in invoiceLedger">
+                    <td>{{pageno+index+1}}</td>
+                    <td>{{CODLedger_List.zonename}}</td>
+                    <td>{{CODLedger_List.hubname}}</td>
+                    <td>{{CODLedger_List.rscowner}}</td>
+                    <td>{{CODLedger_List.hubLocationType}}</td>
+                    <td>{{CODLedger_List.depositdate}}</td>
+                    <td>{{CODLedger_List.deposittype}}</td>
+                    <td>{{CODLedger_List.deliverydate}}</td>
+                    <td>{{CODLedger_List.openingbalance}}</td>
+                    <td>{{CODLedger_List.bankdeposit}}</td>
+                    <td>{{CODLedger_List.bank}}</td>
+                    <td>{{CODLedger_List.exceptionamt}}</td>
+                    <td>{{CODLedger_List.othercharges}}</td>
+                    <td>{{CODLedger_List.receivable}}</td>
+                    <td>{{CODLedger_List.financeconfirmamount}}</td>
+                    <td>{{CODLedger_List.financeconfirmdate}}</td>
+                    <td>{{CODLedger_List.balanceLogic}}</td>
+                  </tr>
+                </tbody>
+
+              </table><br>
+              <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+              </paginate>
+            </div>
+         </div>
+       </div>
+    </div>
+  </div>
+</section>
