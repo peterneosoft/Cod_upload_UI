@@ -85,7 +85,7 @@
                 <th class="text-center tableheader"><b>Bank Deposited Amount</b></th>
                 <th class="text-center tableheader"><b>Actual Received Amount</b></th>
                 <th class="text-center tableheader"><b>Exception Amount</b></th>
-                <!-- <th class="text-center tableheader"><b>Card Issue Amount</b></th> -->
+                <th class="text-center tableheader"><b>Card/Other AWB Amount</b></th>
                 <th class="text-center tableheader"><b>Other Charges</b></th>
                 <th class="text-center tableheader"><b>Balance Outstanding</b></th>
                 <th class="text-center tableheader"><b>Status</b></th>
@@ -94,12 +94,12 @@
                 <th class="text-center tableheader"><b>Bank Name</b></th>
                 <th class="text-center tableheader"><b>Reason</b></th>
                 <th class="text-center tableheader"><b>Receipts</b></th>
-                <th class="text-center tableheader"><b>AWB No.</b></th>
+                <th class="text-center tableheader"><b>View AWB No.</b></th>
               </tr>
             </thead>
             <tbody>
               <tr v-if="resultCount==0">
-                <td colspan="19" align="center">No record found</td>
+                <td colspan="20" align="center">No record found</td>
               </tr>
               <tr v-for="(data,index) in listFinanceledgerData" v-bind:class="`${data.financereasonid == 84 ? 'mismatched' : ''}`">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
@@ -112,7 +112,7 @@
                 <td>{{data.bankdeposit}}</td>
                 <td>{{data.actualrecamt}}</td>
                 <td>{{data.exceptionamt}}</td>
-                <!-- <td>{{data.cardissueamt}}</td> -->
+                <td>{{data.cardissueamt}}</td>
                 <td>{{data.othercharges}}</td>
                 <td>{{data.balanceoutstanding}}</td>
                 <td>{{StatusVal}}</td>
@@ -149,7 +149,7 @@
                 <td>
                   <span v-if="data.awbnocount!=''" @click="showAWBNo('Exception', data.awbno)" style="cursor:pointer; color: rgb(25,25,112);">Exception</span>
                   <br v-if="data.awbnocount!='' && data.cardawbnocount!=''">
-                  <span v-if="data.cardawbnocount!=''" @click="showAWBNo('Card Issue', data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">Card</span>
+                  <span v-if="data.cardawbnocount!=''" @click="showAWBNo('Card/Other Issue', data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">Card/Other</span>
                 </td>
               </tr>
             </tbody>

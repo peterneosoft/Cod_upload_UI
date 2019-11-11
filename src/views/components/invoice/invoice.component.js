@@ -38,12 +38,10 @@ export default {
         { text: 'Monthly Report', value: 'monthly' }
       ],
       invoiceLedger:[],
-      resultCount:'',
+      resultCount:0,
       pageno:0,
       pagecount:0,
       isLoading:false,
-      excelLoading: false,
-      exportf:false,
       zoneLoading:false,
       RSCLoading:false,
       shipmentLoading:false,
@@ -86,79 +84,7 @@ export default {
         this.getInvoiceReport()
     },
 
-    exportHubWiswData(){
-      this.reportlink = '';
-
-      let hubArr = []; let RSCArr = [];
-      if(this.SearchHubIds.length>0){
-        hubArr = this.SearchHubIds;
-      }else{
-        if($.isArray(this.HubId) === false){
-          this.HubId = new Array(this.HubId);
-        }
-
-        this.HubId.forEach(function (val) {
-          hubArr.push(val.HubID);
-        });
-      }
-
-      if(this.SearchRSCIds.length>0){
-        RSCArr = this.SearchRSCIds;
-      }else{
-        if($.isArray(this.RSCName) === false){
-          this.RSCName = new Array(this.RSCName);
-        }
-
-        this.RSCName.forEach(function (val) {
-          RSCArr.push(val.HubID);
-        });
-      }
-
-      let hubIdArr = [...new Set([].concat(...hubArr.concat(RSCArr)))];
-
-      this.input = ({
-          hubid: hubIdArr,
-          zoneid: this.zoneIdArr,
-          status: this.status,
-          fromdate: this.fromDate,
-          todate: this.toDate
-      })
-      axios({
-          method: 'POST',
-          'url': apiUrl.api_url + 'exportHubWiseCODReports',
-          'data': this.input,
-          headers: {
-              'Authorization': 'Bearer '+this.myStr
-          }
-      })
-      .then(result => {
-        if(result.data.code == 200){
-          this.exportf=true;
-          this.reportlink = result.data.data;
-        }else{
-           this.exportf = false; this.reportlink = '';
-        }
-      }, error => {
-         this.exportf = false; this.reportlink = '';
-        console.error(error)
-      })
-    },
-
-    exportreport(){
-      this.excelLoading = true;
-      if(this.reportlink){
-        window.open(this.reportlink);
-        this.excelLoading = false;
-      }else{
-        this.excelLoading = false;
-      }
-    },
-
     getInvoiceReport(){
-
-      // console.log('paystatus==', this.paystatus, 'category==', this.category, 'invoiceno==', this.invoiceno);
-      // console.log('zone==', this.zone, 'shipmenttype==', this.shipmenttype, 'selected==', this.selected);
-      // console.log('toDate==', this.toDate, 'fromDate==', this.fromDate, 'HubName==', this.HubName);
 
       if(this.selected){
         if(this.fromDate > this.toDate){
@@ -175,66 +101,43 @@ export default {
 
       this.isLoading = true;
 
-      let hubArr = []; let RSCArr = [];
-      if(this.SearchHubIds.length>0){
-        hubArr = this.SearchHubIds;
-      }else{
-        if($.isArray(this.HubId) === false){
-          this.HubId = new Array(this.HubId);
-        }
-
-        this.HubId.forEach(function (val) {
-          hubArr.push(val.HubID);
-        });
-      }
-
-      if(this.SearchRSCIds.length>0){
-        RSCArr = this.SearchRSCIds;
-      }else{
-        if($.isArray(this.RSCName) === false){
-          this.RSCName = new Array(this.RSCName);
-        }
-
-        this.RSCName.forEach(function (val) {
-          RSCArr.push(val.HubID);
-        });
-      }
-
-      let hubIdArr = [...new Set([].concat(...hubArr.concat(RSCArr)))];
-
       this.input = ({
-          hubid: hubIdArr,
-          zoneid: this.zoneIdArr,
+          entity: this.category,
+          zoneid: this.zone,
+          OutSourcingMasterID: this.HubName,
+          invoiceno: this.invoiceno,
           fromdate: this.fromDate,
           todate: this.toDate,
-          status: this.status,
+          businessconfigid: this.shipmenttype,
+          paystatus: this.paystatus,
+          username: this.localusername,
           offset:this.pageno,
           limit:10
       })
       axios({
           method: 'POST',
-          url: apiUrl.api_url + 'getHubWiseCODLedgerReports',
+          url: apiUrl.api_url + 'getinvoicedetails',
           'data': this.input,
           headers: {
-            'Authorization': 'Bearer '
+            'Authorization': 'Bearer '+this.myStr
           }
         })
         .then(result => {
           if(result.data.code == 200){
             this.invoiceLedger = result.data.data;
             this.isLoading = false;
+
             let totalRows = result.data.count
             this.resultCount = result.data.count
+
             if (totalRows < 10) {
                  this.pagecount = 1
              } else {
                  this.pagecount = Math.ceil(totalRows / 10)
              }
-             this.exportHubWiswData();
            }else{
-             this.invoiceLedger = [];
+             this.invoiceLedger = []; this.resultCount = 0;
              this.isLoading = false;
-             this.resultCount = 0;
            }
           },
            error => {
@@ -316,7 +219,7 @@ export default {
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
-          this.pageno = 0; this.exportf = false;
+          this.pageno = 0;
           this.getInvoiceReport()
         }
       }).catch(() => {
@@ -325,9 +228,10 @@ export default {
     },
 
     resetForm() {
-      this.fromDate = this.toDate = this.zone = this.paystatus = this.shipmenttype = '';
+      this.fromDate = this.toDate = this.zone = this.paystatus = this.invoiceno = this.shipmenttype = this.selected = '';
       this.HubName = this.RSCList = this.invoiceLedger = []; this.category = 'RSC';
-      this.pageno = this.resultCount = 0; this.exportf = false;
+      this.pageno = this.resultCount = 0;
+      document.getElementById("fdate").innerHTML="";
       this.$validator.reset();
       this.errors.clear();
     }

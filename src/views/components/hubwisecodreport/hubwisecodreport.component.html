@@ -106,7 +106,7 @@
                     <th class="text-center tableheader"><b>Bank Deposit Amount</b></th>
                     <th class="text-center tableheader"><b>Bank Name</b></th>
                     <th class="text-center tableheader"><b>Exception Amount</b></th>
-                    <!-- <th class="text-center tableheader"><b>Card Issue Amount</b></th> -->
+                    <th class="text-center tableheader"><b>Card/Other Issue Amount</b></th>
                     <th class="text-center tableheader"><b>Other Charges</b></th>
                     <th class="text-center tableheader"><b>COD Receivable</b></th>
                     <th class="text-center tableheader"><b>Finance Confirmed Amount</b></th>
@@ -114,12 +114,12 @@
                     <th class="text-center tableheader"><b>Balance Outstanding</b></th>
                     <th class="text-center tableheader"><b>Status</b></th>
                     <th class="text-center tableheader"><b>Closed by</b></th>
-                    <th class="text-center tableheader"><b>AWB No.</b></th>
+                    <th class="text-center tableheader"><b>View AWB No.</b></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td colspan="20" align="center">No record found</td>
+                    <td colspan="21" align="center">No record found</td>
                   </tr>
                   <tr v-for="(CODLedger_List,index) in CODLedgerReports ">
                     <td>{{pageno+index+1}}</td>
@@ -134,7 +134,7 @@
                     <td>{{CODLedger_List.bankdeposit}}</td>
                     <td>{{CODLedger_List.bank}}</td>
                     <td>{{CODLedger_List.exceptionamt}}</td>
-                    <!-- <td>{{CODLedger_List.cardissueamt}}</td> -->
+                    <td>{{CODLedger_List.cardissueamt}}</td>
                     <td>{{CODLedger_List.othercharges}}</td>
                     <td>{{CODLedger_List.receivable}}</td>
                     <td>{{CODLedger_List.financeconfirmamount}}</td>
@@ -145,7 +145,7 @@
                     <td>
                       <span v-if="CODLedger_List.awbnocount!=''" @click="showAWBNo('Exception', CODLedger_List.awbno)" style="cursor:pointer; color: rgb(25,25,112);">Exception</span>
                       <br v-if="CODLedger_List.awbnocount!='' && CODLedger_List.cardawbnocount!=''">
-                      <span v-if="CODLedger_List.cardawbnocount!=''" @click="showAWBNo('Card Issue', CODLedger_List.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">Card</span>
+                      <span v-if="CODLedger_List.cardawbnocount!=''" @click="showAWBNo('Card/Other Issue', CODLedger_List.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">Card/Other</span>
                     </td>
                   </tr>
                 </tbody>

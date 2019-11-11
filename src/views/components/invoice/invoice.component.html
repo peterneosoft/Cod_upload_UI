@@ -17,7 +17,7 @@
                 <div class="col-md-4">
                   <label>Category <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
-                    <select name="category" id="category" @change="addHubData" class="form-control" v-model="category" style="height: 42px;">
+                    <select name="category" id="category" @change="addHubData" class="form-control" v-model="category" style="height: 42px;" v-validate="{required: true}" v-bind:class="{'error': errors.has('category') }">
                       <option value="RSC" title="RSC">RSC</option>
                       <option value="Agent" title="Agent">Agent</option>
                       <option value="INHAgent" title="INH Agent">INH Agent</option>
@@ -50,7 +50,7 @@
 
               <div class="form-group row">
                 <div class="col-md-4">
-                  <label>Invoice No <font color="red">*</font></label>
+                  <label>Invoice No</label>
                   <b-input-group left="<i class='fa fa-file-pdf-o'></i>">
                     <input class="form-control" id="invoiceno" placeholder="Invoice Number" v-model="invoiceno" type="text" name="invoiceno">
                   </b-input-group>
@@ -61,9 +61,9 @@
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <select name="paystatus" id="paystatus" class="form-control" v-model="paystatus">
                       <option value="">--Select--</option>
-                      <option value="paid" title="Paid">Paid</option>
-                      <option value="partial" title="Partial">Partial</option>
-                      <option value="pending" title="Pending">Pending</option>
+                      <option value="Paid" title="Paid">Paid</option>
+                      <option value="Partial" title="Partial">Partial</option>
+                      <option value="Pending" title="Pending">Pending</option>
                     </select>
                   </b-input-group>
                   <span v-show="errors.has('paystatus')" class="text-danger">Please select Pay Status.</span>
@@ -91,14 +91,15 @@
                 </div>
 
                 <div class="col-md-4">
-                  <label>Shipment Type</label>
+                  <label>Shipment Type <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="shipmentLoading" />
-                    <select name="shipmenttype" id="shipmenttype" class="form-control" v-model="shipmenttype">
+                    <select name="shipmenttype" id="shipmenttype" class="form-control" v-model="shipmenttype" v-validate="{required: true}" v-bind:class="{'error': errors.has('shipmenttype') }">
                       <option value="">--Select--</option>
-                      <option v-for="type_obj in shipmentList" v-bind:value="type_obj.businessconfigurationid" v-bind:title="type_obj.businessconfig">{{type_obj.businessconfig}}</option>
+                      <option v-for="type_obj in shipmentList" v-bind:value="type_obj" v-bind:title="type_obj.businessconfig">{{type_obj.businessconfig}}</option>
                     </select>
                   </b-input-group>
+                  <span v-show="errors.has('shipmenttype')" class="text-danger">Please Select Shipment Type.</span>
                 </div>
               </div>
 
@@ -144,38 +145,38 @@
                     <th class="text-center tableheader"><b>Manual Lost Amount</b></th>
                     <th class="text-center tableheader"><b>Recovery Amount</b></th>
                     <th class="text-center tableheader"><b>Final Payble Amount</b></th>
+                    <th class="text-center tableheader"><b>Pay Status</b></th>
                     <th class="text-center tableheader"><b>Invoice Date</b></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td colspan="20" align="center">No record found</td>
+                    <td colspan="21" align="center">No record found</td>
                   </tr>
-                  <tr v-for="(CODLedger_List,index) in invoiceLedger">
+                  <tr v-for="(invoiceList,index) in invoiceLedger">
                     <td>{{pageno+index+1}}</td>
-                    <td>{{CODLedger_List.zonename}}</td>
-                    <td>{{CODLedger_List.hubname}}</td>
-                    <td>{{CODLedger_List.rscowner}}</td>
-                    <td>{{CODLedger_List.hubLocationType}}</td>
-                    <td>{{CODLedger_List.depositdate}}</td>
-                    <td>{{CODLedger_List.deposittype}}</td>
-                    <td>{{CODLedger_List.deliverydate}}</td>
-                    <td>{{CODLedger_List.openingbalance}}</td>
-                    <td>{{CODLedger_List.bankdeposit}}</td>
-                    <td>{{CODLedger_List.bank}}</td>
-                    <td>{{CODLedger_List.exceptionamt}}</td>
-                    <td>{{CODLedger_List.othercharges}}</td>
-                    <td>{{CODLedger_List.receivable}}</td>
-                    <td>{{CODLedger_List.financeconfirmamount}}</td>
-                    <td>{{CODLedger_List.financeconfirmdate}}</td>
-                    <td>{{CODLedger_List.balanceLogic}}</td>
-                    <td>{{CODLedger_List.StatusVal}}</td>
-                    <td>{{CODLedger_List.lastmodifiedby}}</td>
-                    <td>
-                      <span v-if="CODLedger_List.awbnocount!=''" @click="showAWBNo('Exception', CODLedger_List.awbno)" style="cursor:pointer; color: rgb(25,25,112);">Exception</span>
-                      <br v-if="CODLedger_List.awbnocount!='' && CODLedger_List.cardawbnocount!=''">
-                      <span v-if="CODLedger_List.cardawbnocount!=''" @click="showAWBNo('Card Issue', CODLedger_List.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">Card</span>
+                    <td class="text-center">
+                      <a title='Invoice' v-bind:href='`${invoiceList.filename}`'>View</a>
                     </td>
+                    <td>{{invoiceList.invoiceno}}</td>
+                    <td>{{invoiceList.entity}}</td>
+                    <td>{{invoiceList.shipment}}</td>
+                    <td>{{invoiceList.hub}}</td>
+                    <td>{{invoiceList.zone}}</td>
+                    <td>{{invoiceList.entityname}}</td>
+                    <td>{{invoiceList.fromdate}}</td>
+                    <td>{{invoiceList.todate}}</td>
+                    <td>{{invoiceList.ofd}}</td>
+                    <td>{{invoiceList.dlvdcount}}</td>
+                    <td>{{invoiceList.invoiceval}}</td>
+                    <td>{{invoiceList.paidval}}</td>
+                    <td>{{invoiceList.remainamt}}</td>
+                    <td>{{invoiceList.slostamt}}</td>
+                    <td>{{invoiceList.mlostamt}}</td>
+                    <td>{{invoiceList.recoveryamt}}</td>
+                    <td>{{invoiceList.finalamt}}</td>
+                    <td>{{invoiceList.paystatus}}</td>
+                    <td>{{invoiceList.invoicedate}}</td>
                   </tr>
                 </tbody>
 

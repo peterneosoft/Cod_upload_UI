@@ -102,7 +102,7 @@
               <div class="form-group" v-if="exceptionList.length>0">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
-                    <span class="input-group-text" style="width: 140px;">AWB No.</span>
+                    <span class="input-group-text" style="width: 140px;">Exception AWB No.</span>
                   </div>
                   <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="exceptionLoading" />
                   <Multiselect :options="exceptionList" name="exception" id="exception" v-model="exception" @input="addExceptionData" placeholder="Select Shipping Id" label="ShippingID" track-by="ShippingID" :optionHeight="100" :preselect-first="false" v-bind:multiple="multiple()" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
@@ -190,12 +190,12 @@
                 <a v-bind:title='`${file.name}`' v-for="file in reasonFileList" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:25px; color:#4b8cbb; margin: 10px 15px 1px 10px;"></i></a>
               </div>
 
-              <div class="form-group" v-if="Reason==78">
+              <div class="form-group" v-if="Reason==78 || Reason==77 || Reason==152">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
-                    <span class="input-group-text" style="width: 140px;">AWB Number <font color="red">&nbsp;*</font></span>
+                    <span class="input-group-text" style="width: 140px;">AWB No. <font color="red" v-if="Reason==78 || Reason==152">&nbsp;*</font></span>
                   </div>
-                  <input class="form-control" id="AWBNo" type="text" name="AWBNo" title="Enter AWB number" placeholder="Enter AWB number" v-validate="`${Reason==78 ? 'required' : ''}`"
+                  <input class="form-control" id="AWBNo" type="text" name="AWBNo" title="Enter AWB number" placeholder="Enter AWB number" v-validate="`${Reason==78 || Reason==152 ? 'required' : ''}`"
                   v-model="AWBNo" v-bind:class="{'form-control': true, 'error': errors.has('AWBNo') }" style="margin-right: -5px;">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-truck"></i></span>
@@ -354,15 +354,15 @@
                 <th class="text-center tableheader"><b>COD Receivable</b></th>
                 <th class="text-center tableheader"><b>Bank Name</b></th>
                 <th class="text-center tableheader"><b>Bank Deposited Amount</b></th>
-                <th class="text-center tableheader"><b>Exception Amount</b></th>
-                <th class="text-center tableheader"><b>Card Issue Amount</b></th>
+                <th class="text-center tableheader"><b>Exception AWB Amount</b></th>
+                <th class="text-center tableheader"><b>Card/Other AWB Amount</b></th>
                 <th class="text-center tableheader"><b>Other Charges</b></th>
                 <th class="text-center tableheader"><b>Balance Outstanding</b></th>
                 <th class="text-center tableheader"><b>Status</b></th>
                 <th class="text-center tableheader"><b>Reason</b></th>
                 <th class="text-center tableheader"><b>Finance Reason</b></th>
                 <th class="text-center tableheader"><b>Receipts</b></th>
-                <th class="text-center tableheader"><b>AWB No.</b></th>
+                <th class="text-center tableheader"><b>View AWB No.</b></th>
               </tr>
             </thead>
             <tbody>
@@ -400,7 +400,7 @@
                 <td>
                   <span v-if="data.awbnocount!=''" @click="showAWBNo('Exception', data.awbno)" style="cursor:pointer; color: rgb(25,25,112);">Exception</span>
                   <br v-if="data.awbnocount!='' && data.cardawbnocount!=''">
-                  <span v-if="data.cardawbnocount!=''" @click="showAWBNo('Card Issue', data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">Card</span>
+                  <span v-if="data.cardawbnocount!=''" @click="showAWBNo('Card/Other Issue', data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">Card/Other</span>
                 </td>
               </tr>
             </tbody>

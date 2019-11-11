@@ -372,38 +372,36 @@ export default {
     },
 
     cardawbno(event){
-      if(this.AWBNo && (this.Reason==78)){
-        if(/\s/g.test(this.AWBNo) == true || this.AWBNo.indexOf(',') > -1){
-          this.AWBNo = this.AWBNo.replace(/,\s*$/, "").replace(/ /g,'').split(',');
-        }
-        if(Array.isArray(this.AWBNo) == false){
-          this.AWBNo = new Array(this.AWBNo);
-        }
-
-        axios({
-            method: 'POST',
-            'url': apiUrl.api_url + 'getAWBNo',
-            'data': ({AWBNo: this.AWBNo}),
-            headers: {
-                'Authorization': 'Bearer '+this.myStr
-            }
-        })
-        .then((awbres) => {
-          if (awbres.data.code == 200) {
-            if(awbres.data.invalidAwbNo){
-              this.$alertify.error("Some of AWB numbers are invalid, please check: "+awbres.data.invalidAwbNo); return false;
-            }else{
-              this.CardAmount = awbres.data.shipment_amount;
-              this.showCardModal(this.CardAmount);
-            }
-          } else{
-            this.$alertify.error("AWB numbers are invalid, please check."); return false;
-          }
-        })
-        .catch((httpException) => {
-          this.$alertify.error('Error occured'); return false;
-        });
+      if(/\s/g.test(this.AWBNo) == true || this.AWBNo.indexOf(',') > -1){
+        this.AWBNo = this.AWBNo.replace(/,\s*$/, "").replace(/ /g,'').split(',');
       }
+      if(Array.isArray(this.AWBNo) == false){
+        this.AWBNo = new Array(this.AWBNo);
+      }
+
+      axios({
+          method: 'POST',
+          'url': apiUrl.api_url + 'getAWBNo',
+          'data': ({AWBNo: this.AWBNo}),
+          headers: {
+              'Authorization': 'Bearer '+this.myStr
+          }
+      })
+      .then((awbres) => {
+        if (awbres.data.code == 200) {
+          if(awbres.data.invalidAwbNo){
+            this.$alertify.error("Some of AWB numbers are invalid, please check: "+awbres.data.invalidAwbNo); return false;
+          }else{
+            this.CardAmount = awbres.data.shipment_amount;
+            this.showCardModal(this.CardAmount);
+          }
+        } else{
+          this.$alertify.error("AWB numbers are invalid, please check."); return false;
+        }
+      })
+      .catch((httpException) => {
+        this.$alertify.error('Error occured'); return false;
+      });
     },
 
     saveSvcClosure(event) {
@@ -474,6 +472,10 @@ export default {
         let OpeningBalance = parseFloat(this.closingBalance);
         let CODAmount = parseFloat(Math.round(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)));
 
+        if(this.AWBNo && Array.isArray(this.AWBNo) == false){
+          this.AWBNo = new Array(this.AWBNo);
+        }
+
         this.disableButton = true;
         this.input = ({
             DepositDate: this.DepositDate,
@@ -539,11 +541,11 @@ export default {
       this.disableButton = true;
       this.selectedFile = event.target.files[0];
 
-      var name = '';
-      if ( /\.(jpe?g|png|gif|bmp|xls|xlsx|pdf|ods)$/i.test(this.selectedFile.name) ){
+      var name = this.selectedFile.name;
+      if ( /\.(jpe?g|png|gif|bmp|xls|xlsx|csv|doc|docx|rtf|wks|wps|wpd|excel|xlr|pps|pdf|ods|odt)$/i.test(this.selectedFile.name) ){
         name = this.selectedFile.name;
       }else{
-        this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg, .jpeg, .gif, .bmp, .xls, .xlsx, .pdf, .ods");
+        this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg, .jpeg, .gif, .bmp, .xls, .xlsx, .pdf, .ods, .csv, .doc, .odt, .docx, .rtf, .wks, .wps, .wpd, .excel, .xlr, .pps");
         this.disableButton = false;
         return false;
       }
@@ -666,7 +668,7 @@ export default {
               error.innerHTML = "Total denomination & deposit amount is should be same, please check.";
               error.style.display = "block";
           }else{
-            if(this.AWBNo && (this.Reason==78)){
+            if(this.AWBNo && (this.Reason==78 || this.Reason==152)){
               this.cardawbno(event);
             }else{
               this.saveSvcClosure(event);
