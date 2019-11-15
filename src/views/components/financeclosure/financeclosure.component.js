@@ -331,7 +331,7 @@ export default {
     },
 
     resetForm() {
-      this.zone = this.HubId = this.status = ''; this.pageno = this.resultCount = 0; this.listFinanceledgerData = [];
+      this.zone = this.HubId = ''; this.pageno = this.resultCount = 0; this.listFinanceledgerData = []; this.status = 1;
       this.$validator.reset();
       this.errors.clear();
     },

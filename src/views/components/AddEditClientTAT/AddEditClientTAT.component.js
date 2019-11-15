@@ -420,6 +420,7 @@ export default {
       this.$validator.reset();
       this.errors.clear();
       this.ClientCODRemmitanceId="";
+      this.pageno = this.resultCount = 0;
       this.searchClientCODRemittanceData(event);
       document.getElementById("clienterr").innerHTML="";
     },
