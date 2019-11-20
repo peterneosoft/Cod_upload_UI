@@ -148,7 +148,7 @@
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Reason <font color="red">&nbsp;*</font></span>
                   </div>
-                  <select class="form-control" id="Reason" v-model="Reason" name="Reason" v-validate="`${unmatchedAmt > 0 ? 'required' : ''}`"
+                  <select class="form-control" @change="setReasonId" id="Reason" v-model="Reason" name="Reason" v-validate="`${unmatchedAmt > 0 ? 'required' : ''}`"
                   v-bind:class="{'form-control': true, 'error': errors.has('Reason') }" style="margin-right: -5px;">
                     <option value="">--Select--</option>
                     <option v-for="Reason_obj in ReasonList" v-bind:value="Reason_obj.ReasonsID" >{{Reason_obj.Reason}}</option>
@@ -160,12 +160,12 @@
                 <span v-show="errors.has('Reason')" class="text-danger">Rs.{{unmatchedAmt}} is remaining amount so, please select reason to verify.</span>
               </div>
 
-              <div class="form-group" v-if="Reason==65">
+              <div class="form-group" v-if="amoimp">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Reason Amount <font color="red">&nbsp;*</font></span>
                   </div>
-                  <input class="form-control" id="ReasonAmount" type="text" name="ReasonAmount" title="Enter amount used for tax payment/ other purpose" placeholder="Enter amount used for tax payment/ other purpose" v-validate="`${Reason==65 ? 'required' : ''}`"
+                  <input class="form-control" id="ReasonAmount" type="text" name="ReasonAmount" title="Enter amount used for tax payment/ other purpose" placeholder="Enter amount used for tax payment/ other purpose" v-validate="`${amoimp ? 'required' : ''}`"
                   v-model="ReasonAmount" v-bind:class="{'form-control': true, 'error': errors.has('ReasonAmount') }" style="margin-right: -5px;" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-rupee"></i></span>
@@ -174,13 +174,13 @@
                 <span v-show="errors.has('ReasonAmount')" class="text-danger">Please enter amount used for tax payment/ other purpose.</span>
               </div>
 
-              <div class="form-group" v-if="Reason==65">
+              <div class="form-group" v-if="amoimp">
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="ReasonLoading" />
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Reason Slip <font color="red">&nbsp;*</font></span>
                   </div>
-                  <input @change="onUpload" class="form-control" type="file" placeholder="Upload Reason Slip" v-validate="`${Reason==65 ? 'required' : ''}`" name="ReasonSlip" id="ReasonSlip"
+                  <input @change="onUpload" class="form-control" type="file" placeholder="Upload Reason Slip" v-validate="`${amoimp ? 'required' : ''}`" name="ReasonSlip" id="ReasonSlip"
                   v-bind:class="{'form-control': true, 'error': errors.has('ReasonSlip')}" style="margin: -5px 1px 0px 1px; height: 28px; border: 0;">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-file"></i></span>
@@ -190,12 +190,12 @@
                 <a v-bind:title='`${file.name}`' v-for="file in reasonFileList" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:25px; color:#4b8cbb; margin: 10px 15px 1px 10px;"></i></a>
               </div>
 
-              <div class="form-group" v-if="Reason==78 || Reason==77 || Reason==152">
+              <div class="form-group" v-if="cariss || cassnat || deldis">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
-                    <span class="input-group-text" style="width: 140px;">AWB No. <font color="red" v-if="Reason==78 || Reason==152">&nbsp;*</font></span>
+                    <span class="input-group-text" style="width: 140px;">AWB No. <font color="red" v-if="cariss || deldis">&nbsp;*</font></span>
                   </div>
-                  <input class="form-control" id="AWBNo" type="text" name="AWBNo" title="Enter AWB number" placeholder="Enter AWB number" v-validate="`${Reason==78 || Reason==152 ? 'required' : ''}`"
+                  <input class="form-control" id="AWBNo" type="text" name="AWBNo" title="Enter AWB number" placeholder="Enter AWB number" v-validate="`${cariss || deldis ? 'required' : ''}`"
                   v-model="AWBNo" v-bind:class="{'form-control': true, 'error': errors.has('AWBNo') }" style="margin-right: -5px;">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-truck"></i></span>
@@ -205,12 +205,12 @@
                 <span v-show="errors.has('AWBNo')" class="text-danger"><br>Please enter AWB number.</span>
               </div>
 
-              <!-- <div class="form-group" v-if="Reason==78">
+              <!-- <div class="form-group" v-if="cariss">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Card Amount <font color="red">&nbsp;*</font></span>
                   </div>
-                  <input disabled class="form-control" id="CardAmount" type="text" name="CardAmount" title="Enter total card amount" placeholder="Enter total card amount" v-validate="`${Reason==78 ? 'required' : ''}`"
+                  <input disabled class="form-control" id="CardAmount" type="text" name="CardAmount" title="Enter total card amount" placeholder="Enter total card amount" v-validate="`${cariss ? 'required' : ''}`"
                   v-model="CardAmount" v-bind:class="{'form-control': true, 'error': errors.has('CardAmount') }" style="margin-right: -5px;" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-rupee"></i></span>

@@ -71,7 +71,12 @@ export default {
       exception:[],
       exceptionList:[],
       exceptionArr:[],
-      exceptionAmount:0
+      exceptionAmount:0,
+      amoimp:false,
+      venrec:false,
+      deldis:false,
+      cassnat:false,
+      cariss:false
     }
   },
 
@@ -82,6 +87,7 @@ export default {
 
   },
   async mounted() {
+
     var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
     var bytes             = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
@@ -409,7 +415,7 @@ export default {
       let DepositReasonExcepAmount = ''; this.unmatchedAmt = 0;
       DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount));
 
-      if(this.Reason==65){
+      if(this.amoimp){ //65
         DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.ReasonAmount)));
       }else{
         this.ReasonAmount = '';
@@ -443,7 +449,7 @@ export default {
               this.showModal(this.unmatchedAmt);
               return false;
             }else{
-              if(this.Reason==65){
+              if(this.amoimp){ //65
                 this.$alertify.error("Total outstanding COD amount and deposit amount including other charges is should be same, please check.");
                 return false;
               }else{
@@ -542,6 +548,11 @@ export default {
       this.selectedFile = event.target.files[0];
 
       var name = this.selectedFile.name;
+      if(this.selectedFile.size>5242880){
+        this.$alertify.error(event.srcElement.placeholder + " Failed! Upload Max File Size Should Not Be Greater Than 5 MB");
+        this.disableButton = false;
+        return false;
+      }
       if ( /\.(jpe?g|png|gif|bmp|xls|xlsx|csv|doc|docx|rtf|wks|wps|wpd|excel|xlr|pps|pdf|ods|odt)$/i.test(this.selectedFile.name) ){
         name = this.selectedFile.name;
       }else{
@@ -668,7 +679,8 @@ export default {
               error.innerHTML = "Total denomination & deposit amount is should be same, please check.";
               error.style.display = "block";
           }else{
-            if(this.AWBNo && (this.Reason==78 || this.Reason==152)){
+            //78,152
+            if(this.AWBNo && (this.cariss || this.deldis)){
               this.cardawbno(event);
             }else{
               this.saveSvcClosure(event);
@@ -687,6 +699,7 @@ export default {
       this.uploadFileList = []; this.reasonFileList = []; this.BankList = []; this.exception = []; this.exceptionList = []; this.exceptionArr = [];
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.ReasonSlip = this.Reason = '';
       this.AWBNo = '';
+      this.amoimp = this.venrec = this.deldis = this.cassnat = this.cariss = false;
       $('#denomlist input[type="text"]').val(0); $('#denomlist input[type="number"]').val('');
       document.getElementById("d_a").style.display = "none";
       this.GetShipmentUpdate();
@@ -713,6 +726,23 @@ export default {
 
     showAWBNo(typ, ele){
       alert(typ+' AWB No: '+ele);
-    }
+    },
+
+    setReasonId(){
+      this.amoimp = this.venrec = this.deldis = this.cassnat = this.cariss = false;
+      if(this.Reason){
+        if((process.env.NODE_ENV == 'development' && this.Reason == 65) || (process.env.NODE_ENV == 'production' && this.Reason == 120)){
+          this.amoimp = true;
+        }else if((process.env.NODE_ENV == 'development' && this.Reason == 119) || (process.env.NODE_ENV == 'production' && this.Reason == 98)){
+          this.venrec = true;
+        }else if((process.env.NODE_ENV == 'development' && this.Reason == 152) || (process.env.NODE_ENV == 'production' && this.Reason == 121)){
+          this.deldis = true;
+        }else if((process.env.NODE_ENV == 'development' && this.Reason == 77) || (process.env.NODE_ENV == 'production' && this.Reason == 77)){
+          this.cassnat = true;
+        }else if((process.env.NODE_ENV == 'development' && this.Reason == 78) || (process.env.NODE_ENV == 'production' && this.Reason == 78)){
+          this.cariss = true;
+        }
+      }
+    },
   }
 }
