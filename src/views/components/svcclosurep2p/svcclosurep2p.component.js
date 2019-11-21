@@ -417,9 +417,8 @@ export default {
 
       if(this.amoimp){ //65
         DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.ReasonAmount)));
-      }else{
-        this.ReasonAmount = '';
       }
+
       let TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount)-parseFloat(this.CardAmount))));
 
       let p2pamt = parseInt(this.p2pAmount);
@@ -439,6 +438,7 @@ export default {
         error.style.display  = "none";
 
         this.unmatchedAmt = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositReasonExcepAmount)));
+
         let ClosingBalance = 0;
 
         if(this.unmatchedAmt > 0 && this.unmatchedAmt <= 5){
@@ -683,6 +683,18 @@ export default {
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
          document.getElementById("d_a").style.display = "none";
+
+         if(this.AWBNo && (this.deldis || this.cassnat || this.cariss)){
+           result = true;
+           let error = document.getElementById("awb_n");
+           error.innerHTML = "";
+         }else if(!this.AWBNo && (this.deldis || this.cariss)){
+           result = false;
+           let error = document.getElementById("awb_n");
+           error.innerHTML = "Please enter AWB number.";
+           error.display = "block";
+         }
+
          if(result){
            if((this.tot_amt != 0 && this.tot_amt != parseInt(this.Deposit_Amount))||!this.tot_amt){
               let error = document.getElementById("d_a");
@@ -752,6 +764,7 @@ export default {
 
     setReasonId(){
       this.amoimp = this.venrec = this.deldis = this.cassnat = this.cariss = false;
+      this.CardAmount = 0; this.ReasonAmount = ''; this.AWBNo = ''; this.reasonFileList = [];
       if(this.Reason){
         if((process.env.NODE_ENV == 'development' && this.Reason == 65) || (process.env.NODE_ENV == 'production' && this.Reason == 120)){
           this.amoimp = true;
@@ -766,5 +779,10 @@ export default {
         }
       }
     },
+
+    changeDepType(){
+     this.unmatchedAmt = this.CardAmount = 0; this.Reason = ''; this.ReasonAmount = ''; this.AWBNo = ''; this.reasonFileList = [];
+     this.amoimp = this.venrec = this.deldis = this.cassnat = this.cariss = false;
+    }
   }
 }
