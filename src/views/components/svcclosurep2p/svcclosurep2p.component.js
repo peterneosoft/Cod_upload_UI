@@ -693,6 +693,10 @@ export default {
            let error = document.getElementById("awb_n");
            error.innerHTML = "Please enter AWB number.";
            error.display = "block";
+         }else if(this.cassnat){
+           result = true;
+           let error = document.getElementById("awb_n");
+           error.innerHTML = "";
          }
 
          if(result){
