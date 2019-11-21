@@ -551,6 +551,7 @@ export default {
       if(this.selectedFile.size>5242880){
         this.$alertify.error(event.srcElement.placeholder + " Failed! Upload Max File Size Should Not Be Greater Than 5 MB");
         this.disableButton = false;
+        this.DepositSlip = '';
         return false;
       }
       if ( /\.(jpe?g|png|gif|bmp|xls|xlsx|csv|doc|docx|rtf|wks|wps|wpd|excel|xlr|pps|pdf|ods|odt)$/i.test(this.selectedFile.name) ){
@@ -558,6 +559,7 @@ export default {
       }else{
         this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg, .jpeg, .gif, .bmp, .xls, .xlsx, .pdf, .ods, .csv, .doc, .odt, .docx, .rtf, .wks, .wps, .wpd, .excel, .xlr, .pps");
         this.disableButton = false;
+        this.DepositSlip = this.selectedFile = '';
         return false;
       }
 
@@ -610,9 +612,17 @@ export default {
         if(Reason){
           this.ReasonLoading = false;
           this.reasonFileList = result.data.data;
+
+          let error = document.getElementById("rss");
+          error.innerHTML      = "";
+          error.style.display  = "none";
         }else{
           this.DepositLoading = false;
           this.uploadFileList = result.data.data;
+
+          let error = document.getElementById("dps");
+          error.innerHTML      = "";
+          error.style.display  = "none";
         }
         this.disableButton = false;
       }, error => {
@@ -683,7 +693,19 @@ export default {
             if(this.AWBNo && (this.cariss || this.deldis)){
               this.cardawbno(event);
             }else{
-              this.saveSvcClosure(event);
+              if(event.target[6].id=="DepositSlip" && this.uploadFileList.length<=0){
+                let error = document.getElementById("dps");
+                error.innerHTML      = "Please upload deposit slip.";
+                error.style.display  = "block";
+                return false;
+              }else if(event.target[9].id=="ReasonSlip" && this.reasonFileList.length<=0){
+                let error = document.getElementById("rss");
+                error.innerHTML      = "Please upload slip is used for tax payment/ imprest.";
+                error.style.display  = "block";
+                return false;
+              }else{
+                this.saveSvcClosure(event);
+              }
             }
           }
         }
