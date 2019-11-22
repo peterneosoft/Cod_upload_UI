@@ -174,7 +174,7 @@
                 <span v-show="errors.has('ReasonAmount')" class="text-danger">Please enter amount used for tax payment/ imprest.</span>
               </div>
 
-              <div class="form-group" v-if="amoimp">
+              <div class="form-group" v-show="amoimp">
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="ReasonLoading" />
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
@@ -190,7 +190,7 @@
                 <a v-bind:title='`${file.name}`' v-for="file in reasonFileList" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:25px; color:#4b8cbb; margin: 10px 15px 1px 10px;"></i></a>
               </div>
 
-              <div class="form-group" v-if="cariss || cassnat || deldis">
+              <div class="form-group" v-show="cariss || cassnat || deldis">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">AWB No. <font color="red" v-if="cariss || deldis">&nbsp;*</font></span>
@@ -201,23 +201,9 @@
                     <span class="input-group-text"><i class="fa fa-truck"></i></span>
                   </div>
                 </div>
-                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Please enter comma (,) seperated AWB number.</span><br>
+                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Please enter comma (,) seperated AWB number.</span>
                 <span id="awb_n" v-show="errors.has('AWBNo')" class="text-danger"><br>Please enter AWB number.</span>
               </div>
-
-              <!-- <div class="form-group" v-if="cariss">
-                <div class="input-group">
-                  <div class="input-group-prepend" style="width: 140px;">
-                    <span class="input-group-text" style="width: 140px;">Card Amount <font color="red">&nbsp;*</font></span>
-                  </div>
-                  <input disabled class="form-control" id="CardAmount" type="text" name="CardAmount" title="Enter total card amount" placeholder="Enter total card amount" v-validate="`${cariss ? 'required' : ''}`"
-                  v-model="CardAmount" v-bind:class="{'form-control': true, 'error': errors.has('CardAmount') }" style="margin-right: -5px;" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8">
-                  <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-rupee"></i></span>
-                  </div>
-                </div>
-                <span v-show="errors.has('CardAmount')" class="text-danger">Please enter total card amount.</span>
-              </div> -->
 
               <div class="card-footer">
                 <button v-bind:disabled="disableButton" class="btn btn-sm btn-primary" type="submit"><i class="fa fa-dot-circle-o"></i> Save</button>

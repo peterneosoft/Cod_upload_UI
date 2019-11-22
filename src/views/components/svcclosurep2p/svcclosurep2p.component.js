@@ -684,21 +684,6 @@ export default {
       this.$validator.validateAll().then((result) => {
          document.getElementById("d_a").style.display = "none";
 
-         if(this.AWBNo && (this.deldis || this.cassnat || this.cariss)){
-           result = true;
-           let error = document.getElementById("awb_n");
-           error.innerHTML = "";
-         }else if(!this.AWBNo && (this.deldis || this.cariss)){
-           result = false;
-           let error = document.getElementById("awb_n");
-           error.innerHTML = "Please enter AWB number.";
-           error.display = "block";
-         }else if(this.cassnat){
-           result = true;
-           let error = document.getElementById("awb_n");
-           error.innerHTML = "";
-         }
-
          if(result){
            if((this.tot_amt != 0 && this.tot_amt != parseInt(this.Deposit_Amount))||!this.tot_amt){
               let error = document.getElementById("d_a");
