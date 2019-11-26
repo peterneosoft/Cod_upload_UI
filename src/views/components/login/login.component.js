@@ -2,6 +2,7 @@ import apiUrl from '../../../constants';
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
 import VueElementLoading from 'vue-element-loading';
+import { Validator } from 'vee-validate'
 
 export default {
   name: 'login',
@@ -66,13 +67,13 @@ export default {
             window.localStorage.setItem('accesshubdata', hubEncrypt);
           }else{
             this.isLoading = false;
-            this.$alertify.success("Centeral Login Failed");
+            this.$alertify.error("Centeral Login Failed");
           }
 
         })
         .catch((httpException) => {
           this.isLoading = false;
-          this.$alertify.success("Centeral Login Failed");
+          this.$alertify.error("Centeral Login Failed");
           console.error('exception is:::::::::', httpException)
         })
     },
@@ -107,22 +108,31 @@ export default {
               this.$router.push(permissiondata[0].url);
           }else{
             this.isLoading = false;
-            this.$alertify.success("Logging Failed");
+            this.$alertify.error("Logging Failed");
           }
 
           let hubEncrypt = CryptoJS.AES.encrypt(JSON.stringify(response.data.hubData), "Key");
           window.localStorage.setItem('accesshubdata', hubEncrypt);
         }else{
           this.isLoading = false;
-          this.$alertify.success("Logging Failed");
+          this.$alertify.error("Logging Failed");
         }
 
       })
       .catch((httpException) => {
         this.isLoading = false;
-        this.$alertify.success("Logging Failed");
+        this.$alertify.error("Logging Failed");
         console.error('exception is:::::::::', httpException)
       })
-    }
+    },
+    onSubmit: function(event) {
+      this.$validator.validateAll().then((result) => {
+        if(result){
+          this.checklogin();
+        }
+      }).catch(() => {
+        console.log('errors exist', this.errors)
+      });
+    },
   }
 }

@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-sm-5">
         <div class="card">
-          <div class="card-header"><i class="fa fa-align-justify"></i> COD SVC Day Closure</div>
+          <div class="card-header"><i class="fa fa-align-justify"></i> COD Yesterday's Closure Of SVC</div>
           <div class="card-body">
             <form v-on:submit.prevent="onSubmit" id="svcform">
               <div class="form-group">
@@ -17,7 +17,7 @@
                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                   </div>
                 </div>
-                <span v-show="errors.has('DeliveryDate')" class="text-danger">Please select delivery date. </span>
+                <span v-show="errors.has('DeliveryDate')" class="text-danger">Delivery date is required. </span>
               </div>
 
               <div class="form-group">
@@ -31,7 +31,7 @@
                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                   </div>
                 </div>
-                <span v-show="errors.has('DepositDate')" class="text-danger">Please select deposit date. </span>
+                <span v-show="errors.has('DepositDate')" class="text-danger">Deposit date is required. </span>
               </div>
 
               <div class="form-group">
@@ -45,7 +45,7 @@
                     <span class="input-group-text"><i class="fa fa-rupee"></i></span>
                   </div>
                 </div>
-                <span id="d_a" v-show="errors.has('Deposit_Amount')" class="text-danger">Please enter deposit amount. </span>
+                <span id="d_a" v-show="errors.has('Deposit_Amount')" class="text-danger">Deposit amount is required. </span>
               </div>
 
               <div class="form-group">
@@ -64,7 +64,7 @@
                     <span class="input-group-text"><i class="fa fa-angle-down"></i></span>
                   </div>
                 </div>
-                  <span v-show="errors.has('DepositType')" class="text-danger">Please select deposit type.  </span>
+                  <span v-show="errors.has('DepositType')" class="text-danger">Deposit type is required.  </span>
               </div>
 
               <div class="form-group">
@@ -82,7 +82,7 @@
                     <span class="input-group-text"><i class="fa fa-bank"></i></span>
                   </div>
                 </div>
-                <span v-show="errors.has('BankMasterId')" class="text-danger">Please select bank name.</span>
+                <span v-show="errors.has('BankMasterId')" class="text-danger">Bank name is required.</span>
               </div>
 
               <div class="form-group">
@@ -96,7 +96,7 @@
                     <span class="input-group-text"><i class="fa fa-exchange"></i></span>
                   </div>
                 </div>
-                <span v-show="errors.has('TransactionID')" class="text-danger">Please enter transaction id.</span>
+                <span v-show="errors.has('TransactionID')" class="text-danger">Transaction id is required.</span>
               </div>
 
               <div class="form-group" v-if="exceptionList.length>0">
@@ -139,7 +139,7 @@
                     <span class="input-group-text"><i class="fa fa-file"></i></span>
                   </div>
                 </div>
-                <span v-show="errors.has('DepositSlip')" id="dps" class="text-danger">Please upload deposit slip.</span>
+                <span v-show="errors.has('DepositSlip')" id="dps" class="text-danger">Deposit slip is required.</span>
                 <a v-bind:title='`${file.name}`' v-for="file in uploadFileList" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:25px; color:#4b8cbb; margin: 10px 15px 1px 10px;"></i></a>
               </div>
 
@@ -157,7 +157,7 @@
                     <span class="input-group-text"><i class="fa fa-angle-down"></i></span>
                   </div>
                 </div>
-                <span v-show="errors.has('Reason')" class="text-danger">Rs.{{unmatchedAmt}} is remaining amount so, please select reason to verify.</span>
+                <span v-show="errors.has('Reason')" class="text-danger">{{unmatchedAmt}} Rs is remaining amount, please select reason.</span>
               </div>
 
               <div class="form-group" v-if="unmatchedAmt != 0 && amoimp">
@@ -171,7 +171,7 @@
                     <span class="input-group-text"><i class="fa fa-rupee"></i></span>
                   </div>
                 </div>
-                <span v-show="errors.has('ReasonAmount')" class="text-danger">Please enter amount used for tax payment/ imprest.</span>
+                <span v-show="errors.has('ReasonAmount')" class="text-danger">Reason amount used for tax payment/ imprest is required.</span>
               </div>
 
               <div class="form-group" v-show="amoimp">
@@ -186,7 +186,7 @@
                     <span class="input-group-text"><i class="fa fa-file"></i></span>
                   </div>
                 </div>
-                <span v-show="errors.has('ReasonSlip')" id="rss" class="text-danger">Please upload slip is used for tax payment/ imprest.</span>
+                <span v-show="errors.has('ReasonSlip')" id="rss" class="text-danger">Reason slip used for tax payment/ imprest is required.</span>
                 <a v-bind:title='`${file.name}`' v-for="file in reasonFileList" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:25px; color:#4b8cbb; margin: 10px 15px 1px 10px;"></i></a>
               </div>
 
@@ -202,7 +202,7 @@
                   </div>
                 </div>
                 <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Please enter comma (,) seperated AWB number.</span>
-                <span id="awb_n" v-show="errors.has('AWBNo')" class="text-danger"><br>Please enter AWB number.</span>
+                <span id="awb_n" v-show="errors.has('AWBNo')" class="text-danger"><br>AWB number is required.</span>
               </div>
 
               <div class="card-footer">
@@ -292,7 +292,7 @@
               </button>
             </div>
             <div class="modal-bodyfrm">
-              <h5 style="font-size:1rem; color:red;">Please select a reason because Rs. {{unmatchedAmt}} is still remaining.</h5>
+              <h5 style="font-size:1rem; color:red;">Remaining amount is {{unmatchedAmt}} Rs.</h5>
             </div>
             <div class="modal-footerfrm">
             <center><button type="button"  @click="modalShow = false" class="btn btn-success" style="background-color: #20a8d8;">Ok</button></center>
@@ -311,7 +311,7 @@
               </button>
             </div>
             <div class="modal-bodyfrm">
-              <h5 style="font-size:1rem; color:red;">Please make sure, given AWB number card issue amount is Rs. {{CardAmount}}</h5>
+              <h5 style="font-size:1rem; color:red;">Please make sure, given AWB number card issue amount is {{CardAmount}} Rs.</h5>
             </div>
             <div class="modal-footerfrm">
             <center>

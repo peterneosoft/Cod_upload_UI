@@ -91,7 +91,7 @@ const router = new Router({
                 link: '/dashboard'
               },
               {
-                name: 'SVC Closure'
+                name: "Yesterday's Closure Of SVC"
               }
             ]
           },
@@ -108,7 +108,7 @@ const router = new Router({
                 link: '/dashboard'
               },
               {
-                name: 'SR Closure'
+                name: "SR Day Closure"
               }
             ]
           },
@@ -346,7 +346,7 @@ const router = new Router({
                 link: '/dashboard'
               },
               {
-                name: 'Finance Closure'
+                name: "Finance Team Closure"
               }
             ]
           },

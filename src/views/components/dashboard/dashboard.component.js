@@ -167,7 +167,7 @@ export default {
 
     this.getZoneData();
     this.getHubWiseCollectionData();
-    this.getMaxMinCODCollectionData();
+    this.getMaxMinCODCollectionDataSearch();
     this.getPieShipmentPercent();
 
     var date = new Date();
@@ -202,7 +202,7 @@ export default {
     },
     //to get All Hub List
     getZoneData() {
-      this.zone = ""; this.stateList = [];
+      this.zone = this.state = this.city = ""; this.stateList = [];
       this.input = {}
       this.zoneLoading = true;
       axios({
@@ -221,6 +221,7 @@ export default {
           console.error(error)
         })
     },
+
     getPieShipmentPercent() {
       this.input = ({
           hubids: [this.localhubid]
@@ -236,16 +237,9 @@ export default {
         })
         .then(result => {
           this.resultdate = result.data.fdate+" to "+result.data.tdate
+          let tot = parseFloat(result.data.prepaidPer)+parseFloat(result.data.walletPer)+parseFloat(result.data.cardPer)+parseFloat(result.data.cashPer)+parseFloat(result.data.ndrPer);
 
-          if((result.data.prepaidPer && result.data.walletPer && result.data.cardPer && result.data.cashPer && result.data.ndrPer)===0){
-
-            let chartDataObj  = {};
-            chartDataObj.y    = parseFloat(1);
-            chartDataObj.name = "No data to display";
-
-            this.piechart.series.data.push(chartDataObj);
-            this.piechart.tooltip.pointFormat = 'Series 1: <b>0%</b>';
-          }else{
+          if((result.data.code == 200) && (tot > 0)){
 
             let y = [result.data.prepaidPer,result.data.walletPer,result.data.cardPer,result.data.cashPer,result.data.ndrPer]
             let name = ["Prepaid","Wallet","Card","Cash","NDR"]
@@ -256,6 +250,14 @@ export default {
               this.piechart.series.data.push(chartDataObj)
               chartDataObj = {}
             }
+          }else{
+
+            let chartDataObj  = {};
+            chartDataObj.y    = parseFloat(1);
+            chartDataObj.name = "No data to display";
+
+            this.piechart.series.data.push(chartDataObj);
+            this.piechart.tooltip.pointFormat = 'Series 1: <b>0%</b>';
           }
           this.pieLoading = false;
         }, error => {
@@ -290,8 +292,9 @@ export default {
         .then(result => {
           this.resultdate = result.data.fdate+" to "+result.data.tdate;
           this.hubArray   = [];
+          let tot = parseFloat(result.data.prepaidPer)+parseFloat(result.data.walletPer)+parseFloat(result.data.cardPer)+parseFloat(result.data.cashPer)+parseFloat(result.data.ndrPer);
 
-          if(result.data.code == 200){
+          if((result.data.code == 200) && (tot > 0)){
 
             let y             = [result.data.prepaidPer,result.data.walletPer,result.data.cardPer,result.data.cashPer,result.data.ndrPer]
             let name          = ["Prepaid","Wallet","Card","Cash","NDR"]
@@ -401,7 +404,7 @@ export default {
     },
 
     getStateData() {
-      this.state = ""; this.cityList = [];
+      this.state = this.city = ""; this.stateList = this.cityList = [];
       if(this.zone=="" ){
         return false;
       }
@@ -425,8 +428,9 @@ export default {
           console.error(error)
         })
     },
+
     getCityData() {
-      this.city = "";
+      this.city = ""; this.cityList = [];
       if(this.state==""){
         return false;
       }
@@ -700,7 +704,7 @@ export default {
     },
 
     resetForm() {
-      this.FromDate = this.ToDate = ''; this.zone = this.state = this.city =[];
+      this.FromDate = this.ToDate = ''; this.zone = this.state = this.city ='';
       this.$validator.reset();
       this.errors.clear();
     },

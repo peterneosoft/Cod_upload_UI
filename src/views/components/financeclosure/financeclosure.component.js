@@ -255,7 +255,7 @@ export default {
       let finreasonid = document.getElementById('finreason'+ledgerid).value;
 
       if(finreasonid==null || finreasonid==undefined || finreasonid==""){
-         document.getElementById("finR"+ledgerid).innerHTML="Please select reason.";
+         document.getElementById("finR"+ledgerid).innerHTML="Reason is required.";
          return false;
       }else{
         document.getElementById("finR"+ledgerid).innerHTML="";
@@ -266,14 +266,14 @@ export default {
           confirmamount = document.getElementById('confirmamount'+ledgerid).value;
 
           if(confirmamount==null || confirmamount==undefined || confirmamount==""){
-            document.getElementById("finA"+ledgerid).innerHTML="Please enter received amount.";
+            document.getElementById("finA"+ledgerid).innerHTML="Received amount is required.";
             return false;
           }else{
             document.getElementById("finA"+ledgerid).innerHTML="";
           }
         }
         if(financeconfirmdate==null || financeconfirmdate==undefined || financeconfirmdate==""){
-          document.getElementById("finD"+ledgerid).innerHTML="Please select date.";
+          document.getElementById("finD"+ledgerid).innerHTML="Date is required.";
           return false;
         }else{
           document.getElementById("finD"+ledgerid).innerHTML="";
@@ -353,7 +353,7 @@ export default {
     },
 
     scrollWin() {
-      window.scrollBy(0, 1000);
+      if(this.zone && this.HubId && this.status) window.scrollBy(0, 1000);
     },
 
     showAWBNo(typ, ele){

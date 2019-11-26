@@ -15,7 +15,7 @@
                   <template slot="noResult"><p>No Record Found.</p></template>
                 </Multiselect>
               </b-input-group>
-              <span v-show="errors.has('ClientId')" class="text-danger">Please select Client / Company name.</span>
+              <span v-show="errors.has('ClientId')" class="text-danger">Client / Company name is required.</span>
             </div>
 
             <div class="col-md-4">
@@ -24,7 +24,7 @@
                 <b-form-input id="trDate" type="date" name="trDate" v-validate="{required: true}"
                 v-model="trDate" v-bind:class="{'form-control': true, 'error': errors.has('trDate') }"></b-form-input>
               </b-input-group>
-              <span v-show="errors.has('trDate')" class="text-danger">Please select transaction date.</span>
+              <span v-show="errors.has('trDate')" class="text-danger">Transaction date is required.</span>
             </div>
           </div>
           <div>

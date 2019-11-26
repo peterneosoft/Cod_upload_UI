@@ -137,6 +137,12 @@ export default {
       }).catch(() => {
         console.log('errors exist', this.errors)
       });
-    }
+    },
+
+    resetData(event){
+      this.paymentfile = '';
+     this.$validator.reset();
+     this.errors.clear();
+    },
   }
 }

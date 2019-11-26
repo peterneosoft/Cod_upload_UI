@@ -19,9 +19,9 @@
                       <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <b-form-fieldset>
                           <b-input-group left="<i class='icon-user'></i>">
-                            <b-form-input type="text" v-model="username" class="form-control" placeholder="Username" name="username" v-validate="'required|username'" v-bind:class="{'form-control': true, 'error': errors.has('username') }"></b-form-input>
+                            <b-form-input type="text" v-model="username" class="form-control" placeholder="Username" name="username" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('username') }"></b-form-input>
                           </b-input-group>
-                          <span v-show="errors.has('username')" class="text-danger">{{ errors.first('email') }}</span>
+                          <span v-show="errors.has('username')" class="text-danger">{{ errors.first('username') }}</span>
                         </b-form-fieldset>
                       </div>
                     </div>
@@ -39,7 +39,7 @@
                     <div class="row">
                       <vue-element-loading style="background-color: rgb(243, 241, 241); margin: -15px;" spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
                       <div class="col-6">
-                        <button type="submit" class="btn btn-primary px-4" @click="checklogin">Login</button>
+                        <button type="submit" class="btn btn-primary px-4">Login</button>
                       </div>
                       <div class="col-6 text-right">
 

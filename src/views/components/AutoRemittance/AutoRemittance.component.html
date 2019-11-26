@@ -9,7 +9,7 @@
           <form v-on:submit.prevent="onSubmit">
             <div class="form-group row">
               <div class="col-md-4">
-                <label>Generate Remittance File</label>
+                <label>Download Remittance File</label>
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="remLoading" />
                 <b-input-group style="height: 45px;" left="<i class='fa fa-file-text'></i>">
                   <span class="form-control" style="cursor:pointer" @click="realTimeCODRemittance()" title="Generate & download COD Remittance file with real time data">
@@ -31,12 +31,12 @@
                     v-bind:class="{'form-control': true, 'error': errors.has('paymentfile') }">
                 </b-input-group>
                 <small class="text-muted"><font color="red">Note: * Only .csv files allowed to upload.</font></small>
-                <label v-show="errors.has('paymentfile')" class="text-danger">{{ "Please select File Upload " }}</label>
+                <label v-show="errors.has('paymentfile')" class="text-danger">Upload file is required.</label>
               </div>
             </div>
             <div class="card-footer">
               <button class="btn btn-sm btn-primary" type="submit" ><i class="fa fa-upload" ></i> Upload<vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="Loading" /></button>
-              <button class="btn btn-sm btn-danger" type="reset"><i class="fa fa-ban"></i> Clear</button>
+              <button class="btn btn-sm btn-danger" type="reset" @click="resetData"><i class="fa fa-ban"></i> Clear</button>
             </div>
           </form>
         </div>

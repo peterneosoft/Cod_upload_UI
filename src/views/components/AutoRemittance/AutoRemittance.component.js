@@ -170,6 +170,12 @@ export default {
       }, error => {
         console.error(error)
       })
-    }
+    },
+
+    resetData(event){
+     this.paymentfile = '';
+     this.$validator.reset();
+     this.errors.clear();
+    },
   }
 }

@@ -377,11 +377,11 @@ export default {
          if(result){
           if((this.tot_amt != '0' && this.tot_amt != parseInt(this.Deposit_Amount))||!this.tot_amt){
             let error = document.getElementById("d_a");
-             error.innerHTML = "Total denomination & deposit amount is should be same, please check.";
+             error.innerHTML = "Total denomination & deposit amount should be same, please check.";
              error.style.display = "block";
           }else{
             let error = document.getElementById("d_a");
-             error.innerHTML = "Deposit amount field is required";
+             error.innerHTML = "Deposit amount is required";
              error.style.display = "None";
              this.saveSRClosure(event)
           }

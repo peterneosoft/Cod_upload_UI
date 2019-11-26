@@ -20,7 +20,7 @@
                      <template slot="noResult"><p>No Record Found.</p></template>
                     </Multiselect>
                   </b-input-group>
-                  <span v-show="errors.has('ClientId')" class="text-danger">Please select Client.</span>
+                  <span v-show="errors.has('ClientId')" class="text-danger">Client is required.</span>
                 </div>
                 <div class="col-md-4">
                   <label>Bussiness Service Type <font color="red">*</font></label>
@@ -31,7 +31,7 @@
                       <option v-for="Client_obj in ClientBusinessList" v-bind:value="Client_obj.ClientBusinessDetailID" >{{Client_obj.BusinessConfig}}</option>
                     </select>
                   </b-input-group>
-                  <span v-show="errors.has('Bussinesstype')" class="text-danger">Please select Bussiness Type.</span>
+                  <span v-show="errors.has('Bussinesstype')" class="text-danger">Bussiness type is required.</span>
                 </div>
 
                 <div class="col-md-4">
@@ -43,7 +43,7 @@
                       <option v-for="Client_obj in ClientAccountsList"  v-bind:value="Client_obj.ClientBusinessAccountId" >{{Client_obj.AccountName}}</option>
                   </select>
                   </b-input-group>
-                  <span v-show="errors.has('AccountName')" class="text-danger">Please select account name.</span>
+                  <span v-show="errors.has('AccountName')" class="text-danger">Account name is required.</span>
                 </div>
               </div>
 
@@ -55,7 +55,7 @@
                    <template slot="noResult"><p>No Record Found.</p></template>
                   </Multiselect>
                   </b-input-group>
-                  <span v-show="errors.has('RemittanceDay')" class="text-danger">Please Select Remittance Day.</span>
+                  <span v-show="errors.has('RemittanceDay')" class="text-danger">Remittance day is required.</span>
                 </div>
 
                 <div class="col-md-4">
@@ -67,11 +67,11 @@
                       <option value="3">T+3</option>
                   </select>
                   </b-input-group>
-                  <span v-show="errors.has('tat')" class="text-danger">Please Select TAT.</span>
+                  <span v-show="errors.has('tat')" class="text-danger">TAT is required.</span>
                 </div>
 
                 <div class="col-md-4">
-                  <label>Type <font color="red">*</font></label>
+                  <label>Client Type <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <select style="height:45px;" name="type" id="type" class="form-control" v-model="type" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('type') }">
                       <option value="">--Select--</option>
@@ -79,7 +79,7 @@
                       <option value="Non-Hybrid">Non-Hybrid</option>
                   </select>
                   </b-input-group>
-                  <span v-show="errors.has('type')" class="text-danger">Please Select Type.</span>
+                  <span v-show="errors.has('type')" class="text-danger">Client type is required.</span>
                 </div>
               </div>
 
@@ -136,7 +136,7 @@
           <form>
             <div class="form-group row">
               <div class="col-md-5">
-                <label>Client  <font color="red">*</font></label>
+                <label>Client <font color="red">*</font></label>
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <Multiselect :options="ClientList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
                     <template slot="noResult"><p>No Record Found.</p></template>

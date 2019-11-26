@@ -390,7 +390,7 @@ export default {
 
     onSearch() {
       if(this.Client.ClientMasterID==null || this.Client.ClientMasterID=='undefined'){
-        document.getElementById("clienterr").innerHTML="Please select Client";
+        document.getElementById("clienterr").innerHTML="Client is required.";
         return false;
       }
       document.getElementById("clienterr").innerHTML=""; this.Search = 0;

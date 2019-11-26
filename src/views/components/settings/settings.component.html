@@ -9,7 +9,7 @@
           <form v-on:submit.prevent="onSubmit" class="form-horizontal">
             <div class="form-group row">
               <div class="col-md-4">
-                <label>Zone</label>
+                <label>Zone <font color="red">*</font></label>
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="zoneLoading" />
                   <select v-bind:disabled="disableButton" name="zone" id="zone" class="form-control" style="height: 44px;" v-model="zone" v-on:change="getHubData" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('zone') }">
@@ -17,11 +17,11 @@
                     <option v-for="zone_obj in zoneList" v-bind:value="zone_obj.hubzoneid" >{{zone_obj.hubzonename}}</option>
                   </select>
                 </b-input-group>
-                <span v-show="errors.has('zone')" class="text-danger">The Zone field is required.</span>
+                <span v-show="errors.has('zone')" class="text-danger">Zone is required.</span>
               </div>
 
               <div class="col-md-4">
-                <label>Hub</label>
+                <label>Hub Name <font color="red">*</font></label>
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="hubLoading" />
                   <Multiselect v-bind:disabled="disableButton" :options="hubList" @select="handleSelect" @input="addHubData" name="HubId" id="HubId" v-model="HubId" v-validate="{required: true}" v-bind:class="{'error': errors.has('HubId') }" placeholder="Select Hub" label="HubName" track-by="HubID" :optionHeight="100" :preselect-first="false" v-bind:multiple="multiple()" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
@@ -31,7 +31,7 @@
                      </template>
                   </Multiselect>
                 </b-input-group>
-                <span v-show="errors.has('HubId')" class="text-danger">The Hub field is required.</span>
+                <span v-show="errors.has('HubId')" class="text-danger">Hub name is required.</span>
               </div>
             </div>
             <div class="form-group row" v-show="editHubSetting" style="margin:10px 10px 10px 1px; max-height: 200px; overflow-y: scroll;">

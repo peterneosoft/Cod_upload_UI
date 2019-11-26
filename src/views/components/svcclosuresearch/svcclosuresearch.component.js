@@ -115,6 +115,7 @@ export default {
 
     resetForm() {
       this.fromDate = this.toDate = ''; this.listSearchSVCledgerData=[]; this.resultCount = this.pageno = 0;
+      document.getElementById("fdate").innerHTML="";
       this.$validator.reset();
       this.errors.clear();
     },

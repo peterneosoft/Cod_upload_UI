@@ -21,7 +21,7 @@
                       <option v-for="holiday_obj in listholidayData" v-bind:title="holiday_obj.HolidayName" v-bind:value="holiday_obj.HolidayMasterId" >{{holiday_obj.HolidayName}}</option>
                     </select>
                   </b-input-group>
-                  <span v-show="errors.has('holidayid')" class="text-danger">Please select bank holiday occasion.</span>
+                  <span v-show="errors.has('holidayid')" class="text-danger">Bank holiday occasion is required.</span>
                 </div>
 
                 <div class="col-md-4">
@@ -30,7 +30,7 @@
                     <b-form-input id="holidayDate" type="date" name="holidayDate" v-validate="{required: true}"
                     v-model="holidayDate" v-bind:class="{'form-control': true, 'error': errors.has('holidayDate') }"></b-form-input>
                   </b-input-group>
-                  <span v-show="errors.has('holidayDate')" class="text-danger">Please select holiday date. </span>
+                  <span v-show="errors.has('holidayDate')" class="text-danger">Holiday date is required. </span>
                   <span id="fdate" class="text-danger"></span>
                 </div>
 

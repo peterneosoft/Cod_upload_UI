@@ -80,11 +80,20 @@ export default {
            console.error(error)
          })
     },
+
     getPaginationData(pageNum) {
         this.pageno = (pageNum - 1) * 10
         this.getMonthlySRLedgerDetails()
     },
+
     getMonthlySRLedgerDetails(){
+      if(this.fromDate > this.toDate){
+         document.getElementById("fdate").innerHTML="From date should not be greater than To date.";
+         return false;
+      }else{
+        document.getElementById("fdate").innerHTML="";
+      }
+
       this.SRLedgerList = [];
       this.isLoading = true;
       this.input = ({
@@ -136,6 +145,13 @@ export default {
       }).catch(() => {
         console.log('errors exist', this.errors)
       });
-    }
+    },
+
+    resetForm() {
+      this.fromDate = this.toDate = this.SR_Name = ''; this.SRLedgerList=[]; this.resultCount = this.pageno = 0;
+      document.getElementById("fdate").innerHTML="";
+      this.$validator.reset();
+      this.errors.clear();
+    },
   }
 }

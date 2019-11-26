@@ -3,7 +3,7 @@
     <div class="col-md-12 mb-2">
       <div class="card">
         <div class="card-header filter_main">
-          <i class=" fa fa-filter filter"></i> COD SVC Day Closure Search
+          <i class=" fa fa-filter filter"></i> COD SVC Closure Search
         </div>
         <div class="card-body">
           <form v-on:submit.prevent="onSubmit" class="form-horizontal">
@@ -14,7 +14,7 @@
                   <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}"
                   v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
                 </b-input-group>
-                <span v-show="errors.has('fromDate')" class="text-danger">Please select from date. </span>
+                <span v-show="errors.has('fromDate')" class="text-danger">From date is required. </span>
                 <span id="fdate" class="text-danger"></span>
               </div>
 
@@ -24,7 +24,7 @@
                   <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}"
                     v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
                 </b-input-group>
-                <span v-show="errors.has('toDate')" class="text-danger">Please select to date. </span>
+                <span v-show="errors.has('toDate')" class="text-danger">To date is required. </span>
               </div>
             </div>
             <div class="card-footer">

@@ -18,7 +18,7 @@
                     <option v-for="SR_obj in SRList"  v-bind:value="SR_obj.SRID" >{{SR_obj.SRName}}</option>
                   </select>
                 </div>
-                <span v-show="errors.has('SR_Name')" class="text-danger">Please select SR name.</span>
+                <span v-show="errors.has('SR_Name')" class="text-danger">SR name is required.</span>
               </div>
 
               <div class="form-group">
@@ -35,7 +35,7 @@
                     </span>
                   </div>
               </div>
-              <span id="d_a" v-show="errors.has('Deposit_Amount')" class="text-danger">The deposit amount field is required.</span>
+              <span id="d_a" v-show="errors.has('Deposit_Amount')" class="text-danger">Deposit amount is required.</span>
               </div>
 
 
@@ -51,7 +51,7 @@
                    <option v-for="Reason_obj in ReasonList" v-bind:value="Reason_obj.ReasonsID" >{{Reason_obj.Reason}}</option>
                   </select>
                 </div>
-                <span v-show="errors.has('Reason')" class="text-danger">Rs.{{RemainData}} is remaining amount so, please select reason.</span>
+                <span v-show="errors.has('Reason')" class="text-danger">{{RemainData}} Rs is remaining amount, please select reason.</span>
               </div>
 
               <div class="card-footer">
@@ -67,7 +67,7 @@
 
       <div class="col-lg-4">
         <div class="card">
-          <div class="card-header"><i class="fa fa-align-justify"></i> Denomination</div>
+          <div class="card-header"><i class="fa fa-align-justify"></i> Denomination <font color="red">&nbsp;*</font></div>
           <div class="card-body" style="height: 500px;">
             <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="denomLoading" />
             <table class="table table-responsive-sm" height="10">
@@ -160,7 +160,7 @@
               </button>
             </div>
             <div class="modal-bodyfrm">
-              <h5 style="font-size:1rem; color:red;">Remaining Amount is Rs. {{RemainData}}</h5>
+              <h5 style="font-size:1rem; color:red;">Remaining amount is {{RemainData}} Rs.</h5>
             </div>
             <div class="modal-footerfrm">
             <center><button type="button"  @click="modalShow = false" class="btn btn-success" style="background-color: #20a8d8;">OK</button></center>
