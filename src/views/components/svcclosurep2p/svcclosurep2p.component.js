@@ -423,10 +423,10 @@ export default {
 
       let p2pamt = parseInt(this.p2pAmount);
       if(DepositAmount !== parseInt(this.tot_amt)){
-        this.$alertify.error("Denomination details & Deposit amount is should be same, please check.");
+        this.$alertify.error("Denomination details & Deposit amount should be same, please check.");
 
         let error = document.getElementById("d_a");
-         error.innerHTML      = "Denomination details & Deposit amount is should be same, please check.";
+         error.innerHTML      = "Denomination details & Deposit amount should be same, please check.";
          error.style.display  = "block";
          return false;
       }else{
@@ -687,7 +687,7 @@ export default {
          if(result){
            if((this.tot_amt != 0 && this.tot_amt != parseInt(this.Deposit_Amount))||!this.tot_amt){
               let error = document.getElementById("d_a");
-              error.innerHTML = "Total denomination & deposit amount is should be same, please check.";
+              error.innerHTML = "Total denomination & deposit amount should be same, please check.";
               error.style.display = "block";
           }else{
             //78,152
@@ -696,12 +696,12 @@ export default {
             }else{
               if(event.target[6].id=="DepositSlip" && this.uploadFileList.length<=0){
                 let error = document.getElementById("dps");
-                error.innerHTML      = "Please upload deposit slip.";
+                error.innerHTML      = "Deposit slip is required.";
                 error.style.display  = "block";
                 return false;
               }else if(event.target[9].id=="ReasonSlip" && this.reasonFileList.length<=0){
                 let error = document.getElementById("rss");
-                error.innerHTML      = "Please upload slip is used for tax payment/ imprest.";
+                error.innerHTML      = "Reason slip used for tax payment/ imprest is required.";
                 error.style.display  = "block";
                 return false;
               }else{
