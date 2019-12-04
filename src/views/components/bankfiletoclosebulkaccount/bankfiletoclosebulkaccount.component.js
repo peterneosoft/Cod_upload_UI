@@ -24,6 +24,7 @@ export default {
       isLoading: false,
       Loading: false,
       downLoading:false,
+      disbutton:false,
       myStr:""
     }
   },
@@ -53,7 +54,7 @@ export default {
 
         const fd = new FormData();
         fd.append('file', this.selectedFile, name);
-        this.isLoading = true;
+        this.isLoading = this.disbutton = true;
         axios.post(apiUrl.api_url + 'uploadFile', fd,
         {
           headers: {
@@ -61,16 +62,19 @@ export default {
           }
         })
         .then(res => {
-           if(res.data.errorCode == 0){
-             this.isLoading = false;
+          this.isLoading = this.disbutton = false;
+          if(res.data.errorCode == 0){
              this.filename = res.data.filename
            }else{
-             this.$alertify.error(".csv File does not Upload ");
+             this.$alertify.error(".csv File Upload Error");
            }
         }, error => {
           console.error(error)
+          this.isLoading = this.disbutton = false;
+          this.$alertify.error('Error Occured');
         });
       }else{
+        this.isLoading = this.disbutton = false;
         this.$alertify.error(event.target.placeholder + " Failed! Please Upload Only Valid Format: .csv");
       }
     },
@@ -79,7 +83,7 @@ export default {
           filename: this.filename,
           username: this.localusername,
       })
-      this.Loading = true;
+      this.isLoading = this.disbutton = true;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'financeBulkClosure',
@@ -89,18 +93,20 @@ export default {
           }
         })
         .then(result => {
+          this.isLoading = this.disbutton = false;
           this.failed = result.data.failed;
           this.success = result.data.success;
           this.s3link = result.data.s3link;
+
           if(result.data.code == 200){
-            this.Loading = false;
             this.$alertify.success(result.data.message);
             this.filename = ""
           }
 
         }, error => {
           console.error(error)
-          this.Loading = false;
+          this.isLoading = this.disbutton = false;
+          this.$alertify.error('Error Occured');
         })
     },
 
@@ -115,16 +121,15 @@ export default {
         })
         .then(result => {
           if(result.data.code == 200){
-            this.downLoading = false;
              if(result.data.s3link){
                window.open(result.data.s3link);
              }
-          }else{
-            this.downLoading = false;
           }
+          this.downLoading = false;
         }, error => {
           console.error(error)
           this.downLoading = false;
+          this.$alertify.error('Error Occured');
         })
     },
 
@@ -132,17 +137,19 @@ export default {
       this.$validator.validateAll().then((result) => {
         if(result){
           this.uploadFile()
-        event.target.reset();
+          event.target.reset();
        }
       }).catch(() => {
-        console.log('errors exist', this.errors)
+        console.log(this.errors)
+        this.$alertify.error('Error Occured');
       });
     },
 
     resetData(event){
       this.paymentfile = '';
-     this.$validator.reset();
-     this.errors.clear();
+      this.disbutton = false;
+      this.$validator.reset();
+      this.errors.clear();
     },
   }
 }

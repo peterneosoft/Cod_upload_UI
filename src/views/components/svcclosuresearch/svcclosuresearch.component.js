@@ -99,6 +99,7 @@ export default {
         }
       }, error => {
           console.error(error)
+          this.$alertify.error('Error Occured');
       })
     },
 

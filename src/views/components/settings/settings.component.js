@@ -261,6 +261,7 @@ export default {
       })
       .catch((httpException) => {
           console.error('exception is:::::::::', httpException)
+          this.$alertify.error('Error Occured');
       });
     },
 

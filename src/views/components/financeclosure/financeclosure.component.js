@@ -128,6 +128,7 @@ export default {
         return false;
       }
 
+      this.HubId='';
       this.hubLoading = true;
       this.input = ({
           zoneid: this.zone
@@ -227,6 +228,7 @@ export default {
           }
         }, error => {
             console.error(error)
+            this.$alertify.error('Error Occured');
         })
     },
 
@@ -317,6 +319,7 @@ export default {
         })
         .catch((httpException) => {
             console.error('exception is:::::::::', httpException)
+            this.$alertify.error('Error Occured');
         });
       }
     },

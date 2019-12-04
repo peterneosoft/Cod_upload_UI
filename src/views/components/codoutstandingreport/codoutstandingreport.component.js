@@ -172,6 +172,7 @@ export default {
       }, error => {
         this.exportf=false; this.reportlink = '';
         console.error(error)
+        this.$alertify.error('Error Occured');
       })
     },
 
@@ -306,6 +307,7 @@ export default {
            error => {
              this.isLoading = false;
              console.error(error)
+             this.$alertify.error('Error Occured');
         })
     },
 

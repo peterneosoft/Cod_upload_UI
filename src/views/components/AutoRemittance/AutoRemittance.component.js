@@ -111,6 +111,7 @@ export default {
         }, error => {
           console.error(error)
           this.Loading = false;
+          this.$alertify.error('Error Occured');
         })
     },
 
@@ -169,6 +170,7 @@ export default {
         }
       }, error => {
         console.error(error)
+        this.$alertify.error('Error Occured');
       })
     },
 

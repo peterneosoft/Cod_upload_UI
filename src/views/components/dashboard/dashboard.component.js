@@ -250,6 +250,7 @@ export default {
               this.piechart.series.data.push(chartDataObj)
               chartDataObj = {}
             }
+            this.pieLoading = false;
           }else{
 
             let chartDataObj  = {};
@@ -258,8 +259,9 @@ export default {
 
             this.piechart.series.data.push(chartDataObj);
             this.piechart.tooltip.pointFormat = 'Series 1: <b>0%</b>';
+            this.pieLoading = false;
           }
-          this.pieLoading = false;
+
         }, error => {
           this.pieLoading = false;
           console.error(error)
@@ -306,6 +308,7 @@ export default {
               this.piechart.series.data.push(chartDataObj)
               chartDataObj = {}
             }
+            this.pieLoading = false;
           }else{
 
             let chartDataObj  = {};
@@ -314,8 +317,8 @@ export default {
 
             this.piechart.series.data.push(chartDataObj);
             this.piechart.tooltip.pointFormat = 'Series 1: <b>0%</b>';
+            this.pieLoading = false;
           }
-          this.pieLoading = false;
         }, error => {
           this.pieLoading = false;
           console.error(error)
@@ -399,6 +402,7 @@ export default {
         }, error => {
           this.amountLoading = false; this.barLoading = false; this.pieLoading = false; this.collectionLoading = false;
           console.error(error)
+          this.$alertify.error('Error Occured');
         })
       }
     },

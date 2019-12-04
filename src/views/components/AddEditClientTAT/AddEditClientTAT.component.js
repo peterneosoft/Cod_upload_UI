@@ -254,6 +254,7 @@ export default {
       .catch((httpException) => {
           this.submitLoading = false;
           console.error('exception is:::::::::', httpException)
+          this.$alertify.error('Error Occured');
       });
     },
 
@@ -306,6 +307,7 @@ export default {
       .catch((httpException) => {
           this.submitLoading = false;
           console.error('exception is:::::::::', httpException)
+          this.$alertify.error('Error Occured');
       });
     },
 
@@ -339,6 +341,7 @@ export default {
         }
       }, error => {
           console.error(error)
+          this.$alertify.error('Error Occured');
       })
     },
 

@@ -132,6 +132,7 @@ export default {
         }, error => {
           this.isLoading = false;
           console.error(error)
+          this.$alertify.error('Error Occured');
         })
     },
 

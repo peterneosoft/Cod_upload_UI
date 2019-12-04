@@ -155,6 +155,7 @@ export default {
         }, error => {
           console.error(error)
           this.isLoading = false;
+          this.$alertify.error('Error Occured');
         })
       }
     },
@@ -222,6 +223,7 @@ export default {
         }, error => {
           console.error(error)
           this.isLoading = false;
+          this.$alertify.error('Error Occured');
         })
       }
     },
@@ -346,6 +348,7 @@ export default {
         }, error => {
           console.error(error)
           this.isLoading = false;
+          this.$alertify.error('Error Occured');
         })
       }
     },
@@ -384,6 +387,7 @@ export default {
         }, error => {
           console.error(error)
           this.isLoading = false;
+          this.$alertify.error('Error Occured');
         })
       }
     },

@@ -17,7 +17,7 @@
 
       <li v-if="this.hubAccess.length<2" style="right: 15px;position: absolute;">Logged In Hub : {{hub}}</li>
 
-      <b-nav-item-dropdown right style="right: 0px; position: absolute;" v-if="this.hubAccess.length>1">
+      <b-nav-item-dropdown right style="right: 1%; position: absolute;" v-if="this.hubAccess.length>1">
         <template slot="button-content">
           <span class="d-md-down-none" style="color: #000 !important">Change Hub : {{hub}}</span>
         </template>
