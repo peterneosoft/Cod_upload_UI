@@ -4,7 +4,12 @@
 }
 .dropdown-menu{
   top: 20px;
-  left: 20px;
+  right: -2px
+}
+.dropdown-hub{
+  height: 355px;
+  max-height: 251px;
+  overflow-x: hidden;
 }
 </style>
 
@@ -21,7 +26,9 @@
         <template slot="button-content">
           <span class="d-md-down-none" style="color: #000 !important">Change Hub : {{hub}}</span>
         </template>
-        <b-dropdown-item @click="setHUBAccess(hub_obj)" v-for="hub_obj in hubAccess" v-bind:key="hub_obj.HubID"><i class="fa fa-map-marker"></i> {{hub_obj.HubName}}</b-dropdown-item>
+        <div v-bind:class="`${this.hubAccess.length>5 ? 'dropdown-hub' : ''}`">
+          <b-dropdown-item @click="setHUBAccess(hub_obj)" v-for="hub_obj in hubAccess" v-bind:key="hub_obj.HubID"><i class="fa fa-map-marker"></i> {{hub_obj.HubName}}</b-dropdown-item>
+        </div>
       </b-nav-item-dropdown>
     </ul>
   </div>
