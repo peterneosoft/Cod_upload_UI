@@ -180,7 +180,7 @@ export default {
             this.BankName       =  result.data.data.ClientBankName
             this.BankAccount    = result.data.data.ClientAccountNo
             this.rtgs           = result.data.data.ClientBankNeftIFSC
-            this.ContactEmailid = result.data.data.ContactEmailid
+            this.ContactEmailid = result.data.data.SecondaryEmailid
           }
         }, error => {
           this.bankDLoading = false;
