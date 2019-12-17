@@ -20,11 +20,11 @@
         {{ breadcrumb.name }}
       </li>
 
-      <li v-if="this.hubAccess.length<2" style="right: 2%; position: absolute;">Logged In Hub : {{hub}}</li>
+      <li v-if="this.hubAccess.length<2" style="right: 2%; position: absolute;"><b>Logged In Hub:</b>&nbsp;{{hub}}</li>
 
-      <b-nav-item-dropdown right style="right: 1%; position: absolute;" v-if="this.hubAccess.length>1">
+      <b-nav-item-dropdown right style="right: 1%; position: absolute; background: transparent !important;" v-if="this.hubAccess.length>1">
         <template slot="button-content">
-          <span class="d-md-down-none" style="color: #000 !important">Change Hub : {{hub}}</span>
+          <span class="d-md-down-none" style="color: #000 !important"><b>Change Hub:</b>&nbsp;{{hub}}</span>
         </template>
         <div v-bind:class="`${this.hubAccess.length>5 ? 'dropdown-hub' : ''}`">
           <b-dropdown-item @click="setHUBAccess(hub_obj)" v-for="hub_obj in hubAccess" v-bind:key="hub_obj.HubID"><i class="fa fa-map-marker"></i> {{hub_obj.HubName}}</b-dropdown-item>
