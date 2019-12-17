@@ -156,10 +156,6 @@ export default {
 </script>
 
 <style lang="css">
-  .nav-link {
-    cursor:pointer;
-    background:#2f353a;
-  }
   .sidebar{
     z-index:99;
     background:#2f353a;
@@ -167,5 +163,4 @@ export default {
   .app-header.navbar .navbar-toggler{
     color:#23282c;
   }
-
 </style>
