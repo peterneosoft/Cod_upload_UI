@@ -57,7 +57,8 @@ export default {
       show:false,
       urltoken:"",
       denomLoading: false,
-      srLoading: false
+      srLoading: false,
+      modalShippingShow:false
     }
   },
 
@@ -85,13 +86,19 @@ export default {
     this.localusername      = userdetail.username;
 
     var userToken = window.localStorage.getItem('accessuserToken')
-   this.myStr = userToken.replace(/"/g, '');
+    this.myStr = userToken.replace(/"/g, '');
   },
 
   methods: {
+    showShippingidModal(){
+       this.$refs.shippingModalRef.show();
+    },
+    closeShippingidModal() {
+        this.modalShippingShow = false
+    },
     showModal(Balanc){
        this.$refs.myModalRef.show(Balanc)
-      this.RemainData = Balanc;
+       this.RemainData = Balanc;
     },
     hideModal() {
        this.$refs.myModalRef.hide()
@@ -412,10 +419,6 @@ export default {
         }
         document.getElementById('tot_amt').value = this.tot_amt;
       }
-    },
-
-    showShippingId(ele){
-      alert('Today`s Delivered Shipping Ids: '+ele);
     },
   }
 }

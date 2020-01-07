@@ -140,7 +140,7 @@
               <tbody>
                 <tr>
                   <td>Today's COD ( Cash ) Shipment</td>
-                  <td>{{TodaysShipmentCount}}&nbsp;&nbsp;&nbsp;&nbsp;<span v-if="TodaysShipmentCount > 0" @click="showShippingId(TodaysShippingId)" style="cursor:pointer; color: rgb(25,25,112);"><u>View</u></span>
+                  <td>{{TodaysShipmentCount}}&nbsp;&nbsp;&nbsp;&nbsp;<span v-if="TodaysShipmentCount > 0" @click="showShippingidModal()" style="cursor:pointer; color: rgb(25,25,112);"><u>View</u></span>
                   </td>
                 </tr>
               </tbody>
@@ -173,7 +173,23 @@
         </div>
       </div>
 
-      <b-modal ref="myModalRef" v-model="modalShow"  id=#confirmationmodal title="Confirmation">
+      <b-modal ref="shippingModalRef" v-model="modalShippingShow"  id=#confirmationmodal1 title="Confirmation">
+        <div role="document">
+          <div class="modal-content">
+            <div class="modal-headerfrm">
+              <h5 class="modal-title" style="font-size: 1rem;">COD ( Cash ) Delivered Shipping Ids:</h5>
+              <button type="button" class="close" @click="closeShippingidModal" aria-label="Close">
+                <span aria-hidden="true" style="color: white;">×</span>
+              </button>
+            </div>
+            <div class="modal-bodyfrm">
+              <h5 style="font-size: 15px; padding: 10px; color:darkolivegreen;">{{TodaysShippingId}}</h5>
+            </div>
+          </div>
+        </div>
+      </b-modal>
+
+      <b-modal ref="myModalRef" v-model="modalShow" id=#confirmationmodal title="Confirmation">
         <div role="document">
           <div class="modal-content">
             <div class="modal-headerfrm">
