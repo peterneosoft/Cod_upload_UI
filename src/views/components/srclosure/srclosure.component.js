@@ -23,10 +23,13 @@ export default {
       PendingCOD:"",
       TotalAmount:"",
       TodaysCOD:"",
+      TodaysShipmentCount: 0,
+      TodaysShippingId: "",
       DeliveryDate: '',
       assign: 0,
       card: 0,
       cash: 0,
+      payphi: 0,
       cod: "",
       ndr: 0,
       prepaid: 0,
@@ -53,7 +56,8 @@ export default {
       myStr:"",
       show:false,
       urltoken:"",
-      denomLoading: false
+      denomLoading: false,
+      srLoading: false
     }
   },
 
@@ -216,6 +220,8 @@ export default {
            this.PendingCOD = result.data.PendingCOD
            this.TodaysCOD = result.data.TodaysCOD
            this.TotalAmount = result.data.TotalAmount
+           this.TodaysShipmentCount = result.data.TodaysShipmentCount
+           this.TodaysShippingId = result.data.TodaysShippingId
          }else{
             this.isLoading = false;
          }
@@ -254,6 +260,7 @@ export default {
               this.assign = result.data.data.assign
               this.card = result.data.data.card
               this.cash = result.data.data.cash
+              this.payphi = result.data.data.payphi
               this.cod = result.data.data.cod
               this.ndr = result.data.data.ndr
               this.prepaid = result.data.data.prepaid
@@ -345,7 +352,7 @@ export default {
     },
     //to get SR List
     GetDeliveryAgentData() {
-
+      this.srLoading = true;
       var hubEncrypt = window.localStorage.getItem('accesshubdata')
       var hubbytes  = CryptoJS.AES.decrypt(hubEncrypt.toString(), 'Key');
       var hubtext = hubbytes.toString(CryptoJS.enc.Utf8);
@@ -366,9 +373,10 @@ export default {
           }
         })
         .then(result => {
-
+          this.srLoading = false;
           this.SRList = result.data.SR
         }, error => {
+          this.srLoading = false;
           console.error(error)
         })
     },
@@ -404,6 +412,10 @@ export default {
         }
         document.getElementById('tot_amt').value = this.tot_amt;
       }
+    },
+
+    showShippingId(ele){
+      alert('Today`s Delivered Shipping Ids: '+ele);
     },
   }
 }

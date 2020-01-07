@@ -9,6 +9,7 @@
             <form  v-on:submit.prevent="onSubmit">
               <div class="form-group" >
                 <div class="input-group">
+                  <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="srLoading" />
                   <div class="input-group-prepend">
                     <span class="input-group-text">SR Name <font color="red">&nbsp;*</font></span>
                   </div>
@@ -96,14 +97,15 @@
       </div>
 
       <div class="col-sm-4" v-show="RightSRLedger">
-        <b-card >
+        <b-card>
           <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="Loading" />
-          <table class="table table-bordered table-striped table-sm">
+          <table class="table table-bordered table-striped table-sm" style="margin-left: -17px; border: 0px;">
             <thead>
               <tr>
                 <th>Assign</th>
                 <th>Prepaid</th>
                 <th>Cash</th>
+                <th>Payphi</th>
                 <th>Card</th>
                 <th>Wallet</th>
                 <th>NDR</th>
@@ -117,6 +119,8 @@
 
                 <td>{{cash}}</td>
 
+                <td>{{payphi}}</td>
+
                 <td>{{card}}</td>
 
                 <td>{{wallet}}</td>
@@ -126,8 +130,27 @@
             </tbody>
           </table>
         </b-card>
+
         <div class="card">
-          <div class="card-header"><i class="fa fa-align-justify"></i> Amount</div>
+          <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="Loading" />
+          <div class="card-header"><i class="fa fa-align-justify"></i>Delivered Shipment Count</div>
+          <div class="card-body">
+           <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
+            <table class="table table-responsive-sm">
+              <tbody>
+                <tr>
+                  <td>Today's COD ( Cash ) Shipment</td>
+                  <td>{{TodaysShipmentCount}}&nbsp;&nbsp;&nbsp;&nbsp;<span v-if="TodaysShipmentCount > 0" @click="showShippingId(TodaysShippingId)" style="cursor:pointer; color: rgb(25,25,112);"><u>View</u></span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="Loading" />
+          <div class="card-header"><i class="fa fa-align-justify"></i>COD Amount</div>
           <div class="card-body">
            <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
             <table class="table table-responsive-sm">
