@@ -48,6 +48,9 @@ export default {
       zoneLoading: false,
       allZoneLoading: false,
       hubLoading: false,
+      modalAWBNoShow:false,
+      awbnotype:'',
+      awbnumber:''
     }
   },
 
@@ -360,7 +363,14 @@ export default {
     },
 
     showAWBNo(typ, ele){
-      alert(typ+' AWB No: '+ele);
-    }
+      this.awbnotype = ''; this.awbnumber = '';
+      this.awbnotype = typ + ' AWB Number:';
+      this.awbnumber = ele;
+      this.$refs.awbModalRef.show();
+    },
+
+    closeAWBNoModal() {
+        this.modalAWBNoShow = false
+    },
   }
 }

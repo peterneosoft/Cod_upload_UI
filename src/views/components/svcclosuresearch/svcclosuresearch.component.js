@@ -22,7 +22,10 @@ export default {
       listSearchSVCledgerData: [],
       myStr: '',
       localhubid: '',
-      localhubname: ''
+      localhubname: '',
+      modalAWBNoShow:false,
+      awbnotype:'',
+      awbnumber:''
     }
   },
 
@@ -138,7 +141,14 @@ export default {
     },
 
     showAWBNo(typ, ele){
-      alert(typ+' AWB No: '+ele);
-    }
+      this.awbnotype = ''; this.awbnumber = '';
+      this.awbnotype = typ + ' AWB Number:';
+      this.awbnumber = ele;
+      this.$refs.awbModalRef.show();
+    },
+
+    closeAWBNoModal() {
+        this.modalAWBNoShow = false
+    },
   }
 }

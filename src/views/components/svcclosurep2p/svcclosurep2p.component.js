@@ -76,7 +76,10 @@ export default {
       venrec:false,
       deldis:false,
       cassnat:false,
-      cariss:false
+      cariss:false,
+      modalAWBNoShow:false,
+      awbnotype:'',
+      awbnumber:''
     }
   },
 
@@ -124,7 +127,6 @@ export default {
     multiple(){
       return true;
     },
-
     showModal(Balanc){
       this.$refs.myModalRef.show(Balanc)
       this.RemainData = Balanc;
@@ -748,7 +750,14 @@ export default {
     },
 
     showAWBNo(typ, ele){
-      alert(typ+' AWB No: '+ele);
+      this.awbnotype = ''; this.awbnumber = '';
+      this.awbnotype = typ + ' AWB Number:';
+      this.awbnumber = ele;
+      this.$refs.awbModalRef.show();
+    },
+
+    closeAWBNoModal() {
+        this.modalAWBNoShow = false
     },
 
     setReasonId(){

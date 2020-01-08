@@ -108,6 +108,22 @@
         <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
         </paginate>
       </div>
+
+      <b-modal ref="awbModalRef" v-model="modalAWBNoShow"  id=#confirmationmodal1 title="Confirmation">
+        <div role="document">
+          <div class="modal-content">
+            <div class="modal-headerfrm">
+              <h5 class="modal-title" style="font-size: 1rem;">{{awbnotype}}</h5>
+              <button type="button" class="close" @click="closeAWBNoModal" aria-label="Close">
+                <span aria-hidden="true" style="color: white;">×</span>
+              </button>
+            </div>
+            <div class="modal-bodyfrm">
+              <h5 style="font-size: 15px; padding: 10px; color:darkolivegreen;">{{awbnumber}}</h5>
+            </div>
+          </div>
+        </div>
+      </b-modal>
     </div>
   </div>
 </section>
