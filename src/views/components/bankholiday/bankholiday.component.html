@@ -72,11 +72,21 @@
             <tr v-if="resultCount==0">
               <td colspan="6" align="center">No record found</td>
             </tr>
-            <tr v-if="resultCount>0 && saturdayDates">
+            <tr v-if="resultCount>0 && saturdayDates.length>0">
               <td scope="row" class="text-center"><strong>1</strong></td>
               <td class="text-center">Non Working Saturday</td>
               <td class="text-center">Saturday</td>
-              <td class="text-center">{{saturdayDates}}</td>
+              <td class="text-center">
+                <table class="table-bordered table-hover tbl datatables scroll" style="width:100%;">
+                  <tbody>
+                    <tr v-for="(dates,index) in saturdayDates">
+                      <td class="text-center" style="width: 100%">{{dates.HolidayfDate}}</td>
+                      <td class="text-center"><i @click.prevent="getBankHolidayRowData(dates, resultCount), AddEditBankHoliday='1', scrollWin()" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+
               <td class="text-center">&nbsp;</td>
             </tr>
             <tr v-if="resultCount>0 && sundayDates">

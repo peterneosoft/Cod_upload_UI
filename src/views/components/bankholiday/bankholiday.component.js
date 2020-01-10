@@ -26,6 +26,8 @@ export default {
       holidayDate:'',
       holidayid:'',
       holidayname:'',
+      BankHolidayId:'',
+      HolidayMasterName:'',
       status:1,
       year:'',
       listBankHolidayData: [],
@@ -94,7 +96,7 @@ export default {
           if(result.data.code == 200){
             this.listBankHolidayData  = result.data.holidayList;
             this.sundayDates          = result.data.sundayDates.join(', ');
-            this.saturdayDates        = result.data.saturdayDates.join(', ');
+            this.saturdayDates        = result.data.saturdayDates;
             this.year                 = '( Year - '+result.data.year+' )';
 
             this.isLoading            = false;
@@ -164,7 +166,7 @@ export default {
           holidayid: String(this.holidayid),
           holidayname: this.holidayname,
           status: String(this.status),
-          createdby: this.CreatedBy,
+          createdby: this.localuserid,
           lastmodifiedby: this.localuserid,
       });
 
@@ -207,7 +209,8 @@ export default {
     },
 
     resetForm() {
-      this.holidayid = ""; this.holidayDate = ""; this.status=1;
+      this.holidayid = ""; this.holidayDate = ""; this.status=1; this.BankHolidayId='';
+      document.getElementById('holidayDate').value="";
       this.$validator.reset();
       this.errors.clear();
       this.getBankHolidayData();
