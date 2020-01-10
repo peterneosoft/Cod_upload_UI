@@ -237,12 +237,12 @@ export default {
         })
         .then(result => {
           this.resultdate = result.data.fdate+" to "+result.data.tdate
-          let tot = parseFloat(result.data.prepaidPer)+parseFloat(result.data.walletPer)+parseFloat(result.data.cardPer)+parseFloat(result.data.cashPer)+parseFloat(result.data.ndrPer);
+          let tot = parseFloat(result.data.prepaidPer)+parseFloat(result.data.walletPer)+parseFloat(result.data.cardPer)+parseFloat(result.data.cashPer)+parseFloat(result.data.ndrPer)+parseFloat(result.data.payphiPer);
 
           if((result.data.code == 200) && (tot > 0)){
 
-            let y = [result.data.prepaidPer,result.data.walletPer,result.data.cardPer,result.data.cashPer,result.data.ndrPer]
-            let name = ["Prepaid","Wallet","Card","Cash","NDR"]
+            let y = [result.data.prepaidPer,result.data.walletPer,result.data.cardPer,result.data.cashPer,result.data.ndrPer,result.data.payphiPer]
+            let name = ["Prepaid","Wallet","Card","Cash","NDR","PayPhi"]
             let chartDataObj = {};
             for(let i=0;i<y.length;i++){
               chartDataObj.y    = parseFloat(y[i]);
@@ -294,12 +294,12 @@ export default {
         .then(result => {
           this.resultdate = result.data.fdate+" to "+result.data.tdate;
           this.hubArray   = [];
-          let tot = parseFloat(result.data.prepaidPer)+parseFloat(result.data.walletPer)+parseFloat(result.data.cardPer)+parseFloat(result.data.cashPer)+parseFloat(result.data.ndrPer);
+          let tot = parseFloat(result.data.prepaidPer)+parseFloat(result.data.walletPer)+parseFloat(result.data.cardPer)+parseFloat(result.data.cashPer)+parseFloat(result.data.ndrPer)+parseFloat(result.data.payphiPer);
 
           if((result.data.code == 200) && (tot > 0)){
 
-            let y             = [result.data.prepaidPer,result.data.walletPer,result.data.cardPer,result.data.cashPer,result.data.ndrPer]
-            let name          = ["Prepaid","Wallet","Card","Cash","NDR"]
+            let y             = [result.data.prepaidPer,result.data.walletPer,result.data.cardPer,result.data.cashPer,result.data.ndrPer,result.data.payphiPer]
+            let name          = ["Prepaid","Wallet","Card","Cash","NDR","PayPhi"]
             let chartDataObj  = {};
 
             for(let i=0;i<y.length;i++){

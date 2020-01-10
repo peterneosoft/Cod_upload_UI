@@ -79,7 +79,7 @@
 </style>
 <template>
 <header class="app-header navbar">
-  <b-link class="navbar-brand" to="Dashboard"></b-link>
+  <b-link class="navbar-brand" to="dashboard"></b-link>
   <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" @click="sidebarToggle">&#9776;</button>
  <!--  <b-nav is-nav-bar class="d-md-down-none">
     <b-nav-item class="px-3">Dashboard</b-nav-item>

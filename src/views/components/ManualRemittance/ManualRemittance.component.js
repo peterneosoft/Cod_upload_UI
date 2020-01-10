@@ -397,7 +397,7 @@ export default {
         document.getElementById("clienterr").innerHTML="Client is required.";
         return false;
       }
-      document.getElementById("clienterr").innerHTML=""; this.Search = 0;
+      document.getElementById("clienterr").innerHTML="";
       this.onClientSearch(this.Client.ClientMasterID, this.Client.CompanyName);
     },
 
