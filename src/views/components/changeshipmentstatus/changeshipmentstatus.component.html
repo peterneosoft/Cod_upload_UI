@@ -1,0 +1,95 @@
+<section class="user">
+  <div class="animated fadeIn">
+    <div class="col-md-12 mb-2">
+        <div class="card">
+          <div class="card-header filter_main">
+            <i class=" fa fa-filter filter"></i> Change Shipment Status: 'Delivered to InScan'
+          </div>
+          <div class="card-body">
+            <form  v-on:submit.prevent="onSubmit">
+              <div class="form-group row">
+                <div class="col-md-6">
+                  <label>Shipment Id <font color="red">*</font></label>
+                  <b-input-group>
+                    <textarea rows="2" name = "shipmentid" id="shipmentid" ref="textarea" v-model="shipmentid" v-validate="{required: true}" placeholder="Enter Shipment Ids..." v-bind:class="{'form-control': true, 'error': errors.has('shipmentid') }"></textarea>
+                  </b-input-group>
+                  <small class="text-muted"><font color="red">Note: * Only accept comma (,) seperated shipment ids.</font></small>
+                  <span v-show="errors.has('shipmentid')" class="text-danger">Shipment Id is required.</span>
+                </div>
+
+                <div class="col-md-3">
+                  <label>Status <font color="red">*</font></label>
+                  <select class="form-control" disabled id="shipmentstatus" name="shipmentstatus" v-model="shipmentstatus" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('shipmentstatus') }" style="margin-right: -3px;">
+                    <option value="1">Delivered to InScan</option>
+                  </select>
+                  <span v-show="errors.has('shipmentstatus')" class="text-danger">Shipment Id is required.</span>
+                </div>
+              </div>
+              <div class="form-group row">
+              </div>
+              <div class="card-footer">
+                <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>&nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;
+                <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> Update</button>
+                <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card-headerfrm" style="margin-bottom: 15px;">
+              <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result
+                <span v-show="exportf" style="margin-left: 85%; cursor: pointer;" @click="exportreport()">
+                  <button class="btn btn-sm btn-success" type="button">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="excelLoading" />
+                    <i class="fa fa-download"></i> Export
+                  </button>
+                </span>
+              </h4>
+              <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+              <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+                <thead>
+                  <tr class="text-primary">
+                    <th class="text-center tableheader"><b>#</b></th>
+                    <th class="text-center tableheader"><b>Shipment Id</b></th>
+                    <th class="text-center tableheader"><b>Status</b></th>
+                    <th class="text-center tableheader"><b>Shipment Status</b></th>
+                    <th class="text-center tableheader"><b>Order Type</b></th>
+                    <th class="text-center tableheader"><b>OctroiMRP</b></th>
+                    <th class="text-center tableheader"><b>Net Payment</b></th>
+                    <th class="text-center tableheader"><b>Created Date</b></th>
+                    <th class="text-center tableheader"><b>Created By</b></th>
+                    <th class="text-center tableheader"><b>Origin Hub Name</b></th>
+                    <th class="text-center tableheader"><b>Final Destination Name</b></th>
+                    <th class="text-center tableheader"><b>Current Hub Name</b></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-if="resultCount==0">
+                    <td colspan="6" align="center">No record found</td>
+                  </tr>
+                  <tr v-for="(CODOutstanding,index) in CODOutstandingReport">
+                    <td class="text-center">{{pageno+index+1}}</td>
+                    <td class="text-center">{{CODOutstanding.zonename}}</td>
+                    <td class="text-center">{{CODOutstanding.zonename}}</td>
+                    <td class="text-center">{{CODOutstanding.zonename}}</td>
+                    <td class="text-center">{{CODOutstanding.zonename}}</td>
+                    <td class="text-center">{{CODOutstanding.zonename}}</td>
+                    <td class="text-center">{{CODOutstanding.zonename}}</td>
+                    <td class="text-center">{{CODOutstanding.zonename}}</td>
+                    <td class="text-center">{{CODOutstanding.zonename}}</td>
+                    <td class="text-center">{{CODOutstanding.zonename}}</td>
+                    <td class="text-center">{{CODOutstanding.zonename}}</td>
+                    <td class="text-center">{{CODOutstanding.zonename}}</td>
+                  </tr>
+                </tbody>
+              </table><br>
+              <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+              </paginate>
+            </div>
+         </div>
+       </div>
+    </div>
+  </div>
+</section>

@@ -19,14 +19,11 @@
 
       <li v-if="this.hubAccess.length<2" style="right: 2%; position: absolute;"><b>Logged In Hub:</b>&nbsp;{{hub}}</li>
 
-      <b-nav-item-dropdown right style="right: 1%; position: absolute;" v-if="this.hubAccess.length>1">
-        <template slot="button-content">
-          <span class="d-md-down-none" style="color: #000 !important"><b>Change Hub:</b>&nbsp;{{hub}}</span>
-        </template>
-        <div v-bind:class="`${this.hubAccess.length>5 ? 'dropdown-hub' : ''}`">
-          <b-dropdown-item @click="setHUBAccess(hub_obj)" v-for="hub_obj in hubAccess" v-bind:key="hub_obj.HubID"><i class="fa fa-map-marker"></i> {{hub_obj.HubName}}</b-dropdown-item>
-        </div>
-      </b-nav-item-dropdown>
+      <li v-if="this.hubAccess.length>1" style="right: 8%; width: 28%; position: absolute;"><b>Change Hub:</b>&nbsp;
+        <Multiselect :options="hubAccess" @input="setHUBAccess()" name="hubdropdown" id="hubdropdown" v-model="hubdropdown" placeholder="Select Hub" label="HubName" track-by="HubID" :optionHeight="100" :hide-selected="true" style="margin: 2px -95px 9px 15px; width: 90%; z-index:1000;margin-right: -92px;">
+           <template slot="noResult"><p>No Record Found.</p></template>
+        </Multiselect>
+      </li>
     </ul>
   </div>
 </template>
@@ -35,16 +32,23 @@
 import CryptoJS from 'crypto-js';
 import apiUrl from '../constants'
 import axios from 'axios'
+import Multiselect from 'vue-multiselect'
+import 'vue-multiselect/dist/vue-multiselect.min.css';
 
 export default {
   name: 'Breadcrumb',
+  components: {
+      Multiselect
+  },
   data () {
     return {
       breadcrumbList: [],
-      hub:'',
+      hub:[],
       userToken:'',
       userdetail:'',
+      HubId:'',
       hubAccess:[],
+      hubdropdown:[],
     }
   },
   mounted () {
@@ -55,6 +59,8 @@ export default {
     var hubtext     = hubbytes.toString(CryptoJS.enc.Utf8);
     var hubArr      = JSON.parse(hubtext);
     this.hub        = hubArr[0].HubName;
+    this.hubdropdown= hubArr;
+
 
     this.userToken = window.localStorage.getItem('accessuserToken').replace(/"/g, '');
 
@@ -81,6 +87,7 @@ export default {
           }
         })
         .then(result => {
+
           if(result.data.code==200){
             this.hubAccess = result.data.data;
           }else{
@@ -91,7 +98,10 @@ export default {
         })
     },
 
-    setHUBAccess(HubObj) {
+    setHUBAccess() {
+      let HubObj = '';
+      HubObj = this.hubdropdown;
+
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/setHUBAccess',
@@ -102,7 +112,7 @@ export default {
         })
         .then(result => {
           if(result.data.code==200){
-            this.$alertify.success(result.data.msg);
+            this.$alertify.success('result.data.msg');
 
             let newArr = []; newArr.push(HubObj);
             let hubEncrypt = CryptoJS.AES.encrypt(JSON.stringify(newArr), "Key");

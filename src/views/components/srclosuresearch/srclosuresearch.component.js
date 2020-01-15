@@ -27,6 +27,7 @@ export default {
       SRLedgerList:[],
       localhubid:0,
       isLoading:false,
+      srLoading:false,
       pageno: 0,
       pagecount: 0
     }
@@ -50,7 +51,7 @@ export default {
   methods: {
     //to get SR List
     GetDeliveryAgentData(){
-
+      this.srLoading = true;
        var hubEncrypt = window.localStorage.getItem('accesshubdata')
        var hubbytes  = CryptoJS.AES.decrypt(hubEncrypt.toString(), 'Key');
        var hubtext = hubbytes.toString(CryptoJS.enc.Utf8);
@@ -69,14 +70,14 @@ export default {
            }
          })
          .then(result => {
+           this.srLoading = false;
            if(result.data.code == 200){
-           this.SRList = result.data.data;
-
-
-         }else{
-            this.$alertify.error("Data Not Found")
-         }
+             this.SRList = result.data.data;
+           }else{
+              this.$alertify.error("Data Not Found")
+           }
          }, error => {
+           this.srLoading = false;
            console.error(error)
          })
     },

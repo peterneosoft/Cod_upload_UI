@@ -30,6 +30,7 @@ import BankHoliday from '@/views/components/bankholiday'
 import EMailRemittance from '@/views/components/emailremittance'
 import Invoice from '@/views/components/invoice'
 import InvoiceReport from '@/views/components/invoicereport'
+import ChangeShipmentStatus from '@/views/components/changeshipmentstatus'
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -177,6 +178,23 @@ const router = new Router({
               },
               {
                 name: 'Invoice Summary Report'
+              }
+            ]
+          },
+        },
+        {
+          path: 'changeshipmentstatus',
+          name: 'Shipment Status',
+          component: ChangeShipmentStatus,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'Change Shipment Status'
               }
             ]
           },
