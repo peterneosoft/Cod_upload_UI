@@ -162,7 +162,9 @@ export default {
               })
               .then((response) => {
                   if (response.data.code) {
+                    window.scrollBy(0, 1000);
                     this.$alertify.success(response.data.data);
+                    this.GetSRLedgerDetails();
                     this.getRightSRLedgerDetails()
                     this.DenominationList.map(data=>{
                       let countVal = document.getElementById(data.Denomination);
@@ -228,13 +230,6 @@ export default {
              this.TotalAmount = result.data.TotalAmount
              this.TodaysShipmentCount = result.data.TodaysShipmentCount
              this.TodaysShippingId = result.data.TodaysShippingId
-
-             if(this.TotalAmount <= 0){
-               this.resetData();
-             }else{
-               window.scrollBy(0, 1000);
-               this.GetSRLedgerDetails();
-             }
            }else{
               this.isLoading = false;
            }
@@ -267,6 +262,7 @@ export default {
          })
          .then(result => {
            this.getRightSRLedgerDetails()
+           this.GetSRLedgerDetails()
             if(result.data.code == 200){
               this.Loading = false;
               this.assign = result.data.data.assign
@@ -278,6 +274,7 @@ export default {
               this.prepaid = result.data.data.prepaid
               this.wallet = result.data.data.wallet
               this.getRightSRLedgerDetails()
+              this.GetSRLedgerDetails()
             }
             if(result.data.code == 204){
                 this.assign = 0
