@@ -58,7 +58,8 @@ export default {
       urltoken:"",
       denomLoading: false,
       srLoading: false,
-      modalShippingShow:false
+      modalShippingShow:false,
+      disableButton: false,
     }
   },
 
@@ -107,6 +108,7 @@ export default {
          this.modalShow = false
      },
      saveSRClosure(event){
+
        let statusAmount = "";
        let TotalAmt = (document.getElementById("Tot_Amt")).textContent;
        let IntTotalAmt = parseInt(TotalAmt)
@@ -141,6 +143,7 @@ export default {
          statusAmount = "Equal Amount"
        }
        if(insertflag){
+         this.disableButton = true;
          this.SRLedgerDetails = true;
          this.input = ({
            srid: this.SR_Name,
@@ -161,6 +164,7 @@ export default {
                     }
               })
               .then((response) => {
+                this.disableButton = false;
                   if (response.data.code) {
                     window.scrollBy(0, 1000);
                     this.$alertify.success(response.data.data);
@@ -184,6 +188,7 @@ export default {
                   }
               })
               .catch((httpException) => {
+                this.disableButton = false;
                   console.error('exception is:::::::::', httpException)
                   this.$alertify.error('Error Occured');
               });
