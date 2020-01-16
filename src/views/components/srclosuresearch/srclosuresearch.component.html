@@ -41,14 +41,17 @@
 
             <div class="card-footer">
               <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
-              <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
+              <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>&nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;
+              <button class="btn btn-sm btn-success" title="Today's SR Closure Status" @click="srStatus()" type="button"><i class="fa fa-search"></i> SR Closure Status</button>
+              <br>
+              <small class="text-muted"><font color="red">Note: * For SR Closure Staus, no need to fill above input field.</font></small>
             </div>
           </form>
         </div>
       </div>
     </div>
 
-    <div class="col-12">
+    <div class="col-12" v-show="srLedger">
       <div class="card-headerfrm" style="margin-bottom: 15px;">
         <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result</h4>
         <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
@@ -84,5 +87,32 @@
         </paginate>
       </div>
      </div>
+
+     <div class="col-12" v-show="srStatusLedger">
+       <div class="card-headerfrm" style="margin-bottom: 15px;">
+         <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; SR Closure Name&nbsp;&nbsp;<span style="font-size:13px;"><b>({{closuredate}})</b></span></h4>
+         <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="srStatusLoading" />
+         <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+           <thead>
+             <tr class="text-primary">
+               <th class="text-center tableheader"><b>#</b></th>
+               <th class="text-center tableheader"><b>SR Name</b></th>
+               <th class="text-center tableheader"><b>SR Closure Status</b></th>
+             </tr>
+           </thead>
+           <tbody>
+             <tr v-if="resultClosureCount==0">
+               <td colspan="3" align="center">No record found</td>
+             </tr>
+             <tr v-if="resultClosureCount>0">
+               <td scope="row" class="text-center"><strong>1</strong></td>
+               <td>{{pendingSRClosureList}}</td>
+               <td>Pending</td>
+             </tr>
+           </tbody>
+         </table><br>
+         <paginate v-if="resultClosureCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'"></paginate>
+       </div>
+      </div>
   </div>
 </section>

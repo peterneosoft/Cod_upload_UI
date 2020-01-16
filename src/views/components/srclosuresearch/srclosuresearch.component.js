@@ -28,8 +28,14 @@ export default {
       localhubid:0,
       isLoading:false,
       srLoading:false,
+      srStatusLoading:false,
+      srLedger:true,
+      srStatusLedger:false,
       pageno: 0,
-      pagecount: 0
+      pagecount: 0,
+      resultClosureCount: 0,
+      pendingSRClosureList:'',
+      closuredate:''
     }
   },
   computed: {
@@ -97,6 +103,7 @@ export default {
 
       this.SRLedgerList = [];
       this.isLoading = true;
+      this.srLedger = true; this.srStatusLedger = this.srStatusLoading = false;
       this.input = ({
         srid: this.SR_Name.srid,
         hubid:this.localhubid,
@@ -154,6 +161,43 @@ export default {
       document.getElementById("fdate").innerHTML="";
       this.$validator.reset();
       this.errors.clear();
+    },
+
+    srStatus() {
+      this.srLedger = this.isLoading = false; this.srStatusLedger = this.srStatusLoading = true;
+
+      this.input = ({
+        hubid:[this.localhubid]
+      })
+
+      axios({
+        method: 'POST',
+        url: apiUrl.api_url + 'getSRClosureStatus',
+        data: this.input,
+        headers: {
+          'Authorization': 'Bearer '+this.urltoken
+        }
+      })
+      .then(result => {
+        this.closuredate = result.data.date;
+        if(result.data.code == 200){
+          this.srStatusLoading = false;
+          let penarr = [];
+          result.data.data.pending.forEach(function (val) {
+            penarr.push(val.SRName);
+          });
+          this.pendingSRClosureList = penarr.join(', ');
+          this.resultClosureCount  = penarr.length;
+          this.pagecount = 1
+        }else{
+          this.srStatusLoading = false;
+          this.resultClosureCount  = 0
+        }
+      }, error => {
+        this.srStatusLoading = false;
+        console.error(error)
+        this.$alertify.error('Error Occured');
+      })
     },
   }
 }
