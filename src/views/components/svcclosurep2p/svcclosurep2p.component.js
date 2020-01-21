@@ -421,7 +421,8 @@ export default {
         DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.ReasonAmount)));
       }
 
-      let TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount)-parseFloat(this.CardAmount))));
+      //let TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount)-parseFloat(this.CardAmount))));
+      let TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))));
 
       let p2pamt = parseInt(this.p2pAmount);
       if(DepositAmount !== parseInt(this.tot_amt)){

@@ -134,7 +134,7 @@
                     <span class="input-group-text" style="width: 140px;">Deposit Slip <font color="red">&nbsp;*</font></span>
                   </div>
                   <input @change="onUpload" class="form-control" type="file" placeholder="Upload Deposit Slip"  v-validate="`${DepositType != '' ? 'required' : ''}`" name="DepositSlip" id="DepositSlip"
-                  v-bind:class="{'form-control': true, 'error': errors.has('DepositSlip')}" style="margin: -5px 1px 0px 1px; height: 28px; border: 0;">
+                  v-bind:class="{'form-control': true, 'error': errors.has('DepositSlip')}" style="margin: -5px 1px 0px 1px; height: 40px; border: 0;">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-file"></i></span>
                   </div>
@@ -181,7 +181,7 @@
                     <span class="input-group-text" style="width: 140px;">Reason Slip <font color="red">&nbsp;*</font></span>
                   </div>
                   <input @change="onUpload" class="form-control" type="file" placeholder="Upload Reason Slip" v-validate="`${amoimp ? 'required' : ''}`" name="ReasonSlip" id="ReasonSlip"
-                  v-bind:class="{'form-control': true, 'error': errors.has('ReasonSlip')}" style="margin: -5px 1px 0px 1px; height: 28px; border: 0;">
+                  v-bind:class="{'form-control': true, 'error': errors.has('ReasonSlip')}" style="margin: -5px 1px 0px 1px; height: 40px; border: 0;">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-file"></i></span>
                   </div>

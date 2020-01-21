@@ -14,6 +14,7 @@
                     <textarea rows="2" name = "shipmentid" id="shipmentid" ref="textarea" v-model="shipmentid" v-validate="{required: true}" placeholder="Enter Shipment Ids..." v-bind:class="{'form-control': true, 'error': errors.has('shipmentid') }"></textarea>
                   </b-input-group>
                   <small class="text-muted"><font color="red">Note: * Only accept comma (,) seperated shipment ids.</font></small>
+                  <br>
                   <span v-show="errors.has('shipmentid')" class="text-danger">Shipment Id is required.</span>
                 </div>
 
@@ -28,6 +29,7 @@
               <div class="form-group row">
               </div>
               <div class="card-footer">
+                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="submitLoading" />
                 <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>&nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;
                 <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> Update</button>
                 <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
@@ -39,15 +41,8 @@
         <div class="row">
           <div class="col-12">
             <div class="card-headerfrm" style="margin-bottom: 15px;">
-              <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result
-                <span v-show="exportf" style="margin-left: 85%; cursor: pointer;" @click="exportreport()">
-                  <button class="btn btn-sm btn-success" type="button">
-                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="excelLoading" />
-                    <i class="fa fa-download"></i> Export
-                  </button>
-                </span>
-              </h4>
-              <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+              <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result</h4>
+              <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="shipmentLoading" />
               <table class="table-bordered table-hover tbl datatables" style="width:100%;">
                 <thead>
                   <tr class="text-primary">
@@ -69,19 +64,19 @@
                   <tr v-if="resultCount==0">
                     <td colspan="6" align="center">No record found</td>
                   </tr>
-                  <tr v-for="(CODOutstanding,index) in CODOutstandingReport">
+                  <tr v-for="(shipmentobj,index) in shipmentList">
                     <td class="text-center">{{pageno+index+1}}</td>
-                    <td class="text-center">{{CODOutstanding.zonename}}</td>
-                    <td class="text-center">{{CODOutstanding.zonename}}</td>
-                    <td class="text-center">{{CODOutstanding.zonename}}</td>
-                    <td class="text-center">{{CODOutstanding.zonename}}</td>
-                    <td class="text-center">{{CODOutstanding.zonename}}</td>
-                    <td class="text-center">{{CODOutstanding.zonename}}</td>
-                    <td class="text-center">{{CODOutstanding.zonename}}</td>
-                    <td class="text-center">{{CODOutstanding.zonename}}</td>
-                    <td class="text-center">{{CODOutstanding.zonename}}</td>
-                    <td class="text-center">{{CODOutstanding.zonename}}</td>
-                    <td class="text-center">{{CODOutstanding.zonename}}</td>
+                    <td class="text-center">{{shipmentobj.zonename}}</td>
+                    <td class="text-center">{{shipmentobj.zonename}}</td>
+                    <td class="text-center">{{shipmentobj.zonename}}</td>
+                    <td class="text-center">{{shipmentobj.zonename}}</td>
+                    <td class="text-center">{{shipmentobj.zonename}}</td>
+                    <td class="text-center">{{shipmentobj.zonename}}</td>
+                    <td class="text-center">{{shipmentobj.zonename}}</td>
+                    <td class="text-center">{{shipmentobj.zonename}}</td>
+                    <td class="text-center">{{shipmentobj.zonename}}</td>
+                    <td class="text-center">{{shipmentobj.zonename}}</td>
+                    <td class="text-center">{{shipmentobj.zonename}}</td>
                   </tr>
                 </tbody>
               </table><br>

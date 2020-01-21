@@ -7,6 +7,7 @@ import Paginate from 'vuejs-paginate'
 import VueElementLoading from 'vue-element-loading';
 import Multiselect from 'vue-multiselect'
 import 'vue-multiselect/dist/vue-multiselect.min.css';
+import CryptoJS from 'crypto-js';
 
 export default {
   name: 'changeshipmentstatus',
@@ -20,10 +21,11 @@ export default {
   data() {
     return {
       shipmentid:'',
-      shipmentstatus:1,
       pageno:0,
       pagecount:0,
-      isLoading:false,
+      resultCount:0,
+      shipmentstatus:1,
+      shipmentLoading:false,
       submitLoading:false,
       shipmentList:[]
     }
@@ -49,12 +51,11 @@ export default {
       this.submitLoading = true;
       this.input = ({
           ShippingID: this.shipmentid,
-          CurrentHubID: this.CurrentHubID,
           LastModifiedBy: this.localuserid,
       })
       axios({
           method: 'POST',
-          'url': apiUrl.api_url + 'changeShipmentStatus',
+          'url': apiUrl.api_url + 'deliveredtoinscan',
           'data': this.input,
           headers: {
               'Authorization': 'Bearer '+this.myStr
@@ -63,9 +64,7 @@ export default {
       .then((response) => {
         if (response.data.errorCode == 0) {
           this.submitLoading = false;
-          this.AddEditClientTAT=0;
-          this.$alertify.success(response.data.msg);
-          this.resetForm(event);
+          this.resetForm();
         } else if (response.data.errorCode == -1) {
           this.submitLoading = false;
           this.$alertify.error(response.data.msg)
@@ -80,41 +79,43 @@ export default {
 
     getPaginationData(pageNum) {
         this.pageno = (pageNum - 1) * 10
-        this.getCODOutstandingReport()
+        this.getShipmentReport()
     },
 
     //to get All Zone Wise RSC List
-    getRSCData(zoneid) {
-      if(zoneid==""){
-        return false;
+    getShipmentReport() {
+      if(/\s/g.test(this.shipmentid) == true || this.shipmentid.indexOf(',') > -1){
+        this.shipmentid = this.shipmentid.replace(/ /g,'').split(',');
       }
-      this.input = ({
-          zoneid: zoneid
-      })
-      this.RSCLoading = true;
+      if(Array.isArray(this.shipmentid) == false){
+        this.shipmentid = new Array(this.shipmentid);
+      }
+      console.log('this.shipmentid==', this.shipmentid);
+
+      this.shipmentLoading = this.submitLoading = true;
       axios({
           method: 'POST',
-          url: apiUrl.api_url + 'external/getzonersc',
-          'data': this.input,
+          url: apiUrl.api_url + 'getShipmentReport',
+          'data': ({ ShippingID: this.shipmentid }),
           headers: {
             'Authorization': 'Bearer '+this.myStr
           }
         })
         .then(result => {
-          this.RSCLoading = false;
-          this.RSCName=[];
-          this.RSCList = [{HubID:'0', HubName:'All RSC', HubCode:'All RSC'}].concat(result.data.rsc.data);
+          this.shipmentLoading = this.submitLoading = false;
+          this.shipmentList = result.data;
         }, error => {
-          this.RSCLoading = false;
+          this.shipmentLoading = this.submitLoading = false;
           console.error(error)
+          this.$alertify.error('Error Occured');
         })
     },
 
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
-          this.pageno = 0; this.exportf = false;
-          this.getCODOutstandingReport()
+          this.pageno = 0;
+          this.getShipmentReport()
         }
       }).catch(() => {
         console.log('errors exist', this.errors)
@@ -122,8 +123,7 @@ export default {
     },
 
     resetForm() {
-      this.zone=""; this.hubList=[]; this.HubId=[]; this.RSCList = []; this.RSCName = []; this.pageno = 0;
-      this.CODOutstandingReport = []; this.exportf = false; this.disableHub = false; this.resultCount = 0;
+      this.pageno = this.resultCount = 0; this.shipmentList = []; this.shipmentLoading = false; this.shipmentstatus = 1;
       this.$validator.reset();
       this.errors.clear();
     },
