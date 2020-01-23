@@ -8,31 +8,44 @@
           <div class="card-body">
             <form  v-on:submit.prevent="onSubmit">
               <div class="form-group row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                   <label>Shipment Id <font color="red">*</font></label>
                   <b-input-group>
-                    <textarea rows="2" name = "shipmentid" id="shipmentid" ref="textarea" v-model="shipmentid" v-validate="{required: true}" placeholder="Enter Shipment Ids..." v-bind:class="{'form-control': true, 'error': errors.has('shipmentid') }"></textarea>
+                    <input class="form-control" id="shipmentid" type="text" v-on:change="getShipmentReport()" name="shipmentid" placeholder="Enter Shipping Id" v-validate="{required: true}" v-model="shipmentid" v-bind:class="{'form-control': true, 'error': errors.has('shipmentid') }">
                   </b-input-group>
-                  <small class="text-muted"><font color="red">Note: * Only accept comma (,) seperated shipment ids.</font></small>
-                  <br>
                   <span v-show="errors.has('shipmentid')" class="text-danger">Shipment Id is required.</span>
                 </div>
 
-                <div class="col-md-3">
-                  <label>Status <font color="red">*</font></label>
-                  <select class="form-control" disabled id="shipmentstatus" name="shipmentstatus" v-model="shipmentstatus" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('shipmentstatus') }" style="margin-right: -3px;">
-                    <option value="1">Delivered To InScan</option>
+                <div class="col-md-4">
+                  <label>Epayment Type <font color="red">*</font></label>
+                  <select class="form-control" id="epaymenttype" name="epaymenttype" v-on:change="GetEpaymentName" v-model="epaymenttype" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('epaymenttype') }">
+                    <option value="">--Select--</option>
+                    <option value="cash">Cash</option>
+                    <option value="wallet">Wallet</option>
+                    <option value="payphi">Payphi</option>
+                    <option value="card">Card</option>
                   </select>
-                  <span v-show="errors.has('shipmentstatus')" class="text-danger">Status is required.</span>
+                  <span v-show="errors.has('epaymenttype')" class="text-danger">Payment Mode is required.</span>
+                </div>
+                <div class="col-md-4">
+                  <label>Epayment Name <font color="red">*</font></label>
+                  <select disabled class="form-control" id="epaymentname" v-model="epaymentname" name="epaymentname" v-validate="{required: true}"
+                  v-bind:class="{'form-control': true, 'error': errors.has('epaymentname') }" style="margin-right: -8px;">
+                    <option value="">--Select--</option>
+                    <option v-for="Epayment_obj in EpaymentNameList" v-bind:value="Epayment_obj.EpaymentType" >{{Epayment_obj.EpaymentName}}</option>
+                  </select>
+                  <span v-show="errors.has('epaymentname')" class="text-danger">Payment Mode is required.</span>
                 </div>
               </div>
               <div class="form-group row">
               </div>
               <div class="card-footer">
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="submitLoading" />
-                <button class="btn btn-sm btn-primary" title="Check Shipment Status" @click="getShipmentReport()" type="button"><i class="fa fa-search"></i> Search</button>&nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;
+                <button class="btn btn-sm btn-primary" title="Check Shipment Detail" @click="getShipmentReport()" type="button"><i class="fa fa-search"></i> Search</button>&nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;
                 <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> Update</button>
                 <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
+                <br>
+                <small class="text-muted"><font color="red">Note: * For search shipment detail, only fill  `Shipment Id` input field.</font></small>
               </div>
             </form>
           </div>
@@ -50,38 +63,33 @@
                     <th class="text-center tableheader"><b>Shipping Id</b></th>
                     <th class="text-center tableheader"><b>Status</b></th>
                     <th class="text-center tableheader"><b>Shipment Status</b></th>
-                    <th class="text-center tableheader"><b>Order Type</b></th>
-                    <th class="text-center tableheader"><b>OctroiMRP</b></th>
-                    <th class="text-center tableheader"><b>Net Payment</b></th>
-                    <th class="text-center tableheader"><b>Origin Hub Name</b></th>
-                    <th class="text-center tableheader"><b>Final Destination Name</b></th>
-                    <th class="text-center tableheader"><b>Current Hub Name</b></th>
+                    <th class="text-center tableheader"><b>Epayment Type</b></th>
+                    <th class="text-center tableheader"><b>Epayment Name</b></th>
+                    <th class="text-center tableheader"><b>COD Amount</b></th>
+                    <th class="text-center tableheader"><b>Hub Name</b></th>
                     <th class="text-center tableheader"><b>Last Modified By</b></th>
                     <th class="text-center tableheader"><b>Last Modified Date</b></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td colspan="12" align="center">No record found</td>
+                    <td colspan="10" align="center">No record found</td>
                   </tr>
                   <tr v-for="(shipmentobj,index) in shipmentList">
                     <td class="text-center">{{pageno+index+1}}</td>
                     <td class="text-center">{{shipmentobj.ShippingID}}</td>
                     <td class="text-center">{{shipmentobj.Status}}</td>
                     <td class="text-center">{{shipmentobj.ShipmentStatus}}</td>
-                    <td class="text-center">{{shipmentobj.OrderType}}</td>
-                    <td class="text-center">{{shipmentobj.OctroiMRP}}</td>
+                    <td class="text-center">{{shipmentobj.EpaymentType}}</td>
+                    <td class="text-center">{{shipmentobj.EpaymentName}}</td>
                     <td class="text-center">{{shipmentobj.NetPayment}}</td>
-                    <td class="text-center">{{shipmentobj.OriginHubName}}</td>
-                    <td class="text-center">{{shipmentobj.FinalDestinationHubName}}</td>
                     <td class="text-center">{{shipmentobj.CurrentHubName}}</td>
                     <td class="text-center">{{shipmentobj.LastModifiedBy}}</td>
                     <td class="text-center">{{shipmentobj.LastModifiedDate}}</td>
                   </tr>
                 </tbody>
               </table><br>
-              <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
-              </paginate>
+              <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'"></paginate>
             </div>
          </div>
        </div>
@@ -96,7 +104,7 @@
                </button>
              </div>
              <div class="modal-bodyfrm">
-               <h5 style="font-size: 15px; padding: 10px; color:red;">Are you sure, you want to change shipment status from `Delivered` to `InScan`</h5>
+               <h5 style="font-size: 15px; padding: 10px; color:red;">Are you sure, you want to change `Epayment Type` from `{{OEpayType}}` to `{{NEpayType}}`</h5>
              </div>
              <div class="modal-footerfrm">
              <center>

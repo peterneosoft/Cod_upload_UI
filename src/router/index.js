@@ -30,7 +30,8 @@ import BankHoliday from '@/views/components/bankholiday'
 import EMailRemittance from '@/views/components/emailremittance'
 import Invoice from '@/views/components/invoice'
 import InvoiceReport from '@/views/components/invoicereport'
-import ChangeShipmentStatus from '@/views/components/changeshipmentstatus'
+import DeliveredToInScan from '@/views/components/changeshipmentstatus'
+import PaymentMode from '@/views/components/paymentmode'
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -183,9 +184,9 @@ const router = new Router({
           },
         },
         {
-          path: 'changeshipmentstatus',
-          name: 'Shipment Status',
-          component: ChangeShipmentStatus,
+          path: 'deliveredtoinscan',
+          name: 'Delivered To InScan',
+          component: DeliveredToInScan,
           meta: {
             requiresAuth: true,
             adminAuth: true,
@@ -195,6 +196,23 @@ const router = new Router({
               },
               {
                 name: 'Change Shipment Status'
+              }
+            ]
+          },
+        },
+        {
+          path: 'paymentmode',
+          name: 'Payment Mode',
+          component: PaymentMode,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'Change Payment Mode'
               }
             ]
           },

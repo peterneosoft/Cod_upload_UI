@@ -24,11 +24,18 @@ export default {
       pageno:0,
       pagecount:0,
       resultCount:0,
-      shipmentstatus:1,
+      epaymenttype:'',
+      epaymentname:'',
+      OEpayType:'',
+      NEpayType:'',
+      eptype:'',
+      epname:'',
+      hubid:'',
       shipmentLoading:false,
       submitLoading:false,
-      shipmentList:[],
-      confModalShow:false
+      confModalShow:false,
+      EpaymentNameList:[],
+      shipmentList:[]
     }
   },
 
@@ -45,6 +52,13 @@ export default {
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
     var userdetail        = JSON.parse(plaintext);
     this.localuserid      = userdetail.username;
+
+    this.EpaymentNameList = [
+      {'EpaymentType':'cash', 'EpaymentName':'Cash'},
+      {'EpaymentType':'wallet', 'EpaymentName':'PayTM'},
+      {'EpaymentType':'payphi', 'EpaymentName':'Payphi'},
+      {'EpaymentType':'card', 'EpaymentName':'Mosambee'},
+    ];
   },
 
   methods: {
@@ -54,7 +68,7 @@ export default {
     hideConfModal(ele) {
       if(ele == 0){
         this.$refs.myConfModalRef.hide()
-        this.changeShipmentStatus();
+        this.updatePaymentMode();
       }else{
         this.$refs.myConfModalRef.hide();
       }
@@ -63,28 +77,32 @@ export default {
       this.confModalShow = false
     },
 
-    changeShipmentStatus(event) {
+    updatePaymentMode(event) {
       this.submitLoading = true;
+
       this.input = ({
-          ShipmentArr: this.shipmentid,
-          LastModifiedBy: this.localuserid,
+          ShippingID: this.shipmentid,
+          lastmodifiedby: this.localuserid,
+          EPaymentType: this.eptype,
+          EPaymentName: this.epname,
+          hubid: this.hubid
       })
       axios({
           method: 'POST',
-          'url': apiUrl.api_url + 'updateShipmentStatus',
+          'url': apiUrl.api_url + 'updatepaymentmode',
           'data': this.input,
           headers: {
               'Authorization': 'Bearer '+this.myStr
           }
       })
       .then((response) => {
-        if (response.data.code == 200) {
-          this.submitLoading = false;
-          this.$alertify.success(response.data.message)
+        if (response.data.errorCode == 0) {
+          this.submitLoading = false; this.epaymenttype = this.epaymentname = '';
+          this.$alertify.success(response.data.msg);
           this.getShipmentReport();
         } else if (response.data.errorCode == -1) {
           this.submitLoading = false;
-          this.$alertify.error(response.data.msg)
+          this.$alertify.error(response.data.msg);
         }
       })
       .catch((httpException) => {
@@ -94,16 +112,16 @@ export default {
       });
     },
 
-    getPaginationData(pageNum) {
-        this.pageno = (pageNum - 1) * 10
-        this.getShipmentReport()
-    },
-
-    //to get All Zone Wise RSC List
+    //to get shipment data using shipping id
     getShipmentReport() {
-      this.pageno = 0;
-      if(/\s/g.test(this.shipmentid) == true || this.shipmentid.indexOf(',') > -1){
-        this.shipmentid = this.shipmentid.replace(/"|'| |,\s*$/g,'').split(',');
+      this.pageno = 0; this.shipmentid = this.shipmentid.trim();
+      if(this.shipmentid.indexOf(',') > -1){
+        this.$alertify.error("Enter only one shipment id at a time, please check.");
+        return false;
+      }
+
+      if(/"|'| \s*$/g.test(this.shipmentid) == true){
+        this.shipmentid = this.shipmentid.replace(/"|'| \s*$/g,'');
       }
       if(Array.isArray(this.shipmentid) == false){
         this.shipmentid = new Array(this.shipmentid);
@@ -119,23 +137,19 @@ export default {
           }
         })
         .then(result => {
-
+          this.shipmentList = [];
           if(result.data.code == 200){
 
             this.shipmentLoading  = this.submitLoading = false;
             this.shipmentList     = result.data.data;
-            let totalRows         = result.data.count;
+            this.hubid            = this.shipmentList[0].CurrentHubID;
+            this.OEpayType        = this.shipmentList[0].EpaymentType;
             this.resultCount      = result.data.count;
-
-            if (totalRows < 10) {
-                this.pagecount = 1
-            } else {
-                this.pagecount = Math.ceil(totalRows / 10)
-            }
-          }
-          if(result.data.code == 204){
+            this.pagecount        = 1
+          }else{
             this.shipmentLoading = this.submitLoading = false;
             this.resultCount  = 0
+            this.$alertify.error(result.data.msg);
           }
         }, error => {
           this.shipmentLoading = this.submitLoading = false;
@@ -144,21 +158,31 @@ export default {
         })
     },
 
+    GetEpaymentName() {
+      this.epaymentname = this.epaymenttype;
+    },
+
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
 
-          if(/\s/g.test(this.shipmentid) == true || this.shipmentid.indexOf(',') > -1){
-            this.shipmentid = this.shipmentid.replace(/"|'| |,\s*$/g,'').split(',');
+          if(this.shipmentid.indexOf(',') > -1){
+            this.$alertify.error("Enter only one shipment id at a time, please check.");
+            return false;
           }
-          if(Array.isArray(this.shipmentid) == false){
-            this.shipmentid = new Array(this.shipmentid);
+
+          if(/"|'| \s*$/g.test(this.shipmentid) == true){
+            this.shipmentid = this.shipmentid.replace(/"|'| \s*$/g,'');
           }
+
+          if(Array.isArray(this.shipmentid) == true){
+            this.shipmentid = this.shipmentid.toString();
+          }
+          this.NEpayType    = this.epaymenttype.charAt(0).toUpperCase() + this.epaymenttype.slice(1);
+          this.eptype = event.target[1].selectedOptions[0].text;
+          this.epname = event.target[2].selectedOptions[0].text;
 
           this.showConfirmationModal(event);
-
-          this.pageno = 0;
-          this.updateShipmentStatus()
         }
       }).catch(() => {
         console.log('errors exist', this.errors)
@@ -166,7 +190,8 @@ export default {
     },
 
     resetForm() {
-      this.pageno = this.resultCount = 0; this.shipmentList = []; this.shipmentLoading = false; this.shipmentstatus = 1;
+      this.pageno = this.resultCount = 0; this.shipmentList = []; this.shipmentLoading = false; this.epaymenttype = this.epaymentname = '';
+      this.OEpayType = this.NEpayType = this.hubid = '';
       this.$validator.reset();
       this.errors.clear();
     },
