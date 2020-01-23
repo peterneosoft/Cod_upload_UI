@@ -384,8 +384,10 @@
                   </span>
                 </td>
                 <td>
-                  <span v-if="data.awbnocount!=''" @click="showAWBNo('Exception', data.awbno)" style="cursor:pointer; color: rgb(25,25,112);">Exception</span>
+                  <span v-if="data.awbnocount!='' && data.reasonid!=186 && data.reasonid!=123" @click="showAWBNo('Exception', data.awbno)" style="cursor:pointer; color: rgb(25,25,112);">Exception</span>
                   <br v-if="data.awbnocount!='' && data.cardawbnocount!=''">
+                  <span v-if="data.reasonid==186 || data.reasonid==123" @click="showAWBNo('Payment Mode Changed', data.awbno)" style="cursor:pointer; color: rgb(25,25,112);">AWB No</span>
+                  <br v-if="data.reasonid==186 || data.reasonid==123">
                   <span v-if="data.cardawbnocount!=''" @click="showAWBNo('Card/Other Issue', data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">Card/Other</span>
                 </td>
               </tr>

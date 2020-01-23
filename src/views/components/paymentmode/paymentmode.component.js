@@ -83,6 +83,7 @@ export default {
       this.input = ({
           ShippingID: this.shipmentid,
           lastmodifiedby: this.localuserid,
+          EPaymentTypeFrom:this.OEpayType,
           EPaymentType: this.eptype,
           EPaymentName: this.epname,
           hubid: this.hubid
