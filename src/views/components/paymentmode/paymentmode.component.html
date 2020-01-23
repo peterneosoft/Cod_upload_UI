@@ -3,7 +3,7 @@
     <div class="col-md-12 mb-2">
         <div class="card">
           <div class="card-header filter_main">
-            <i class=" fa fa-filter filter"></i> Change Shipment Status: 'Delivered to InScan'
+            <i class=" fa fa-filter filter"></i> Change Shipment Payment Mode
           </div>
           <div class="card-body">
             <form  v-on:submit.prevent="onSubmit">
@@ -25,7 +25,7 @@
                     <option value="payphi">Payphi</option>
                     <option value="card">Card</option>
                   </select>
-                  <span v-show="errors.has('epaymenttype')" class="text-danger">Payment Mode is required.</span>
+                  <span v-show="errors.has('epaymenttype')" class="text-danger">Epayment type is required.</span>
                 </div>
                 <div class="col-md-4">
                   <label>Epayment Name <font color="red">*</font></label>
@@ -34,7 +34,7 @@
                     <option value="">--Select--</option>
                     <option v-for="Epayment_obj in EpaymentNameList" v-bind:value="Epayment_obj.EpaymentType" >{{Epayment_obj.EpaymentName}}</option>
                   </select>
-                  <span v-show="errors.has('epaymentname')" class="text-danger">Payment Mode is required.</span>
+                  <span v-show="errors.has('epaymentname')" class="text-danger">Epayment name is required.</span>
                 </div>
               </div>
               <div class="form-group row">

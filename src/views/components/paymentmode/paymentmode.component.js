@@ -98,9 +98,10 @@ export default {
       })
       .then((response) => {
         if (response.data.errorCode == 0) {
-          this.submitLoading = false; this.epaymenttype = this.epaymentname = '';
+          this.submitLoading = false;
           this.$alertify.success(response.data.msg);
           this.getShipmentReport();
+          this.resetForm();
         } else if (response.data.errorCode == -1) {
           this.submitLoading = false;
           this.$alertify.error(response.data.msg);
@@ -115,7 +116,7 @@ export default {
 
     //to get shipment data using shipping id
     getShipmentReport() {
-      this.pageno = 0; this.shipmentid = this.shipmentid.trim();
+      this.pageno = 0;
       if(this.shipmentid.indexOf(',') > -1){
         this.$alertify.error("Enter only one shipment id at a time, please check.");
         return false;
@@ -192,9 +193,8 @@ export default {
 
     resetForm() {
       this.pageno = this.resultCount = 0; this.shipmentList = []; this.shipmentLoading = false; this.epaymenttype = this.epaymentname = '';
-      this.OEpayType = this.NEpayType = this.hubid = '';
-      this.$validator.reset();
-      this.errors.clear();
+      this.OEpayType = this.NEpayType = this.hubid = this.eptype = this.epname = this.hubid = '';
+      this.$validator.reset(); this.errors.clear();
     },
   }
 }
