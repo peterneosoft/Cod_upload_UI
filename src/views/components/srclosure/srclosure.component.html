@@ -113,19 +113,19 @@
             </thead>
             <tbody>
               <tr>
-                <td>{{assign}}</td>
+                <td @click="showShippingidModal('Assigned Shipping Ids', assignArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{assign}}</u></td>
 
-                <td>{{prepaid}}</td>
+                <td @click="showShippingidModal('Prepaid Shipping Ids', prepaidArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{prepaid}}</u></td>
 
-                <td>{{cash}}</td>
+                <td @click="showShippingidModal('COD ( Cash ) Shipping Ids', cashArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{cash}}</u></td>
 
-                <td>{{payphi}}</td>
+                <td @click="showShippingidModal('Payphi Shipping Ids', payphiArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{payphi}}</u></td>
 
-                <td>{{card}}</td>
+                <td @click="showShippingidModal('Card Shipping Ids', cardArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{card}}</u></td>
 
-                <td>{{wallet}}</td>
+                <td @click="showShippingidModal('Wallet Shipping Ids', walletArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{wallet}}</u></td>
 
-                <td>{{ndr}}</td>
+                <td @click="showShippingidModal('NDR Shipping Ids', ndrArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{ndr}}</u></td>
               </tr>
             </tbody>
           </table>
@@ -140,8 +140,7 @@
               <tbody>
                 <tr>
                   <td>Today's COD ( Cash ) Shipment</td>
-                  <td>{{TodaysShipmentCount}}&nbsp;&nbsp;&nbsp;&nbsp;<span v-if="TodaysShipmentCount > 0" @click="showShippingidModal()" style="cursor:pointer; color: rgb(25,25,112);"><u>View</u></span>
-                  </td>
+                  <td @click="showShippingidModal('Delivered COD ( Cash ) Shipping Ids', deliveredCODArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{TodaysShipmentCount}}</u></td>
                 </tr>
               </tbody>
             </table>
@@ -177,13 +176,51 @@
         <div role="document">
           <div class="modal-content">
             <div class="modal-headerfrm">
-              <h5 class="modal-title" style="font-size: 1rem;">COD ( Cash ) Delivered Shipping Ids:</h5>
+              <h5 class="modal-title" style="font-size: 1rem;">{{awbnotype}}:</h5>
               <button type="button" class="close" @click="closeShippingidModal" aria-label="Close">
                 <span aria-hidden="true" style="color: white;">×</span>
               </button>
             </div>
             <div class="modal-bodyfrm">
-              <h5 style="font-size: 15px; padding: 10px; color:darkolivegreen;">{{TodaysShippingId}}</h5>
+              <table v-if="awbArr.length>10" class="table-bordered table-hover tbl datatables scroll" style="width:100%;">
+                <thead>
+                  <tr class="text-primary">
+                    <th class="text-center tableheader" style="width: 25px"><b>#</b></th>
+                    <th class="text-center tableheader" style="width: 298px"><b>AWB Number</b></th>
+                    <th class="text-center tableheader" style="width: 128px"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-if="awbArr.length<=0">
+                    <td colspan="3" align="center">No record found</td>
+                  </tr>
+                  <tr v-for="(val,index) in awbArr">
+                    <td class="text-center">{{index+1}}</td>
+                    <td class="text-center" style="width: 70%">{{val.ShippingID}}</td>
+                    <td class="text-center" style="width: 30%">{{val.Amount}}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <table v-if="awbArr.length<11" class="table-bordered table-hover tbl datatables" style="width:100%;">
+                <thead>
+                  <tr class="text-primary">
+                    <th class="text-center tableheader" style="width: 18px"><b>#</b></th>
+                    <th class="text-center tableheader" style="width: 312px"><b>AWB Number</b></th>
+                    <th class="text-center tableheader" style="width: 133px"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-if="awbArr.length<=0">
+                    <td colspan="3" align="center">No record found</td>
+                  </tr>
+                  <tr v-for="(val,index) in awbArr">
+                    <td class="text-center">{{index+1}}</td>
+                    <td class="text-center" style="width: 70%">{{val.ShippingID}}</td>
+                    <td class="text-center" style="width: 30%">{{val.Amount}}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

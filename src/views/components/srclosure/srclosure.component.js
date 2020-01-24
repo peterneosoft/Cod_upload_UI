@@ -20,11 +20,11 @@ export default {
       Deposit_Amount:"",
       SR_Name:"",
       tot_amt:"",
-      PendingCOD:"",
-      TotalAmount:"",
-      TodaysCOD:"",
+      PendingCOD:0,
+      TotalAmount:0,
+      TodaysCOD:0,
       TodaysShipmentCount: 0,
-      TodaysShippingId: "",
+      deliveredCODArr: [],
       DeliveryDate: '',
       assign: 0,
       card: 0,
@@ -34,6 +34,15 @@ export default {
       ndr: 0,
       prepaid: 0,
       wallet: 0,
+      assignArr: [],
+      cardArr: [],
+      cashArr: [],
+      payphiArr: [],
+      ndrArr: [],
+      prepaidArr: [],
+      walletArr: [],
+      awbnotype: '',
+      awbArr: [],
       Reason:"",
       RemainData:0,
       resultCount:0,
@@ -91,8 +100,11 @@ export default {
   },
 
   methods: {
-    showShippingidModal(){
-       this.$refs.shippingModalRef.show();
+    showShippingidModal(typ, ele){
+      this.awbnotype = ''; this.awbArr = [];
+      this.awbnotype = typ;
+      this.awbArr = ele;
+      this.$refs.shippingModalRef.show();
     },
     closeShippingidModal() {
         this.modalShippingShow = false
@@ -198,17 +210,15 @@ export default {
       this.DenominationList.map(data=>{
         let countVal = document.getElementById(data.Denomination);
         let amountVal = document.getElementById("mo"+data.Denomination);
-        countVal.value=""
-        amountVal.value=0
+        countVal.value=""; amountVal.value=0;
       });
       this.GetDeliveryAgentData();
-      this.Regionshow = false,
-      this.RightSRLedger = false,
-      this.SRLedgerDetails = false,
-      this.SR_Name = "",
-      this.Deposit_Amount = "",
-      this.Reason = "",
-      this.tot_amt = ""
+      this.Regionshow = this.RightSRLedger = this.SRLedgerDetails = false;
+      this.assign = this.card = this.cash = this.cod = this.ndr = this.prepaid = this.wallet = this.payphi = 0;
+      this.assignArr = this.cardArr = this.cashArr = this.ndrArr = this.prepaidArr = this.walletArr = this.payphiArr = this.awbArr = [];
+      this.SR_Name = this.Deposit_Amount = this.Reason = this.tot_amt = this.awbnotype = '';
+      this.PendingCOD = this.TodaysCOD = this.TotalAmount = this.TodaysShipmentCount = 0;
+      this.deliveredCODArr = [];
       this.$validator.reset();
       this.errors.clear();
       event.target.reset();
@@ -229,14 +239,17 @@ export default {
          })
          .then(result => {
            if(result.data.code = 200){
-             this.isLoading = false;
-             this.PendingCOD = result.data.PendingCOD
-             this.TodaysCOD = result.data.TodaysCOD
-             this.TotalAmount = result.data.TotalAmount
+             this.isLoading           = false;
+             this.PendingCOD          = result.data.PendingCOD
+             this.TodaysCOD           = result.data.TodaysCOD
+             this.TotalAmount         = result.data.TotalAmount
              this.TodaysShipmentCount = result.data.TodaysShipmentCount
-             this.TodaysShippingId = result.data.TodaysShippingId
+
+             this.deliveredCODArr     = result.data.TodaysShippingId
            }else{
               this.isLoading = false;
+              this.PendingCOD = this.TodaysCOD = this.TotalAmount = this.TodaysShipmentCount = 0;
+              this.deliveredCODArr = [];
            }
          }, error => {
            console.error(error)
@@ -266,29 +279,39 @@ export default {
            }
          })
          .then(result => {
+
            this.getRightSRLedgerDetails()
            this.GetSRLedgerDetails()
+
             if(result.data.code == 200){
-              this.Loading = false;
-              this.assign = result.data.data.assign
-              this.card = result.data.data.card
-              this.cash = result.data.data.cash
-              this.payphi = result.data.data.payphi
-              this.cod = result.data.data.cod
-              this.ndr = result.data.data.ndr
-              this.prepaid = result.data.data.prepaid
-              this.wallet = result.data.data.wallet
-              this.getRightSRLedgerDetails()
-              this.GetSRLedgerDetails()
+              this.Loading      = false;
+              this.assign       = result.data.data.assign
+              this.assignArr    = result.data.data.assignArr
+
+              this.card         = result.data.data.card
+              this.cardArr      = result.data.data.cardArr
+
+              this.cash         = result.data.data.cash
+              this.cashArr      = result.data.data.cashArr
+
+              this.payphi       = result.data.data.payphi
+              this.payphiArr    = result.data.data.payphiArr
+
+              this.cod          = result.data.data.cod
+
+              this.ndr          = result.data.data.ndr
+              this.ndrArr       = result.data.data.ndrArr
+
+              this.prepaid      = result.data.data.prepaid
+              this.prepaidArr   = result.data.data.prepaidArr
+
+              this.wallet       = result.data.data.wallet
+              this.walletArr    = result.data.data.walletArr
             }
             if(result.data.code == 204){
-                this.assign = 0
-                this.card = 0
-                this.cash = 0
-                this.cod = 0
-                this.ndr = 0
-                this.prepaid = 0
-                this.wallet = 0
+              this.assign = this.card = this.cash = this.cod = this.ndr = this.prepaid = this.wallet = this.payphi = 0;
+              this.assignArr = this.cardArr = this.cashArr = this.ndrArr = this.prepaidArr = this.walletArr = this.payphiArr = this.awbArr = [];
+              this.awbnotype = '';
               this.Loading = false;
             }
 
