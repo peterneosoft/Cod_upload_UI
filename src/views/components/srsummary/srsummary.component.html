@@ -1,0 +1,144 @@
+<section class="user">
+  <div class="animated fadeIn">
+    <div class="col-md-12 mb-2">
+      <div class="card">
+        <div v-if="ShowHideFilter==0" @click = "ShowHideFilter = '1'" class="card-header filter_main" style="cursor: pointer;">
+          <i class="fa fa-plus plus"></i> SR Summary ( Delivered COD Shipments )
+        </div>
+        <div v-if="ShowHideFilter==1" @click = "ShowHideFilter = '0'" class="card-header filter_main" style="cursor: pointer;">
+          <i class="fa fa-minus minus"></i> SR Summary ( Delivered COD Shipments )
+        </div>
+        <b-collapse v-bind:class="`${ShowHideFilter == '1' ? 'show' : 'hide'}`" id="collapse1">
+          <div class="card-body">
+            <form  v-on:submit.prevent="onSubmit">
+              <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="srLoading" />
+              <div class="form-group row">
+                <div class="col-md-4">
+                  <label>Delivery Date <font color="red">*</font></label>
+                  <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
+                    <b-form-input id="deliverydate" type="date" name="deliverydate" v-validate="{required: true}"
+                    v-model="deliverydate" v-bind:class="{'form-control': true, 'error': errors.has('deliverydate') }"></b-form-input>
+                  </b-input-group>
+                  <span v-show="errors.has('deliverydate')" class="text-danger">Delivery date is required. </span>
+                </div>
+              </div>
+
+              <div class="card-footer">
+                <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+                <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
+              </div>
+            </form>
+          </div>
+        </b-collapse>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="card-headerfrm" style="margin-bottom: 15px;">
+        <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result
+          <span v-show="exportf" style="margin-left: 85%; cursor: pointer;" @click="exportSRSummaryData()">
+            <button class="btn btn-sm btn-success" type="button">
+              <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="excelLoading" />
+              <i class="fa fa-download"></i> Export
+            </button>
+          </span>
+        </h4>
+        <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+        <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+          <thead>
+            <tr class="text-primary">
+              <th class="text-center tableheader"><b>#</b></th>
+              <th class="text-center tableheader"><b>SR Name</b></th>
+              <th class="text-center tableheader"><b>Delivery Date</b></th>
+              <th class="text-center tableheader"><b>COD Shipments</b></th>
+              <th class="text-center tableheader"><b>Cash</b></th>
+              <th class="text-center tableheader"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>Payphi</b></th>
+              <th class="text-center tableheader"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>Card</b></th>
+              <th class="text-center tableheader"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>Wallet</b></th>
+              <th class="text-center tableheader"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="resultCount==0">
+              <td colspan="12" align="center">No record found</td>
+            </tr>
+            <tr v-for="(val,index) in srSummaryList ">
+              <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
+              <td class="text-center">{{val.SRName}}</td>
+              <td class="text-center">{{deldate}}</td>
+              <td class="text-center">{{val.cod}}</td>
+              <td class="text-center" @click="showShippingidModal('Cash Shipping Ids', val.cashArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{val.cash}}</u></td>
+              <td class="text-center">{{val.cashAmt}}</td>
+              <td class="text-center" @click="showShippingidModal('Payphi Shipping Ids', val.payphiArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{val.payphi}}</u></td>
+              <td class="text-center">{{val.payphiAmt}}</td>
+              <td class="text-center" @click="showShippingidModal('Card Shipping Ids', val.cardArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{val.card}}</u></td>
+              <td class="text-center">{{val.cardAmt}}</td>
+              <td class="text-center" @click="showShippingidModal('Wallet Shipping Ids', val.walletArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{val.wallet}}</u></td>
+              <td class="text-center">{{val.walletAmt}}</td>
+            </tr>
+          </tbody>
+
+        </table><br>
+        <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+        </paginate>
+      </div>
+     </div>
+
+     <b-modal ref="shippingModalRef" v-model="modalShippingShow"  id=#confirmationmodal1 title="Confirmation">
+       <div role="document">
+         <div class="modal-content">
+           <div class="modal-headerfrm">
+             <h5 class="modal-title" style="font-size: 1rem;">{{awbnotype}}:</h5>
+             <button type="button" class="close" @click="closeShippingidModal" aria-label="Close">
+               <span aria-hidden="true" style="color: white;">×</span>
+             </button>
+           </div>
+           <div class="modal-bodyfrm">
+             <table v-if="awbArr.length>10" class="table-bordered table-hover tbl datatables scroll" style="width:100%;">
+               <thead>
+                 <tr class="text-primary">
+                   <th class="text-center tableheader" style="width: 25px"><b>#</b></th>
+                   <th class="text-center tableheader" style="width: 298px"><b>AWB Number</b></th>
+                   <th class="text-center tableheader" style="width: 128px"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                 </tr>
+               </thead>
+               <tbody>
+                 <tr v-if="awbArr.length<=0">
+                   <td colspan="3" align="center">No record found</td>
+                 </tr>
+                 <tr v-for="(val,index) in awbArr">
+                   <td class="text-center">{{index+1}}</td>
+                   <td class="text-center" style="width: 70%">{{val.ShippingID}}</td>
+                   <td class="text-center" style="width: 30%">{{val.Amount}}</td>
+                 </tr>
+               </tbody>
+             </table>
+
+             <table v-if="awbArr.length<11" class="table-bordered table-hover tbl datatables" style="width:100%;">
+               <thead>
+                 <tr class="text-primary">
+                   <th class="text-center tableheader" style="width: 18px"><b>#</b></th>
+                   <th class="text-center tableheader" style="width: 312px"><b>AWB Number</b></th>
+                   <th class="text-center tableheader" style="width: 133px"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                 </tr>
+               </thead>
+               <tbody>
+                 <tr v-if="awbArr.length<=0">
+                   <td colspan="3" align="center">No record found</td>
+                 </tr>
+                 <tr v-for="(val,index) in awbArr">
+                   <td class="text-center">{{index+1}}</td>
+                   <td class="text-center" style="width: 70%">{{val.ShippingID}}</td>
+                   <td class="text-center" style="width: 30%">{{val.Amount}}</td>
+                 </tr>
+               </tbody>
+             </table>
+           </div>
+         </div>
+       </div>
+     </b-modal>
+  </div>
+</section>

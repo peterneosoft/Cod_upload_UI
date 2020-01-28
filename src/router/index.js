@@ -32,6 +32,7 @@ import Invoice from '@/views/components/invoice'
 import InvoiceReport from '@/views/components/invoicereport'
 import DeliveredToInScan from '@/views/components/changeshipmentstatus'
 import PaymentMode from '@/views/components/paymentmode'
+import SRSummary from '@/views/components/srsummary'
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -213,6 +214,23 @@ const router = new Router({
               },
               {
                 name: 'Change Payment Mode'
+              }
+            ]
+          },
+        },
+        {
+          path: 'srsummary',
+          name: 'SR Summary',
+          component: SRSummary,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'SR Summary'
               }
             ]
           },
