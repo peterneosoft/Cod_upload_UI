@@ -59,6 +59,7 @@
           <thead>
             <tr class="text-primary">
               <th class="text-center tableheader"><b>#</b></th>
+              <th class="text-center tableheader"><b>COD Receivable</b></th>
               <th class="text-center tableheader"><b>Paid Amount</b></th>
               <th class="text-center tableheader"><b>Pending Amount</b></th>
               <th class="text-center tableheader"><b>Created Date</b></th>
@@ -69,10 +70,11 @@
           </thead>
           <tbody>
             <tr v-if="resultCount==0">
-              <td colspan="7" align="center">No record found</td>
+              <td colspan="8" align="center">No record found</td>
             </tr>
             <tr v-for="(SL_List,index) in SRLedgerList ">
               <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
+              <td>{{SL_List.codamount}}</td>
               <td>{{SL_List.creditamount}}</td>
               <td>{{SL_List.debitamount}}</td>
               <td>{{SL_List.createddate}}</td>

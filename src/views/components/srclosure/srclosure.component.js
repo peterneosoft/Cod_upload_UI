@@ -122,6 +122,7 @@ export default {
      saveSRClosure(event){
 
        let statusAmount = "";
+
        let TotalAmt = (document.getElementById("Tot_Amt")).textContent;
        let IntTotalAmt = parseInt(TotalAmt)
        let IntDeposit_Amount = parseInt(this.Deposit_Amount)
@@ -163,6 +164,7 @@ export default {
            status: statusAmount,
            creditamount: this.Deposit_Amount,
            debitamount: Balanc,
+           todayscod: this.TodaysCOD,
            reasonid: this.Reason,
            islessamountaccept: false,
            username: this.localusername
