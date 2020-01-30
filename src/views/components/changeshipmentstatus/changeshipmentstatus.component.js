@@ -119,7 +119,7 @@ export default {
           }
         })
         .then(result => {
-
+          this.shipmentList = [];
           if(result.data.code == 200){
 
             this.shipmentLoading  = this.submitLoading = false;
@@ -132,8 +132,7 @@ export default {
             } else {
                 this.pagecount = Math.ceil(totalRows / 10)
             }
-          }
-          if(result.data.code == 204){
+          }else{
             this.shipmentLoading = this.submitLoading = false;
             this.resultCount  = 0
           }

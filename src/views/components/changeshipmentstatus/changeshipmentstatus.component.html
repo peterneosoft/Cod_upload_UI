@@ -51,6 +51,7 @@
                     <th class="text-center tableheader"><b>Status</b></th>
                     <th class="text-center tableheader"><b>Shipment Status</b></th>
                     <th class="text-center tableheader"><b>Order Type</b></th>
+                    <th class="text-center tableheader"><b>Epayment Type</b></th>
                     <th class="text-center tableheader"><b>OctroiMRP</b></th>
                     <th class="text-center tableheader"><b>Net Payment</b></th>
                     <th class="text-center tableheader"><b>Origin Hub Name</b></th>
@@ -62,7 +63,7 @@
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td colspan="12" align="center">No record found</td>
+                    <td colspan="13" align="center">No record found</td>
                   </tr>
                   <tr v-for="(shipmentobj,index) in shipmentList">
                     <td class="text-center">{{pageno+index+1}}</td>
@@ -70,6 +71,7 @@
                     <td class="text-center">{{shipmentobj.Status}}</td>
                     <td class="text-center">{{shipmentobj.ShipmentStatus}}</td>
                     <td class="text-center">{{shipmentobj.OrderType}}</td>
+                    <td class="text-center">{{shipmentobj.EpaymentType}}</td>
                     <td class="text-center">{{shipmentobj.OctroiMRP}}</td>
                     <td class="text-center">{{shipmentobj.NetPayment}}</td>
                     <td class="text-center">{{shipmentobj.OriginHubName}}</td>
