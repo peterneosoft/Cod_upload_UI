@@ -94,11 +94,6 @@ export default {
       });
     },
 
-    getPaginationData(pageNum) {
-        this.pageno = (pageNum - 1) * 10
-        this.getShipmentReport()
-    },
-
     //to get All Zone Wise RSC List
     getShipmentReport() {
       this.pageno = 0;
@@ -124,14 +119,9 @@ export default {
 
             this.shipmentLoading  = this.submitLoading = false;
             this.shipmentList     = result.data.data;
-            let totalRows         = result.data.count;
             this.resultCount      = result.data.count;
 
-            if (totalRows < 10) {
-                this.pagecount = 1
-            } else {
-                this.pagecount = Math.ceil(totalRows / 10)
-            }
+            this.pagecount = 1;
           }else{
             this.shipmentLoading = this.submitLoading = false;
             this.resultCount  = 0

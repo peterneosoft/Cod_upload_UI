@@ -21,7 +21,7 @@
                 <label>Hub Name <font color="red">*</font></label>
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="hubLoading" />
-                  <Multiselect :options="hubList" name="HubId" id="HubId" v-model="HubId" v-validate="{required: true}" v-bind:class="{'error': errors.has('HubId') }" placeholder="Select Hub" label="HubName" track-by="HubID" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                  <Multiselect :options="hubList" v-bind:multiple="multipleHub()" name="HubId" id="HubId" v-model="HubId" v-validate="{required: true}" v-bind:class="{'error': errors.has('HubId') }" placeholder="Select Hub" label="HubName" track-by="HubID" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
                      <template slot="noResult"><p>No Record Found.</p></template>
                   </Multiselect>
                 </b-input-group>
@@ -103,7 +103,7 @@
               </tr>
               <tr v-for="(data,index) in listFinanceledgerData" v-bind:class="`${data.financereasonid == 84 ? 'mismatched' : ''}`">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
-                <td>{{HubName}}</td>
+                <td>{{data.hubname}}</td>
                 <td>{{data.rscowner}}</td>
                 <td>{{data.deliverydate}}</td>
                 <td>{{data.depositdate}}</td>

@@ -18,8 +18,8 @@ export default {
   data() {
     return {
       zone:'',
-      HubId:'',
-      HubName:'',
+      HubId:[],
+      SearchHubIds:[],
       HubID:'',
       status:1,
       StatusVal:'',
@@ -77,6 +77,22 @@ export default {
   },
 
   methods: {
+    multipleHub(){
+      let key = this.HubId.length-1;
+      if(this.HubId.length>0 && this.HubId[key].HubID == 0){
+        this.SearchHubIds = [];
+        this.HubId = this.HubId[key];
+
+        for (let item of this.hubList) {
+          if (item.HubID != 0) {
+            this.SearchHubIds.push(item.HubID);
+          }
+        }
+      }
+
+      if(this.HubId.HubID == 0){ return false; }
+      else{ this.SearchHubIds = []; return true; }
+    },
 
     setid(name, key){
       return name+key;
@@ -85,7 +101,7 @@ export default {
     //to get All Zone List
     getZoneData() {
       this.allZoneLoading = true;
-      this.input = {}
+      this.input = {}; this.zoneList = [];
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/getallzones',
@@ -96,9 +112,9 @@ export default {
         })
         .then(result => {
           this.allZoneLoading = false;
-          this.zoneList = result.data.zone.data;
+          if(result.data.zone.data.length > 0) this.zoneList = result.data.zone.data;
         }, error => {
-          this.allZoneLoading = false;
+          this.allZoneLoading = false; this.HubId = this.hubList = [];
           console.error(error)
         })
     },
@@ -131,7 +147,8 @@ export default {
         return false;
       }
 
-      this.HubId='';
+      this.HubId = this.hubList = [];
+
       this.hubLoading = true;
       this.input = ({
           zoneid: this.zone
@@ -147,7 +164,7 @@ export default {
         })
         .then(result => {
           this.hubLoading = false;
-          this.hubList = result.data.hub.data;
+          if(result.data.hub.data.length > 0) this.hubList = [{HubID:'0', HubName:'All Hub', HubCode:'All Hub'}].concat(result.data.hub.data);
         }, error => {
           this.hubLoading = false;
           console.error(error)
@@ -183,10 +200,23 @@ export default {
         $('span[id^="vri"]').hide();
         $('span[id^="vrl"]').show();
 
+        let hubArr = [];
+        if(this.SearchHubIds.length>0){
+          hubArr = this.SearchHubIds;
+        }else{
+          if($.isArray(this.HubId) === false){
+            this.HubId = new Array(this.HubId);
+          }
+
+          this.HubId.forEach(function (val) {
+            hubArr.push(val.HubID);
+          });
+        }
+
         this.input = ({
             offset: this.pageno,
             limit: 10,
-            hubid: this.HubId.HubID,
+            hubid: hubArr,
             statusid: this.status
         })
         this.isLoading = true;
@@ -238,7 +268,6 @@ export default {
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
-          this.HubName = this.HubId.HubName;
           this.HubID = this.HubId.HubID;
           this.StatusVal = event.target[2].selectedOptions[0].attributes.title.nodeValue;
           if(this.StatusVal == "Close"){
