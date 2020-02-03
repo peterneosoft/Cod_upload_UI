@@ -182,16 +182,13 @@ export default {
         this.closuredate = result.data.date;
         if(result.data.code == 200){
           this.srStatusLoading = false;
-          let penarr = [];
-          result.data.data.pending.forEach(function (val) {
-            penarr.push(val.SRName);
-          });
-          this.pendingSRClosureList = penarr.join(', ');
-          this.resultClosureCount  = penarr.length;
+          this.pendingSRClosureList = result.data.data.pending;
+          this.resultClosureCount  = result.data.data.pending.length;
           this.pagecount = 1
         }else{
           this.srStatusLoading = false;
-          this.resultClosureCount  = 0
+          this.resultClosureCount  = 0;
+          this.pendingSRClosureList  = [];
         }
       }, error => {
         this.srStatusLoading = false;

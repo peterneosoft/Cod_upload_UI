@@ -92,24 +92,31 @@
 
      <div class="col-12" v-show="srStatusLedger">
        <div class="card-headerfrm" style="margin-bottom: 15px;">
-         <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; SR Closure Name&nbsp;&nbsp;<span style="font-size:13px;"><b>({{closuredate}})</b></span></h4>
+         <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; SR Closure Result&nbsp;&nbsp;<span style="font-size:13px;"><b>({{closuredate}})</b></span></h4>
          <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="srStatusLoading" />
          <table class="table-bordered table-hover tbl datatables" style="width:100%;">
            <thead>
              <tr class="text-primary">
                <th class="text-center tableheader"><b>#</b></th>
                <th class="text-center tableheader"><b>SR Name</b></th>
+               <th class="text-center tableheader"><b>Today's COD Amount ( <i class="fa fa-rupee"></i> )</b></th>
+               <th class="text-center tableheader"><b>Pending COD Amount ( <i class="fa fa-rupee"></i> )</b></th>
+               <th class="text-center tableheader"><b>Total COD Amount ( <i class="fa fa-rupee"></i> )</b></th>
                <th class="text-center tableheader"><b>SR Closure Status</b></th>
              </tr>
            </thead>
            <tbody>
              <tr v-if="resultClosureCount==0">
-               <td colspan="3" align="center">No record found</td>
+               <td colspan="6" align="center">No record found</td>
              </tr>
-             <tr v-if="resultClosureCount>0">
-               <td scope="row" class="text-center"><strong>1</strong></td>
-               <td>{{pendingSRClosureList}}</td>
-               <td>Pending</td>
+
+             <tr v-for="(pend_List,index) in pendingSRClosureList ">
+               <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
+               <td class="text-center">{{pend_List.SRName}}</td>
+               <td class="text-center">{{pend_List.todaysCOD}}</td>
+               <td class="text-center">{{pend_List.oldCOD}}</td>
+               <td class="text-center">{{pend_List.totalCOD}}</td>
+               <td class="text-center">Pending</td>
              </tr>
            </tbody>
          </table><br>
