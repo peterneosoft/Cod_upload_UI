@@ -52,6 +52,7 @@ export default {
     this.localhubid       = hubdetail[0].HubID;
     this.urltoken = window.localStorage.getItem('accessuserToken');
     this.GetDeliveryAgentData();
+    this.srStatus();
   },
 
   methods: {
