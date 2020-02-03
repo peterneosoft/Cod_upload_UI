@@ -321,7 +321,7 @@ export default {
             financereasonid: parseInt(finreasonid),
             financeconfirmdate: financeconfirmdate,
             confirmamount: confirmamount,
-            hubid: this.HubID,
+            hubid: findata.hubid,
             username: this.localuserid,
             deliverydate: findata.deliverydate,
             formatdeldate: findata.formatdeldate,
