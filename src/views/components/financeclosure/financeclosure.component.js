@@ -344,10 +344,9 @@ export default {
             this.form.hide[ledgerid] = ledgerid;
             this.GetFinanceledgerData();
 
-          } else if (response.data.code == 202) {
+          } else {
             this.$alertify.error(response.data.message)
           }
-          event.target.reset();
         })
         .catch((httpException) => {
             console.error('exception is:::::::::', httpException)
