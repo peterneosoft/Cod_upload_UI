@@ -33,6 +33,7 @@ import InvoiceReport from '@/views/components/invoicereport'
 import DeliveredToInScan from '@/views/components/changeshipmentstatus'
 import PaymentMode from '@/views/components/paymentmode'
 import SRSummary from '@/views/components/srsummary'
+import AWBDifference from '@/views/components/awbdifference'
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -231,6 +232,23 @@ const router = new Router({
               },
               {
                 name: 'SR Summary'
+              }
+            ]
+          },
+        },
+        {
+          path: 'awbdifference',
+          name: 'AWB Difference',
+          component: AWBDifference,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'AWB Difference'
               }
             ]
           },

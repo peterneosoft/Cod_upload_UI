@@ -1,0 +1,154 @@
+<section class="user">
+  <div class="animated fadeIn">
+    <div class="col-md-12 mb-2">
+      <div class="card">
+        <div v-if="ShowHideFilter==0" @click = "ShowHideFilter = '1'" class="card-header filter_main" style="cursor: pointer;">
+          <i class="fa fa-plus plus"></i> AWB Difference
+        </div>
+        <div v-if="ShowHideFilter==1" @click = "ShowHideFilter = '0'" class="card-header filter_main" style="cursor: pointer;">
+          <i class="fa fa-minus minus"></i> AWB Difference
+        </div>
+        <b-collapse v-bind:class="`${ShowHideFilter == '1' ? 'show' : 'hide'}`" id="collapse1">
+          <div class="card-body">
+            <form  v-on:submit.prevent="onSubmit">
+              <div class="form-group row">
+                <div class="col-md-4">
+                  <label>Delivery Date <font color="red">*</font></label>
+                  <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
+                    <b-form-input id="deliverydate" type="date" name="deliverydate" v-validate="{required: true}"
+                    v-model="deliverydate" v-bind:class="{'form-control': true, 'error': errors.has('deliverydate') }"></b-form-input>
+                  </b-input-group>
+                  <span v-show="errors.has('deliverydate')" class="text-danger">Delivery date is required. </span>
+                </div>
+              </div>
+
+              <div class="card-footer">
+                <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+                <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
+              </div>
+            </form>
+          </div>
+        </b-collapse>
+      </div>
+    </div>
+
+     <div class="col-12">
+       <div class="card-headerfrm" style="margin-bottom: 15px;">
+         <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; AWB Difference Result&nbsp;&nbsp;<span style="font-size:13px;"><b>({{closuredate}})</b></span></h4>
+         <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+         <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+           <thead>
+             <tr class="text-primary">
+               <th colspan="2" class="text-center tableheader"><b>AWB Number Count & Amount</b></th>
+             </tr>
+           </thead>
+           <tbody>
+             <tr v-if="resultDiffCount==0">
+               <td colspan="2" align="center">No record found</td>
+             </tr>
+             <tr v-if="resultDiffCount>0">
+               <td class="text-center"><strong>COD Difference</strong></td>
+               <td class="text-center">Difference Count:&nbsp;&nbsp;{{DiffList.TotalCODdiffCnt}},&nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;Difference Amount:&nbsp;&nbsp;{{DiffList.CODdiffAmt}}</td>
+             </tr>
+             <tr v-if="resultDiffCount>0">
+               <td class="text-center"><strong>COD AWB No</strong></td>
+               <td class="text-center">{{DiffList.CODdiffArr}}</td>
+             </tr>
+           </tbody>
+         </table>
+       </div>
+      </div>
+
+      <div class="col-12">
+        <div class="card-headerfrm" style="margin-bottom: 15px;">
+          <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Shipment Update Result&nbsp;&nbsp;<span style="font-size:13px;"><b>({{closuredate}})</b></span></h4>
+          <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+          <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+            <thead>
+              <tr class="text-primary">
+                <th colspan="2" class="text-center tableheader"><b>AWB Number Count & Amount</b></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="resultSUCount==0">
+                <td colspan="2" align="center">No record found</td>
+              </tr>
+
+              <tr v-if="resultSUCount>0">
+                <td class="text-center"><strong>SU Count</strong></td>
+                <td class="text-center">COD Count:&nbsp;&nbsp;{{SUList.TotalCODCnt}},
+                  &nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;Cash Count:&nbsp;&nbsp;{{SUList.CODcashCnt}},&nbsp;&nbsp;Cash Amount:&nbsp;&nbsp;{{SUList.CODCashAmt}},
+                  &nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;Card Count:&nbsp;&nbsp;{{SUList.CODcardCnt}},&nbsp;&nbsp;Card Amount:&nbsp;&nbsp;{{SUList.CODcardAmt}},
+                  &nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;Payphi Count:&nbsp;&nbsp;{{SUList.CODpayphiCnt}},&nbsp;&nbsp;Payphi Amount:&nbsp;&nbsp;{{SUList.CODpayphiAmt}},
+                  &nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;Wallet Count:&nbsp;&nbsp;{{SUList.CODwalletCnt}},&nbsp;&nbsp;Wallet Amount:&nbsp;&nbsp;{{SUList.CODwalletAmt}},
+                  &nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;Prepaid Count:&nbsp;&nbsp;{{SUList.CODprepaidCnt}}
+                </td>
+              </tr>
+              <tr v-if="resultSUCount>0">
+                <td class="text-center"><strong>Cash AWB No</strong></td>
+                <td class="text-center">{{SUList.cashArr}}</td>
+              </tr>
+              <tr v-if="resultSUCount>0">
+                <td class="text-center"><strong>Card AWB No</strong></td>
+                <td class="text-center">{{SUList.cardArr}}</td>
+              </tr>
+              <tr v-if="resultSUCount>0">
+                <td class="text-center"><strong>Payphi AWB No</strong></td>
+                <td class="text-center">{{SUList.payphiArr}}</td>
+              </tr>
+              <tr v-if="resultSUCount>0">
+                <td class="text-center"><strong>Wallet AWB No</strong></td>
+                <td class="text-center">{{SUList.walletArr}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+       </div>
+
+       <div class="col-12">
+         <div class="card-headerfrm" style="margin-bottom: 15px;">
+           <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; DB Result&nbsp;&nbsp;<span style="font-size:13px;"><b>({{closuredate}})</b></span></h4>
+           <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+           <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+             <thead>
+               <tr class="text-primary">
+                 <th colspan="2" class="text-center tableheader"><b>AWB Number Count & Amount</b></th>
+               </tr>
+             </thead>
+             <tbody>
+               <tr v-if="resultDBCount==0">
+                 <td colspan="6" align="center">No record found</td>
+               </tr>
+
+               <tr v-if="resultDBCount>0">
+                 <td class="text-center"><strong>DB Count</strong></td>
+                 <td class="text-center">COD Count:&nbsp;&nbsp;{{DBList.DBTotalCODCnt}},
+                   &nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;Cash Count:&nbsp;&nbsp;{{DBList.DBCODcashCnt}},&nbsp;&nbsp;Cash Amount:&nbsp;&nbsp;{{DBList.DBCODCashAmt}},
+                   &nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;Card Count:&nbsp;&nbsp;{{DBList.DBCODcardCnt}},&nbsp;&nbsp;Card Amount:&nbsp;&nbsp;{{DBList.DBCODcardAmt}},
+                   &nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;Payphi Count:&nbsp;&nbsp;{{DBList.DBCODpayphiCnt}},&nbsp;&nbsp;Payphi Amount:&nbsp;&nbsp;{{DBList.DBCODpayphiAmt}},
+                   &nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;Wallet Count:&nbsp;&nbsp;{{DBList.DBCODwalletCnt}},&nbsp;&nbsp;Wallet Amount:&nbsp;&nbsp;{{DBList.DBCODwalletAmt}}
+                 </td>
+               </tr>
+               <tr v-if="resultDBCount>0">
+                 <td class="text-center"><strong>Cash AWB No</strong></td>
+                 <td class="text-center">{{DBList.DBcashArr}}</td>
+               </tr>
+               <tr v-if="resultDBCount>0">
+                 <td class="text-center"><strong>Card AWB No</strong></td>
+                 <td class="text-center">{{DBList.DBcardArr}}</td>
+               </tr>
+               <tr v-if="resultDBCount>0">
+                 <td class="text-center"><strong>Payphi AWB No</strong></td>
+                 <td class="text-center">{{DBList.DBpayphiArr}}</td>
+               </tr>
+               <tr v-if="resultDBCount>0">
+                 <td class="text-center"><strong>Wallet AWB No</strong></td>
+                 <td class="text-center">{{DBList.DBwalletArr}}</td>
+               </tr>
+             </tbody>
+           </table><br>
+           <paginate :page-count="pagecount" :page-range="2" :margin-pages="2" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'"></paginate>
+         </div>
+      </div>
+  </div>
+</section>
