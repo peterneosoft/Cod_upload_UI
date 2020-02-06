@@ -239,7 +239,6 @@ export default {
         countVal.value=""; amountVal.value=0;
       });
       //this.GetDeliveryAgentData();
-      this.srStatus();
       this.Regionshow = this.RightSRLedger = this.SRLedgerDetails = false;
       this.assign = this.card = this.cash = this.cod = this.ndr = this.prepaid = this.wallet = this.payphi = 0;
       this.assignArr = this.cardArr = this.cashArr = this.ndrArr = this.prepaidArr = this.walletArr = this.payphiArr = this.awbArr = [];

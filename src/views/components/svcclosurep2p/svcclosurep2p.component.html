@@ -340,6 +340,7 @@
                 <th class="text-center tableheader"><b>COD Receivable ( <i class="fa fa-rupee"></i> )</b></th>
                 <th class="text-center tableheader"><b>Bank Name</b></th>
                 <th class="text-center tableheader"><b>Bank Deposited Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                <th class="text-center tableheader"><b>Actual Received Amount ( <i class="fa fa-rupee"></i> )</b></th>
                 <th class="text-center tableheader"><b>Exception AWB Amount ( <i class="fa fa-rupee"></i> )</b></th>
                 <th class="text-center tableheader"><b>Card/Other AWB Amount ( <i class="fa fa-rupee"></i> )</b></th>
                 <th class="text-center tableheader"><b>Other Charges ( <i class="fa fa-rupee"></i> )</b></th>
@@ -353,7 +354,7 @@
             </thead>
             <tbody>
               <tr v-if="resultCount==0">
-                <td colspan="17" align="center">No record found</td>
+                <td colspan="18" align="center">No record found</td>
               </tr>
               <tr v-for="(data,index) in listSVCledgerData" v-bind:class="`${data.createdby == 'schedular@xpressbees.com' ? 'scheduler' : '' || data.reasonid == 65 ? 'other' : '' || data.financereasonid == 84 ? 'mismatched' : ''}`">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
@@ -364,6 +365,7 @@
                 <td>{{data.codamount}}</td>
                 <td>{{data.bankname}}</td>
                 <td>{{data.bankdeposit}}</td>
+                <td>{{data.actualrecamt}}</td>
                 <td>{{data.exceptionamt}}</td>
                 <td>{{data.cardissueamt}}</td>
                 <td>{{data.othercharges}}</td>
