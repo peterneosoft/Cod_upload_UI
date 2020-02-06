@@ -101,7 +101,7 @@
               <tr v-if="resultCount==0">
                 <td colspan="20" align="center">No record found</td>
               </tr>
-              <tr v-for="(data,index) in listFinanceledgerData" v-bind:class="`${data.financereasonid == 84 ? 'mismatched' : ''}`">
+              <tr v-for="(data,index) in listFinanceledgerData" v-bind:class="`${(data.financereasonid != 83 || data.financereasonid != 85) ? 'mismatched' : ''}`">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
                 <td>{{data.hubname}}</td>
                 <td>{{data.rscowner}}</td>
@@ -126,8 +126,8 @@
                     <br v-show="form.finreason[data.svcledgerid] > 0 && form.hide[data.svcledgerid] == 0">
                     <input v-show="form.finreason[data.svcledgerid] > 0 && form.hide[data.svcledgerid] == 0" v-model="form.financeconfirmdate[data.svcledgerid]" v-bind:name="setid('financeconfirmdate', data.svcledgerid)" v-bind:id="setid('financeconfirmdate', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('financeconfirmdate'+data.svcledgerid) }" type="date">
                     <span v-bind:id="setid('finD', data.svcledgerid)" class="text-danger"></span>
-                    <br v-show="form.finreason[data.svcledgerid] == 84 && form.hide[data.svcledgerid] == 0">
-                    <input v-show="form.finreason[data.svcledgerid] == 84 && form.hide[data.svcledgerid] == 0" v-model="form.confirmamount[data.svcledgerid]" v-bind:name="setid('confirmamount', data.svcledgerid)" v-bind:id="setid('confirmamount', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('confirmamount'+data.svcledgerid) }" type="text" placeholder="Enter Received Amount">
+                    <br v-show="(form.finreason[data.svcledgerid] != 83 || form.finreason[data.svcledgerid] != 85) && form.hide[data.svcledgerid] == 0">
+                    <input v-show="(form.finreason[data.svcledgerid] != 83 || form.finreason[data.svcledgerid] != 85) && form.hide[data.svcledgerid] == 0" v-model="form.confirmamount[data.svcledgerid]" v-bind:name="setid('confirmamount', data.svcledgerid)" v-bind:id="setid('confirmamount', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('confirmamount'+data.svcledgerid) }" type="text" placeholder="Enter Received Amount">
                     <span v-bind:id="setid('finA', data.svcledgerid)" class="text-danger"></span>
                     <span v-show="form.hide[data.svcledgerid] == 0"><br><button class="btn btn-sm btn-primary" type="submit" :disabled = "data.statusid == 6" ><i class="fa fa-dot-circle-o"></i> Submit</button></span>
                 </form>

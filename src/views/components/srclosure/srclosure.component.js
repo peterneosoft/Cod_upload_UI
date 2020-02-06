@@ -69,6 +69,13 @@ export default {
       srLoading: false,
       modalShippingShow:false,
       disableButton: false,
+      pendingClosureList:[],
+      todayClosureList:[],
+      pendingCount:0,
+      closureCount:0,
+      srtype:'',
+      srArr:[],
+      modalSRNameShow:false
     }
   },
 
@@ -80,7 +87,7 @@ export default {
   },
 
   mounted() {
-    this.GetDeliveryAgentData();
+    //this.GetDeliveryAgentData();
     this.GetDenominationData();
     this.GetReasonList();
     var hubdetailEncrypt  = window.localStorage.getItem('accesshubdata')
@@ -97,9 +104,20 @@ export default {
 
     var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');
+
+    this.srStatus();
   },
 
   methods: {
+    showSRNameModal(typ, ele){
+      this.srtype = ''; this.srArr = [];
+      this.srtype = typ;
+      this.srArr = ele;
+      this.$refs.SRNameModalRef.show();
+    },
+    closeSRNameModal() {
+        this.modalSRNameShow = false
+    },
     showShippingidModal(typ, ele){
       this.awbnotype = ''; this.awbArr = [];
       this.awbnotype = typ;
@@ -183,7 +201,8 @@ export default {
                     window.scrollBy(0, 1000);
                     this.$alertify.success(response.data.data);
                     this.GetSRLedgerDetails();
-                    this.getRightSRLedgerDetails()
+                    this.getRightSRLedgerDetails();
+                    this.srStatus();
                     this.DenominationList.map(data=>{
                       let countVal = document.getElementById(data.Denomination);
                       let amountVal = document.getElementById("mo"+data.Denomination);
@@ -214,7 +233,8 @@ export default {
         let amountVal = document.getElementById("mo"+data.Denomination);
         countVal.value=""; amountVal.value=0;
       });
-      this.GetDeliveryAgentData();
+      //this.GetDeliveryAgentData();
+      this.srStatus();
       this.Regionshow = this.RightSRLedger = this.SRLedgerDetails = false;
       this.assign = this.card = this.cash = this.cod = this.ndr = this.prepaid = this.wallet = this.payphi = 0;
       this.assignArr = this.cardArr = this.cashArr = this.ndrArr = this.prepaidArr = this.walletArr = this.payphiArr = this.awbArr = [];
@@ -450,6 +470,39 @@ export default {
         }
         document.getElementById('tot_amt').value = this.tot_amt;
       }
+    },
+
+    srStatus() {
+      this.srLoading = true;
+      this.input = ({
+        hubid:[this.localhubid]
+      })
+
+      axios({
+        method: 'POST',
+        url: apiUrl.api_url + 'getSRClosureStatus',
+        data: this.input,
+        headers: {
+          'Authorization': 'Bearer '+this.urltoken
+        }
+      })
+      .then(result => {
+        this.pendingClosureList  = this.todayClosureList = [];
+        this.pendingCount  = this.closureCount = 0;
+
+        if(result.data.code == 200){
+          this.pendingClosureList = result.data.data.pending;
+          this.todayClosureList  = result.data.todayClosure;
+
+          this.pendingCount = result.data.data.pending.length;
+          this.closureCount = result.data.todayClosure.length;
+        }
+        this.srLoading = false;
+      }, error => {
+        console.error(error)
+        this.srLoading = false;
+        this.$alertify.error('Error Occured');
+      })
     },
   }
 }

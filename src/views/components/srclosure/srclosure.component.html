@@ -1,7 +1,32 @@
 <section>
   <div class="animated fadeIn">
     <div class="row">
-      <div class="col-sm-4">
+      <div class="col-sm-12" style="margin-top: -15px;">
+        <div class="card">
+          <div class="card-body" style="height: 40px;">
+           <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
+            <table class="table table-responsive-sm" style="margin-top: -27px; width: 75%;">
+              <tbody>
+                <tr>
+                  <td>
+                    <b style="font-size: 13px;">Completed SR Closure Count :</b>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <u @click="showSRNameModal('Completed Closure SR Name', todayClosureList)" style="cursor:pointer; color: rgb(79, 151, 39); font-size: 15px;">
+                      <span class="fa-stack"><span class="fa fa-circle-o fa-stack-2x"></span><strong class="fa-stack-1x">{{closureCount}}</strong></span>
+                    </u>
+                  </td>
+                  <td>
+                    <b style="font-size: 13px;">Pending SR Closure Count :</b>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <u @click="showSRNameModal('Pending Closure SR Name', pendingClosureList)" style="cursor:pointer; color: rgb(221, 16, 16); font-size: 15px;">
+                      <span class="fa-stack"><span class="fa fa-circle-o fa-stack-2x"></span><strong class="fa-stack-1x">{{pendingCount}}</strong></span>
+                    </u>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4" style="margin-top: -15px;">
         <div class="card">
           <div class="card-header"><i class="fa fa-align-justify"></i> COD SR Day Closure</div>
           <div class="card-body">
@@ -16,7 +41,7 @@
                   <select class="form-control" id="SR_Name" v-model="SR_Name" name="SR_Name" v-on:input="srChange"
                      v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('SR_Name') }">
                     <option value="">--Select--</option>
-                    <option v-for="SR_obj in SRList"  v-bind:value="SR_obj.SRID" >{{SR_obj.SRName}}</option>
+                    <option v-for="SR_obj in pendingClosureList"  v-bind:value="SR_obj.SRID" >{{SR_obj.SRName}}</option>
                   </select>
                 </div>
                 <span v-show="errors.has('SR_Name')" class="text-danger">SR name is required.</span>
@@ -66,7 +91,7 @@
         </div>
       </div>
 
-      <div class="col-lg-4">
+      <div class="col-lg-4" style="margin-top: -15px;">
         <div class="card">
           <div class="card-header"><i class="fa fa-align-justify"></i> Denomination <font color="red">&nbsp;*</font></div>
           <div class="card-body" style="height: 500px;">
@@ -96,7 +121,7 @@
         </div>
       </div>
 
-      <div class="col-sm-4" v-show="RightSRLedger">
+      <div class="col-sm-4" v-show="RightSRLedger" style="margin-top: -15px;">
         <b-card>
           <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="Loading" />
           <table class="table table-bordered table-striped table-sm" style="margin-left: -17px; border: 0px;">
@@ -218,6 +243,56 @@
                     <td class="text-center">{{index+1}}</td>
                     <td class="text-center" style="width: 70%">{{val.ShippingID}}</td>
                     <td class="text-center" style="width: 30%">{{val.Amount}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </b-modal>
+
+      <b-modal ref="SRNameModalRef" v-model="modalSRNameShow"  id=#confirmationmodal3 title="Confirmation">
+        <div role="document">
+          <div class="modal-content">
+            <div class="modal-headerfrm">
+              <h5 class="modal-title" style="font-size: 1rem;">{{srtype}}:</h5>
+              <button type="button" class="close" @click="closeSRNameModal" aria-label="Close">
+                <span aria-hidden="true" style="color: white;">×</span>
+              </button>
+            </div>
+            <div class="modal-bodyfrm">
+              <table v-if="srArr.length>10" class="table-bordered table-hover tbl datatables scroll" style="width:100%;">
+                <thead>
+                  <tr class="text-primary">
+                    <th class="text-center tableheader" style="width: 25px"><b>#</b></th>
+                    <th class="text-center tableheader" style="width: 298px"><b>SR Name</b></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-if="srArr.length<=0">
+                    <td colspan="3" align="center">No record found</td>
+                  </tr>
+                  <tr v-for="(val,index) in srArr">
+                    <td class="text-center">{{index+1}}</td>
+                    <td class="text-center" style="width: 70%">{{val.SRName}}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <table v-if="srArr.length<11" class="table-bordered table-hover tbl datatables" style="width:100%;">
+                <thead>
+                  <tr class="text-primary">
+                    <th class="text-center tableheader" style="width: 18px"><b>#</b></th>
+                    <th class="text-center tableheader" style="width: 312px"><b>SR Name</b></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-if="srArr.length<=0">
+                    <td colspan="3" align="center">No record found</td>
+                  </tr>
+                  <tr v-for="(val,index) in srArr">
+                    <td class="text-center">{{index+1}}</td>
+                    <td class="text-center" style="width: 70%">{{val.SRName}}</td>
                   </tr>
                 </tbody>
               </table>
