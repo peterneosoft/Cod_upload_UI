@@ -198,11 +198,18 @@ export default {
               .then((response) => {
                 this.disableButton = false;
                   if (response.data.code) {
-                    window.scrollBy(0, 1000);
-                    this.$alertify.success(response.data.data);
-                    this.GetSRLedgerDetails();
-                    this.getRightSRLedgerDetails();
                     this.srStatus();
+                    this.$alertify.success(response.data.data);
+
+                    if(Balanc > 0){
+                      this.GetSRLedgerDetails();
+                      this.getRightSRLedgerDetails();
+                      window.scrollBy(0, 1000);
+                    }else{
+                      this.RightSRLedger = this.SRLedgerDetails = false;
+                      this.SR_Name = '';
+                    }
+
                     this.DenominationList.map(data=>{
                       let countVal = document.getElementById(data.Denomination);
                       let amountVal = document.getElementById("mo"+data.Denomination);
@@ -210,8 +217,6 @@ export default {
                       amountVal.value=0
                     });
                     this.Regionshow = false,
-                    this.RightSRLedger = true,
-                    this.SRLedgerDetails = true,
                     this.Deposit_Amount = "",
                     this.Reason = "",
                     this.tot_amt = ""
