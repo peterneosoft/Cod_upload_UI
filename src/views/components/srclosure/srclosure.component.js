@@ -53,6 +53,7 @@ export default {
       ledgerLoading: false,
       SRList:[],
       DenominationList:[],
+      DenominationArr: [],
       RightSRLedgerList:[],
       SRLedgerList:[],
       ReasonList:[],
@@ -173,6 +174,15 @@ export default {
          this.Regionshow = false
          statusAmount = "Equal Amount"
        }
+
+       let NoteCountArr = []; let DenominationIDArr = [];
+       if(this.DenominationArr.length > 0){
+         this.DenominationArr.forEach(function (denomi) {
+           NoteCountArr.push(parseInt(document.getElementById("mo"+denomi).value) / parseInt(denomi));
+           DenominationIDArr.push(parseInt(document.getElementById("moi"+denomi).value));
+         });
+       }
+
        if(insertflag){
          this.disableButton = true;
          this.SRLedgerDetails = true;
@@ -185,7 +195,10 @@ export default {
            todayscod: this.TodaysCOD,
            reasonid: this.Reason,
            islessamountaccept: false,
-           username: this.localusername
+           username: this.localusername,
+           Denomination: this.DenominationArr,
+           NoteCount: NoteCountArr,
+           DenominationID: DenominationIDArr
            })
            axios({
              method: 'POST',
@@ -465,12 +478,19 @@ export default {
     //function is used for calculate notes amount
     notesCount(event){
       if(event.target.id){
-        document.getElementById("mo"+event.target.id).value = event.target.id * event.target.value;
+        let Denomination = event.target.id;
+        let NoteCount = event.target.value;
+
+        document.getElementById("mo"+event.target.id).value = Denomination * NoteCount;
         var arr = document.getElementsByName('note_amt');
-        this.tot_amt = 0;
+        this.tot_amt=0;
+
         for(var i=0;i<arr.length;i++){
-            if(parseInt(arr[i].value))
-                this.tot_amt += parseInt(arr[i].value);
+          if(this.DenominationArr.indexOf(Denomination) === -1) {
+            this.DenominationArr.push(Denomination);
+          }
+
+          if(parseInt(arr[i].value)) this.tot_amt += parseInt(arr[i].value);
         }
         document.getElementById('tot_amt').value = this.tot_amt;
       }

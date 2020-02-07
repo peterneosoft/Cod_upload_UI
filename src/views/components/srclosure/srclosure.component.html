@@ -107,8 +107,11 @@
               <tbody>
                 <tr v-for="data in DenominationList ">
                   <td class="notes">{{data.Denomination}}</td>
-                  <td class="notes"><input class="form-control"  :id="`${data.Denomination}`" min="0" type="number"  @change="notesCount" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8"></td>
-                  <td class="notes"><input class="form-control"  :id="`mo${data.Denomination}`"type="text" name="note_amt" value="0" disabled></td>
+                  <td class="notes"><input class="form-control"  :id="`${data.Denomination}`" name="`${data.Denomination}`" min="0" type="number"  @change="notesCount" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8"></td>
+                  <td class="notes">
+                    <input class="form-control" :id="`mo${data.Denomination}`"type="text" name="note_amt" value="0" disabled>
+                    <input class="form-control" :id="`moi${data.Denomination}`" type="hidden" :value="`${data.DenominationID}`" disabled>
+                  </td>
                 </tr>
                 <tr>
                   <td class="notes"></td>
