@@ -295,8 +295,7 @@ export default {
         document.getElementById("finR"+ledgerid).innerHTML="";
         financeconfirmdate = document.getElementById('financeconfirmdate'+ledgerid).value;
 
-        if(finreasonid == 84 || finreasonid == 187){
-
+        if(finreasonid == 84 || finreasonid == 124 || finreasonid == 187){
           confirmamount = document.getElementById('confirmamount'+ledgerid).value;
 
           if(confirmamount==null || confirmamount==undefined || confirmamount==""){
@@ -306,6 +305,7 @@ export default {
             document.getElementById("finA"+ledgerid).innerHTML="";
           }
         }
+
         if(financeconfirmdate==null || financeconfirmdate==undefined || financeconfirmdate==""){
           document.getElementById("finD"+ledgerid).innerHTML="Date is required.";
           return false;

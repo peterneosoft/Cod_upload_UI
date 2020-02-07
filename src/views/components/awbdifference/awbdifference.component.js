@@ -4,12 +4,15 @@ import {Validator} from 'vee-validate'
 import CryptoJS from 'crypto-js'
 import Paginate from 'vuejs-paginate';
 import VueElementLoading from 'vue-element-loading';
+import Multiselect from 'vue-multiselect'
+import 'vue-multiselect/dist/vue-multiselect.min.css';
 
 export default {
   name: 'srclosuresearch',
   components: {
     Paginate,
-    VueElementLoading
+    VueElementLoading,
+    Multiselect
   },
   props: [],
 
@@ -21,10 +24,16 @@ export default {
       SUList:[],
       DBList:[],
       DiffList:[],
+      zoneList:[],
+      hubList:[],
+      HubId:'',
+      zone:'',
       deliverydate:'',
       closuredate:'',
       localhubid:0,
       isLoading:false,
+      allZoneLoading:false,
+      hubLoading:false,
       pageno: 0,
       pagecount: 0,
       urltoken:'',
@@ -47,6 +56,7 @@ export default {
 
     this.urltoken = window.localStorage.getItem('accessuserToken');
 
+    this.getZoneData();
     this.awbDifference();
   },
 
@@ -55,12 +65,63 @@ export default {
         this.pageno = (pageNum - 1) * 10
     },
 
+    //to get All Zone List
+    getZoneData() {
+      this.allZoneLoading = true;
+      this.input = {}; this.zoneList = [];
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'external/getallzones',
+          data: this.input,
+          headers: {
+            'Authorization': 'Bearer '+this.urltoken
+          }
+        })
+        .then(result => {
+          this.allZoneLoading = false;
+          if(result.data.zone.data.length > 0) this.zoneList = result.data.zone.data;
+        }, error => {
+          this.allZoneLoading = false; this.HubId = this.hubList = [];
+          console.error(error)
+        })
+    },
+
+    //to get Hub List According to Zone
+    getHubData() {
+      if(this.zone==""){
+        return false;
+      }
+
+      this.HubId = ''; this.hubList = [];
+
+      this.hubLoading = true;
+      this.input = ({
+          zoneid: this.zone
+      })
+
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'external/getzonehub',
+          'data': this.input,
+          headers: {
+            'Authorization': 'Bearer '+this.urltoken
+          }
+        })
+        .then(result => {
+          this.hubLoading = false;
+          if(result.data.hub.data.length > 0) this.hubList = result.data.hub.data;
+        }, error => {
+          this.hubLoading = false;
+          console.error(error)
+        })
+    },
+
     //to get difference between db and shipment update
     awbDifference() {
       this.isLoading = true;
 
       this.input = ({
-        hubid:this.localhubid,
+        hubid:this.HubId ? this.HubId.HubID : this.localhubid,
         date:this.deliverydate,
         status:'Delivered',
       })
@@ -109,8 +170,9 @@ export default {
     },
 
     resetForm() {
-      this.deliverydate = ''; this.resultSUCount = this.resultDBCount = this.resultDiffCount = 0; this.pageno = this.pagecount = 1;
-      this.SUList = this.DBList  = this.DiffList = [];
+      this.deliverydate = this.HubId = this.zone = '';
+      this.resultSUCount = this.resultDBCount = this.resultDiffCount = 0; this.pageno = this.pagecount = 1;
+      this.SUList = this.DBList  = this.hubList = this.DiffList = [];
       this.$validator.reset();
       this.errors.clear();
     },
