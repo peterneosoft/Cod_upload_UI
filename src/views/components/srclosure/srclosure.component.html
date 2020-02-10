@@ -9,7 +9,7 @@
               <tbody>
                 <tr>
                   <td>
-                    <b style="font-size: 13px;">Completed SR Closure Count :</b>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <b style="font-size: 13px;">Today's SR Closure Count :</b>&nbsp;&nbsp;&nbsp;&nbsp;
                     <u @click="showSRNameModal('Completed Closure SR Name', todayClosureList)" style="cursor:pointer; color: rgb(79, 151, 39); font-size: 15px;">
                       <span class="fa-stack"><span class="fa fa-circle-o fa-stack-2x"></span><strong class="fa-stack-1x">{{closureCount}}</strong></span>
                     </u>
@@ -267,8 +267,8 @@
               <table v-if="srArr.length>10" class="table-bordered table-hover tbl datatables scroll" style="width:100%;">
                 <thead>
                   <tr class="text-primary">
-                    <th class="text-center tableheader" style="width: 25px"><b>#</b></th>
-                    <th class="text-center tableheader" style="width: 298px"><b>SR Name</b></th>
+                    <th class="text-center tableheader" style="width: 135px;"><b>#</b></th>
+                    <th class="text-center tableheader" style="width: 315px;"><b>SR Name</b></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -276,7 +276,7 @@
                     <td colspan="3" align="center">No record found</td>
                   </tr>
                   <tr v-for="(val,index) in srArr">
-                    <td class="text-center">{{index+1}}</td>
+                    <td class="text-center" style="width: 135px;">{{index+1}}</td>
                     <td class="text-center" style="width: 70%">{{val.SRName}}</td>
                   </tr>
                 </tbody>
