@@ -190,12 +190,12 @@
                 <a v-bind:title='`${file.name}`' v-for="file in reasonFileList" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:25px; color:#4b8cbb; margin: 10px 15px 1px 10px;"></i></a>
               </div>
 
-              <div class="form-group" v-show="cariss || cassnat || deldis">
+              <div class="form-group" v-show="cariss || cassnat || deldis || paychg">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
-                    <span class="input-group-text" style="width: 140px;">AWB No. <font color="red" v-if="cariss || deldis">&nbsp;*</font></span>
+                    <span class="input-group-text" style="width: 140px;">AWB No. <font color="red" v-if="cariss || deldis || paychg">&nbsp;*</font></span>
                   </div>
-                  <input class="form-control" id="AWBNo" type="text" name="AWBNo" title="Enter AWB number" placeholder="Enter AWB number" v-validate="`${cariss || deldis ? 'required' : ''}`"
+                  <input class="form-control" id="AWBNo" type="text" name="AWBNo" title="Enter AWB number" placeholder="Enter AWB number" v-validate="`${cariss || deldis || paychg ? 'required' : ''}`"
                   v-model="AWBNo" v-bind:class="{'form-control': true, 'error': errors.has('AWBNo') }" style="margin-right: -5px;">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-truck"></i></span>
@@ -388,9 +388,9 @@
                 <td>
                   <span v-if="data.awbnocount!='' && data.reasonid!=186 && data.reasonid!=123" @click="showAWBNo('Exception', data.awbno)" style="cursor:pointer; color: rgb(25,25,112);">Exception</span>
                   <br v-if="data.awbnocount!='' && data.cardawbnocount!=''">
-                  <span v-if="data.reasonid==186 || data.reasonid==123" @click="showAWBNo('Payment Mode Changed', data.awbno)" style="cursor:pointer; color: rgb(25,25,112);">AWB No</span>
+                  <span v-if="data.reasonid==186 || data.reasonid==123" @click="showAWBNo('Payment Mode Changed', data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">AWB No</span>
                   <br v-if="data.reasonid==186 || data.reasonid==123">
-                  <span v-if="data.cardawbnocount!=''" @click="showAWBNo('Card/Other Issue', data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">Card/Other</span>
+                  <span v-if="data.cardawbnocount!='' && data.reasonid!=186 && data.reasonid!=123" @click="showAWBNo('Card/Other Issue', data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">Card/Other</span>
                 </td>
               </tr>
             </tbody>
@@ -410,7 +410,7 @@
               </button>
             </div>
             <div class="modal-bodyfrm">
-              <h5 style="font-size: 15px; padding: 10px; color:darkolivegreen;">{{awbnumber}}</h5>
+              <h5 style="font-size: 15px; padding: 10px; color:#074202;">{{awbnumber}}</h5>
             </div>
           </div>
         </div>

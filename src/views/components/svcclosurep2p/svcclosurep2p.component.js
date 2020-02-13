@@ -77,6 +77,7 @@ export default {
       deldis:false,
       cassnat:false,
       cariss:false,
+      paychg:false,
       modalAWBNoShow:false,
       awbnotype:'',
       awbnumber:''
@@ -693,8 +694,8 @@ export default {
               error.innerHTML = "Total denomination & deposit amount should be same, please check.";
               error.style.display = "block";
           }else{
-            //78,152
-            if(this.AWBNo && (this.cariss || this.deldis)){
+            //78,152,186
+            if(this.AWBNo && (this.cariss || this.deldis || this.paychg)){
               this.cardawbno(event);
             }else{
               if(event.target[6].id=="DepositSlip" && this.uploadFileList.length<=0){
@@ -725,7 +726,7 @@ export default {
       this.uploadFileList = []; this.reasonFileList = []; this.BankList = []; this.exception = []; this.exceptionList = []; this.exceptionArr = [];
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.ReasonSlip = this.Reason = '';
       this.AWBNo = '';
-      this.amoimp = this.venrec = this.deldis = this.cassnat = this.cariss = false;
+      this.amoimp = this.venrec = this.deldis = this.cassnat = this.cariss = this.paychg = false;
       $('#denomlist input[type="text"]').val(0); $('#denomlist input[type="number"]').val('');
       document.getElementById("d_a").style.display = "none";
       this.GetShipmentUpdate();
@@ -762,7 +763,7 @@ export default {
     },
 
     setReasonId(){
-      this.amoimp = this.venrec = this.deldis = this.cassnat = this.cariss = false;
+      this.amoimp = this.venrec = this.deldis = this.cassnat = this.cariss = this.paychg = false;
       this.CardAmount = 0; this.ReasonAmount = ''; this.AWBNo = ''; this.reasonFileList = [];
       if(this.Reason){
         if((process.env.NODE_ENV == 'development' && this.Reason == 65) || (process.env.NODE_ENV == 'production' && this.Reason == 120)){
@@ -775,13 +776,15 @@ export default {
           this.cassnat = true;
         }else if((process.env.NODE_ENV == 'development' && this.Reason == 78) || (process.env.NODE_ENV == 'production' && this.Reason == 78)){
           this.cariss = true;
+        }else if((process.env.NODE_ENV == 'development' && this.Reason == 186) || (process.env.NODE_ENV == 'production' && this.Reason == 123)){
+          this.paychg = true;
         }
       }
     },
 
     changeDepType(){
      this.unmatchedAmt = this.CardAmount = 0; this.Reason = ''; this.ReasonAmount = ''; this.AWBNo = ''; this.reasonFileList = [];
-     this.amoimp = this.venrec = this.deldis = this.cassnat = this.cariss = false;
+     this.amoimp = this.venrec = this.deldis = this.cassnat = this.cariss = this.paychg = false;
     }
   }
 }
