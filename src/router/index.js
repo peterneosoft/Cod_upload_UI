@@ -34,6 +34,7 @@ import DeliveredToInScan from '@/views/components/changeshipmentstatus'
 import PaymentMode from '@/views/components/paymentmode'
 import SRSummary from '@/views/components/srsummary'
 import AWBDifference from '@/views/components/awbdifference'
+import SRPendingLimit from '@/views/components/srpendinglimit'
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -249,6 +250,23 @@ const router = new Router({
               },
               {
                 name: 'AWB Difference'
+              }
+            ]
+          },
+        },
+        {
+          path: 'srpendinglimit',
+          name: 'SR Pending Limit',
+          component: SRPendingLimit,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'SR Pending Limit'
               }
             ]
           },

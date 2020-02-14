@@ -1,0 +1,59 @@
+<section class="user">
+  <div class="animated fadeIn">
+    <div class="col-md-12 mb-2">
+      <div class="card">
+        <div class="card-header filter_main">
+          <i class=" fa fa-list list"></i> SR Pending Limit
+        </div>
+        <div class="card-body">
+          <form v-on:submit.prevent="onSubmit" class="form-horizontal">
+            <div class="form-group row">
+              <div class="col-md-4">
+                <label>Pending Limit <font color="red">*</font></label>
+                <b-input-group left="<i class='fa fa-inr'></i>">
+                  <vue-element-loading spinner="mini-spinner" color="#FF6700"/>
+                  <input v-bind:disabled="disableButton" class="form-control" id="srpendinglimit" placeholder="Enter pending limit" v-model="srpendinglimit" type="text" name="srpendinglimit"
+                     onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8" v-validate="{required: true}"
+                     v-bind:class="{'form-control': true, 'error': errors.has('srpendinglimit') }" >
+                </b-input-group>
+                <span v-show="errors.has('srpendinglimit')" class="text-danger">SR pending limit is required.</span>
+              </div>
+            </div>
+
+            <div class="card-footer">
+              <button class="btn btn-sm btn-primary" v-bind:disabled="disableButton" type="submit"><i class="fa fa-dot-circle-o"></i> Submit</button>
+              <button class="btn btn-sm btn-danger" v-bind:disabled="disableButton" type="reset" @click="resetForm()"><i class="fa fa-ban"></i> Clear</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-12 mb-2">
+      <div class="card-headerfrm" style="margin-bottom: 15px;">
+        <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
+        <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+        <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+          <thead>
+            <tr class="text-primary">
+              <th class="text-center tableheader"><b>#</b></th>
+              <th class="text-center tableheader"><b>SR Pending Limit ( <i class='fa fa-inr'></i> )</b></th>
+              <th class="text-center tableheader"><b>Action</b></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="resultCount==0"><td colspan="3" align="center">No record found</td></tr>
+
+            <tr>
+              <td scope="row" class="text-center"><strong>1</strong></td>
+              <td class="text-center">{{srPendingLimit}}</td>
+              <td class="text-center"><i @click.prevent="getSRPendingRowData(srPendingLimit), editSRPendingLimit = 'true'" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></td>
+            </tr>
+          </tbody>
+        </table><br>
+        <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+        </paginate>
+      </div>
+    </div>
+  </div>
+</section>
