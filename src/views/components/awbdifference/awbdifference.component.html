@@ -22,26 +22,25 @@
                 </div>
 
                 <div class="col-md-4">
-                  <label>Zone <font color="red">*</font></label>
+                  <label>Zone</label>
                   <b-input-group left="<i class='fa fa-list'></i>" style="height: 44px;">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="allZoneLoading" />
-                    <select name="zone" id="zone" class="form-control" v-model="zone" v-on:change="getHubData" v-validate="'required'" style="height: 44px;" v-bind:class="{'form-control': true, 'error': errors.has('zone') }">
+                    <select name="zone" id="zone" class="form-control" v-model="zone" v-on:change="getHubData" style="height: 44px;">
                       <option value="">--Select--</option>
                       <option v-for="zone_obj in zoneList" v-bind:value="zone_obj.hubzoneid" >{{zone_obj.hubzonename}}</option>
                     </select>
                   </b-input-group>
-                  <span v-show="errors.has('zone')" class="text-danger">Zone is required.</span>
                 </div>
 
                 <div class="col-md-4">
-                  <label>Hub Name <font color="red">*</font></label>
+                  <label>Hub Name</label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="hubLoading" />
-                    <Multiselect :options="hubList" name="HubId" id="HubId" v-model="HubId" v-validate="{required: true}" v-bind:class="{'error': errors.has('HubId') }" placeholder="Select Hub" label="HubName" track-by="HubID" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                    <Multiselect :options="hubList" name="HubId" id="HubId" v-model="HubId" placeholder="Select Hub" label="HubName" track-by="HubID" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
                        <template slot="noResult"><p>No Record Found.</p></template>
                     </Multiselect>
                   </b-input-group>
-                  <span v-show="errors.has('HubId')" class="text-danger">Hub name is required.</span>
+                  <span class="text-danger">Note: Please select Hub Name after Zone.</span>
                 </div>
               </div>
 

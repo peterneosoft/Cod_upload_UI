@@ -10,14 +10,14 @@
                 <tr>
                   <td>
                     <b style="font-size: 13px;">Today's SR Closure Count :</b>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <u @click="showSRNameModal('Completed Closure SR Name', todayClosureList)" style="cursor:pointer; color: rgb(79, 151, 39); font-size: 15px;">
+                    <u @click="showSRNameModal('SR Name ( Today`s Closure )', todayClosureList)" style="cursor:pointer; color: rgb(79, 151, 39); font-size: 15px;">
                       <span class="fa-stack"><span class="fa fa-circle-o fa-stack-2x" style="font-size: 39px; margin-top: -5px;"></span>
                       <strong class="fa-stack-1x" style="margin-left: 2px;">{{closureCount}}</strong></span>
                     </u>
                   </td>
                   <td>
                     <b style="font-size: 13px;">Pending SR Closure Count :</b>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <u @click="showSRNameModal('Pending Closure SR Name', pendingClosureList)" style="cursor:pointer; color: rgb(221, 16, 16); font-size: 15px;">
+                    <u @click="showSRNameModal('SR Name ( Pending Closure )', pendingClosureList)" style="cursor:pointer; color: rgb(221, 16, 16); font-size: 15px;">
                       <span class="fa-stack"><span class="fa fa-circle-o fa-stack-2x" style="font-size: 39px; margin-top: -5px;"></span>
                       <strong class="fa-stack-1x" style="margin-left: 2px;">{{pendingCount}}</strong></span>
                     </u>

@@ -145,9 +145,9 @@
                     <td>
                       <span v-if="CODLedger_List.awbnocount!='' && CODLedger_List.reasonid!=186 && CODLedger_List.reasonid!=123" @click="showAWBNo('Exception', CODLedger_List.awbno)" style="cursor:pointer; color: rgb(25,25,112);">Exception</span>
                       <br v-if="CODLedger_List.awbnocount!='' && CODLedger_List.cardawbnocount!=''">
-                      <span v-if="CODLedger_List.reasonid==186 || CODLedger_List.reasonid==123" @click="showAWBNo('Payment Mode Changed', CODLedger_List.awbno)" style="cursor:pointer; color: rgb(25,25,112);">AWB No</span>
+                      <span v-if="CODLedger_List.reasonid==186 || CODLedger_List.reasonid==123" @click="showAWBNo('Payment Mode Changed', CODLedger_List.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">AWB No</span>
                       <br v-if="CODLedger_List.reasonid==186 || CODLedger_List.reasonid==123">
-                      <span v-if="CODLedger_List.cardawbnocount!=''" @click="showAWBNo('Card/Other Issue', CODLedger_List.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">Card/Other</span>
+                      <span v-if="CODLedger_List.cardawbnocount!='' && CODLedger_List.reasonid!=186 && CODLedger_List.reasonid!=123" @click="showAWBNo('Card/Other Issue', CODLedger_List.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">Card/Other</span>
                     </td>
                   </tr>
                 </tbody>
@@ -168,7 +168,7 @@
                  </button>
                </div>
                <div class="modal-bodyfrm">
-                 <h5 style="font-size: 15px; padding: 10px; color:darkolivegreen;">{{awbnumber}}</h5>
+                 <h5 style="font-size: 15px; padding: 10px; color:#074202;">{{awbnumber}}</h5>
                </div>
              </div>
            </div>
