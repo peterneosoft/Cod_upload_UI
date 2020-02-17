@@ -343,7 +343,11 @@ export default {
           }
         })
         .then(result => {
-          this.ReasonList = result.data.Reasons.data;
+          if(result.data.Reasons.code==200){
+            this.ReasonList = result.data.Reasons.data.filter(item => (item['ReasonsID'] != 186 && item['ReasonsID'] != 123));
+          }else{
+            console.log('Error', result.data.Reasons.message);
+          }
         }, error => {
           console.error(error)
         })

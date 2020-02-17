@@ -106,7 +106,6 @@ export default {
           if(response.data.code==200){
               this.isLoading = false;
               this.$router.push(permissiondata[0].url);
-              location.reload(true);
           }else{
             this.isLoading = false;
             this.$alertify.error("Logging Failed");
