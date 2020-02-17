@@ -770,7 +770,7 @@ export default {
       this.amoimp = this.venrec = this.deldis = this.cassnat = this.cariss = this.paychg = false;
       this.CardAmount = 0; this.ReasonAmount = ''; this.AWBNo = ''; this.reasonFileList = [];
       if(this.Reason){
-        if((process.env.NODE_ENV == 'development' && this.Reason == 65) || (process.env.NODE_ENV == 'production' && this.Reason == 120)){
+        if(this.Reason == 65){
           this.amoimp = true;
         }else if((process.env.NODE_ENV == 'development' && this.Reason == 119) || (process.env.NODE_ENV == 'production' && this.Reason == 98)){
           this.venrec = true;
