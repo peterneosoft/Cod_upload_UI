@@ -699,7 +699,7 @@ export default {
               error.style.display = "block";
           }else{
             //78,152,186
-            if(this.AWBNo && (this.cariss || this.deldis || this.paychg)){
+            if(this.AWBNo && (this.cariss || this.deldis || this.paychg || this.cassnat)){
               this.cardawbno(event);
             }else{
               if(event.target[6].id=="DepositSlip" && this.uploadFileList.length<=0){
