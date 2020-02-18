@@ -371,7 +371,7 @@ export default {
           }
         })
         .then(result => {
-          this.ReasonList = result.data.Reasons.data;
+          this.ReasonList = result.data.Reasons.data.filter(item => (item['ReasonsID'] != 185 && item['ReasonsID'] != 122));
         }, error => {
           console.error(error)
         })
