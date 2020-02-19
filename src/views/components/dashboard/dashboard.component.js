@@ -167,7 +167,6 @@ export default {
 
     this.getZoneData();
     this.getHubWiseCollectionData();
-    this.getMaxMinCODCollectionDataSearch();
     this.getPieShipmentPercent();
 
     var date = new Date();
@@ -367,7 +366,6 @@ export default {
         }else{
           this.getPieShipmentPercentSearch()
           this.getHubWiseCollectionDataSearch()
-          this.getMaxMinCODCollectionDataSearch()
         }
       }else{
         axios({
@@ -383,7 +381,6 @@ export default {
             this.hubArray.push(result.data.hubids)
             this.getPieShipmentPercentSearch()
             this.getHubWiseCollectionDataSearch()
-            this.getMaxMinCODCollectionDataSearch()
           }else{
             this.hubCollectionList  = [];
             this.resultHubCollCount  = 0;
@@ -486,7 +483,7 @@ export default {
       this.input = ({
           hubids: [this.localhubid]
       })
-      this.amountLoading = true; this.barLoading = true; this.pieLoading = true;
+      this.amountLoading = true; this.barLoading = true; this.collectionLoading = false;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'gethubwisecollection',
@@ -497,12 +494,16 @@ export default {
         })
         .then(result => {
           this.resultdate = result.data.fdate+" to "+result.data.tdate
+
           if(result.data.code == 200){
             this.hubCollectionList = result.data.data;
             this.pendPerc = result.data.pendPerc;
             this.recPerc = result.data.recPerc;
             this.totPerc = result.data.totPerc;
             this.resultHubCollCount = result.data.data.length;
+
+            this.maxCOD = result.data.MaxCOD;
+            this.minCOD = result.data.MinCOD;
 
             let y = [this.pendPerc,this.recPerc,this.totPerc]
             let name = ["Pending","Received","Total Amount"]
@@ -516,11 +517,20 @@ export default {
               barDataObj ={}
             }
             this.hubArray=[];
-            this.amountLoading = false; this.barLoading = false; this.pieLoading = false;
-          }
-          if(result.data.code == 204){
+            this.amountLoading = false; this.barLoading = false; this.collectionLoading = false;
+          }else{
              this.hubCollectionList = [];
              this.resultHubCollCount  = 0
+
+             this.maxCOD = {
+               hubname:this.localhubname,
+               received:'0.00',
+             };
+             this.minCOD = {
+               hubname:this.localhubname,
+               received:'0.00',
+             };
+
              let y = [0,0,0]
              let name = ["Pending","Received","Total Amount"]
              let barDataObj = {};
@@ -533,10 +543,10 @@ export default {
                barDataObj ={}
              }
              this.hubArray=[];
-             this.amountLoading = false; this.barLoading = false; this.pieLoading = false;
+             this.amountLoading = false; this.barLoading = false; this.collectionLoading = false;
           }
         }, error => {
-          this.amountLoading = false; this.barLoading = false; this.pieLoading = false;
+          this.amountLoading = false; this.barLoading = false; this.collectionLoading = false;
           console.error(error)
         })
     },
@@ -557,7 +567,7 @@ export default {
           fromdate: this.FromDate,
           todate: this.ToDate,
       })
-      this.amountLoading = true; this.barLoading = true; this.pieLoading = true;
+      this.amountLoading = true; this.barLoading = true; this.collectionLoading = true;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'gethubwisecollection',
@@ -575,6 +585,9 @@ export default {
             this.totPerc = result.data.totPerc;
             this.resultHubCollCount = result.data.data.length;
 
+            this.maxCOD = result.data.MaxCOD;
+            this.minCOD = result.data.MinCOD;
+
             let y = [this.pendPerc,this.recPerc,this.totPerc]
             let name = ["Pending","Received","Total Amount"]
             let barDataObj = {};
@@ -587,12 +600,21 @@ export default {
               barDataObj ={}
             }
             this.resultdata = false;
-            this.amountLoading = false; this.barLoading = false; this.pieLoading = false;
-          }
-          if(result.data.code == 204){
+            this.amountLoading = false; this.barLoading = false; this.collectionLoading = false;
+          }else{
              this.resultdata = true;
              this.hubCollectionList = [];
              this.resultHubCollCount  = 0;
+
+             this.maxCOD = {
+               hubname:this.localhubname,
+               received:'0.00',
+             };
+             this.minCOD = {
+               hubname:this.localhubname,
+               received:'0.00',
+             };
+
              let y = [0,0,0]
              let name = ["Pending","Received","Total Amount"]
              let barDataObj = {};
@@ -605,93 +627,10 @@ export default {
                barDataObj ={}
              }
              this.hubArray=[];
-             this.amountLoading = false; this.barLoading = false; this.pieLoading = false;
+             this.amountLoading = false; this.barLoading = false; this.collectionLoading = false;
           }
         }, error => {
-          this.amountLoading = false; this.barLoading = false; this.pieLoading = false;
-          console.error(error)
-        })
-    },
-
-    //to get Hub Collection
-    getMaxMinCODCollectionData() {
-      this.input = ({
-          hubids: [this.localhubid]
-      })
-      this.collectionLoading = true;
-      axios({
-          method: 'POST',
-          url: apiUrl.api_url + 'getMaxMinCODCollection',
-          data: this.input,
-          headers: {
-            'Authorization': 'Bearer '+this.myStr
-          }
-        })
-        .then(result => {
-          this.resultdate = result.data.fdate+" to "+result.data.tdate
-          if(result.data.code == 200){
-            this.maxCOD = result.data.MaxCOD;
-            this.minCOD = result.data.MinCOD;
-            this.collectionLoading = false;
-          }else{
-            this.maxCOD = {
-              hubname:this.localhubname,
-              value:'0.00',
-            };
-            this.minCOD = {
-              hubname:this.localhubname,
-              value:'0.00',
-            };
-            this.collectionLoading = false;
-            //this.$alertify.success("No Record Found");
-          }
-        }, error => {
-          this.collectionLoading = false;
-          console.error(error)
-        })
-    },
-
-    getMaxMinCODCollectionDataSearch() {
-      if(this.FromDate == ""){
-       this.FromDate =  null
-      }
-      if(this.ToDate == ""){
-       this.ToDate =  null
-      }
-      this.input = ({
-          hubids: (this.hubArray[0])?this.hubArray[0]:0,
-          fromdate: this.FromDate,
-          todate: this.ToDate
-      })
-      this.collectionLoading = true;
-      axios({
-          method: 'POST',
-          url: apiUrl.api_url + 'getMaxMinCODCollection',
-          data: this.input,
-          headers: {
-            'Authorization': 'Bearer '+this.myStr
-          }
-        })
-        .then(result => {
-          this.resultdate = result.data.fdate+" to "+result.data.tdate
-          if(result.data.code == 200){
-            this.maxCOD = result.data.MaxCOD;
-            this.minCOD = result.data.MinCOD;
-            this.collectionLoading = false;
-          }
-          if(result.data.code == 204){
-            this.maxCOD = {
-              hubname:this.localhubname,
-              value:'0.00',
-            };
-            this.minCOD = {
-              hubname:this.localhubname,
-              value:'0.00',
-            };
-            this.collectionLoading = false;
-          }
-        }, error => {
-          this.collectionLoading = false;
+          this.amountLoading = false; this.barLoading = false; this.collectionLoading = false;
           console.error(error)
         })
     },
