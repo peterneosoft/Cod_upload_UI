@@ -118,17 +118,23 @@
                 <td>{{StatusVal}}</td>
                 <td>
                   <form v-on:submit.prevent="onUpdate(data.svcledgerid, data)">
-                    <select style="width: 210px;" v-model="form.finreason[data.svcledgerid]"  v-bind:name="setid('finreason', data.svcledgerid)" v-bind:id="setid('finreason', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('finreason'+data.svcledgerid) }" :disabled="data.statusid == 6 ? true : false">
+                    <select style="width: 220px;" v-model="form.finreason[data.svcledgerid]"  v-bind:name="setid('finreason', data.svcledgerid)" v-bind:id="setid('finreason', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('finreason'+data.svcledgerid) }" :disabled="data.statusid == 6 ? true : false">
                       <option value="">--Select--</option>
                       <option v-for="finreason_obj in FinanceReasonList" v-bind:value="finreason_obj.ReasonsID" >{{finreason_obj.Reason}}</option>
                     </select>
                     <span v-bind:id="setid('finR', data.svcledgerid)" class="text-danger"></span>
+
                     <br v-show="form.finreason[data.svcledgerid] > 0 && form.hide[data.svcledgerid] == 0">
                     <input v-show="form.finreason[data.svcledgerid] > 0 && form.hide[data.svcledgerid] == 0" v-model="form.financeconfirmdate[data.svcledgerid]" v-bind:name="setid('financeconfirmdate', data.svcledgerid)" v-bind:id="setid('financeconfirmdate', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('financeconfirmdate'+data.svcledgerid) }" type="date">
                     <span v-bind:id="setid('finD', data.svcledgerid)" class="text-danger"></span>
-                    <br v-show="([84,124,187].includes(form.finreason[data.svcledgerid])) && form.hide[data.svcledgerid] == 0">
-                    <input v-show="([84,124,187].includes(form.finreason[data.svcledgerid])) && form.hide[data.svcledgerid] == 0" v-model="form.confirmamount[data.svcledgerid]" v-bind:name="setid('confirmamount', data.svcledgerid)" v-bind:id="setid('confirmamount', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('confirmamount'+data.svcledgerid) }" type="text" placeholder="Enter Received Amount">
+
+                    <br v-show="([84,124,187,125,218].includes(form.finreason[data.svcledgerid])) && form.hide[data.svcledgerid] == 0">
+                    <input v-show="([84,124,187,125,218].includes(form.finreason[data.svcledgerid])) && form.hide[data.svcledgerid] == 0" v-model="form.confirmamount[data.svcledgerid]" v-bind:name="setid('confirmamount', data.svcledgerid)" v-bind:id="setid('confirmamount', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('confirmamount'+data.svcledgerid) }" type="text" placeholder="Enter Received Amount">
                     <span v-bind:id="setid('finA', data.svcledgerid)" class="text-danger"></span>
+
+                    <br v-show="([125,218].includes(form.finreason[data.svcledgerid])) && form.hide[data.svcledgerid] == 0">
+                    <input v-show="([125,218].includes(form.finreason[data.svcledgerid])) && form.hide[data.svcledgerid] == 0" v-model="form.recoveryamount[data.svcledgerid]" v-bind:name="setid('recoveryamount', data.svcledgerid)" v-bind:id="setid('recoveryamount', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('recoveryamount'+data.svcledgerid) }" type="text" placeholder="Enter Debit/Recovery Amount">
+                    <span v-bind:id="setid('finDR', data.svcledgerid)" class="text-danger"></span>
                     <span v-show="form.hide[data.svcledgerid] == 0"><br><button class="btn btn-sm btn-primary" type="submit" :disabled = "data.statusid == 6" ><i class="fa fa-dot-circle-o"></i> Submit</button></span>
                 </form>
                 </td>

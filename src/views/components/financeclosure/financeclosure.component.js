@@ -39,6 +39,7 @@ export default {
           finreason: [],
           financeconfirmdate: [],
           confirmamount: [],
+          recoveryamount: [],
           hide: []
       },
       zoneAmtList: [],
@@ -284,7 +285,7 @@ export default {
 
     updateSVCFinanceledger(elem, findata) {
 
-      let insertflag= 0; let ledgerid = elem; let financeconfirmdate = ''; let confirmamount = 0;
+      let insertflag= 0; let ledgerid = elem; let financeconfirmdate = ''; let confirmamount = 0; let recoveryamount = 0;
 
       let finreasonid = document.getElementById('finreason'+ledgerid).value;
 
@@ -293,9 +294,16 @@ export default {
          return false;
       }else{
         document.getElementById("finR"+ledgerid).innerHTML="";
-        financeconfirmdate = document.getElementById('financeconfirmdate'+ledgerid).value;
 
-        if(finreasonid == 84 || finreasonid == 124 || finreasonid == 187){
+        financeconfirmdate = document.getElementById('financeconfirmdate'+ledgerid).value;
+        if(financeconfirmdate==null || financeconfirmdate==undefined || financeconfirmdate==""){
+          document.getElementById("finD"+ledgerid).innerHTML="Date is required.";
+          return false;
+        }else{
+          document.getElementById("finD"+ledgerid).innerHTML="";
+        }
+
+        if(finreasonid == 84 || finreasonid == 124 || finreasonid == 187 || finreasonid == 125 || finreasonid == 218){
           confirmamount = document.getElementById('confirmamount'+ledgerid).value;
 
           if(confirmamount==null || confirmamount==undefined || confirmamount==""){
@@ -304,14 +312,17 @@ export default {
           }else{
             document.getElementById("finA"+ledgerid).innerHTML="";
           }
+
+          recoveryamount = document.getElementById('recoveryamount'+ledgerid).value;
+
+          if((finreasonid == 125 || finreasonid == 218) && (recoveryamount==null || recoveryamount==undefined || recoveryamount=="")){
+            document.getElementById("finDR"+ledgerid).innerHTML="Self Debit/Client Recovery amount is required.";
+            return false;
+          }else{
+            document.getElementById("finDR"+ledgerid).innerHTML="";
+          }
         }
 
-        if(financeconfirmdate==null || financeconfirmdate==undefined || financeconfirmdate==""){
-          document.getElementById("finD"+ledgerid).innerHTML="Date is required.";
-          return false;
-        }else{
-          document.getElementById("finD"+ledgerid).innerHTML="";
-        }
         insertflag=1;
       }
 
@@ -321,6 +332,7 @@ export default {
             financereasonid: parseInt(finreasonid),
             financeconfirmdate: financeconfirmdate,
             confirmamount: confirmamount,
+            recoveryamount: recoveryamount,
             hubid: findata.hubid,
             username: this.localuserid,
             deliverydate: findata.deliverydate,
