@@ -137,7 +137,7 @@
                     <span v-show="([125,218].includes(form.finreason[data.svcledgerid])) && form.hide[data.svcledgerid] == 0" class="text" style="font-size: 11px; color: rgb(255, 0, 0);">Note: Please enter comma (,) seperated AWB number.</span>
                     <br v-show="([125,218].includes(form.finreason[data.svcledgerid])) && form.hide[data.svcledgerid] == 0">
                     <span v-bind:id="setid('finDR', data.svcledgerid)" class="text-danger"></span>
-                    <span v-show="form.hide[data.svcledgerid] == 0"><br><button class="btn btn-sm btn-primary" type="submit" :disabled = "data.statusid == 6" ><i class="fa fa-dot-circle-o"></i> Submit</button></span>
+                    <span v-show="form.hide[data.svcledgerid] == 0"><br><button class="btn btn-sm btn-primary" type="submit" :disabled = "(data.statusid == 6) || (form.button[data.svcledgerid])" ><i class="fa fa-dot-circle-o"></i> Submit</button></span>
                 </form>
                 </td>
                 <td>{{data.deposittype}}</td>

@@ -42,7 +42,8 @@ export default {
           financeconfirmdate: [],
           confirmamount: [],
           AWBNo: [],
-          hide: []
+          hide: [],
+          button:[]
       },
       zoneAmtList: [],
       totalzoneamt: '0.00',
@@ -366,6 +367,8 @@ export default {
         insertflag=1;
       }
 
+      this.form.button[ledgerid] = true;
+
       if(insertflag){
         this.input = ({
             svcledgerid: ledgerid,
@@ -400,10 +403,12 @@ export default {
           } else {
             this.$alertify.error(response.data.message)
           }
+          this.form.button[ledgerid] = false;
         })
         .catch((httpException) => {
-            console.error('exception is:::::::::', httpException)
-            this.$alertify.error('Error Occured');
+          this.form.button[ledgerid] = false;
+          console.error('exception is:::::::::', httpException)
+          this.$alertify.error('Error Occured');
         });
       }
     },
