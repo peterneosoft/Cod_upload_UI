@@ -103,6 +103,8 @@
                 <span v-if="data.reasonid==186 || data.reasonid==123" @click="showAWBNo('Payment Mode Changed', data.awbno)" style="cursor:pointer; color: rgb(25,25,112);">AWB No</span>
                 <br v-if="data.reasonid==186 || data.reasonid==123">
                 <span v-if="data.cardawbnocount!=''" @click="showAWBNo('Card/Other Issue', data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">Card/Other</span>
+                <br v-if="data.recoveryawbcount!=''">
+                <span v-if="data.recoveryawbcount!=''" @click="showAWBNo('Self Debit/Recovery', data.recoveryawb)" style="cursor:pointer; color: rgb(25,25,112);">Recovery</span>
               </td>
             </tr>
           </tbody>
