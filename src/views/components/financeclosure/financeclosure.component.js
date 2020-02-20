@@ -352,7 +352,7 @@ export default {
           document.getElementById("finD"+ledgerid).innerHTML="";
         }
 
-        if(finreasonid == 84 || finreasonid == 124 || finreasonid == 187){
+        if(finreasonid == 84 || finreasonid == 124 || finreasonid == 187 || finreasonid == 125 || finreasonid == 218){
           confirmamount = document.getElementById('confirmamount'+ledgerid).value;
 
           if(confirmamount==null || confirmamount==undefined || confirmamount==""){
