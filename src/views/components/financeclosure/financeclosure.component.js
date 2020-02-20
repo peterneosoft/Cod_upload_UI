@@ -332,7 +332,7 @@ export default {
             financereasonid: parseInt(finreasonid),
             financeconfirmdate: financeconfirmdate,
             confirmamount: confirmamount,
-            recoveryamount: recoveryamount,
+            recoveryamount: recoveryamount ? recoveryamount : 0,
             hubid: findata.hubid,
             username: this.localuserid,
             deliverydate: findata.deliverydate,

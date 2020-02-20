@@ -73,11 +73,13 @@ export default {
       exceptionArr:[],
       exceptionAmount:0,
       amoimp:false,
-      venrec:false,
+      vendrec:false,
       deldis:false,
       cassnat:false,
       cariss:false,
       paychg:false,
+      casstol:false,
+      theftstol:false,
       modalAWBNoShow:false,
       awbnotype:'',
       awbnumber:''
@@ -699,7 +701,7 @@ export default {
               error.style.display = "block";
           }else{
             //78,152,186
-            if(this.AWBNo && (this.cariss || this.deldis || this.paychg || this.cassnat)){
+            if(this.AWBNo && (this.cariss || this.deldis || this.paychg || this.cassnat || this.casstol || this.theftstol || this.vendrec)){
               this.cardawbno(event);
             }else{
               if(event.target[6].id=="DepositSlip" && this.uploadFileList.length<=0){
@@ -730,7 +732,7 @@ export default {
       this.uploadFileList = []; this.reasonFileList = []; this.BankList = []; this.exception = []; this.exceptionList = []; this.exceptionArr = [];
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.ReasonSlip = this.Reason = '';
       this.AWBNo = '';
-      this.amoimp = this.venrec = this.deldis = this.cassnat = this.cariss = this.paychg = false;
+      this.amoimp = this.vendrec = this.deldis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = false;
       $('#denomlist input[type="text"]').val(0); $('#denomlist input[type="number"]').val('');
       document.getElementById("d_a").style.display = "none";
       this.GetShipmentUpdate();
@@ -767,13 +769,13 @@ export default {
     },
 
     setReasonId(){
-      this.amoimp = this.venrec = this.deldis = this.cassnat = this.cariss = this.paychg = false;
+      this.amoimp = this.vendrec = this.deldis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = false;
       this.CardAmount = 0; this.ReasonAmount = ''; this.AWBNo = ''; this.reasonFileList = [];
       if(this.Reason){
         if(this.Reason == 65){
           this.amoimp = true;
         }else if((process.env.NODE_ENV == 'development' && this.Reason == 119) || (process.env.NODE_ENV == 'production' && this.Reason == 98)){
-          this.venrec = true;
+          this.vendrec = true;
         }else if((process.env.NODE_ENV == 'development' && this.Reason == 152) || (process.env.NODE_ENV == 'production' && this.Reason == 121)){
           this.deldis = true;
         }else if((process.env.NODE_ENV == 'development' && this.Reason == 77) || (process.env.NODE_ENV == 'production' && this.Reason == 77)){
@@ -782,13 +784,17 @@ export default {
           this.cariss = true;
         }else if((process.env.NODE_ENV == 'development' && this.Reason == 186) || (process.env.NODE_ENV == 'production' && this.Reason == 123)){
           this.paychg = true;
+        }else if((process.env.NODE_ENV == 'development' && this.Reason == 69) || (process.env.NODE_ENV == 'production' && this.Reason == 69)){
+          this.casstol = true;
+        }else if((process.env.NODE_ENV == 'development' && this.Reason == 82) || (process.env.NODE_ENV == 'production' && this.Reason == 82)){
+          this.theftstol = true;
         }
       }
     },
 
     changeDepType(){
      this.unmatchedAmt = this.CardAmount = 0; this.Reason = ''; this.ReasonAmount = ''; this.AWBNo = ''; this.reasonFileList = [];
-     this.amoimp = this.venrec = this.deldis = this.cassnat = this.cariss = this.paychg = false;
+     this.amoimp = this.vendrec = this.deldis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = false;
     }
   }
 }
