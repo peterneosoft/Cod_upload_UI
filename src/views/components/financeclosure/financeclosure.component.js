@@ -28,6 +28,8 @@ export default {
       pagecount: 0,
       pageno: 0,
       count: 0,
+      AWBAmount: 0,
+      AWBArr: '',
       hubList: [],
       zoneList: [],
       listFinanceledgerData: [],
@@ -39,7 +41,7 @@ export default {
           finreason: [],
           financeconfirmdate: [],
           confirmamount: [],
-          recoveryamount: [],
+          AWBNo: [],
           hide: []
       },
       zoneAmtList: [],
@@ -51,7 +53,11 @@ export default {
       hubLoading: false,
       modalAWBNoShow:false,
       awbnotype:'',
-      awbnumber:''
+      awbnumber:'',
+      modalShow:false,
+      cardModalShow:false,
+      findata:[],
+      elem:''
     }
   },
 
@@ -283,9 +289,52 @@ export default {
       });
     },
 
+    showCardModal(AWBAmount, elem, findata){
+      this.$refs.myCardModalRef.show(AWBAmount)
+    },
+    hideCardModal(ele, findata) {
+      if(ele == 0){
+        this.$refs.myCardModalRef.hide()
+        this.updateSVCFinanceledger(this.elem, this.findata);
+      }else{
+        this.$refs.myCardModalRef.hide()
+      }
+    },
+    closeStatusRoleModal() {
+      this.modalShow = false
+      this.cardModalShow = false
+    },
+
+    cardawbno(elem, findata){
+
+      axios({
+          method: 'POST',
+          'url': apiUrl.api_url + 'getAWBNo',
+          'data': ({AWBNo: this.AWBArr}),
+          headers: {
+              'Authorization': 'Bearer '+this.myStr
+          }
+      })
+      .then((awbres) => {
+        if (awbres.data.code == 200) {
+          if(awbres.data.invalidAwbNo){
+            this.$alertify.error("Some of AWB numbers are invalid, please check: "+awbres.data.invalidAwbNo); return false;
+          }else{
+            this.AWBAmount = awbres.data.shipment_amount;
+            this.showCardModal(this.AWBAmount, elem, findata);
+          }
+        } else{
+          this.$alertify.error("AWB numbers are invalid, please check."); return false;
+        }
+      })
+      .catch((httpException) => {
+        this.$alertify.error('Error occured'); return false;
+      });
+    },
+
     updateSVCFinanceledger(elem, findata) {
 
-      let insertflag= 0; let ledgerid = elem; let financeconfirmdate = ''; let confirmamount = 0; let recoveryamount = 0;
+      let insertflag= 0; let ledgerid = elem; let financeconfirmdate = ''; let confirmamount = 0;
 
       let finreasonid = document.getElementById('finreason'+ledgerid).value;
 
@@ -303,7 +352,7 @@ export default {
           document.getElementById("finD"+ledgerid).innerHTML="";
         }
 
-        if(finreasonid == 84 || finreasonid == 124 || finreasonid == 187 || finreasonid == 125 || finreasonid == 218){
+        if(finreasonid == 84 || finreasonid == 124 || finreasonid == 187){
           confirmamount = document.getElementById('confirmamount'+ledgerid).value;
 
           if(confirmamount==null || confirmamount==undefined || confirmamount==""){
@@ -311,15 +360,6 @@ export default {
             return false;
           }else{
             document.getElementById("finA"+ledgerid).innerHTML="";
-          }
-
-          recoveryamount = document.getElementById('recoveryamount'+ledgerid).value;
-
-          if((finreasonid == 125 || finreasonid == 218) && (recoveryamount==null || recoveryamount==undefined || recoveryamount=="")){
-            document.getElementById("finDR"+ledgerid).innerHTML="Self Debit/Client Recovery amount is required.";
-            return false;
-          }else{
-            document.getElementById("finDR"+ledgerid).innerHTML="";
           }
         }
 
@@ -332,7 +372,8 @@ export default {
             financereasonid: parseInt(finreasonid),
             financeconfirmdate: financeconfirmdate,
             confirmamount: confirmamount,
-            recoveryamount: recoveryamount ? recoveryamount : 0,
+            AWBNo: (this.AWBArr)?this.AWBArr:new Array(),
+            recoveryamount: this.AWBAmount,
             hubid: findata.hubid,
             username: this.localuserid,
             deliverydate: findata.deliverydate,
@@ -369,7 +410,29 @@ export default {
 
     onUpdate: function(elem, findata) {
       if(elem){
-        this.updateSVCFinanceledger(elem, findata);
+        let ledgerid = elem; this.AWBArr = ''; this.AWBAmount = 0; this.findata = []; this.elem = '';
+
+        let finreasonid = document.getElementById('finreason'+ledgerid).value;
+        this.AWBArr = document.getElementById('AWBNo'+ledgerid).value;
+
+        if((finreasonid == 125 || finreasonid == 218) && (this.AWBArr==null || this.AWBArr==undefined || this.AWBArr=="")){
+          document.getElementById("finDR"+ledgerid).innerHTML="AWB Number is required.";
+          return false;
+        }else if(this.AWBArr && (finreasonid == 125 || finreasonid == 218)){
+          if(/\s/g.test(this.AWBArr) == true || this.AWBArr.indexOf(',') > -1){
+            this.AWBArr = this.AWBArr.replace(/,\s*$/, "").replace(/ /g,'').split(',');
+          }
+          if(this.AWBArr && Array.isArray(this.AWBArr) == false){
+            this.AWBArr = new Array(this.AWBArr);
+          }
+
+          document.getElementById("finDR"+ledgerid).innerHTML="";
+          this.findata = findata; this.elem = elem;
+          this.cardawbno(this.AWBArr, elem, findata);
+        }else{
+          this.AWBArr = ''; this.AWBAmount = 0; document.getElementById("finDR"+ledgerid).innerHTML="";
+          this.updateSVCFinanceledger(elem, findata);
+        }
       }else{
         console.log('errors exist', elem)
         return false;
