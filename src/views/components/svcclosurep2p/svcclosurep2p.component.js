@@ -80,6 +80,7 @@ export default {
       paychg:false,
       casstol:false,
       theftstol:false,
+      wrongdel:false,
       modalAWBNoShow:false,
       awbnotype:'',
       awbnumber:''
@@ -701,7 +702,7 @@ export default {
               error.style.display = "block";
           }else{
             //78,152,186
-            if(this.AWBNo && (this.cariss || this.deldis || this.paychg || this.cassnat || this.casstol || this.theftstol || this.vendrec)){
+            if(this.AWBNo && (this.cariss || this.deldis || this.paychg || this.cassnat || this.casstol || this.theftstol || this.vendrec || this.wrongdel)){
               this.cardawbno(event);
             }else{
               if(event.target[6].id=="DepositSlip" && this.uploadFileList.length<=0){
@@ -732,7 +733,7 @@ export default {
       this.uploadFileList = []; this.reasonFileList = []; this.BankList = []; this.exception = []; this.exceptionList = []; this.exceptionArr = [];
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.ReasonSlip = this.Reason = '';
       this.AWBNo = '';
-      this.amoimp = this.vendrec = this.deldis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = false;
+      this.amoimp = this.vendrec = this.deldis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel= false;
       $('#denomlist input[type="text"]').val(0); $('#denomlist input[type="number"]').val('');
       document.getElementById("d_a").style.display = "none";
       this.GetShipmentUpdate();
@@ -769,7 +770,7 @@ export default {
     },
 
     setReasonId(){
-      this.amoimp = this.vendrec = this.deldis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = false;
+      this.amoimp = this.vendrec = this.deldis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = false;
       this.CardAmount = 0; this.ReasonAmount = ''; this.AWBNo = ''; this.reasonFileList = [];
       if(this.Reason){
         if(this.Reason == 65){
@@ -788,13 +789,15 @@ export default {
           this.casstol = true;
         }else if((process.env.NODE_ENV == 'development' && this.Reason == 82) || (process.env.NODE_ENV == 'production' && this.Reason == 82)){
           this.theftstol = true;
+        }else if((process.env.NODE_ENV == 'development' && this.Reason == 284) || (process.env.NODE_ENV == 'production' && this.Reason == 252)){
+          this.wrongdel = true;
         }
       }
     },
 
     changeDepType(){
      this.unmatchedAmt = this.CardAmount = 0; this.Reason = ''; this.ReasonAmount = ''; this.AWBNo = ''; this.reasonFileList = [];
-     this.amoimp = this.vendrec = this.deldis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = false;
+     this.amoimp = this.vendrec = this.deldis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = false;
     }
   }
 }

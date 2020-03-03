@@ -190,12 +190,12 @@
                 <a v-bind:title='`${file.name}`' v-for="file in reasonFileList" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:25px; color:#4b8cbb; margin: 10px 15px 1px 10px;"></i></a>
               </div>
 
-              <div class="form-group" v-show="cariss || cassnat || deldis || paychg || vendrec || casstol || theftstol">
+              <div class="form-group" v-show="cariss || cassnat || deldis || paychg || vendrec || casstol || theftstol || wrongdel">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
                   </div>
-                  <input class="form-control" id="AWBNo" type="text" name="AWBNo" title="Enter AWB number" placeholder="Enter AWB number" v-validate="`${cariss || cassnat || deldis || paychg || vendrec || casstol || theftstol ? 'required' : ''}`"
+                  <input class="form-control" id="AWBNo" type="text" name="AWBNo" title="Enter AWB number" placeholder="Enter AWB number" v-validate="`${cariss || cassnat || deldis || paychg || vendrec || casstol || theftstol || wrongdel ? 'required' : ''}`"
                   v-model="AWBNo" v-bind:class="{'form-control': true, 'error': errors.has('AWBNo') }" style="margin-right: -5px;">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-truck"></i></span>
