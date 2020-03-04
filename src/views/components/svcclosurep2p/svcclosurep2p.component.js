@@ -789,7 +789,7 @@ export default {
           this.casstol = true;
         }else if((process.env.NODE_ENV == 'development' && this.Reason == 82) || (process.env.NODE_ENV == 'production' && this.Reason == 82)){
           this.theftstol = true;
-        }else if((process.env.NODE_ENV == 'development' && this.Reason == 284) || (process.env.NODE_ENV == 'production' && this.Reason == 252)){
+        }else if((process.env.NODE_ENV == 'development' && this.Reason == 284) || (process.env.NODE_ENV == 'production' && this.Reason == 127)){
           this.wrongdel = true;
         }
       }
