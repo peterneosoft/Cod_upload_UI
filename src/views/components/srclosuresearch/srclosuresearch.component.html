@@ -66,6 +66,7 @@
               <th class="text-center tableheader"><b>Reason</b></th>
               <th class="text-center tableheader"><b>Created Date</b></th>
               <th class="text-center tableheader"><b>Created By</b></th>
+              <th class="text-center tableheader"><b>AWB No.</b></th>              
             </tr>
           </thead>
           <tbody>
@@ -81,6 +82,7 @@
               <td>{{SL_List.Reason}}</td>
               <td>{{SL_List.createddate}}</td>
               <td>{{SL_List.createdby}}</td>
+              <td>{{ (SL_List.awbno) ? SL_List.awbno.toString():''}}</td>
             </tr>
           </tbody>
 
