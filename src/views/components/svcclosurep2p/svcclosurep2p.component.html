@@ -105,7 +105,7 @@
                     <span class="input-group-text" style="width: 140px;">Exception AWB No.</span>
                   </div>
                   <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="exceptionLoading" />
-                  <Multiselect disabled :options="exceptionList" name="exception" id="exception" v-model="exception" @input="addExceptionData" placeholder="Select Shipping Id" label="ShippingID" track-by="ShippingID" :optionHeight="100" :preselect-first="false" v-bind:multiple="multiple()" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                  <Multiselect disabled :options="exceptionList" name="exception" id="exception" v-model="exception" @input="addExceptionData" placeholder="Select AWB No" label="ShippingID" track-by="ShippingID" :optionHeight="100" :preselect-first="false" v-bind:multiple="multiple()" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
                      <template slot="noResult"><p>No Record Found.</p></template>
                   </Multiselect>
                   <div class="input-group-append">
@@ -177,7 +177,7 @@
                 </div>
                 <div id="checkboxes">
                   <label v-for="Reason_obj in ReasonList" v-bind:for="setid(Reason_obj.ReasonsID)">
-                    <input type="checkbox" v-bind:id="setid(Reason_obj.ReasonsID)" @change="showHideReasonField(Reason_obj.ReasonsID)" />&nbsp;&nbsp;{{Reason_obj.Reason}}</label>
+                    <input type="checkbox" name="reason" v-bind:id="setid(Reason_obj.ReasonsID)" @change="showHideReasonField(Reason_obj.ReasonsID)" />&nbsp;&nbsp;{{Reason_obj.Reason}}</label>
                 </div>
                 <span class="text-danger">Note: {{unmatchedAmt}} Rs is remaining amount, please select reason.</span>
               </div>

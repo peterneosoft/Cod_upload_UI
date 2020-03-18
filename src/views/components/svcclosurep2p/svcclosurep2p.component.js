@@ -414,7 +414,7 @@ export default {
 
       if(this.carissAWBNo) awbArr.push({ ReasonID:this.carissReason, AWBNo:this.checkAWB(this.carissAWBNo) });
 
-      if(this.cassnatAWBNo) awbArr.push({ ReasonID:this.carissReason, AWBNo:this.checkAWB(this.cassnatAWBNo) });
+      if(this.cassnatAWBNo) awbArr.push({ ReasonID:this.cassnatReason, AWBNo:this.checkAWB(this.cassnatAWBNo) });
 
       if(this.deldisAWBNo) awbArr.push({ ReasonID:this.deldisReason, AWBNo:this.checkAWB(this.deldisAWBNo) });
 
@@ -830,10 +830,14 @@ export default {
         this.modalAWBNoShow = false
     },
 
-    changeDepType(){ //change deposit type
+    changeDepType(){ //change deposit Amount
      this.unmatchedAmt = this.CardAmount = 0; this.Reason = ''; this.ReasonAmount = ''; this.DisputeArr = []; this.reasonFileList = [];
      this.amoimp = this.vendrec = this.deldis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = false;
      this.ReasonAmount = this.vendrecAWBNo = this.deldisAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = '';
+
+      $('input[name="reason"]').each(function() {
+  			this.checked = false;
+  		});
     },
 
     showCheckboxes(){
