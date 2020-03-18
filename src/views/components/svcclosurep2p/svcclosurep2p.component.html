@@ -143,7 +143,7 @@
                 <a v-bind:title='`${file.name}`' v-for="file in uploadFileList" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:25px; color:#4b8cbb; margin: 10px 15px 1px 10px;"></i></a>
               </div>
 
-              <div class="form-group" v-show="unmatchedAmt != 0" style="margin-top: -10px;">
+              <!-- <div class="form-group" v-show="unmatchedAmt != 0" style="margin-top: -10px;">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Reason <font color="red">&nbsp;*</font></span>
@@ -158,6 +158,28 @@
                   </div>
                 </div>
                 <span v-show="errors.has('Reason')" class="text-danger">{{unmatchedAmt}} Rs is remaining amount, please select reason.</span>
+              </div> -->
+
+              <div class="multiselect" v-show="unmatchedAmt != 0">
+                <div class="input-group">
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">Reason <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <div class="selectBox" @click="showCheckboxes()">
+                    <select>
+                      <option>-- Select Reason --</option>
+                    </select>
+                    <div class="overSelect"></div>
+                  </div>
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-angle-down"></i></span>
+                  </div>
+                </div>
+                <div id="checkboxes">
+                  <label v-for="Reason_obj in ReasonList" v-bind:for="setid(Reason_obj.ReasonsID)">
+                    <input type="checkbox" v-bind:id="setid(Reason_obj.ReasonsID)" @change="showHideReasonField(Reason_obj.ReasonsID)" />&nbsp;&nbsp;{{Reason_obj.Reason}}</label>
+                </div>
+                <span class="text-danger">Note: {{unmatchedAmt}} Rs is remaining amount, please select reason.</span>
               </div>
 
               <div class="form-group" v-if="unmatchedAmt != 0 && amoimp">
@@ -190,7 +212,127 @@
                 <a v-bind:title='`${file.name}`' v-for="file in reasonFileList" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:25px; color:#4b8cbb; margin: 10px 15px 1px 10px;"></i></a>
               </div>
 
-              <div class="form-group" v-show="cariss || cassnat || deldis || paychg || vendrec || casstol || theftstol || wrongdel">
+              <div class="form-group" v-show="cariss">
+                <div class="input-group">
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="carissAWBNo" type="text" name="carissAWBNo" title="Enter Card/Wallet/Payphi issue AWB number" placeholder="Card/Wallet/Payphi issue AWB No." v-validate="`${cariss ? 'required' : ''}`"
+                  v-model="carissAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('carissAWBNo') }" style="margin-right: -5px;">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-truck"></i></span>
+                  </div>
+                </div>
+                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Please enter comma (,) seperated AWB number.</span>
+                <span id="awb_n" v-show="errors.has('carissAWBNo')" class="text-danger"><br>Card/Wallet/Payphi issue AWB No. is required.</span>
+              </div>
+
+              <div class="form-group" v-show="cassnat">
+                <div class="input-group">
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="cassnatAWBNo" type="text" name="cassnatAWBNo" title="Enter Cash/shipmet snatched by Customer AWB No." placeholder="Cash/shipmet snatched by Customer AWB No." v-validate="`${cassnat ? 'required' : ''}`"
+                  v-model="cassnatAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('cassnatAWBNo') }" style="margin-right: -5px;">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-truck"></i></span>
+                  </div>
+                </div>
+                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Please enter comma (,) seperated AWB number.</span>
+                <span id="awb_n" v-show="errors.has('cassnatAWBNo')" class="text-danger"><br>Cash/shipmet snatched by Customer AWB No. is required.</span>
+              </div>
+
+              <div class="form-group" v-show="deldis">
+                <div class="input-group">
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="deldisAWBNo" type="text" name="deldisAWBNo" title="Enter Delivery Dispute AWB No." placeholder="Delivery Dispute AWB No." v-validate="`${deldis ? 'required' : ''}`"
+                  v-model="deldisAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('deldisAWBNo') }" style="margin-right: -5px;">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-truck"></i></span>
+                  </div>
+                </div>
+                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Please enter comma (,) seperated AWB number.</span>
+                <span id="awb_n" v-show="errors.has('deldisAWBNo')" class="text-danger"><br>Delivery Dispute AWB No. is required.</span>
+              </div>
+
+              <div class="form-group" v-show="paychg">
+                <div class="input-group">
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="paychgAWBNo" type="text" name="paychgAWBNo" title="Enter Payment Mode Changed AWB No." placeholder="Payment Mode Changed AWB No." v-validate="`${paychg ? 'required' : ''}`"
+                  v-model="paychgAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('paychgAWBNo') }" style="margin-right: -5px;">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-truck"></i></span>
+                  </div>
+                </div>
+                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Please enter comma (,) seperated AWB number.</span>
+                <span id="awb_n" v-show="errors.has('paychgAWBNo')" class="text-danger"><br>Payment Mode Changed AWB No. is required.</span>
+              </div>
+
+              <div class="form-group" v-show="vendrec">
+                <div class="input-group">
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="vendrecAWBNo" type="text" name="vendrecAWBNo" title="Enter Vendor Recovery AWB No." placeholder="Vendor Recovery AWB No." v-validate="`${vendrec ? 'required' : ''}`"
+                  v-model="vendrecAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('vendrecAWBNo') }" style="margin-right: -5px;">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-truck"></i></span>
+                  </div>
+                </div>
+                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Please enter comma (,) seperated AWB number.</span>
+                <span id="awb_n" v-show="errors.has('vendrecAWBNo')" class="text-danger"><br>Vendor Recovery AWB No. is required.</span>
+              </div>
+
+              <div class="form-group" v-show="casstol">
+                <div class="input-group">
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="casstolAWBNo" type="text" name="casstolAWBNo" title="Enter Cash stolen by unidentified party AWB No." placeholder="Cash stolen by unidentified party AWB No." v-validate="`${casstol ? 'required' : ''}`"
+                  v-model="casstolAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('casstolAWBNo') }" style="margin-right: -5px;">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-truck"></i></span>
+                  </div>
+                </div>
+                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Please enter comma (,) seperated AWB number.</span>
+                <span id="awb_n" v-show="errors.has('casstolAWBNo')" class="text-danger"><br>Cash stolen by unidentified party AWB No. is required.</span>
+              </div>
+
+              <div class="form-group" v-show="theftstol">
+                <div class="input-group">
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="theftstolAWBNo" type="text" name="theftstolAWBNo" title="Enter Theft/Stolen cases AWB No." placeholder="Theft/Stolen cases AWB No." v-validate="`${theftstol ? 'required' : ''}`"
+                  v-model="theftstolAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('theftstolAWBNo') }" style="margin-right: -5px;">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-truck"></i></span>
+                  </div>
+                </div>
+                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Please enter comma (,) seperated AWB number.</span>
+                <span id="awb_n" v-show="errors.has('theftstolAWBNo')" class="text-danger"><br>Theft/Stolen cases AWB No. is required.</span>
+              </div>
+
+              <div class="form-group" v-show="wrongdel">
+                <div class="input-group">
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="wrongdelAWBNo" type="text" name="wrongdelAWBNo" title="Enter Wrong Delivered Shipments AWB No." placeholder="Wrong Delivered Shipments AWB No." v-validate="`${wrongdel ? 'required' : ''}`"
+                  v-model="wrongdelAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('wrongdelAWBNo') }" style="margin-right: -5px;">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-truck"></i></span>
+                  </div>
+                </div>
+                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Please enter comma (,) seperated AWB number.</span>
+                <span id="awb_n" v-show="errors.has('wrongdelAWBNo')" class="text-danger"><br>Wrong Delivered Shipments AWB No. is required.</span>
+              </div>
+
+              <!-- <div class="form-group" v-show="cariss || cassnat || deldis || paychg || vendrec || casstol || theftstol || wrongdel">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
@@ -203,7 +345,7 @@
                 </div>
                 <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Please enter comma (,) seperated AWB number.</span>
                 <span id="awb_n" v-show="errors.has('AWBNo')" class="text-danger"><br>AWB number is required.</span>
-              </div>
+              </div> -->
 
               <div class="card-footer">
                 <button v-bind:disabled="disableButton" class="btn btn-sm btn-primary" type="submit"><i class="fa fa-dot-circle-o"></i> Save</button>
@@ -301,7 +443,7 @@
         </div>
       </b-modal>
 
-      <b-modal ref="myCardModalRef" v-model="cardModalShow" id=#confirmationmodal title="Confirmation">
+      <!-- <b-modal ref="myCardModalRef" v-model="cardModalShow" id=#confirmationmodal title="Confirmation">
         <div role="document">
           <div class="modal-content">
             <div class="modal-headerfrm">
@@ -318,6 +460,108 @@
               <button type="button" @click = "hideCardModal('0')" class="btn btn-success" style="background-color: #20a8d8;">Ok</button>
               <button type="button" @click = "hideCardModal('1')" class="btn btn-danger" style="background-color: #f86c6b;">Cancel</button>
             </center>
+            </div>
+          </div>
+        </div>
+      </b-modal> -->
+
+      <b-modal ref="myCardModalRef" v-model="cardModalShow" id=#confirmationmodal1 title="Confirmation">
+        <div role="document">
+          <div class="modal-content" style="width: 150%;">
+            <div class="modal-headerfrm">
+              <h5 class="modal-title" style="font-size: 1rem;">AWB No & AWB Amount Confirmation</h5>
+              <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
+                <span aria-hidden="true" style="color: white;">×</span>
+              </button>
+            </div>
+            <div class="modal-bodyfrm">
+              <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+                <thead>
+                  <tr class="text-primary">
+                    <th class="text-center tableheader" style="width: 1%"><b>#</b></th>
+                    <th class="text-center tableheader" style="width: 50%"><b>Reason</b></th>
+                    <th class="text-center tableheader" style="width: 49%">
+                      <table class="table-bordered table-hover tbl datatables">
+                        <tr class="text-primary">
+                          <th class="text-center tableheader" style="width:25%"><b>AWB Number</b></th>
+                          <th class="text-center tableheader" style="width:10%"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                        </tr>
+                      </table>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-if="DisputeArr.length<=0">
+                    <td colspan="3" align="center">No record found</td>
+                  </tr>
+                  <tr v-for="(val,index) in DisputeArr">
+                    <td class="text-center" style="width: 1%">{{index+1}}</td>
+                    <td class="text-center" style="width: 50%">{{val.Reason}}</td>
+                    <td class="text-center" style="width: 49%">
+                      <table class="table-bordered table-hover tbl datatables">
+                        <tr v-for="(row, ind) in val.awb">
+                          <td class="text-center" style="width:25%">{{(Object.keys(row)) ? Object.keys(row).toString() : ''}}</td>
+                          <td class="text-center" style="width:11%">{{(Object.values(row)) ? Object.values(row).toString() : ''}}</td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footerfrm">
+              <center>
+                <button type="button" @click = "hideCardModal('0')" class="btn btn-success" style="background-color: #20a8d8;">Ok</button>
+                <button type="button" @click = "hideCardModal('1')" class="btn btn-danger" style="background-color: #f86c6b;">Cancel</button>
+              </center>
+            </div>
+          </div>
+        </div>
+      </b-modal>
+
+      <b-modal ref="myReasonModalRef" v-model="ReasonModalShow" id=#confirmationmodal2 title="Confirmation">
+        <div role="document">
+          <div class="modal-content" style="width: 150%;">
+            <div class="modal-headerfrm">
+              <h5 class="modal-title" style="font-size: 1rem;">Reason & AWB No/Amount</h5>
+              <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
+                <span aria-hidden="true" style="color: white;">×</span>
+              </button>
+            </div>
+            <div class="modal-bodyfrm">
+              <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+                <thead>
+                  <tr class="text-primary">
+                    <th class="text-center tableheader" style="width: 1%"><b>#</b></th>
+                    <th class="text-center tableheader" style="width: 50%"><b>Reason</b></th>
+                    <th class="text-center tableheader" style="width: 49%">
+                      <table class="table-bordered table-hover tbl datatables">
+                        <tr class="text-primary">
+                          <th class="text-center tableheader" style="width:25%"><b>AWB Number</b></th>
+                          <th class="text-center tableheader" style="width:10%"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                        </tr>
+                      </table>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-if="DisputeArr.length<=0">
+                    <td colspan="3" align="center">No record found</td>
+                  </tr>
+                  <tr v-for="(val,index) in DisputeArr">
+                    <td class="text-center" style="width: 1%">{{index+1}}</td>
+                    <td class="text-center" style="width: 50%">{{val.Reason}}</td>
+                    <td class="text-center" style="width: 49%">
+                      <table class="table-bordered table-hover tbl datatables">
+                        <tr v-for="(row, ind) in val.awb">
+                          <td class="text-center" style="width:25%">{{(Object.keys(row)) ? Object.keys(row).toString() : ''}}</td>
+                          <td class="text-center" style="width:11%">{{(Object.values(row)) ? Object.values(row).toString() : ''}}</td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -349,7 +593,7 @@
                 <th class="text-center tableheader"><b>Reason</b></th>
                 <th class="text-center tableheader"><b>Finance Reason</b></th>
                 <th class="text-center tableheader"><b>View Receipt</b></th>
-                <th class="text-center tableheader"><b>View AWB No.</b></th>
+                <th class="text-center tableheader"><b>View Reason/AWB No.</b></th>
               </tr>
             </thead>
             <tbody>
@@ -358,22 +602,22 @@
               </tr>
               <tr v-for="(data,index) in listSVCledgerData" v-bind:class="`${data.createdby == 'schedular@xpressbees.com' ? 'scheduler' : '' || data.reasonid == 65 ? 'other' : '' || ([84,124,187].includes(data.financereasonid)) ? 'mismatched' : ''}`">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
-                <td>{{data.deliverydate}}</td>
-                <td>{{data.bankdepositdate}}</td>
-                <td>{{data.deposittype}}</td>
-                <td>{{data.openingbalance}}</td>
-                <td>{{data.codamount}}</td>
-                <td>{{data.bankname}}</td>
-                <td>{{data.bankdeposit}}</td>
-                <td>{{data.actualrecamt}}</td>
-                <td>{{data.exceptionamt}}</td>
-                <td>{{data.cardissueamt}}</td>
-                <td>{{data.othercharges}}</td>
-                <td>{{data.closingbalance}}</td>
-                <td v-if="data.statusid==1">Open</td>
-                <td v-if="data.statusid==6">Close</td>
-                <td>{{data.Reason}}</td>
-                <td>{{data.financereason}}</td>
+                <td class="text-center">{{data.deliverydate}}</td>
+                <td class="text-center">{{data.bankdepositdate}}</td>
+                <td class="text-center">{{data.deposittype}}</td>
+                <td class="text-center">{{data.openingbalance}}</td>
+                <td class="text-center">{{data.codamount}}</td>
+                <td class="text-center">{{data.bankname}}</td>
+                <td class="text-center">{{data.bankdeposit}}</td>
+                <td class="text-center">{{data.actualrecamt}}</td>
+                <td class="text-center">{{data.exceptionamt}}</td>
+                <td class="text-center">{{data.cardissueamt}}</td>
+                <td class="text-center">{{data.othercharges}}</td>
+                <td class="text-center">{{data.closingbalance}}</td>
+                <td class="text-center" v-if="data.statusid==1">Open</td>
+                <td class="text-center" v-if="data.statusid==6">Close</td>
+                <td class="text-center">{{data.Reason}}</td>
+                <td class="text-center">{{data.financereason}}</td>
                 <td class="text-center">
                   <span v-bind:id='`${"vrl"+data.svcledgerid}`' v-if="data.files.length>0 && data.createdby!='schedular@xpressbees.com' && data.othercharges == '0.00'" @click="showHideImages(data.svcledgerid, 'vrl')" style="color: blue; cursor: pointer;">Deposit</span>
                   <span v-bind:id='`${"vri"+data.svcledgerid}`' style="display: none;">
@@ -385,12 +629,12 @@
                     <a v-bind:title='`${file.name}`' v-for="file in data.reasonfiles" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
                   </span>
                 </td>
-                <td>
+                <td class="text-center">
                   <span v-if="data.awbnocount!='' && data.reasonid!=186 && data.reasonid!=123" @click="showAWBNo('Exception', data.awbno)" style="cursor:pointer; color: rgb(25,25,112);">Exception</span>
                   <br v-if="data.awbnocount!='' && data.cardawbnocount!=''">
                   <span v-if="data.reasonid==186 || data.reasonid==123" @click="showAWBNo('Payment Mode Changed', data.awbno)" style="cursor:pointer; color: rgb(25,25,112);">AWB No</span>
                   <br v-if="data.reasonid==186 || data.reasonid==123">
-                  <span v-if="data.cardawbnocount!='' && data.reasonid!=186 && data.reasonid!=123" @click="showAWBNo('Card/Other Issue', data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">Card/Other</span>
+                  <span v-if="data.cardawbnocount!='' && data.reasonid!=186 && data.reasonid!=123" @click="showReasonAWBNo(data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">View</span>
                   <br v-if="data.recoveryawbcount!=''">
                   <span v-if="data.recoveryawbcount!=''" @click="showAWBNo('Self Debit/Recovery', data.recoveryawb)" style="cursor:pointer; color: rgb(25,25,112);">Recovery</span>
                 </td>

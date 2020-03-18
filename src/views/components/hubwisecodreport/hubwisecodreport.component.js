@@ -45,7 +45,9 @@ export default {
       reportlink:'',
       modalAWBNoShow:false,
       awbnotype:'',
-      awbnumber:''
+      awbnumber:'',
+      ReasonModalShow:false,
+      DisputeArr:[]
     }
   },
 
@@ -429,6 +431,16 @@ export default {
 
     closeAWBNoModal() {
         this.modalAWBNoShow = false
+    },
+
+    showReasonAWBNo(ele){
+      this.DisputeArr = [];
+      this.DisputeArr = ele;
+      this.$refs.myReasonModalRef.show();
+    },
+
+    closeStatusRoleModal() {
+      this.ReasonModalShow = false
     },
   }
 }

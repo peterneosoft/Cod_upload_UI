@@ -210,3 +210,66 @@ td{
     font-weight: bold;
     font-size: 0.8rem;
 }
+
+.selectBox {
+  position: relative;
+	width: 235px;
+}
+
+.selectBox select {
+  width: 100%;
+	border: 1px solid #c2cfd6;
+	border-radius: 0px;
+	height: 35px;
+	background: white;
+}
+
+.overSelect {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+#checkboxes {
+  display: none;
+  border: 1px #dadada solid;
+	border-radius: 5px;
+}
+
+#checkboxes label {
+  display: block;
+	margin: 10px;
+}
+
+#checkboxes label:hover {
+  background-color: #cfe3f5;
+}
+
+.multiselect {
+  margin-bottom: 1rem;
+	font-size: 14px;
+}
+
+table.scroll {
+    border: 0px solid #c2cfd6;
+}
+
+table.scroll tbody,
+table.scroll thead tr { display: block; }
+
+table.scroll tbody {
+    height: 291px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+table.scroll tbody td,
+table.scroll thead th {
+    //width: 133px;
+}
+
+table.scroll thead th:last-child {
+    width: 156px; /* 140px + 16px scrollbar width */
+}

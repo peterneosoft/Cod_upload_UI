@@ -77,6 +77,54 @@
               </div>
             </form>
           </div>
+
+          <b-modal ref="myReasonModalRef" v-model="ReasonModalShow" id=#confirmationmodal2 title="Confirmation">
+            <div role="document">
+              <div class="modal-content" style="width: 150%;">
+                <div class="modal-headerfrm">
+                  <h5 class="modal-title" style="font-size: 1rem;">Reason & AWB No/Amount</h5>
+                  <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
+                    <span aria-hidden="true" style="color: white;">×</span>
+                  </button>
+                </div>
+                <div class="modal-bodyfrm">
+                  <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+                    <thead>
+                      <tr class="text-primary">
+                        <th class="text-center tableheader" style="width: 1%"><b>#</b></th>
+                        <th class="text-center tableheader" style="width: 50%"><b>Reason</b></th>
+                        <th class="text-center tableheader" style="width: 49%">
+                          <table class="table-bordered table-hover tbl datatables">
+                            <tr class="text-primary">
+                              <th class="text-center tableheader" style="width:25%"><b>AWB Number</b></th>
+                              <th class="text-center tableheader" style="width:10%"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                            </tr>
+                          </table>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-if="DisputeArr.length<=0">
+                        <td colspan="3" align="center">No record found</td>
+                      </tr>
+                      <tr v-for="(val,index) in DisputeArr">
+                        <td class="text-center" style="width: 1%">{{index+1}}</td>
+                        <td class="text-center" style="width: 50%">{{val.Reason}}</td>
+                        <td class="text-center" style="width: 49%">
+                          <table class="table-bordered table-hover tbl datatables">
+                            <tr v-for="(row, ind) in val.awb">
+                              <td class="text-center" style="width:25%">{{(Object.keys(row)) ? Object.keys(row).toString() : ''}}</td>
+                              <td class="text-center" style="width:11%">{{(Object.values(row)) ? Object.values(row).toString() : ''}}</td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </b-modal>
         </div>
 
         <div class="row">
@@ -98,13 +146,14 @@
                     <th class="text-center tableheader"><b>Zone</b></th>
                     <th class="text-center tableheader"><b>Hub/SVC Name</b></th>
                     <th class="text-center tableheader"><b>RSC Name</b></th>
+                    <th class="text-center tableheader"><b>RSC PAN</b></th>
                     <th class="text-center tableheader"><b>Location Type</b></th>
                     <th class="text-center tableheader"><b>Delivery Date</b></th>
                     <th class="text-center tableheader"><b>Opening Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>COD Receivable <br>( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Deposit Type</b></th>
                     <th class="text-center tableheader"><b>Bank Name</b></th>
-                    <th class="text-center tableheader"><b>Deposit Date</b></th>                                        
+                    <th class="text-center tableheader"><b>Deposit Date</b></th>
                     <th class="text-center tableheader"><b>Bank Deposit Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Finance Confirmed Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Finance Confirmed Date</b></th>
@@ -114,40 +163,41 @@
                     <th class="text-center tableheader"><b>Outstanding Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Status</b></th>
                     <th class="text-center tableheader"><b>Closed by</b></th>
-                    <th class="text-center tableheader"><b>View AWB No.</b></th>
+                    <th class="text-center tableheader"><b>View Reason/AWB No.</b></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td colspan="21" align="center">No record found</td>
+                    <td colspan="22" align="center">No record found</td>
                   </tr>
                   <tr v-for="(CODLedger_List,index) in CODLedgerReports ">
-                    <td>{{pageno+index+1}}</td>
-                    <td>{{CODLedger_List.zonename}}</td>
-                    <td>{{CODLedger_List.hubname}}</td>
-                    <td>{{CODLedger_List.rscowner}}</td>
-                    <td>{{CODLedger_List.hubLocationType}}</td>
-                    <td>{{CODLedger_List.deliverydate}}</td>
-                    <td>{{CODLedger_List.openingbalance}}</td>
-                    <td>{{CODLedger_List.receivable}}</td>
-                    <td>{{CODLedger_List.deposittype}}</td>
-                    <td>{{CODLedger_List.bank}}</td>
-                    <td>{{CODLedger_List.depositdate}}</td>                                        
-                    <td>{{CODLedger_List.bankdeposit}}</td>
-                    <td>{{CODLedger_List.financeconfirmamount}}</td>
-                    <td>{{CODLedger_List.financeconfirmdate}}</td>
-                    <td>{{CODLedger_List.exceptionamt}}</td>
-                    <td>{{CODLedger_List.cardissueamt}}</td>
-                    <td>{{CODLedger_List.othercharges}}</td>
-                    <td>{{CODLedger_List.balanceLogic}}</td>
-                    <td>{{CODLedger_List.StatusVal}}</td>
-                    <td>{{CODLedger_List.lastmodifiedby}}</td>
-                    <td>
+                    <td class="text-center">{{pageno+index+1}}</td>
+                    <td class="text-center">{{CODLedger_List.zonename}}</td>
+                    <td class="text-center">{{CODLedger_List.hubname}}</td>
+                    <td class="text-center">{{CODLedger_List.rscowner}}</td>
+                    <td class="text-center">{{CODLedger_List.rscpan}}</td>
+                    <td class="text-center">{{CODLedger_List.hubLocationType}}</td>
+                    <td class="text-center">{{CODLedger_List.deliverydate}}</td>
+                    <td class="text-center">{{CODLedger_List.openingbalance}}</td>
+                    <td class="text-center">{{CODLedger_List.receivable}}</td>
+                    <td class="text-center">{{CODLedger_List.deposittype}}</td>
+                    <td class="text-center">{{CODLedger_List.bank}}</td>
+                    <td class="text-center">{{CODLedger_List.depositdate}}</td>
+                    <td class="text-center">{{CODLedger_List.bankdeposit}}</td>
+                    <td class="text-center">{{CODLedger_List.financeconfirmamount}}</td>
+                    <td class="text-center">{{CODLedger_List.financeconfirmdate}}</td>
+                    <td class="text-center">{{CODLedger_List.exceptionamt}}</td>
+                    <td class="text-center">{{CODLedger_List.cardissueamt}}</td>
+                    <td class="text-center">{{CODLedger_List.othercharges}}</td>
+                    <td class="text-center">{{CODLedger_List.balanceLogic}}</td>
+                    <td class="text-center">{{CODLedger_List.StatusVal}}</td>
+                    <td class="text-center">{{CODLedger_List.lastmodifiedby}}</td>
+                    <td class="text-center">
                       <span v-if="CODLedger_List.awbnocount!='' && CODLedger_List.reasonid!=186 && CODLedger_List.reasonid!=123" @click="showAWBNo('Exception', CODLedger_List.awbno)" style="cursor:pointer; color: rgb(25,25,112);">Exception</span>
                       <br v-if="CODLedger_List.awbnocount!='' && CODLedger_List.cardawbnocount!=''">
                       <span v-if="CODLedger_List.reasonid==186 || CODLedger_List.reasonid==123" @click="showAWBNo('Payment Mode Changed', CODLedger_List.awbno)" style="cursor:pointer; color: rgb(25,25,112);">AWB No</span>
                       <br v-if="CODLedger_List.reasonid==186 || CODLedger_List.reasonid==123">
-                      <span v-if="CODLedger_List.cardawbnocount!='' && CODLedger_List.reasonid!=186 && CODLedger_List.reasonid!=123" @click="showAWBNo('Card/Other Issue', CODLedger_List.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">Card/Other</span>
+                      <span v-if="CODLedger_List.cardawbnocount!=''" @click="showReasonAWBNo(CODLedger_List.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">View</span>
                       <br v-if="CODLedger_List.recoveryawbcount!=''">
                       <span v-if="CODLedger_List.recoveryawbcount!=''" @click="showAWBNo('Self Debit/Recovery', CODLedger_List.recoveryawb)" style="cursor:pointer; color: rgb(25,25,112);">Recovery</span>
                     </td>

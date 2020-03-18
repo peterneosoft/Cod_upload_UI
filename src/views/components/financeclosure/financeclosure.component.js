@@ -58,7 +58,9 @@ export default {
       modalShow:false,
       cardModalShow:false,
       findata:[],
-      elem:''
+      elem:'',
+      DisputeArr:[],
+      ReasonModalShow:false
     }
   },
 
@@ -479,6 +481,16 @@ export default {
 
     closeAWBNoModal() {
         this.modalAWBNoShow = false
+    },
+
+    showReasonAWBNo(ele){
+      this.DisputeArr = [];
+      this.DisputeArr = ele;
+      this.$refs.myReasonModalRef.show();
+    },
+
+    closeStatusRoleModal() {
+      this.ReasonModalShow = false
     },
   }
 }

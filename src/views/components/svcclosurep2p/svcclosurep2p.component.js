@@ -46,8 +46,26 @@ export default {
       uploadFileList: [],
       reasonFileList: [],
       ReasonAmount: '',
-      AWBNo: '',
+      //AWBNo: '',
+      lowdisReason:'',
+      carissAWBNo: '',
+      cassnatAWBNo: '',
+      deldisAWBNo: '',
+      paychgAWBNo: '',
+      vendrecAWBNo: '',
+      casstolAWBNo: '',
+      theftstolAWBNo: '',
+      wrongdelAWBNo: '',
+      carissReason: '',
+      cassnatReason: '',
+      deldisReason: '',
+      paychgReason: '',
+      vendrecReason: '',
+      casstolReason: '',
+      theftstolReason: '',
+      wrongdelReason: '',
       CardAmount: 0,
+      DisputeArr: [],
       cardM: 1,
       isLoading: false,
       bankLoading: false,
@@ -65,6 +83,7 @@ export default {
       disableButton: false,
       modalShow:false,
       cardModalShow:false,
+      ReasonModalShow:false,
       penAmtLoading: false,
       denomLoading: false,
       exceptionLoading: false,
@@ -72,6 +91,7 @@ export default {
       exceptionList:[],
       exceptionArr:[],
       exceptionAmount:0,
+      lowdis:false,
       amoimp:false,
       vendrec:false,
       deldis:false,
@@ -83,7 +103,8 @@ export default {
       wrongdel:false,
       modalAWBNoShow:false,
       awbnotype:'',
-      awbnumber:''
+      awbnumber:'',
+      expanded:false
     }
   },
 
@@ -152,6 +173,7 @@ export default {
     closeStatusRoleModal() {
       this.modalShow = false
       this.cardModalShow = false
+      this.ReasonModalShow = false
     },
 
     GetShipmentUpdate() {
@@ -388,27 +410,42 @@ export default {
     },
 
     cardawbno(event){
-      if(/\s/g.test(this.AWBNo) == true || this.AWBNo.indexOf(',') > -1){
-        this.AWBNo = this.AWBNo.replace(/,\s*$/, "").replace(/ /g,'').split(',');
-      }
-      if(Array.isArray(this.AWBNo) == false){
-        this.AWBNo = new Array(this.AWBNo);
-      }
+      let awbArr = []; this.DisputeArr = []; this.CardAmount = 0;
+
+      if(this.carissAWBNo) awbArr.push({ ReasonID:this.carissReason, AWBNo:this.checkAWB(this.carissAWBNo) });
+
+      if(this.cassnatAWBNo) awbArr.push({ ReasonID:this.carissReason, AWBNo:this.checkAWB(this.cassnatAWBNo) });
+
+      if(this.deldisAWBNo) awbArr.push({ ReasonID:this.deldisReason, AWBNo:this.checkAWB(this.deldisAWBNo) });
+
+      if(this.paychgAWBNo) awbArr.push({ ReasonID:this.paychgReason, AWBNo:this.checkAWB(this.paychgAWBNo) });
+
+      if(this.vendrecAWBNo) awbArr.push({ ReasonID:this.vendrecReason, AWBNo:this.checkAWB(this.vendrecAWBNo) });
+
+      if(this.casstolAWBNo) awbArr.push({ ReasonID:this.casstolReason, AWBNo:this.checkAWB(this.casstolAWBNo) });
+
+      if(this.theftstolAWBNo) awbArr.push({ ReasonID:this.theftstolReason, AWBNo:this.checkAWB(this.theftstolAWBNo) });
+
+      if(this.wrongdelAWBNo) awbArr.push({ ReasonID:this.wrongdelReason, AWBNo:this.checkAWB(this.wrongdelAWBNo) });
+
+      if(this.lowdis) awbArr.push({ ReasonID:this.lowdisReason, AWBNo:[] });
 
       axios({
-          method: 'POST',
-          'url': apiUrl.api_url + 'getAWBNo',
-          'data': ({AWBNo: this.AWBNo}),
-          headers: {
-              'Authorization': 'Bearer '+this.myStr
-          }
+        method: 'POST',
+        'url': apiUrl.api_url + 'getAWBNo',
+        'data': ({'DisputeArr': awbArr}),
+        headers: {
+          'Authorization': 'Bearer '+this.myStr
+        }
       })
       .then((awbres) => {
+
         if (awbres.data.code == 200) {
-          if(awbres.data.invalidAwbNo){
-            this.$alertify.error("Some of AWB numbers are invalid, please check: "+awbres.data.invalidAwbNo); return false;
+          if(awbres.data.invalidAwb.length>0){
+            this.$alertify.error("Some of AWB numbers are invalid, please check: "+awbres.data.invalidAwb.join(', ')); return false;
           }else{
-            this.CardAmount = awbres.data.shipment_amount;
+            this.CardAmount = awbres.data.total;
+            this.DisputeArr = awbres.data.result;
             this.showCardModal(this.CardAmount);
           }
         } else{
@@ -420,13 +457,29 @@ export default {
       });
     },
 
+    checkAWB(awbno){
+
+      if(awbno){
+        if(/\s/g.test(awbno) == true || awbno.indexOf(',') > -1){
+          awbno =awbno.replace(/,\s*$/, "").replace(/ /g,'').split(',');
+        }
+        if(Array.isArray(awbno) == false){
+          awbno = new Array(awbno);
+        }
+
+        return awbno;
+      }
+    },
+
     saveSvcClosure(event) {
       let DepositAmount = parseInt(this.Deposit_Amount);
       let DepositReasonExcepAmount = ''; this.unmatchedAmt = 0;
       DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount));
 
-      if(this.amoimp){ //65
-        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.ReasonAmount)));
+      this.ReasonAmount = (this.ReasonAmount)?this.ReasonAmount:0;
+
+      if(this.amoimp || this.CardAmount > 0){ //65
+        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.ReasonAmount)+parseFloat(this.CardAmount)));
       }
 
       //let TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount)-parseFloat(this.CardAmount))));
@@ -456,12 +509,15 @@ export default {
           ClosingBalance = 0; this.unmatchedAmt = 0;
         }else{
           if((DepositReasonExcepAmount < TolatCollection) && (this.unmatchedAmt>0)){
-            if(this.Reason==''){
+
+            if(!this.lowdis){
+
               this.showModal(this.unmatchedAmt);
               return false;
             }else{
-              if(this.amoimp){ //65
-                this.$alertify.error("Total outstanding COD amount and deposit amount including other charges is should be same, please check.");
+
+              if((this.amoimp || this.CardAmount > 0) && !this.lowdis){ //65
+                this.$alertify.error("Total outstanding COD amount and deposit amount including other charges or sum of Dispute AWB amount is should be same, please check.");
                 return false;
               }else{
                 this.reasonFileList=[];
@@ -469,10 +525,10 @@ export default {
               }
             }
           }else if(DepositReasonExcepAmount > TolatCollection){
-            this.$alertify.error("Deposit amount including other charges should not be greater than total outstanding COD amount, please check.");
+            this.$alertify.error("Deposit amount including other charges or sum of Dispute AWB amount should not be greater than total outstanding COD amount, please check.");
 
             let error            = document.getElementById("d_a");
-            error.innerHTML      = "Deposit amount including other charges should not be greater than total outstanding COD amount, please check.";
+            error.innerHTML      = "Deposit amount including other or sum of Dispute AWB amount charges should not be greater than total outstanding COD amount, please check.";
             error.style.display  = "block"; return false;
           }
           ClosingBalance = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositReasonExcepAmount)));
@@ -489,10 +545,6 @@ export default {
         let OpeningBalance = parseFloat(this.closingBalance);
         let CODAmount = parseFloat(Math.round(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)));
 
-        if(this.AWBNo && Array.isArray(this.AWBNo) == false){
-          this.AWBNo = new Array(this.AWBNo);
-        }
-
         this.disableButton = true;
         this.input = ({
             DepositDate: this.DepositDate,
@@ -504,8 +556,8 @@ export default {
             TransactionID: this.TransactionID,
             ReasonID: (this.Reason)?this.Reason:null,
             ReasonAmount: (this.ReasonAmount)?this.ReasonAmount:0,
-            AWBNo: (this.AWBNo)?this.AWBNo:new Array(),
-            CardAmount: this.CardAmount,
+            AWBNo: (this.DisputeArr)?this.DisputeArr:new Array(),
+            CardAmount: (this.CardAmount)?this.CardAmount:0,
             CreatedBy: this.localuserid,
             HubId: this.localhubid,
             HubZoneId: this.localhubzoneid,
@@ -702,7 +754,9 @@ export default {
               error.style.display = "block";
           }else{
             //78,152,186
-            if(this.AWBNo && (this.cariss || this.deldis || this.paychg || this.cassnat || this.casstol || this.theftstol || this.vendrec || this.wrongdel)){
+
+            if((this.carissAWBNo || this.cassnatAWBNo || this.deldisAWBNo || this.paychgAWBNo || this.vendrecAWBNo || this.casstolAWBNo || this.theftstolAWBNo  || this.wrongdelAWBNo)
+             && (this.cariss || this.deldis || this.paychg || this.cassnat || this.casstol || this.theftstol || this.vendrec || this.wrongdel)){
               this.cardawbno(event);
             }else{
               if(event.target[6].id=="DepositSlip" && this.uploadFileList.length<=0){
@@ -729,11 +783,12 @@ export default {
     resetForm(event) {
       this.DepositLoading = false; this.ReasonLoading = false;
       this.BatchID = Math.floor(Math.random() * (Math.pow(10,5)));
-      this.pageno = this.tot_amt = this.unmatchedAmt = this.CardAmount = 0; this.ReasonAmount = '';
+      this.pageno = this.tot_amt = this.unmatchedAmt = this.CardAmount = 0;
       this.uploadFileList = []; this.reasonFileList = []; this.BankList = []; this.exception = []; this.exceptionList = []; this.exceptionArr = [];
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.ReasonSlip = this.Reason = '';
-      this.AWBNo = '';
+      this.DisputeArr = [];
       this.amoimp = this.vendrec = this.deldis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel= false;
+      this.ReasonAmount = this.vendrecAWBNo = this.deldisAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = '';
       $('#denomlist input[type="text"]').val(0); $('#denomlist input[type="number"]').val('');
       document.getElementById("d_a").style.display = "none";
       this.GetShipmentUpdate();
@@ -765,39 +820,84 @@ export default {
       this.$refs.awbModalRef.show();
     },
 
+    showReasonAWBNo(ele){
+      this.DisputeArr = [];
+      this.DisputeArr = ele;
+      this.$refs.myReasonModalRef.show();
+    },
+
     closeAWBNoModal() {
         this.modalAWBNoShow = false
     },
 
-    setReasonId(){
-      this.amoimp = this.vendrec = this.deldis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = false;
-      this.CardAmount = 0; this.ReasonAmount = ''; this.AWBNo = ''; this.reasonFileList = [];
-      if(this.Reason){
-        if(this.Reason == 65){
-          this.amoimp = true;
-        }else if((process.env.NODE_ENV == 'development' && this.Reason == 119) || (process.env.NODE_ENV == 'production' && this.Reason == 98)){
-          this.vendrec = true;
-        }else if((process.env.NODE_ENV == 'development' && this.Reason == 152) || (process.env.NODE_ENV == 'production' && this.Reason == 121)){
-          this.deldis = true;
-        }else if((process.env.NODE_ENV == 'development' && this.Reason == 77) || (process.env.NODE_ENV == 'production' && this.Reason == 77)){
-          this.cassnat = true;
-        }else if((process.env.NODE_ENV == 'development' && this.Reason == 78) || (process.env.NODE_ENV == 'production' && this.Reason == 78)){
-          this.cariss = true;
-        }else if((process.env.NODE_ENV == 'development' && this.Reason == 186) || (process.env.NODE_ENV == 'production' && this.Reason == 123)){
-          this.paychg = true;
-        }else if((process.env.NODE_ENV == 'development' && this.Reason == 69) || (process.env.NODE_ENV == 'production' && this.Reason == 69)){
-          this.casstol = true;
-        }else if((process.env.NODE_ENV == 'development' && this.Reason == 82) || (process.env.NODE_ENV == 'production' && this.Reason == 82)){
-          this.theftstol = true;
-        }else if((process.env.NODE_ENV == 'development' && this.Reason == 284) || (process.env.NODE_ENV == 'production' && this.Reason == 127)){
-          this.wrongdel = true;
-        }
+    changeDepType(){ //change deposit type
+     this.unmatchedAmt = this.CardAmount = 0; this.Reason = ''; this.ReasonAmount = ''; this.DisputeArr = []; this.reasonFileList = [];
+     this.amoimp = this.vendrec = this.deldis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = false;
+     this.ReasonAmount = this.vendrecAWBNo = this.deldisAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = '';
+    },
+
+    showCheckboxes(){
+      var checkboxes = document.getElementById("checkboxes");
+      if (!this.expanded) {
+        checkboxes.style.display = "block";
+        this.expanded = true;
+      } else {
+        checkboxes.style.display = "none";
+        this.expanded = false;
       }
     },
 
-    changeDepType(){
-     this.unmatchedAmt = this.CardAmount = 0; this.Reason = ''; this.ReasonAmount = ''; this.AWBNo = ''; this.reasonFileList = [];
-     this.amoimp = this.vendrec = this.deldis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = false;
-    }
+    setid(key){
+      return key;
+    },
+
+    showHideReasonField(Reason){
+
+      if(($('#'+Reason).prop("checked") == true) && Reason){
+        if(Reason == 65){
+          this.amoimp = true; this.amoimpReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 119) || (process.env.NODE_ENV == 'production' && Reason == 98)){
+          this.vendrec = true; this.vendrecReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 152) || (process.env.NODE_ENV == 'production' && Reason == 121)){
+          this.deldis = true; this.deldisReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 77) || (process.env.NODE_ENV == 'production' && Reason == 77)){
+          this.cassnat = true; this.cassnatReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 78) || (process.env.NODE_ENV == 'production' && Reason == 78)){
+          this.cariss = true; this.carissReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 186) || (process.env.NODE_ENV == 'production' && Reason == 123)){
+          this.paychg = true; this.paychgReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 69) || (process.env.NODE_ENV == 'production' && Reason == 69)){
+          this.casstol = true; this.casstolReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 82) || (process.env.NODE_ENV == 'production' && Reason == 82)){
+          this.theftstol = true; this.theftstolReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 284) || (process.env.NODE_ENV == 'production' && Reason == 127)){
+          this.wrongdel = true; this.wrongdelReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 80) || (process.env.NODE_ENV == 'production' && Reason == 80)){
+          this.lowdis = true; this.lowdisReason = Reason;
+        }
+      }else{
+        if(Reason == 65){
+          this.amoimp = false; this.ReasonAmount = ''; this.reasonFileList = []; this.amoimpReason = '';
+        }else if((process.env.NODE_ENV == 'development' && Reason == 119) || (process.env.NODE_ENV == 'production' && Reason == 98)){
+          this.vendrec = false; this.vendrecAWBNo = ''; this.vendrecReason = '';
+        }else if((process.env.NODE_ENV == 'development' && Reason == 152) || (process.env.NODE_ENV == 'production' && Reason == 121)){
+          this.deldis = false; this.deldisAWBNo = ''; this.deldisReason = '';
+        }else if((process.env.NODE_ENV == 'development' && Reason == 77) || (process.env.NODE_ENV == 'production' && Reason == 77)){
+          this.cassnat = false; this.cassnatAWBNo = ''; this.cassnatReason = '';
+        }else if((process.env.NODE_ENV == 'development' && Reason == 78) || (process.env.NODE_ENV == 'production' && Reason == 78)){
+          this.cariss = false; this.carissAWBNo = ''; this.carissReason = '';
+        }else if((process.env.NODE_ENV == 'development' && Reason == 186) || (process.env.NODE_ENV == 'production' && Reason == 123)){
+          this.paychg = false; this.paychgAWBNo = ''; this.paychgReason = '';
+        }else if((process.env.NODE_ENV == 'development' && Reason == 69) || (process.env.NODE_ENV == 'production' && Reason == 69)){
+          this.casstol = false; this.casstolAWBNo = ''; this.casstolReason = '';
+        }else if((process.env.NODE_ENV == 'development' && Reason == 82) || (process.env.NODE_ENV == 'production' && Reason == 82)){
+          this.theftstol = false; this.theftstolAWBNo = ''; this.theftstolReason = '';
+        }else if((process.env.NODE_ENV == 'development' && Reason == 284) || (process.env.NODE_ENV == 'production' && Reason == 127)){
+          this.wrongdel = false; this.wrongdelAWBNo = ''; this.wrongdelReason = '';
+        }else if((process.env.NODE_ENV == 'development' && Reason == 80) || (process.env.NODE_ENV == 'production' && Reason == 80)){
+          this.lowdis = false; this.lowdisReason = '';
+        }
+      }
+    },
   }
 }

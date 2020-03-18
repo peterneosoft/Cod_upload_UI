@@ -20,12 +20,14 @@ export default {
       toDate: '',
       fromDate: '',
       listSearchSVCledgerData: [],
+      DisputeArr: [],
       myStr: '',
       localhubid: '',
       localhubname: '',
       modalAWBNoShow:false,
       awbnotype:'',
-      awbnumber:''
+      awbnumber:'',
+      ReasonModalShow:false
     }
   },
 
@@ -149,6 +151,16 @@ export default {
 
     closeAWBNoModal() {
         this.modalAWBNoShow = false
+    },
+
+    showReasonAWBNo(ele){
+      this.DisputeArr = [];
+      this.DisputeArr = ele;
+      this.$refs.myReasonModalRef.show();
+    },
+
+    closeStatusRoleModal() {
+      this.ReasonModalShow = false
     },
   }
 }

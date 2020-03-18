@@ -67,12 +67,14 @@
                     <th class="text-center tableheader"><b>Hub/SVC Name</b></th>
                     <th class="text-center tableheader"><b>RSC Name</b></th>
                     <th class="text-center tableheader"><b>Till Date</b></th>
-                    <th class="text-center tableheader"><b>COD Outstanding Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Pending COD ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Dispute Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Total Outstanding ( <i class="fa fa-rupee"></i> )</b></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td colspan="6" align="center">No record found</td>
+                    <td colspan="8" align="center">No record found</td>
                   </tr>
                   <tr v-for="(CODOutstanding,index) in CODOutstandingReport">
                     <td class="text-center">{{pageno+index+1}}</td>
@@ -80,6 +82,8 @@
                     <td class="text-center">{{CODOutstanding.hubname}}</td>
                     <td class="text-center">{{CODOutstanding.rscowner}}</td>
                     <td class="text-center">{{CODOutstanding.createddate}}</td>
+                    <td class="text-center">{{CODOutstanding.pendingcod}}</td>
+                    <td class="text-center">{{CODOutstanding.DisputeAmt}}</td>
                     <td class="text-center">{{CODOutstanding.closingbalance}}</td>
                   </tr>
                 </tbody>
