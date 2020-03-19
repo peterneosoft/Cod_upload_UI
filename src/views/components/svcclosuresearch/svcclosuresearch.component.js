@@ -24,10 +24,10 @@ export default {
       myStr: '',
       localhubid: '',
       localhubname: '',
-      modalAWBNoShow:false,
       awbnotype:'',
       awbnumber:'',
-      ReasonModalShow:false
+      ReasonModalShow:false,
+      RecExcModalShow:false
     }
   },
 
@@ -142,15 +142,9 @@ export default {
       }
     },
 
-    showAWBNo(typ, ele){
-      this.awbnotype = ''; this.awbnumber = '';
-      this.awbnotype = typ + ' AWB Number:';
-      this.awbnumber = ele;
-      this.$refs.awbModalRef.show();
-    },
-
-    closeAWBNoModal() {
-        this.modalAWBNoShow = false
+    closeStatusRoleModal() {
+      this.ReasonModalShow = false
+      this.RecExcModalShow = false
     },
 
     showReasonAWBNo(ele){
@@ -159,8 +153,39 @@ export default {
       this.$refs.myReasonModalRef.show();
     },
 
-    closeStatusRoleModal() {
-      this.ReasonModalShow = false
+    showRecExcAWBNo(eletyp, ele, eleawb, financereasonid=null){
+
+      this.DisputeArr = [];
+
+      if(ele>0){
+        let AWBArr = {}; AWBArr['awb'] = []
+
+        if(eletyp == 'recovery' && financereasonid!=null){
+          AWBArr['Reason'] = "Self Debit/Client Recovery"
+        }else if(eletyp == 'recovery' && financereasonid==null){
+          AWBArr['Reason'] = "Amount used for Tax Payment/Imprest"
+        }else if(eletyp == 'exception'){
+          AWBArr['Reason'] = "Exception"
+        }
+
+        eleawb = eleawb.split(',');
+        if(eleawb.length>0){
+          eleawb.forEach(async(item, i) => {
+            let obj = {};
+            obj[item]=item;
+            AWBArr['awb'].push(obj)
+          });
+        }else{
+          let obj = {};
+          obj[eleawb]=eleawb;
+          AWBArr['awb'].push(obj)
+        }
+        AWBArr['amount'] = ele
+
+        this.DisputeArr = new Array(AWBArr);
+      }
+
+      this.$refs.myRecExcModalRef.show();
     },
   }
 }

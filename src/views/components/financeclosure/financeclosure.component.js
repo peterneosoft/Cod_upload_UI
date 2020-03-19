@@ -52,7 +52,6 @@ export default {
       zoneLoading: false,
       allZoneLoading: false,
       hubLoading: false,
-      modalAWBNoShow:false,
       awbnotype:'',
       awbnumber:'',
       modalShow:false,
@@ -60,7 +59,8 @@ export default {
       findata:[],
       elem:'',
       DisputeArr:[],
-      ReasonModalShow:false
+      ReasonModalShow:false,
+      RecExcModalShow:false
     }
   },
 
@@ -306,13 +306,15 @@ export default {
     closeStatusRoleModal() {
       this.modalShow = false
       this.cardModalShow = false
+      this.ReasonModalShow = false
+      this.RecExcModalShow = false
     },
 
     cardawbno(elem, findata){
 
       axios({
           method: 'POST',
-          'url': apiUrl.api_url + 'getAWBNo',
+          'url': apiUrl.api_url + 'checkAWBNo',
           'data': ({AWBNo: this.AWBArr}),
           headers: {
               'Authorization': 'Bearer '+this.myStr
@@ -472,25 +474,45 @@ export default {
       if(this.zone && this.HubId && this.status) window.scrollBy(0, 1000);
     },
 
-    showAWBNo(typ, ele){
-      this.awbnotype = ''; this.awbnumber = '';
-      this.awbnotype = typ + ' AWB Number:';
-      this.awbnumber = ele;
-      this.$refs.awbModalRef.show();
-    },
-
-    closeAWBNoModal() {
-        this.modalAWBNoShow = false
-    },
-
     showReasonAWBNo(ele){
       this.DisputeArr = [];
       this.DisputeArr = ele;
       this.$refs.myReasonModalRef.show();
     },
 
-    closeStatusRoleModal() {
-      this.ReasonModalShow = false
+    showRecExcAWBNo(eletyp, ele, eleawb, financereasonid=null){
+
+      this.DisputeArr = [];
+
+      if(ele>0){
+        let AWBArr = {}; AWBArr['awb'] = []
+
+        if(eletyp == 'recovery' && financereasonid!=null){
+          AWBArr['Reason'] = "Self Debit/Client Recovery"
+        }else if(eletyp == 'recovery' && financereasonid==null){
+          AWBArr['Reason'] = "Amount used for Tax Payment/Imprest"
+        }else if(eletyp == 'exception'){
+          AWBArr['Reason'] = "Exception"
+        }
+
+        eleawb = eleawb.split(',');
+        if(eleawb.length>0){
+          eleawb.forEach(async(item, i) => {
+            let obj = {};
+            obj[item]=item;
+            AWBArr['awb'].push(obj)
+          });
+        }else{
+          let obj = {};
+          obj[eleawb]=eleawb;
+          AWBArr['awb'].push(obj)
+        }
+        AWBArr['amount'] = ele
+
+        this.DisputeArr = new Array(AWBArr);
+      }
+
+      this.$refs.myRecExcModalRef.show();
     },
   }
 }

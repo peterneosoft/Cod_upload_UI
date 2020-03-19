@@ -84,6 +84,7 @@ export default {
       modalShow:false,
       cardModalShow:false,
       ReasonModalShow:false,
+      RecExcModalShow:false,
       penAmtLoading: false,
       denomLoading: false,
       exceptionLoading: false,
@@ -174,6 +175,7 @@ export default {
       this.modalShow = false
       this.cardModalShow = false
       this.ReasonModalShow = false
+      this.RecExcModalShow = false
     },
 
     GetShipmentUpdate() {
@@ -430,6 +432,8 @@ export default {
 
       if(this.lowdis) awbArr.push({ ReasonID:this.lowdisReason, AWBNo:[] });
 
+      if(this.amoimp) awbArr.push({ ReasonID:this.amoimpReason, AWBNo:[] });
+
       axios({
         method: 'POST',
         'url': apiUrl.api_url + 'getAWBNo',
@@ -476,10 +480,8 @@ export default {
       let DepositReasonExcepAmount = ''; this.unmatchedAmt = 0;
       DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount));
 
-      this.ReasonAmount = (this.ReasonAmount)?this.ReasonAmount:0;
-
       if(this.amoimp || this.CardAmount > 0){ //65
-        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.ReasonAmount)+parseFloat(this.CardAmount)));
+        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat((this.ReasonAmount)?this.ReasonAmount:'0')+parseFloat(this.CardAmount)));
       }
 
       //let TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount)-parseFloat(this.CardAmount))));
@@ -545,63 +547,67 @@ export default {
         let OpeningBalance = parseFloat(this.closingBalance);
         let CODAmount = parseFloat(Math.round(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)));
 
-        this.disableButton = true;
-        this.input = ({
-            DepositDate: this.DepositDate,
-            DeliveryDate: this.DeliveryDate,
-            Deposit_Amount: DepositAmount,
-            DepositType: this.DepositType,
-            BankID: this.BankMasterId,
-            BankDeposit: DepositAmount,
-            TransactionID: this.TransactionID,
-            ReasonID: (this.Reason)?this.Reason:null,
-            ReasonAmount: (this.ReasonAmount)?this.ReasonAmount:0,
-            AWBNo: (this.DisputeArr)?this.DisputeArr:new Array(),
-            CardAmount: (this.CardAmount)?this.CardAmount:0,
-            CreatedBy: this.localuserid,
-            HubId: this.localhubid,
-            HubZoneId: this.localhubzoneid,
-            DifferenceAmount: 0,
-            TolatCollection: TolatCollection,
-            StatusID: 1,
-            OpeningBalance: OpeningBalance,
-            ClosingBalance: (ClosingBalance)?ClosingBalance:0,
-            FinanceConfirmAmount: 0,
-            CODAmount: CODAmount,
-            IsActive: true,
-            BatchID: this.BatchID,
-            p2pamt: p2pamt,
-            totalAmtdeposit: DepositAmount + p2pamt,
-            Denomination: this.DenominationArr,
-            NoteCount: NoteCountArr,
-            DenominationID: DenominationIDArr,
-            exceptionId: this.exceptionArr,
-            exceptionAmount: this.exceptionAmount,
-            hubIsRSC: this.localhubIsRSC
-        })
+        if(this.lowdis || ClosingBalance=='0'){
+          this.disableButton = true;
+          this.input = ({
+              DepositDate: this.DepositDate,
+              DeliveryDate: this.DeliveryDate,
+              Deposit_Amount: DepositAmount,
+              DepositType: this.DepositType,
+              BankID: this.BankMasterId,
+              BankDeposit: DepositAmount,
+              TransactionID: this.TransactionID,
+              ReasonID: (this.Reason)?this.Reason:null,
+              ReasonAmount: (this.ReasonAmount)?this.ReasonAmount:0,
+              AWBNo: (this.DisputeArr)?this.DisputeArr:new Array(),
+              CardAmount: (this.CardAmount)?this.CardAmount:0,
+              CreatedBy: this.localuserid,
+              HubId: this.localhubid,
+              HubZoneId: this.localhubzoneid,
+              DifferenceAmount: 0,
+              TolatCollection: TolatCollection,
+              StatusID: 1,
+              OpeningBalance: OpeningBalance,
+              ClosingBalance: (ClosingBalance)?ClosingBalance:0,
+              FinanceConfirmAmount: 0,
+              CODAmount: CODAmount,
+              IsActive: true,
+              BatchID: this.BatchID,
+              p2pamt: p2pamt,
+              totalAmtdeposit: DepositAmount + p2pamt,
+              Denomination: this.DenominationArr,
+              NoteCount: NoteCountArr,
+              DenominationID: DenominationIDArr,
+              exceptionId: this.exceptionArr,
+              exceptionAmount: this.exceptionAmount,
+              hubIsRSC: this.localhubIsRSC
+          })
 
-        axios({
-            method: 'POST',
-            'url': apiUrl.api_url + 'submitSVCClosure',
-            'data': this.input,
-            headers: {
-                'Authorization': 'Bearer '+this.myStr
+          axios({
+              method: 'POST',
+              'url': apiUrl.api_url + 'submitSVCClosure',
+              'data': this.input,
+              headers: {
+                  'Authorization': 'Bearer '+this.myStr
+              }
+          })
+          .then((response) => {
+            if (response.data.errorCode == 0) {
+              this.$alertify.success(response.data.msg);
+              this.disableButton = false;
+              window.scrollBy(0, 1000);
+              this.resetForm(event);
+            } else if (response.data.errorCode == -1) {
+              this.$alertify.error(response.data.msg)
             }
-        })
-        .then((response) => {
-          if (response.data.errorCode == 0) {
-            this.$alertify.success(response.data.msg);
-            this.disableButton = false;
-            window.scrollBy(0, 1000);
-            this.resetForm(event);
-          } else if (response.data.errorCode == -1) {
-            this.$alertify.error(response.data.msg)
-          }
-        })
-        .catch((httpException) => {
-            this.disableButton = false;
-            this.$alertify.error('Error occured')
-        });
+          })
+          .catch((httpException) => {
+              this.disableButton = false;
+              this.$alertify.error('Error occured')
+          });
+        }else{
+          this.$alertify.error('Error occured')
+        }
       }
     },
 
@@ -755,8 +761,7 @@ export default {
           }else{
             //78,152,186
 
-            if((this.carissAWBNo || this.cassnatAWBNo || this.deldisAWBNo || this.paychgAWBNo || this.vendrecAWBNo || this.casstolAWBNo || this.theftstolAWBNo  || this.wrongdelAWBNo)
-             && (this.cariss || this.deldis || this.paychg || this.cassnat || this.casstol || this.theftstol || this.vendrec || this.wrongdel)){
+            if(this.amoimp || this.cariss || this.deldis || this.paychg || this.cassnat || this.casstol || this.theftstol || this.vendrec || this.wrongdel || this.lowdis){
               this.cardawbno(event);
             }else{
               if(event.target[6].id=="DepositSlip" && this.uploadFileList.length<=0){
@@ -787,7 +792,7 @@ export default {
       this.uploadFileList = []; this.reasonFileList = []; this.BankList = []; this.exception = []; this.exceptionList = []; this.exceptionArr = [];
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.ReasonSlip = this.Reason = '';
       this.DisputeArr = [];
-      this.amoimp = this.vendrec = this.deldis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel= false;
+      this.amoimp = this.vendrec = this.deldis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = this.lowdis = false;
       this.ReasonAmount = this.vendrecAWBNo = this.deldisAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = '';
       $('#denomlist input[type="text"]').val(0); $('#denomlist input[type="number"]').val('');
       document.getElementById("d_a").style.display = "none";
@@ -811,23 +816,6 @@ export default {
         $('#vri'+index).show();
         $('#vrl'+index).hide();
       }
-    },
-
-    showAWBNo(typ, ele){
-      this.awbnotype = ''; this.awbnumber = '';
-      this.awbnotype = typ + ' AWB Number:';
-      this.awbnumber = ele;
-      this.$refs.awbModalRef.show();
-    },
-
-    showReasonAWBNo(ele){
-      this.DisputeArr = [];
-      this.DisputeArr = ele;
-      this.$refs.myReasonModalRef.show();
-    },
-
-    closeAWBNoModal() {
-        this.modalAWBNoShow = false
     },
 
     changeDepType(){ //change deposit Amount
@@ -902,6 +890,47 @@ export default {
           this.lowdis = false; this.lowdisReason = '';
         }
       }
+    },
+
+    showReasonAWBNo(ele){
+      this.DisputeArr = [];
+      this.DisputeArr = ele;
+      this.$refs.myReasonModalRef.show();
+    },
+
+    showRecExcAWBNo(eletyp, ele, eleawb, financereasonid=null){
+
+      this.DisputeArr = [];
+
+      if(ele>0){
+        let AWBArr = {}; AWBArr['awb'] = []
+
+        if(eletyp == 'recovery' && financereasonid!=null){
+          AWBArr['Reason'] = "Self Debit/Client Recovery"
+        }else if(eletyp == 'recovery' && financereasonid==null){
+          AWBArr['Reason'] = "Amount used for Tax Payment/Imprest"
+        }else if(eletyp == 'exception'){
+          AWBArr['Reason'] = "Exception"
+        }
+
+        eleawb = eleawb.split(',');
+        if(eleawb.length>0){
+          eleawb.forEach(async(item, i) => {
+            let obj = {};
+            obj[item]=item;
+            AWBArr['awb'].push(obj)
+          });
+        }else{
+          let obj = {};
+          obj[eleawb]=eleawb;
+          AWBArr['awb'].push(obj)
+        }
+        AWBArr['amount'] = ele
+
+        this.DisputeArr = new Array(AWBArr);
+      }
+
+      this.$refs.myRecExcModalRef.show();
     },
   }
 }

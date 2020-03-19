@@ -113,6 +113,54 @@
           </div>
         </div>
       </b-modal>
+
+      <b-modal ref="myRecExcModalRef" v-model="RecExcModalShow" id=#confirmationmodal3 title="Confirmation">
+        <div role="document">
+          <div class="modal-content" style="width: 150%;">
+            <div class="modal-headerfrm">
+              <h5 class="modal-title" style="font-size: 1rem;">Self Debit/Recovery & Exception AWB No/Amount</h5>
+              <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
+                <span aria-hidden="true" style="color: white;">×</span>
+              </button>
+            </div>
+            <div class="modal-bodyfrm">
+              <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+                <thead>
+                  <tr class="text-primary">
+                    <th class="text-center tableheader" style="width: 1%"><b>#</b></th>
+                    <th class="text-center tableheader" style="width: 50%"><b>Reason</b></th>
+                    <th class="text-center tableheader" style="width: 49%">
+                      <table class="table-bordered table-hover tbl datatables">
+                        <tr class="text-primary">
+                          <th class="text-center tableheader" style="width:25%"><b>AWB Number</b></th>
+                        </tr>
+                      </table>
+                    </th>
+                    <th class="text-center tableheader" style="width:10%"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-if="DisputeArr.length<=0">
+                    <td colspan="4" align="center">No record found</td>
+                  </tr>
+                  <tr v-for="(val,index) in DisputeArr">
+                    <td class="text-center" style="width: 1%">{{index+1}}</td>
+                    <td class="text-center" style="width: 50%">{{val.Reason}}</td>
+                    <td class="text-center" style="width: 49%">
+                      <table class="table-bordered table-hover tbl datatables">
+                        <tr v-for="(row, ind) in val.awb">
+                          <td class="text-center" style="width:25%">{{(Object.keys(row)) ? Object.keys(row).toString() : ''}}</td>
+                        </tr>
+                      </table>
+                    </td>
+                    <td class="text-center" style="width:11%">{{val.amount}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </b-modal>
     </div>
 
     <div class="row">
@@ -133,38 +181,42 @@
                 <th class="text-center tableheader"><b>Bank Deposited Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                 <th class="text-center tableheader"><b>Finance Confirmed Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                 <th class="text-center tableheader"><b>Exception Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
-                <th class="text-center tableheader"><b>Card/ Other AWB Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+                <th class="text-center tableheader"><b>Dispute Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                 <th class="text-center tableheader"><b>Charges/ Recovery Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                 <th class="text-center tableheader"><b>Outstanding Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                 <th class="text-center tableheader"><b>Status</b></th>
                 <th class="text-center tableheader"><b>Finance Reason</b></th>
                 <th class="text-center tableheader"><b>Deposit Type</b></th>
                 <th class="text-center tableheader"><b>Bank Name</b></th>
-                <th class="text-center tableheader"><b>Reason</b></th>
                 <th class="text-center tableheader"><b>View Receipt</b></th>
-                <th class="text-center tableheader"><b>View Reason/AWB No.</b></th>
               </tr>
             </thead>
             <tbody>
               <tr v-if="resultCount==0">
-                <td colspan="20" align="center">No record found</td>
+                <td colspan="18" align="center">No record found</td>
               </tr>
               <tr v-for="(data,index) in listFinanceledgerData" v-bind:class="`${([84,124,187].includes(data.financereasonid)) ? 'mismatched' : ''}`">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
-                <td>{{data.hubname}}</td>
-                <td>{{data.rscowner}}</td>
-                <td>{{data.deliverydate}}</td>
-                <td>{{data.depositdate}}</td>
-                <td>{{data.openingbalance}}</td>
-                <td>{{data.codamount}}</td>
-                <td>{{data.bankdeposit}}</td>
-                <td>{{data.actualrecamt}}</td>
-                <td>{{data.exceptionamt}}</td>
-                <td>{{data.cardissueamt}}</td>
-                <td>{{data.othercharges}}</td>
-                <td>{{data.balanceoutstanding}}</td>
-                <td>{{StatusVal}}</td>
-                <td>
+                <td class="text-center">{{data.hubname}}</td>
+                <td class="text-center">{{data.rscowner}}</td>
+                <td class="text-center">{{data.deliverydate}}</td>
+                <td class="text-center">{{data.depositdate}}</td>
+                <td class="text-center">{{data.openingbalance}}</td>
+                <td class="text-center">{{data.codamount}}</td>
+                <td class="text-center">{{data.bankdeposit}}</td>
+                <td class="text-center">{{data.actualrecamt}}</td>
+                <td class="text-center">
+                  <span @click="showRecExcAWBNo('exception', data.exceptionamt, data.awbno)" style="cursor:pointer; color: rgb(25,25,112);">{{data.exceptionamt}}</span>
+                </td>
+                <td class="text-center">
+                  <span @click="showReasonAWBNo(data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">{{data.cardissueamt}}</span>
+                </td>
+                <td class="text-center">
+                  <span @click="showRecExcAWBNo('recovery', data.othercharges, data.recoveryawb, data.financereasonid)" style="cursor:pointer; color: rgb(25,25,112);">{{data.othercharges}}</span>
+                </td>
+                <td class="text-center">{{data.balanceoutstanding}}</td>
+                <td class="text-center">{{StatusVal}}</td>
+                <td class="text-center">
                   <form v-on:submit.prevent="onUpdate(data.svcledgerid, data)">
                     <select style="width: 220px;" v-model="form.finreason[data.svcledgerid]"  v-bind:name="setid('finreason', data.svcledgerid)" v-bind:id="setid('finreason', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('finreason'+data.svcledgerid) }" :disabled="data.statusid == 6 ? true : false">
                       <option value="">--Select--</option>
@@ -188,10 +240,9 @@
                     <span v-show="form.hide[data.svcledgerid] == 0"><br><button class="btn btn-sm btn-primary" type="submit" :disabled = "(data.statusid == 6) || (form.button[data.svcledgerid])" ><i class="fa fa-dot-circle-o"></i> Submit</button></span>
                 </form>
                 </td>
-                <td>{{data.deposittype}}</td>
-                <td>{{data.bank}}</td>
-                <td>{{data.reason}}</td>
-                <td>
+                <td class="text-center">{{data.deposittype}}</td>
+                <td class="text-center">{{data.bank}}</td>
+                <td class="text-center">
                   <span v-bind:id='`${"vrl"+data.svcledgerid}`' v-if="data.files.length>0" @click="showHideImages(data.svcledgerid, 'vrl')" style="color: blue; cursor: pointer;"><u>Deposit</u></span>
                   <span v-bind:id='`${"vri"+data.svcledgerid}`' style="display: none;">
                     <a v-bind:title='`${file.name}`' v-for="file in data.files" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
@@ -202,15 +253,6 @@
                     <a v-bind:title='`${file.name}`' v-for="file in data.reasonfiles" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
                   </span>
                 </td>
-                <td>
-                  <span v-if="data.awbnocount!='' && data.reasonid!=186 && data.reasonid!=123" @click="showAWBNo('Exception', data.awbno)" style="cursor:pointer; color: rgb(25,25,112);">Exception</span>
-                  <br v-if="data.awbnocount!='' && data.cardawbnocount!=''">
-                  <span v-if="data.reasonid==186 || data.reasonid==123" @click="showAWBNo('Payment Mode Changed', data.awbno)" style="cursor:pointer; color: rgb(25,25,112);">AWB No</span>
-                  <br v-if="data.reasonid==186 || data.reasonid==123">
-                  <span v-if="data.cardawbnocount!=''" @click="showReasonAWBNo(data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">View</span>
-                  <br v-if="data.recoveryawbcount!=''">
-                  <span v-if="data.recoveryawbcount!=''" @click="showAWBNo('Self Debit/Recovery', data.recoveryawb)" style="cursor:pointer; color: rgb(25,25,112);">Recovery</span>
-                </td>
               </tr>
             </tbody>
           </table><br>
@@ -218,22 +260,6 @@
           </paginate>
         </div>
       </div>
-
-      <b-modal ref="awbModalRef" v-model="modalAWBNoShow"  id=#confirmationmodal1 title="Confirmation">
-        <div role="document">
-          <div class="modal-content">
-            <div class="modal-headerfrm">
-              <h5 class="modal-title" style="font-size: 1rem;">{{awbnotype}}</h5>
-              <button type="button" class="close" @click="closeAWBNoModal" aria-label="Close">
-                <span aria-hidden="true" style="color: white;">×</span>
-              </button>
-            </div>
-            <div class="modal-bodyfrm">
-              <h5 style="font-size: 15px; padding: 10px; color:#074202;">{{awbnumber}}</h5>
-            </div>
-          </div>
-        </div>
-      </b-modal>
 
       <b-modal ref="myCardModalRef" v-model="cardModalShow" id=#confirmationmodal title="Confirmation">
         <div role="document">
