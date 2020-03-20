@@ -70,7 +70,7 @@
         <div role="document">
           <div class="modal-content" style="width: 150%;">
             <div class="modal-headerfrm">
-              <h5 class="modal-title" style="font-size: 1rem;">Reason & AWB No/Amount</h5>
+              <h5 class="modal-title" style="font-size: 1rem;">Reason AWB No/Amount</h5>
               <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
                 <span aria-hidden="true" style="color: white;">×</span>
               </button>
@@ -98,11 +98,19 @@
                   <tr v-for="(val,index) in DisputeArr">
                     <td class="text-center" style="width: 1%">{{index+1}}</td>
                     <td class="text-center" style="width: 50%">{{val.Reason}}</td>
-                    <td class="text-center" style="width: 49%">
+                    <td class="text-center" style="width: 49%" v-if="val.ReasonAmt">
+                      <table class="table-bordered table-hover tbl datatables">
+                        <tr>
+                          <td class="text-center" style="width:21%">&nbsp;</td>
+                          <td class="text-center" style="width:9%">{{val.ReasonAmt}}</td>
+                        </tr>
+                      </table>
+                    </td>
+                    <td class="text-center" style="width: 49%" v-if="!val.ReasonAmt">
                       <table class="table-bordered table-hover tbl datatables">
                         <tr v-for="(row, ind) in val.awb">
-                          <td class="text-center" style="width:25%">{{(Object.keys(row)) ? Object.keys(row).toString() : ''}}</td>
-                          <td class="text-center" style="width:11%">{{(Object.values(row)) ? Object.values(row).toString() : ''}}</td>
+                          <td class="text-center" style="width:21%">{{(Object.keys(row)) ? Object.keys(row).toString() : ''}}</td>
+                          <td class="text-center" style="width:9%">{{(Object.values(row)) ? Object.values(row).toString() : ''}}</td>
                         </tr>
                       </table>
                     </td>

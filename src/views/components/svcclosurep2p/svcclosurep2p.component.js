@@ -432,7 +432,7 @@ export default {
 
       if(this.lowdis) awbArr.push({ ReasonID:this.lowdisReason, AWBNo:[] });
 
-      if(this.amoimp) awbArr.push({ ReasonID:this.amoimpReason, AWBNo:[] });
+      if(this.amoimp) awbArr.push({ ReasonID:this.amoimpReason, AWBNo:[], ReasonAmt:(this.ReasonAmount)?this.ReasonAmount:'0' });
 
       axios({
         method: 'POST',
@@ -557,8 +557,8 @@ export default {
               BankID: this.BankMasterId,
               BankDeposit: DepositAmount,
               TransactionID: this.TransactionID,
-              ReasonID: (this.Reason)?this.Reason:null,
-              ReasonAmount: (this.ReasonAmount)?this.ReasonAmount:0,
+              ReasonID: (this.amoimpReason)?this.amoimpReason:null,
+              ReasonAmount: 0,
               AWBNo: (this.DisputeArr)?this.DisputeArr:new Array(),
               CardAmount: (this.CardAmount)?this.CardAmount:0,
               CreatedBy: this.localuserid,
@@ -898,17 +898,15 @@ export default {
       this.$refs.myReasonModalRef.show();
     },
 
-    showRecExcAWBNo(eletyp, ele, eleawb, financereasonid=null){
+    showRecExcAWBNo(eletyp, ele, eleawb){
 
       this.DisputeArr = [];
 
       if(ele>0){
         let AWBArr = {}; AWBArr['awb'] = []
 
-        if(eletyp == 'recovery' && financereasonid!=null){
+        if(eletyp == 'recovery'){
           AWBArr['Reason'] = "Self Debit/Client Recovery"
-        }else if(eletyp == 'recovery' && financereasonid==null){
-          AWBArr['Reason'] = "Amount used for Tax Payment/Imprest"
         }else if(eletyp == 'exception'){
           AWBArr['Reason'] = "Exception"
         }
