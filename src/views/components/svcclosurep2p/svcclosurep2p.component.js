@@ -794,6 +794,7 @@ export default {
       this.DisputeArr = [];
       this.amoimp = this.vendrec = this.deldis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = this.lowdis = false;
       this.ReasonAmount = this.vendrecAWBNo = this.deldisAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = '';
+      this.amoimpReason = this.vendrecReason = this.deldisReason = this.cassnatReason = this.carissReason = this.paychgReason = this.casstolReason = this.theftstolReason = this.wrongdelReason = this.lowdisReason = '';
       $('#denomlist input[type="text"]').val(0); $('#denomlist input[type="number"]').val('');
       document.getElementById("d_a").style.display = "none";
       this.GetShipmentUpdate();
