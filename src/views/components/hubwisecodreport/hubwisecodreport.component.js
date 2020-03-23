@@ -433,17 +433,15 @@ export default {
       this.$refs.myReasonModalRef.show();
     },
 
-    showRecExcAWBNo(eletyp, ele, eleawb, financereasonid=null){
+    showRecExcAWBNo(eletyp, ele, eleawb){
 
       this.DisputeArr = [];
 
       if(ele>0){
         let AWBArr = {}; AWBArr['awb'] = []
 
-        if(eletyp == 'recovery' && financereasonid!=null){
+        if(eletyp == 'recovery'){
           AWBArr['Reason'] = "Self Debit/Client Recovery"
-        }else if(eletyp == 'recovery' && financereasonid==null){
-          AWBArr['Reason'] = "Amount used for Tax Payment/Imprest"
         }else if(eletyp == 'exception'){
           AWBArr['Reason'] = "Exception"
         }
