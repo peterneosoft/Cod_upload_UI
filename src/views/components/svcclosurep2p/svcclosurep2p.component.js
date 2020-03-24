@@ -481,7 +481,8 @@ export default {
       DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount));
 
       if(this.amoimp || this.CardAmount > 0){ //65
-        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat((this.ReasonAmount)?this.ReasonAmount:'0')+parseFloat(this.CardAmount)));
+        //DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat((this.ReasonAmount)?this.ReasonAmount:'0')+parseFloat(this.CardAmount)));
+        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.CardAmount)));
       }
 
       //let TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount)-parseFloat(this.CardAmount))));
@@ -533,7 +534,7 @@ export default {
             error.innerHTML      = "Deposit amount including other or sum of Dispute AWB amount charges should not be greater than total outstanding COD amount, please check.";
             error.style.display  = "block"; return false;
           }
-          ClosingBalance = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositReasonExcepAmount)));
+          ClosingBalance = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositAmount)));
         }
 
         let NoteCountArr = []; let DenominationIDArr = [];
