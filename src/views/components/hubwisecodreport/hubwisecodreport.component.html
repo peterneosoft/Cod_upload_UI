@@ -242,13 +242,16 @@
                     <td class="text-center">{{CODLedger_List.financeconfirmamount}}</td>
                     <td class="text-center">{{CODLedger_List.financeconfirmdate}}</td>
                     <td class="text-center">
-                      <span @click="showRecExcAWBNo('exception', CODLedger_List.exceptionamt, CODLedger_List.awbno)" style="cursor:pointer; color: rgb(25,25,112);">{{CODLedger_List.exceptionamt}}</span>
+                      <span @click="showRecExcAWBNo('exception', CODLedger_List.exceptionamt, CODLedger_List.awbno)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="CODLedger_List.exceptionamt>0">{{CODLedger_List.exceptionamt}}</span>
+                      <span v-if="CODLedger_List.exceptionamt<=0">{{CODLedger_List.exceptionamt}}</span>
                     </td>
                     <td class="text-center">
-                      <span @click="showReasonAWBNo(CODLedger_List.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">{{CODLedger_List.cardissueamt}}</span>
+                      <span @click="showReasonAWBNo(CODLedger_List.cardawbno)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="CODLedger_List.cardissueamt>0">{{CODLedger_List.cardissueamt}}</span>
+                      <span v-if="CODLedger_List.cardissueamt<=0">{{CODLedger_List.cardissueamt}}</span>
                     </td>
                     <td class="text-center">
-                      <span @click="showRecExcAWBNo('recovery', CODLedger_List.othercharges, CODLedger_List.recoveryawb)" style="cursor:pointer; color: rgb(25,25,112);">{{CODLedger_List.othercharges}}</span>
+                      <span @click="showRecExcAWBNo('recovery', CODLedger_List.othercharges, CODLedger_List.recoveryawb)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="CODLedger_List.othercharges>0">{{CODLedger_List.othercharges}}</span>
+                      <span v-if="CODLedger_List.othercharges<=0">{{CODLedger_List.othercharges}}</span>
                     </td>
                     <td class="text-center">{{CODLedger_List.balanceLogic}}</td>
                     <td class="text-center">{{CODLedger_List.StatusVal}}</td>

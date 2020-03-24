@@ -673,25 +673,28 @@
                 <td class="text-center">{{data.bankdeposit}}</td>
                 <td class="text-center">{{data.actualrecamt}}</td>
                 <td class="text-center">
-                  <span @click="showRecExcAWBNo('exception', data.exceptionamt, data.awbno)" style="cursor:pointer; color: rgb(25,25,112);">{{data.exceptionamt}}</span>
+                  <span @click="showRecExcAWBNo('exception', data.exceptionamt, data.awbno)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.exceptionamt>0">{{data.exceptionamt}}</span>
+                  <span v-if="data.exceptionamt<=0">{{data.exceptionamt}}</span>
                 </td>
                 <td class="text-center">
-                  <span @click="showReasonAWBNo(data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112);">{{data.cardissueamt}}</span>
+                  <span @click="showReasonAWBNo(data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.cardissueamt>0">{{data.cardissueamt}}</span>
+                  <span v-if="data.cardissueamt<=0">{{data.cardissueamt}}</span>
                 </td>
                 <td class="text-center">
-                  <span @click="showRecExcAWBNo('recovery', data.othercharges, data.recoveryawb)" style="cursor:pointer; color: rgb(25,25,112);">{{data.othercharges}}</span>
+                  <span @click="showRecExcAWBNo('recovery', data.othercharges, data.recoveryawb)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.othercharges>0">{{data.othercharges}}</span>
+                  <span v-if="data.othercharges<=0">{{data.othercharges}}</span>
                 </td>
                 <td class="text-center">{{data.closingbalance}}</td>
                 <td class="text-center" v-if="data.statusid==1">Open</td>
                 <td class="text-center" v-if="data.statusid==6">Close</td>
                 <td class="text-center">{{data.financereason}}</td>
                 <td class="text-center">
-                  <span v-bind:id='`${"vrl"+data.svcledgerid}`' v-if="data.files.length>0 && data.createdby!='schedular@xpressbees.com' && data.othercharges == '0.00'" @click="showHideImages(data.svcledgerid, 'vrl')" style="color: blue; cursor: pointer;">Deposit</span>
+                  <span v-bind:id='`${"vrl"+data.svcledgerid}`' v-if="data.files.length>0 && data.createdby!='schedular@xpressbees.com' && data.othercharges == '0.00'" @click="showHideImages(data.svcledgerid, 'vrl')" style="color: blue; cursor: pointer; text-decoration: underline;">Deposit</span>
                   <span v-bind:id='`${"vri"+data.svcledgerid}`' style="display: none;">
                     <a v-bind:title='`${file.name}`' v-for="file in data.files" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
                   </span>
 
-                  <br><span v-bind:id='`${"vrrl"+data.svcledgerid}`' v-if="(data.reasonfiles.length>0 && data.createdby!='schedular@xpressbees.com')" @click="showHideImages(data.svcledgerid, 'vrrl')" style="color: blue; cursor: pointer;">Other</span>
+                  <br><span v-bind:id='`${"vrrl"+data.svcledgerid}`' v-if="(data.reasonfiles.length>0 && data.createdby!='schedular@xpressbees.com')" @click="showHideImages(data.svcledgerid, 'vrrl')" style="color: blue; cursor: pointer; text-decoration: underline;">Other</span>
                   <span v-bind:id='`${"vrri"+data.svcledgerid}`' style="display: none;">
                     <a v-bind:title='`${file.name}`' v-for="file in data.reasonfiles" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
                   </span>
