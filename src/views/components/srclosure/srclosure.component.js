@@ -76,7 +76,50 @@ export default {
       closureCount:0,
       srtype:'',
       srArr:[],
-      modalSRNameShow:false
+      modalSRNameShow:false,
+      castheftAWBNo: '',
+      prevpenbalAWBNo: '',
+      srissAWBNo: '',
+      carissAWBNo: '',
+      cassnatAWBNo: '',
+      selfrecAWBNo: '',
+      paychgAWBNo: '',
+      codimprAWBNo: '',
+      codnttimAWBNo: '',
+      theftstolAWBNo: '',
+      wrongdelAWBNo: '',
+      castheftReason:'',
+      prevpenbalReason:'',
+      srissReason: '',
+      lowdisReason:'',
+      carissReason: '',
+      cassnatReason: '',
+      selfrecReason: '',
+      paychgReason: '',
+      codimprReason: '',
+      codnttimReason: '',
+      theftstolReason: '',
+      wrongdelReason: '',
+      castheft:false,
+      prevpenbal:false,
+      sriss:false,
+      lowdis:false,
+      cariss:false,
+      codimpr:false,
+      selfrec:false,
+      cassnat:false,
+      paychg:false,
+      codnttim:false,
+      theftstol:false,
+      wrongdel:false,
+      CardAmount: 0,
+      DisputeArr: [],
+      expanded:false,
+      cardModalShow:false,
+      subLoading:false,
+      ReasonModalShow:false,
+      DenomDetailModalShow:false,
+      DenomDetail:[]
     }
   },
 
@@ -116,35 +159,50 @@ export default {
       this.srArr = ele;
       this.$refs.SRNameModalRef.show();
     },
+
     closeSRNameModal() {
         this.modalSRNameShow = false
     },
+
     showShippingidModal(typ, ele){
       this.awbnotype = ''; this.awbArr = [];
       this.awbnotype = typ;
       this.awbArr = ele;
       this.$refs.shippingModalRef.show();
     },
+
     closeShippingidModal() {
         this.modalShippingShow = false
     },
+
     showModal(Balanc){
        this.$refs.myModalRef.show(Balanc)
        this.RemainData = Balanc;
     },
+
     hideModal() {
        this.$refs.myModalRef.hide()
      },
-     closeStatusRoleModal() {
-         this.modalShow = false
-     },
-     saveSRClosure(event){
+
+    closeStatusRoleModal() {
+       this.modalShow = false
+       this.cardModalShow = false
+       this.ReasonModalShow = false
+       this.DenomDetailModalShow = false
+    },
+
+    saveSRClosure(event){
 
        let statusAmount = "";
 
        let TotalAmt = (document.getElementById("Tot_Amt")).textContent;
        let IntTotalAmt = parseInt(TotalAmt)
        let IntDeposit_Amount = parseInt(this.Deposit_Amount)
+
+       if(this.CardAmount > 0){
+         IntDeposit_Amount = parseFloat(Math.round(IntDeposit_Amount+parseFloat(this.CardAmount)));
+       }
+
        let Balanc = 0;
        let insertflag= 0;
 
@@ -157,11 +215,11 @@ export default {
        }
 
        if(IntTotalAmt > IntDeposit_Amount){
-         Balanc = TotalAmt - this.Deposit_Amount ;
+         Balanc = TotalAmt - IntDeposit_Amount ;
          this.showModal(Balanc)
          this.Regionshow = true
          statusAmount = "Less Amount"
-         if(this.Reason){
+         if(this.lowdis || Balanc<=0){
            insertflag=1;
            this.hideModal()
          }
@@ -176,6 +234,7 @@ export default {
        }
 
        let NoteCountArr = []; let DenominationIDArr = [];
+       console.log('DenominationArr==', this.DenominationArr);
        if(this.DenominationArr.length > 0){
          this.DenominationArr.forEach(function (denomi) {
            NoteCountArr.push(parseInt(document.getElementById("mo"+denomi).value) / parseInt(denomi));
@@ -183,22 +242,23 @@ export default {
          });
        }
 
-       if(insertflag){
-         this.disableButton = true;
-         this.SRLedgerDetails = true;
+       if(this.lowdis || insertflag == 1){
+         this.disableButton = true; this.SRLedgerDetails = true; this.subLoading = true;
          this.input = ({
            srid: this.SR_Name,
            hubid: this.localhubid,
            status: statusAmount,
            creditamount: this.Deposit_Amount,
-           debitamount: Balanc,
+           debitamount:  parseFloat(Math.round(TotalAmt-parseInt(this.Deposit_Amount))),
            todayscod: this.TodaysCOD,
-           reasonid: this.Reason,
+           reasonid: '',
            islessamountaccept: false,
            username: this.localusername,
            Denomination: this.DenominationArr,
            NoteCount: NoteCountArr,
-           DenominationID: DenominationIDArr
+           DenominationID: DenominationIDArr,
+           AWBNo: (this.DisputeArr)?this.DisputeArr:new Array(),
+           disputeAmt: (this.CardAmount)?this.CardAmount:0
            })
            axios({
              method: 'POST',
@@ -209,7 +269,7 @@ export default {
                     }
               })
               .then((response) => {
-                this.disableButton = false;
+                this.disableButton = false; this.subLoading = false;
                   if (response.data.code) {
                     this.srStatus();
                     this.$alertify.success(response.data.data);
@@ -229,23 +289,18 @@ export default {
                       countVal.value=""
                       amountVal.value=0
                     });
-                    this.Regionshow = false,
-                    this.Deposit_Amount = "",
-                    this.Reason = "",
-                    this.tot_amt = ""
-                    this.$validator.reset();
-                    this.errors.clear();
-                    event.target.reset();
+                    this.resetData(event);
                   }
               })
               .catch((httpException) => {
-                this.disableButton = false;
-                  console.error('exception is:::::::::', httpException)
-                  this.$alertify.error('Error Occured');
+                this.disableButton = false; this.subLoading = false;
+                console.error('exception is:::::::::', httpException)
+                this.$alertify.error('Error Occured');
               });
        }
-     },
-     resetData(event){
+    },
+
+    resetData(event){
       this.DenominationList.map(data=>{
         let countVal = document.getElementById(data.Denomination);
         let amountVal = document.getElementById("mo"+data.Denomination);
@@ -257,13 +312,18 @@ export default {
       this.assignArr = this.cardArr = this.cashArr = this.ndrArr = this.prepaidArr = this.walletArr = this.payphiArr = this.awbArr = [];
       this.SR_Name = this.Deposit_Amount = this.Reason = this.tot_amt = this.awbnotype = '';
       this.PendingCOD = this.TodaysCOD = this.TotalAmount = this.TodaysShipmentCount = 0;
-      this.deliveredCODArr = [];
-      this.$validator.reset();
-      this.errors.clear();
-      event.target.reset();
-     },
 
-     getRightSRLedgerDetails(){
+      this.DisputeArr = this. DenomDetail = []; this.CardAmount = 0;
+
+      this.castheft = this.prevpenbal = this.sriss = this.lowdis = this.cariss = this.codimpr = this.selfrec = this.cassnat = this.paychg = this.codnttim = this.theftstol = this.wrongdel = false;
+      this.castheftAWBNo = this.prevpenbalAWBNo = this.srissAWBNo = this.carissAWBNo = this.codimprAWBNo = this.selfrecAWBNo = this.cassnatAWBNo = this.paychgAWBNo = this.codnttimAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = '';
+      this.castheftReason = this.prevpenbalReason = this.srissReason = this.lowdisReason = this.carissReason = this.codimprReason = this.selfrecReason = this.cassnatReason = this.paychgReason = this.codnttimReason = this.theftstolReason = this.wrongdelReason = '';
+
+      this.deliveredCODArr = [];
+      this.$validator.reset(); this.errors.clear(); document.getElementById('srform').reset();
+    },
+
+    getRightSRLedgerDetails(){
        this.input = ({
           srid: this.SR_Name
        })
@@ -293,8 +353,9 @@ export default {
          }, error => {
            console.error(error)
          })
-     },
-     srChange(event){
+    },
+
+    srChange(event){
        this.SR_Name = event.target.value
        this.RightSRLedger = true;
        this.SRLedgerDetails = true;
@@ -357,7 +418,8 @@ export default {
          }, error => {
            console.error(error)
          })
-     },
+    },
+
     GetReasonList(){
       this.input = ({
         ReasonType:"SR"
@@ -376,6 +438,7 @@ export default {
           console.error(error)
         })
     },
+
     GetSRLedgerDetails(){
       this.input = ({
         srid: this.SR_Name,
@@ -406,7 +469,8 @@ export default {
           console.error(error)
         })
     },
-      //to get Denomination List
+
+    //to get Denomination List
     GetDenominationData(){
       this.denomLoading = true;
       axios({
@@ -425,6 +489,7 @@ export default {
         })
 
     },
+
     //to get SR List
     GetDeliveryAgentData() {
       this.srLoading = true;
@@ -463,11 +528,15 @@ export default {
             let error = document.getElementById("d_a");
              error.innerHTML = "Total denomination & deposit amount should be same, please check.";
              error.style.display = "block";
+
           }else{
-            let error = document.getElementById("d_a");
-             error.innerHTML = "Deposit amount is required";
-             error.style.display = "None";
-             this.saveSRClosure(event)
+            if(this.castheft || this.prevpenbal || this.sriss || this.lowdis || this.cariss || this.codimpr || this.selfrec || this.cassnat || this.paychg || this.codnttim || this.theftstol || this.wrongdel){
+              this.cardawbno(event);
+            }else{
+              let error = document.getElementById("d_a");
+              error.innerHTML = "Deposit amount is required"; error.style.display = "None";
+              this.saveSRClosure(event)
+            }
           }
         }
       }).catch(() => {
@@ -493,6 +562,8 @@ export default {
           if(parseInt(arr[i].value)) this.tot_amt += parseInt(arr[i].value);
         }
         document.getElementById('tot_amt').value = this.tot_amt;
+        this.Deposit_Amount = "";
+        this.Deposit_Amount = this.tot_amt;
       }
     },
 
@@ -527,6 +598,176 @@ export default {
         this.srLoading = false;
         this.$alertify.error('Error Occured');
       })
+    },
+
+    showCheckboxes(){
+      var checkboxes = document.getElementById("checkboxes");
+      if (!this.expanded) {
+        checkboxes.style.display = "block";
+        this.expanded = true;
+      } else {
+        checkboxes.style.display = "none";
+        this.expanded = false;
+      }
+    },
+
+    setid(key){
+      return key;
+    },
+
+    showHideReasonField(Reason){
+
+      if(($('#'+Reason).prop("checked") == true) && Reason){
+        if(Reason == 66){
+          this.cassnat = true; this.cassnatReason = Reason;
+        }else if(Reason == 67){
+          this.castheft = true; this.castheftReason = Reason;
+        }else if(Reason == 71){
+          this.prevpenbal = true; this.prevpenbalReason = Reason;
+        }else if(Reason == 72){
+          this.lowdis = true; this.lowdisReason = Reason;
+        }else if(Reason == 73){
+          this.wrongdel = true; this.wrongdelReason = Reason;
+        }else if(Reason == 74){
+          this.sriss = true; this.srissReason = Reason;
+        }else if(Reason == 75){
+          this.theftstol = true; this.theftstolReason = Reason;
+        }else if(Reason == 76){
+          this.codimpr = true; this.codimprReason = Reason;
+        }else if(Reason == 68){
+          this.cariss = true; this.carissReason = Reason;
+        }else if(Reason == 70){
+          this.codnttim = true; this.codnttimReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 185) || (process.env.NODE_ENV == 'production' && Reason == 122)){
+          this.paychg = true; this.paychgReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 251) || (process.env.NODE_ENV == 'production' && Reason == 126)){
+          this.selfrec = true; this.selfrecReason = Reason;
+        }
+
+      }else{
+        if(Reason == 66){
+          this.cassnat = false; this.cassnatAWBNo = ''; this.cassnatReason = '';
+        }else if(Reason == 67){
+          this.castheft = false; this.castheftAWBNo = ''; this.castheftReason = '';
+        }else if(Reason == 71){
+          this.prevpenbal = false; this.prevpenbalAWBNo = ''; this.prevpenbalReason = '';
+        }else if(Reason == 72){
+          this.lowdis = false; this.lowdisReason = '';
+        }else if(Reason == 73){
+          this.wrongdel = false; this.wrongdelAWBNo = ''; this.wrongdelReason = '';
+        }else if(Reason == 74){
+          this.sriss = false; this.srissAWBNo = ''; this.srissReason = '';
+        }else if(Reason == 75){
+          this.theftstol = false; this.theftstolAWBNo = ''; this.theftstolReason = '';
+        }else if(Reason == 76){
+          this.codimpr = false; this.codimprAWBNo = ''; this.codimprReason = '';
+        }else if(Reason == 68){
+          this.cariss = false; this.carissAWBNo = ''; this.carissReason = '';
+        }else if(Reason == 70){
+          this.codnttim = false; this.codnttimReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 185) || (process.env.NODE_ENV == 'production' && Reason == 122)){
+          this.paychg = false; this.paychgAWBNo = ''; this.paychgReason = '';
+        }else if((process.env.NODE_ENV == 'development' && Reason == 251) || (process.env.NODE_ENV == 'production' && Reason == 126)){
+          this.selfrec = false; this.selfrecAWBNo = ''; this.selfrecReason = '';
+        }
+      }
+    },
+
+    checkAWB(awbno){
+
+      if(awbno){
+        if(/\s/g.test(awbno) == true || awbno.indexOf(',') > -1){
+          awbno =awbno.replace(/,\s*$/, "").replace(/ /g,'').split(',');
+        }
+        if(Array.isArray(awbno) == false){
+          awbno = new Array(awbno);
+        }
+
+        return awbno;
+      }
+    },
+
+    cardawbno(event){
+      this.disableButton = true; this.subLoading = true;
+      let awbArr = []; this.DisputeArr = []; this.CardAmount = 0;
+
+      if(this.carissAWBNo) awbArr.push({ ReasonID:this.carissReason, AWBNo:this.checkAWB(this.carissAWBNo) });
+
+      if(this.cassnatAWBNo) awbArr.push({ ReasonID:this.cassnatReason, AWBNo:this.checkAWB(this.cassnatAWBNo) });
+
+      if(this.castheftAWBNo) awbArr.push({ ReasonID:this.castheftReason, AWBNo:this.checkAWB(this.castheftAWBNo) });
+
+      if(this.paychgAWBNo) awbArr.push({ ReasonID:this.paychgReason, AWBNo:this.checkAWB(this.paychgAWBNo) });
+
+      if(this.prevpenbalAWBNo) awbArr.push({ ReasonID:this.prevpenbalReason, AWBNo:this.checkAWB(this.prevpenbalAWBNo) });
+
+      if(this.srissAWBNo) awbArr.push({ ReasonID:this.srissReason, AWBNo:this.checkAWB(this.srissAWBNo) });
+
+      if(this.theftstolAWBNo) awbArr.push({ ReasonID:this.theftstolReason, AWBNo:this.checkAWB(this.theftstolAWBNo) });
+
+      if(this.wrongdelAWBNo) awbArr.push({ ReasonID:this.wrongdelReason, AWBNo:this.checkAWB(this.wrongdelAWBNo) });
+
+      if(this.codnttimAWBNo) awbArr.push({ ReasonID:this.codnttimReason, AWBNo:this.checkAWB(this.codnttimAWBNo) });
+
+      if(this.codimprAWBNo) awbArr.push({ ReasonID:this.codimprReason, AWBNo:this.checkAWB(this.codimprAWBNo) });
+
+      if(this.selfrecAWBNo) awbArr.push({ ReasonID:this.selfrecReason, AWBNo:this.checkAWB(this.selfrecAWBNo) });
+
+      if(this.lowdis) awbArr.push({ ReasonID:this.lowdisReason, AWBNo:[] });
+
+      axios({
+        method: 'POST',
+        'url': apiUrl.api_url + 'getAWBNo',
+        'data': ({'DisputeArr': awbArr}),
+        headers: {
+          'Authorization': 'Bearer '+this.myStr
+        }
+      })
+      .then((awbres) => {
+        this.disableButton = false; this.subLoading = false;
+        if (awbres.data.code == 200) {
+          if(awbres.data.invalidAwb.length>0){
+            this.$alertify.error("Some of AWB numbers are invalid, please check: "+awbres.data.invalidAwb.join(', ')); return false;
+          }else{
+            this.CardAmount = awbres.data.total;
+            this.DisputeArr = awbres.data.result;
+            this.showCardModal(this.CardAmount);
+          }
+        } else{
+          this.$alertify.error("AWB numbers are invalid, please check."); return false;
+        }
+      })
+      .catch((httpException) => {
+        this.disableButton = false; this.subLoading = false;
+        this.$alertify.error('Error occured'); return false;
+      });
+    },
+
+    showCardModal(CardAmount){
+      this.$refs.myCardModalRef.show(CardAmount)
+    },
+
+    hideCardModal(ele) {
+      if(ele == 0){
+        this.$refs.myCardModalRef.hide()
+        this.saveSRClosure(event);
+      }else{
+        this.$refs.myCardModalRef.hide()
+      }
+    },
+
+    showReasonAWBNo(ele){
+      this.DisputeArr = [];
+      this.DisputeArr = ele;
+      this.$refs.myReasonModalRef.show();
+    },
+
+    showDenomDetail(eleawb){
+
+      this.DenomDetail = [];
+      this.DenomDetail = eleawb;
+
+      this.$refs.myDenomDetailModalRef.show();
     },
   }
 }

@@ -35,7 +35,11 @@ export default {
       pagecount: 0,
       resultClosureCount: 0,
       pendingSRClosureList:'',
-      closuredate:''
+      closuredate:'',
+      ReasonModalShow:false,
+      DenomDetailModalShow:false,
+      DisputeArr: [],
+      DenomDetail:[]
     }
   },
   computed: {
@@ -159,7 +163,7 @@ export default {
 
     resetForm() {
       this.fromDate = this.toDate = this.SR_Name = ''; this.SRLedgerList=[]; this.resultCount = this.pageno = 0;
-      document.getElementById("fdate").innerHTML="";
+      document.getElementById("fdate").innerHTML=""; this.DisputeArr = this. DenomDetail = [];
       this.$validator.reset();
       this.errors.clear();
     },
@@ -196,6 +200,25 @@ export default {
         console.error(error)
         this.$alertify.error('Error Occured');
       })
+    },
+
+    closeStatusRoleModal() {
+       this.ReasonModalShow = false
+       this.DenomDetailModalShow = false
+    },
+
+    showReasonAWBNo(ele){
+      this.DisputeArr = [];
+      this.DisputeArr = ele;
+      this.$refs.myReasonModalRef.show();
+    },
+
+    showDenomDetail(eleawb){
+
+      this.DenomDetail = [];
+      this.DenomDetail = eleawb;
+
+      this.$refs.myDenomDetailModalRef.show();
     },
   }
 }

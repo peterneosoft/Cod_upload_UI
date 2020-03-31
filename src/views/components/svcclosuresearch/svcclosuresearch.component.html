@@ -39,7 +39,7 @@
         <div role="document">
           <div class="modal-content" style="width: 150%;">
             <div class="modal-headerfrm">
-              <h5 class="modal-title" style="font-size: 1rem;">Reason & AWB No/Amount</h5>
+              <h5 class="modal-title" style="font-size: 1rem;">Dispute Reason & AWB No/Amount</h5>
               <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
                 <span aria-hidden="true" style="color: white;">×</span>
               </button>
@@ -156,7 +156,7 @@
               <th class="text-center tableheader"><b>Bank Deposited Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
               <th class="text-center tableheader"><b>Exception AWB Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
               <th class="text-center tableheader"><b>Dispute Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
-              <th class="text-center tableheader"><b>Self Debit/ Recovery Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+              <!-- <th class="text-center tableheader"><b>Self Debit/ Recovery Amount <br>( <i class="fa fa-rupee"></i> )</b></th> -->
               <th class="text-center tableheader"><b>Finance Confirmed Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
               <th class="text-center tableheader"><b>Outstanding Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
               <th class="text-center tableheader"><b>Status</b></th>
@@ -168,7 +168,7 @@
           </thead>
           <tbody>
             <tr v-if="resultCount==0">
-              <td colspan="17" align="center">No record found</td>
+              <td colspan="16" align="center">No record found</td>
             </tr>
             <tr v-for="(data,index) in listSearchSVCledgerData">
               <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
@@ -186,10 +186,10 @@
                 <span @click="showReasonAWBNo(data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.cardissueamt!=0">{{data.cardissueamt}}</span>
                 <span v-if="data.cardissueamt==0">{{data.cardissueamt}}</span>
               </td>
-              <td class="text-center">
+              <!-- <td class="text-center">
                 <span @click="showRecExcAWBNo('recovery', data.othercharges, data.recoveryawb, data.financereasonid)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.othercharges!=0">{{data.othercharges}}</span>
                 <span v-if="data.othercharges==0">{{data.othercharges}}</span>
-              </td>
+              </td> -->
               <td class="text-center">{{data.actualrecamt}}</td>
               <td class="text-center">{{data.closingbalance}}</td>
               <td class="text-center">{{data.status}}</td>

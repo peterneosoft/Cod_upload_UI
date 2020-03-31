@@ -70,7 +70,7 @@
         <div role="document">
           <div class="modal-content" style="width: 150%;">
             <div class="modal-headerfrm">
-              <h5 class="modal-title" style="font-size: 1rem;">Reason AWB No/Amount</h5>
+              <h5 class="modal-title" style="font-size: 1rem;">Dispute Reason & AWB No/Amount</h5>
               <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
                 <span aria-hidden="true" style="color: white;">×</span>
               </button>
@@ -190,7 +190,7 @@
                 <th class="text-center tableheader"><b>Finance Confirmed Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                 <th class="text-center tableheader"><b>Exception Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                 <th class="text-center tableheader"><b>Dispute Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
-                <th class="text-center tableheader"><b>Self Debit/ Recovery Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+                <!-- <th class="text-center tableheader"><b>Self Debit/ Recovery Amount <br>( <i class="fa fa-rupee"></i> )</b></th> -->
                 <th class="text-center tableheader"><b>Outstanding Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                 <th class="text-center tableheader"><b>Status</b></th>
                 <th class="text-center tableheader"><b>Finance Reason</b></th>
@@ -201,7 +201,7 @@
             </thead>
             <tbody>
               <tr v-if="resultCount==0">
-                <td colspan="18" align="center">No record found</td>
+                <td colspan="17" align="center">No record found</td>
               </tr>
               <tr v-for="(data,index) in listFinanceledgerData" v-bind:class="`${([84,124,187].includes(data.financereasonid)) ? 'mismatched' : ''}`">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
@@ -221,10 +221,10 @@
                   <span @click="showReasonAWBNo(data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.cardissueamt!=0">{{data.cardissueamt}}</span>
                   <span v-if="data.cardissueamt==0">{{data.cardissueamt}}</span>
                 </td>
-                <td class="text-center">
+                <!-- <td class="text-center">
                   <span @click="showRecExcAWBNo('recovery', data.othercharges, data.recoveryawb, data.financereasonid)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.othercharges!=0">{{data.othercharges}}</span>
                   <span v-if="data.othercharges==0">{{data.othercharges}}</span>
-                </td>
+                </td> -->
                 <td class="text-center">{{data.balanceoutstanding}}</td>
                 <td class="text-center">{{StatusVal}}</td>
                 <td class="text-center">
@@ -235,20 +235,20 @@
                     </select>
                     <span v-bind:id="setid('finR', data.svcledgerid)" class="text-danger"></span>
 
-                    <br v-show="form.finreason[data.svcledgerid] > 0 && form.hide[data.svcledgerid] == 0">
-                    <input v-show="form.finreason[data.svcledgerid] > 0 && form.hide[data.svcledgerid] == 0" v-model="form.financeconfirmdate[data.svcledgerid]" v-bind:name="setid('financeconfirmdate', data.svcledgerid)" v-bind:id="setid('financeconfirmdate', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('financeconfirmdate'+data.svcledgerid) }" type="date">
+                    <br v-show="form.finreason[data.svcledgerid] > 0 && data.statusid != 6">
+                    <input v-show="form.finreason[data.svcledgerid] > 0 && data.statusid != 6" v-model="form.financeconfirmdate[data.svcledgerid]" v-bind:name="setid('financeconfirmdate', data.svcledgerid)" v-bind:id="setid('financeconfirmdate', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('financeconfirmdate'+data.svcledgerid) }" type="date">
                     <span v-bind:id="setid('finD', data.svcledgerid)" class="text-danger"></span>
 
-                    <br v-show="([84,124,187,125,218].includes(form.finreason[data.svcledgerid])) && form.hide[data.svcledgerid] == 0">
-                    <input v-show="([84,124,187,125,218].includes(form.finreason[data.svcledgerid])) && form.hide[data.svcledgerid] == 0" v-model="form.confirmamount[data.svcledgerid]" v-bind:name="setid('confirmamount', data.svcledgerid)" v-bind:id="setid('confirmamount', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('confirmamount'+data.svcledgerid) }" type="text" placeholder="Enter Received Amount">
+                    <br v-show="([84,124,187,125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6">
+                    <input v-show="([84,124,187,125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6" v-model="form.confirmamount[data.svcledgerid]" v-bind:name="setid('confirmamount', data.svcledgerid)" v-bind:id="setid('confirmamount', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('confirmamount'+data.svcledgerid) }" type="text" placeholder="Enter Received Amount">
                     <span v-bind:id="setid('finA', data.svcledgerid)" class="text-danger"></span>
 
-                    <br v-show="([125,218].includes(form.finreason[data.svcledgerid])) && form.hide[data.svcledgerid] == 0">
-                    <input v-show="([125,218].includes(form.finreason[data.svcledgerid])) && form.hide[data.svcledgerid] == 0" v-model="form.AWBNo[data.svcledgerid]" v-bind:name="setid('AWBNo', data.svcledgerid)" v-bind:id="setid('AWBNo', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('AWBNo'+data.svcledgerid) }" type="text" placeholder="Enter AWB Number">
-                    <span v-show="([125,218].includes(form.finreason[data.svcledgerid])) && form.hide[data.svcledgerid] == 0" class="text" style="font-size: 11px; color: rgb(255, 0, 0);">Note: Please enter comma (,) seperated AWB number.</span>
-                    <br v-show="([125,218].includes(form.finreason[data.svcledgerid])) && form.hide[data.svcledgerid] == 0">
+                    <br v-show="([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6">
+                    <input v-show="([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6" v-model="form.AWBNo[data.svcledgerid]" v-bind:name="setid('AWBNo', data.svcledgerid)" v-bind:id="setid('AWBNo', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('AWBNo'+data.svcledgerid) }" type="text" placeholder="Enter AWB Number">
+                    <span v-show="([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6" class="text" style="font-size: 11px; color: rgb(255, 0, 0);">Note: Please enter comma (,) seperated AWB number.</span>
+                    <br v-show="([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6">
                     <span v-bind:id="setid('finDR', data.svcledgerid)" class="text-danger"></span>
-                    <span v-show="form.hide[data.svcledgerid] == 0"><br><button class="btn btn-sm btn-primary" type="submit" :disabled = "(data.statusid == 6) || (form.button[data.svcledgerid])" ><i class="fa fa-dot-circle-o"></i> Submit</button></span>
+                    <span v-show="(data.statusid != 6)"><br><button class="btn btn-sm btn-primary" type="submit" :disabled = "(data.statusid == 6) || (form.button[data.svcledgerid])" ><i class="fa fa-dot-circle-o"></i> Submit</button></span>
                 </form>
                 </td>
                 <td class="text-center">{{data.deposittype}}</td>

@@ -449,7 +449,7 @@ export default {
     },
 
     resetForm() {
-      this.zone = this.HubId = ''; this.pageno = this.resultCount = 0; this.listFinanceledgerData = []; this.status = 1;
+      this.zone = ''; this.HubId = []; this.pageno = this.resultCount = 0; this.listFinanceledgerData = []; this.status = 1;
       this.$validator.reset();
       this.errors.clear();
     },
@@ -471,7 +471,7 @@ export default {
     },
 
     scrollWin() {
-      if(this.zone && this.HubId && this.status) window.scrollBy(0, 1000);
+      if(this.zone && this.HubId.length>0 && this.status) window.scrollBy(0, 1000);
     },
 
     showReasonAWBNo(ele){

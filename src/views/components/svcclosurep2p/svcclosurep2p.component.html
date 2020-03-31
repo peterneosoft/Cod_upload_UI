@@ -348,6 +348,7 @@
               </div> -->
 
               <div class="card-footer">
+                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="subLoading" />
                 <button v-bind:disabled="disableButton" class="btn btn-sm btn-primary" type="submit"><i class="fa fa-dot-circle-o"></i> Save</button>
                 <button v-bind:disabled="disableButton" class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
               </div>
@@ -651,7 +652,7 @@
                 <th class="text-center tableheader"><b>Finance Confirmed Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                 <th class="text-center tableheader"><b>Exception AWB Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                 <th class="text-center tableheader"><b>Dispute Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
-                <th class="text-center tableheader"><b>Self Debit/ Recovery Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+                <!-- <th class="text-center tableheader"><b>Self Debit/ Recovery Amount <br>( <i class="fa fa-rupee"></i> )</b></th> -->
                 <th class="text-center tableheader"><b>Outstanding Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                 <th class="text-center tableheader"><b>Status</b></th>
                 <th class="text-center tableheader"><b>Finance Reason</b></th>
@@ -660,7 +661,7 @@
             </thead>
             <tbody>
               <tr v-if="resultCount==0">
-                <td colspan="16" align="center">No record found</td>
+                <td colspan="15" align="center">No record found</td>
               </tr>
               <tr v-for="(data,index) in listSVCledgerData" v-bind:class="`${data.createdby == 'schedular@xpressbees.com' ? 'scheduler' : '' || data.reasonid == 65 ? 'other' : '' || ([84,124,187].includes(data.financereasonid)) ? 'mismatched' : ''}`">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
@@ -680,10 +681,10 @@
                   <span @click="showReasonAWBNo(data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.cardissueamt!=0">{{data.cardissueamt}}</span>
                   <span v-if="data.cardissueamt==0">{{data.cardissueamt}}</span>
                 </td>
-                <td class="text-center">
+                <!-- <td class="text-center">
                   <span @click="showRecExcAWBNo('recovery', data.othercharges, data.recoveryawb)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.othercharges!=0">{{data.othercharges}}</span>
                   <span v-if="data.othercharges==0">{{data.othercharges}}</span>
-                </td>
+                </td> -->
                 <td class="text-center">{{data.closingbalance}}</td>
                 <td class="text-center" v-if="data.statusid==1">Open</td>
                 <td class="text-center" v-if="data.statusid==6">Close</td>

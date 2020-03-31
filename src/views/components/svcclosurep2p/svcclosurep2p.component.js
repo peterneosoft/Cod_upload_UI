@@ -105,7 +105,8 @@ export default {
       modalAWBNoShow:false,
       awbnotype:'',
       awbnumber:'',
-      expanded:false
+      expanded:false,
+      subLoading:false
     }
   },
 
@@ -549,7 +550,7 @@ export default {
         let CODAmount = parseFloat(Math.round(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)));
 
         if(this.lowdis || ClosingBalance=='0'){
-          this.disableButton = true;
+          this.disableButton = true; this.subLoading = true;
           this.input = ({
               DepositDate: this.DepositDate,
               DeliveryDate: this.DeliveryDate,
@@ -595,7 +596,7 @@ export default {
           .then((response) => {
             if (response.data.errorCode == 0) {
               this.$alertify.success(response.data.msg);
-              this.disableButton = false;
+              this.disableButton = false; this.subLoading = false;
               window.scrollBy(0, 1000);
               this.resetForm(event);
             } else if (response.data.errorCode == -1) {
@@ -603,7 +604,7 @@ export default {
             }
           })
           .catch((httpException) => {
-              this.disableButton = false;
+              this.disableButton = false; this.subLoading = false;
               this.$alertify.error('Error occured')
           });
         }else{
@@ -614,13 +615,13 @@ export default {
 
     //function is used for upload files on AWS s3bucket
     onUpload(event){
-      this.disableButton = true;
+      this.disableButton = true; this.subLoading = true;
       this.selectedFile = event.target.files[0];
 
       var name = this.selectedFile.name;
       if(this.selectedFile.size>5242880){
         this.$alertify.error(event.srcElement.placeholder + " Failed! Upload Max File Size Should Not Be Greater Than 5 MB");
-        this.disableButton = false;
+        this.disableButton = false; this.subLoading = false;
         this.DepositSlip = '';
         return false;
       }
@@ -628,7 +629,7 @@ export default {
         name = this.selectedFile.name;
       }else{
         this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg, .jpeg, .gif, .bmp, .xls, .xlsx, .pdf, .ods, .csv, .doc, .odt, .docx, .rtf, .wks, .wps, .wpd, .excel, .xlr, .pps");
-        this.disableButton = false;
+        this.disableButton = false; this.subLoading = false;
         this.DepositSlip = this.selectedFile = '';
         return false;
       }
@@ -694,7 +695,7 @@ export default {
           error.innerHTML      = "";
           error.style.display  = "none";
         }
-        this.disableButton = false;
+        this.disableButton = false; this.subLoading = false;
       }, error => {
         console.error(error)
       })
