@@ -120,15 +120,19 @@ export default {
       ReasonModalShow:false,
       DenomDetailModalShow:false,
       DenomDetail:[],
+      deliveredCashArr:[],
       deliveredPayphiArr:[],
       deliveredWalletArr:[],
       deliveredCardArr:[],
+      TodaysCash:0,
       TodaysPayphi:0,
       TodaysWallet:0,
       TodaysCard:0,
+      TodaysCashCount:0,
       TodaysPayphiCount:0,
       TodaysWalletCount:0,
-      TodaysCardCount:0
+      TodaysCardCount:0,
+      codArr:[]
     }
   },
 
@@ -318,7 +322,7 @@ export default {
       //this.GetDeliveryAgentData();
       this.Regionshow = this.RightSRLedger = this.SRLedgerDetails = false;
       this.assign = this.card = this.cash = this.cod = this.ndr = this.prepaid = this.wallet = this.payphi = 0;
-      this.assignArr = this.cardArr = this.cashArr = this.ndrArr = this.prepaidArr = this.walletArr = this.payphiArr = this.awbArr = [];
+      this.assignArr = this.cardArr = this.cashArr = this.ndrArr = this.prepaidArr = this.walletArr = this.payphiArr = this.awbArr = this.codArr = [];
       this.SR_Name = this.Deposit_Amount = this.Reason = this.tot_amt = this.awbnotype = '';
 
       this.DisputeArr = this. DenomDetail = []; this.CardAmount = 0;
@@ -327,8 +331,8 @@ export default {
       this.castheftAWBNo = this.prevpenbalAWBNo = this.srissAWBNo = this.carissAWBNo = this.codimprAWBNo = this.selfrecAWBNo = this.cassnatAWBNo = this.paychgAWBNo = this.codnttimAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = '';
       this.castheftReason = this.prevpenbalReason = this.srissReason = this.lowdisReason = this.carissReason = this.codimprReason = this.selfrecReason = this.cassnatReason = this.paychgReason = this.codnttimReason = this.theftstolReason = this.wrongdelReason = '';
 
-      this.PendingCOD = this.TodaysCOD = this.TotalAmount = this.TodaysShipmentCount = this.TodaysPayphi = this.TodaysWallet = this.TodaysCard = this.TodaysPayphiCount = this.TodaysWalletCount = this.TodaysCardCount = 0;
-      this.deliveredCODArr = this.deliveredPayphiArr = this.deliveredWalletArr = this.deliveredCardArr = [];
+      this.PendingCOD = this.TodaysCOD = this.TotalAmount = this.TodaysShipmentCount = this.TodaysCash = this.TodaysPayphi = this.TodaysWallet = this.TodaysCard = this.TodaysCashCount = this.TodaysPayphiCount = this.TodaysWalletCount = this.TodaysCardCount = 0;
+      this.deliveredCODArr = this.deliveredCashArr = this.deliveredPayphiArr = this.deliveredWalletArr = this.deliveredCardArr = [];
       this.$validator.reset(); this.errors.clear(); document.getElementById('srform').reset();
     },
 
@@ -354,20 +358,23 @@ export default {
              this.TodaysShipmentCount = result.data.TodaysShipmentCount
              this.deliveredCODArr     = result.data.TodaysShippingId
 
+             this.deliveredCashArr  = result.data.CODDetailsArr[0].cashArr
              this.deliveredPayphiArr  = result.data.CODDetailsArr[0].payphiArr
              this.deliveredWalletArr  = result.data.CODDetailsArr[0].walletArr
              this.deliveredCardArr    = result.data.CODDetailsArr[0].cardArr
 
+             this.TodaysCash          = result.data.CODDetailsArr[0].cashAmt
              this.TodaysPayphi        = result.data.CODDetailsArr[0].payphiAmt
              this.TodaysWallet        = result.data.CODDetailsArr[0].walletAmt
              this.TodaysCard          = result.data.CODDetailsArr[0].cardAmt
 
+             this.TodaysCashCount = result.data.CODDetailsArr[0].cash
              this.TodaysPayphiCount = result.data.CODDetailsArr[0].payphi
              this.TodaysWalletCount = result.data.CODDetailsArr[0].wallet
              this.TodaysCardCount = result.data.CODDetailsArr[0].card
            }else{
               this.isLoading = false;
-              this.PendingCOD = this.TodaysCOD = this.TotalAmount = this.TodaysShipmentCount = this.TodaysPayphi = this.TodaysWallet = this.TodaysCard = this.TodaysPayphiCount = this.TodaysWalletCount = this.TodaysCardCount = 0;
+              this.PendingCOD = this.TodaysCOD = this.TotalAmount = this.TodaysShipmentCount = this.TodaysCash = this.TodaysPayphi = this.TodaysWallet = this.TodaysCard = this.TodaysCashCount = this.TodaysPayphiCount = this.TodaysWalletCount = this.TodaysCardCount = 0;
               this.deliveredCODArr = this.deliveredPayphiArr = this.deliveredWalletArr = this.deliveredCardArr = [];
            }
          }, error => {
@@ -418,6 +425,7 @@ export default {
               this.payphiArr    = result.data.data.payphiArr
 
               this.cod          = result.data.data.cod
+              this.codArr    = result.data.data.codArr
 
               this.ndr          = result.data.data.ndr
               this.ndrArr       = result.data.data.ndrArr
@@ -430,7 +438,7 @@ export default {
             }
             if(result.data.code == 204){
               this.assign = this.card = this.cash = this.cod = this.ndr = this.prepaid = this.wallet = this.payphi = 0;
-              this.assignArr = this.cardArr = this.cashArr = this.ndrArr = this.prepaidArr = this.walletArr = this.payphiArr = this.awbArr = [];
+              this.assignArr = this.cardArr = this.cashArr = this.ndrArr = this.prepaidArr = this.walletArr = this.payphiArr = this.awbArr = this.codArr = [];
               this.awbnotype = '';
               this.Loading = false;
             }

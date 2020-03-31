@@ -277,8 +277,8 @@
                   <td v-if="prepaid > 0" class="text-center" @click="showShippingidModal('Prepaid AWB Numbers', prepaidArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{prepaid}}</u></td>
                   <td class="text-center" v-if="prepaid<=0">{{prepaid}}</td>
 
-                  <td v-if="cash > 0" class="text-center" @click="showShippingidModal('COD AWB Numbers', cashArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{cash}}</u></td>
-                  <td class="text-center" v-if="cash<=0">{{cash}}</td>
+                  <td v-if="cod > 0" class="text-center" @click="showShippingidModal('COD AWB Numbers', codArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{cod}}</u></td>
+                  <td class="text-center" v-if="cod<=0">{{cod}}</td>
                 </tr>
               </tbody>
             </table>
@@ -303,9 +303,9 @@
               <tbody>
                 <tr>
                   <td class="text-center" style="width: 30%">Cash</td>
-                  <td v-if="TodaysShipmentCount > 0" class="text-center" @click="showShippingidModal('Cash AWB Numbers', deliveredCODArr)" style="width: 30%; cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{TodaysShipmentCount}}</td>
-                  <td class="text-center" v-if="TodaysShipmentCount<=0">{{TodaysShipmentCount}}</td>
-                  <td class="text-center" style="width: 30%">{{TodaysCOD}}</td>
+                  <td v-if="TodaysCashCount > 0" class="text-center" @click="showShippingidModal('Cash AWB Numbers', deliveredCashArr)" style="width: 30%; cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{TodaysCashCount}}</td>
+                  <td class="text-center" v-if="TodaysCashCount<=0">{{TodaysCashCount}}</td>
+                  <td class="text-center" style="width: 30%">{{TodaysCash}}</td>
                 </tr>
                 <tr>
                   <td class="text-center" style="width: 30%">Payphi</td>

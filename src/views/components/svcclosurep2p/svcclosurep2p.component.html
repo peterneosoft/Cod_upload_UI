@@ -39,7 +39,7 @@
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Deposit Amount <font color="red">&nbsp;*</font></span>
                   </div>
-                  <input class="form-control" @change="changeDepType" id="Deposit_Amount" type="text" name="Deposit_Amount" placeholder="Enter Deposit Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8"
+                  <input class="form-control" disabled @change="changeDepType" id="Deposit_Amount" type="text" name="Deposit_Amount" placeholder="Enter Deposit Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8"
                     v-validate="{required: true}" v-model="Deposit_Amount" v-bind:class="{'form-control': true, 'error': errors.has('Deposit_Amount') }" style="margin-right: 0px;">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-rupee"></i></span>
