@@ -254,50 +254,76 @@
       </div>
 
       <div class="col-sm-4" v-show="RightSRLedger" style="margin-top: -15px;">
-        <b-card>
-          <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="Loading" />
-          <table class="table table-bordered table-striped table-sm" style="margin-left: -17px; border: 0px;">
-            <thead>
-              <tr>
-                <th>Assign Shipments</th>
-                <th>Prepaid Shipments</th>
-                <th>Cash Shipments</th>
-                <th>Payphi</th>
-                <th>Card</th>
-                <th>Wallet</th>
-                <th>NDR</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td @click="showShippingidModal('Assigned AWB Numbers', assignArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{assign}}</u></td>
-
-                <td @click="showShippingidModal('Prepaid AWB Numbers', prepaidArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{prepaid}}</u></td>
-
-                <td @click="showShippingidModal('COD ( Cash ) AWB Numbers', cashArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{cash}}</u></td>
-
-                <td @click="showShippingidModal('Payphi AWB Numbers', payphiArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{payphi}}</u></td>
-
-                <td @click="showShippingidModal('Card AWB Numbers', cardArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{card}}</u></td>
-
-                <td @click="showShippingidModal('Wallet AWB Numbers', walletArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{wallet}}</u></td>
-
-                <td @click="showShippingidModal('NDR AWB Numbers', ndrArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{ndr}}</u></td>
-              </tr>
-            </tbody>
-          </table>
-        </b-card>
 
         <div class="card">
           <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="Loading" />
-          <div class="card-header"><i class="fa fa-align-justify"></i>Delivered Shipment Count</div>
+          <div class="card-header"><i class="fa fa-align-justify"></i>Today's Shipment - Count</div>
           <div class="card-body">
-           <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
-            <table class="table table-responsive-sm">
+           <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="Loading" />
+
+            <table class="table-responsive-sm table-bordered table-hover tbl datatables" style="width:100%;">
+              <thead>
+                <tr class="text-primary">
+                  <th class="text-center tableheader" style="width: 30%"><b>Assign</b></th>
+                  <th class="text-center tableheader" style="width: 30%"><b>Prepaid</b></th>
+                  <th class="text-center tableheader" style="width: 30%"><b>COD</b></th>
+                </tr>
+              </thead>
               <tbody>
                 <tr>
-                  <td>Today's COD ( Cash ) Shipment</td>
-                  <td @click="showShippingidModal('Delivered COD ( Cash ) AWB Numbers', deliveredCODArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{TodaysShipmentCount}}</u></td>
+                  <td v-if="assign > 0" class="text-center" @click="showShippingidModal('Assign AWB Numbers', assignArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{assign}}</u></td>
+                  <td class="text-center" v-if="assign<=0">{{assign}}</td>
+
+                  <td v-if="prepaid > 0" class="text-center" @click="showShippingidModal('Prepaid AWB Numbers', prepaidArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{prepaid}}</u></td>
+                  <td class="text-center" v-if="prepaid<=0">{{prepaid}}</td>
+
+                  <td v-if="cash > 0" class="text-center" @click="showShippingidModal('COD AWB Numbers', cashArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{cash}}</u></td>
+                  <td class="text-center" v-if="cash<=0">{{cash}}</td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+
+        <div class="card">
+          <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="Loading" />
+          <div class="card-header"><i class="fa fa-align-justify"></i>Total COD Delivered Shipment - Count</div>
+          <div class="card-body">
+           <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
+
+            <table class="table-responsive-sm table-bordered table-hover tbl datatables" style="width:100%;">
+              <thead>
+                <tr class="text-primary">
+                  <th class="text-center tableheader" style="width: 30%"><b>Type</b></th>
+                  <th class="text-center tableheader" style="width: 30%"><b>Count</b></th>
+                  <th class="text-center tableheader" style="width: 30%"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-center" style="width: 30%">Cash</td>
+                  <td v-if="TodaysShipmentCount > 0" class="text-center" @click="showShippingidModal('Cash AWB Numbers', deliveredCODArr)" style="width: 30%; cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{TodaysShipmentCount}}</td>
+                  <td class="text-center" v-if="TodaysShipmentCount<=0">{{cash}}</td>
+                  <td class="text-center" style="width: 30%">{{TodaysCOD}}</td>
+                </tr>
+                <tr>
+                  <td class="text-center" style="width: 30%">Payphi</td>
+                  <td v-if="TodaysPayphiCount > 0" class="text-center" @click="showShippingidModal('Payphi AWB Numbers', deliveredPayphiArr)" style="width: 30%; cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{TodaysPayphiCount}}</td>
+                  <td class="text-center" v-if="TodaysPayphiCount<=0">{{TodaysPayphiCount}}</td>
+                  <td class="text-center" style="width: 30%">{{TodaysPayphi}}</td>
+                </tr>
+                <tr>
+                  <td class="text-center" style="width: 30%">Card</td>
+                  <td v-if="TodaysCardCount > 0" class="text-center" @click="showShippingidModal('Card AWB Numbers', deliveredCardArr)" style="width: 30%; cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{TodaysCardCount}}</td>
+                  <td class="text-center" v-if="TodaysCardCount<=0">{{TodaysCardCount}}</td>
+                  <td class="text-center" style="width: 30%">{{TodaysCard}}</td>
+                </tr>
+                <tr>
+                  <td class="text-center" style="width: 30%">Wallet</td>
+                  <td v-if="TodaysWalletCount > 0" class="text-center" @click="showShippingidModal('Wallet AWB Numbers', deliveredWalletArr)" style="width: 30%; cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{TodaysWalletCount}}</td>
+                  <td class="text-center" v-if="TodaysWalletCount<=0">{{TodaysWalletCount}}</td>
+                  <td class="text-center" style="width: 30%">{{TodaysWallet}}</td>
                 </tr>
               </tbody>
             </table>
@@ -348,9 +374,6 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-if="awbArr.length<=0">
-                    <td colspan="3" align="center">No record found</td>
-                  </tr>
                   <tr v-for="(val,index) in awbArr">
                     <td class="text-center">{{index+1}}</td>
                     <td class="text-center" style="width: 70%">{{val.ShippingID}}</td>
@@ -583,7 +606,6 @@
               <table class="table-bordered table-hover tbl datatables" style="width:100%;">
                 <thead>
                   <tr class="text-primary">
-                    <th class="text-center tableheader" style="width: 1%"><b>#</b></th>
                     <th class="text-center tableheader" style="width: 30%"><b>Denomination</b></th>
                     <th class="text-center tableheader" style="width: 30%"><b>Note Count</b></th>
                     <th class="text-center tableheader" style="width: 30%"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
@@ -591,10 +613,9 @@
                 </thead>
                 <tbody>
                   <tr v-if="DenomDetail.length<=0">
-                    <td colspan="4" align="center">No record found</td>
+                    <td colspan="3" align="center">No record found</td>
                   </tr>
                   <tr v-for="(val,index) in DenomDetail" v-if="val.NoteCount>0">
-                    <td class="text-center" style="width: 1%">{{index+1}}</td>
                     <td class="text-center" style="width: 30%">{{val.Denomination}}</td>
                     <td class="text-center" style="width: 30%">{{val.NoteCount}}</td>
                     <td class="text-center" style="width: 30%">{{val.Denomination*val.NoteCount}}</td>
