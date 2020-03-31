@@ -304,7 +304,7 @@
                 <tr>
                   <td class="text-center" style="width: 30%">Cash</td>
                   <td v-if="TodaysShipmentCount > 0" class="text-center" @click="showShippingidModal('Cash AWB Numbers', deliveredCODArr)" style="width: 30%; cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{TodaysShipmentCount}}</td>
-                  <td class="text-center" v-if="TodaysShipmentCount<=0">{{cash}}</td>
+                  <td class="text-center" v-if="TodaysShipmentCount<=0">{{TodaysShipmentCount}}</td>
                   <td class="text-center" style="width: 30%">{{TodaysCOD}}</td>
                 </tr>
                 <tr>
