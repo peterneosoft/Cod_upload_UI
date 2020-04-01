@@ -358,24 +358,29 @@ export default {
              this.TodaysShipmentCount = result.data.TodaysShipmentCount
              this.deliveredCODArr     = result.data.TodaysShippingId
 
-             this.deliveredCashArr  = result.data.CODDetailsArr[0].cashArr
-             this.deliveredPayphiArr  = result.data.CODDetailsArr[0].payphiArr
-             this.deliveredWalletArr  = result.data.CODDetailsArr[0].walletArr
-             this.deliveredCardArr    = result.data.CODDetailsArr[0].cardArr
+             if(result.data.CODDetailsArr.length>0){
+               this.deliveredCashArr  = result.data.CODDetailsArr[0].cashArr
+               this.deliveredPayphiArr  = result.data.CODDetailsArr[0].payphiArr
+               this.deliveredWalletArr  = result.data.CODDetailsArr[0].walletArr
+               this.deliveredCardArr    = result.data.CODDetailsArr[0].cardArr
 
-             this.TodaysCash          = result.data.CODDetailsArr[0].cashAmt
-             this.TodaysPayphi        = result.data.CODDetailsArr[0].payphiAmt
-             this.TodaysWallet        = result.data.CODDetailsArr[0].walletAmt
-             this.TodaysCard          = result.data.CODDetailsArr[0].cardAmt
+               this.TodaysCash          = result.data.CODDetailsArr[0].cashAmt
+               this.TodaysPayphi        = result.data.CODDetailsArr[0].payphiAmt
+               this.TodaysWallet        = result.data.CODDetailsArr[0].walletAmt
+               this.TodaysCard          = result.data.CODDetailsArr[0].cardAmt
 
-             this.TodaysCashCount = result.data.CODDetailsArr[0].cash
-             this.TodaysPayphiCount = result.data.CODDetailsArr[0].payphi
-             this.TodaysWalletCount = result.data.CODDetailsArr[0].wallet
-             this.TodaysCardCount = result.data.CODDetailsArr[0].card
+               this.TodaysCashCount = result.data.CODDetailsArr[0].cash
+               this.TodaysPayphiCount = result.data.CODDetailsArr[0].payphi
+               this.TodaysWalletCount = result.data.CODDetailsArr[0].wallet
+               this.TodaysCardCount = result.data.CODDetailsArr[0].card
+             }else{
+               this.TodaysCash = this.TodaysPayphi = this.TodaysWallet = this.TodaysCard = this.TodaysCashCount = this.TodaysPayphiCount = this.TodaysWalletCount = this.TodaysCardCount = 0;
+               this.deliveredCashArr = this.deliveredPayphiArr = this.deliveredWalletArr = this.deliveredCardArr = [];
+             }
            }else{
               this.isLoading = false;
               this.PendingCOD = this.TodaysCOD = this.TotalAmount = this.TodaysShipmentCount = this.TodaysCash = this.TodaysPayphi = this.TodaysWallet = this.TodaysCard = this.TodaysCashCount = this.TodaysPayphiCount = this.TodaysWalletCount = this.TodaysCardCount = 0;
-              this.deliveredCODArr = this.deliveredPayphiArr = this.deliveredWalletArr = this.deliveredCardArr = [];
+              this.deliveredCODArr = this.deliveredCashArr = this.deliveredPayphiArr = this.deliveredWalletArr = this.deliveredCardArr = [];
            }
          }, error => {
            console.error(error)
