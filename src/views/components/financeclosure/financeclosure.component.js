@@ -30,6 +30,7 @@ export default {
       count: 0,
       AWBAmount: 0,
       AWBArr: '',
+      RecAmt: '',
       hubList: [],
       zoneList: [],
       listFinanceledgerData: [],
@@ -43,7 +44,9 @@ export default {
           confirmamount: [],
           AWBNo: [],
           hide: [],
-          button:[]
+          button:[],
+          radio:[],
+          RecAmt:[]
       },
       zoneAmtList: [],
       totalzoneamt: '0.00',
@@ -311,11 +314,11 @@ export default {
     },
 
     cardawbno(elem, findata){
-
+      this.AWBAmount = 0;
       axios({
           method: 'POST',
           'url': apiUrl.api_url + 'checkAWBNo',
-          'data': ({AWBNo: this.AWBArr}),
+          'data': ({AWBNo: this.form.AWBNo[this.elem]}),
           headers: {
               'Authorization': 'Bearer '+this.myStr
           }
@@ -379,7 +382,7 @@ export default {
             financereasonid: parseInt(finreasonid),
             financeconfirmdate: financeconfirmdate,
             confirmamount: confirmamount,
-            AWBNo: (this.AWBArr)?this.AWBArr:new Array(),
+            AWBNo: (this.form.AWBNo[this.elem])?this.form.AWBNo[this.elem]:new Array(),
             recoveryamount: this.AWBAmount,
             hubid: findata.hubid,
             username: this.localuserid,
@@ -419,28 +422,50 @@ export default {
 
     onUpdate: function(elem, findata) {
       if(elem){
-        let ledgerid = elem; this.AWBArr = ''; this.AWBAmount = 0; this.findata = []; this.elem = '';
+         this.elem = ''; this.AWBAmount = ''; this.findata = []; this.elem = elem; this.findata = findata;
 
-        let finreasonid = document.getElementById('finreason'+ledgerid).value;
-        this.AWBArr = document.getElementById('AWBNo'+ledgerid).value;
+        let finreasonid = this.form.finreason[this.elem];
 
-        if((finreasonid == 125 || finreasonid == 218) && (this.AWBArr==null || this.AWBArr==undefined || this.AWBArr=="")){
-          document.getElementById("finDR"+ledgerid).innerHTML="AWB Number is required.";
+        if((finreasonid == 125 || finreasonid == 218) && (this.form.radio[this.elem]==null || this.form.radio[this.elem]=="")){
+
+          document.getElementById("finRadio"+this.elem).innerHTML="Radio selection is required.";
           return false;
-        }else if(this.AWBArr && (finreasonid == 125 || finreasonid == 218)){
-          if(/\s/g.test(this.AWBArr) == true || this.AWBArr.indexOf(',') > -1){
-            this.AWBArr = this.AWBArr.replace(/,\s*$/, "").replace(/ /g,'').split(',');
-          }
-          if(this.AWBArr && Array.isArray(this.AWBArr) == false){
-            this.AWBArr = new Array(this.AWBArr);
-          }
+        }else if((finreasonid == 125 || finreasonid == 218) && (!this.form.RecAmt[this.elem] || this.form.RecAmt[this.elem]==null || this.form.RecAmt[this.elem]==undefined || this.form.RecAmt[this.elem]=="") && this.form.radio[this.elem]=="amount"){
 
-          document.getElementById("finDR"+ledgerid).innerHTML="";
-          this.findata = findata; this.elem = elem;
-          this.cardawbno(this.AWBArr, elem, findata);
+          document.getElementById("finDR"+this.elem).innerHTML=""; document.getElementById("finRadio"+this.elem).innerHTML="";
+          document.getElementById("finRec"+this.elem).innerHTML="Recovery Amount is required.";
+          this.form.AWBNo[this.elem] = ''; this.form.RecAmt[this.elem] = '';
+          return false;
+        }else if((finreasonid == 125 || finreasonid == 218) && (!this.form.AWBNo[this.elem] || this.form.AWBNo[this.elem]==null || this.form.AWBNo[this.elem]==undefined || this.form.AWBNo[this.elem]=="") && this.form.radio[this.elem]=="awb"){
+
+          document.getElementById("finRec"+this.elem).innerHTML=""; document.getElementById("finRadio"+this.elem).innerHTML="";
+          document.getElementById("finDR"+this.elem).innerHTML="AWB Number is required.";
+          this.form.RecAmt[this.elem] = ''; this.form.AWBNo[this.elem] = '';
+          return false;
+        }else if((this.form.AWBNo[this.elem] || this.form.RecAmt[this.elem]) && (finreasonid == 125 || finreasonid == 218)){
+
+          if(this.form.AWBNo[this.elem] && this.form.radio[this.elem]=="awb"){
+
+            if(/\s/g.test(this.form.AWBNo[this.elem]) == true || this.form.AWBNo[this.elem].indexOf(',') > -1){
+              this.form.AWBNo[this.elem] = this.form.AWBNo[this.elem].replace(/,\s*$/, "").replace(/ /g,'').split(',');
+            }
+
+            if(this.form.AWBNo[this.elem] && Array.isArray(this.form.AWBNo[this.elem]) == false){
+              this.form.AWBNo[this.elem] = new Array(this.form.AWBNo[this.elem]);
+            }
+
+            document.getElementById("finDR"+this.elem).innerHTML="";  this.form.RecAmt[this.elem] = '';
+            this.cardawbno(this.form.AWBNo[this.elem], this.elem, findata);
+          }else if(this.form.RecAmt[this.elem] && this.form.radio[this.elem]=="amount"){
+
+            document.getElementById("finRec"+this.elem).innerHTML=""; this.form.AWBNo[this.elem] = ''; this.AWBAmount = this.form.RecAmt[this.elem];
+            this.showCardModal(this.AWBAmount, this.elem, findata);
+          }
+          document.getElementById("finRadio"+this.elem).innerHTML="";
         }else{
-          this.AWBArr = ''; this.AWBAmount = 0; document.getElementById("finDR"+ledgerid).innerHTML="";
-          this.updateSVCFinanceledger(elem, findata);
+          this.form.AWBNo[this.elem] = ''; this.AWBAmount = ''; this.form.RecAmt[this.elem] = '';
+          document.getElementById("finDR"+this.elem).innerHTML=""; document.getElementById("finRec"+this.elem).innerHTML=""; document.getElementById("finRadio"+this.elem).innerHTML="";
+          this.updateSVCFinanceledger(this.elem, findata);
         }
       }else{
         console.log('errors exist', elem)
