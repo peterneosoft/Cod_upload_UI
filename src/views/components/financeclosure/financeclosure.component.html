@@ -240,25 +240,26 @@
                     <span v-bind:id="setid('finD', data.svcledgerid)" class="text-danger"></span>
 
                     <br v-show="([84,124,187,125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6">
-                    <input v-show="([84,124,187,125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6" v-model="form.confirmamount[data.svcledgerid]" v-bind:name="setid('confirmamount', data.svcledgerid)" v-bind:id="setid('confirmamount', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('confirmamount'+data.svcledgerid) }" type="text" placeholder="Enter Received Amount">
+                    <input v-show="([84,124,187,125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6" v-model="form.confirmamount[data.svcledgerid]" v-bind:name="setid('confirmamount', data.svcledgerid)" v-bind:id="setid('confirmamount', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('confirmamount'+data.svcledgerid) }" type="text" placeholder="Enter Received Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8">
                     <span v-bind:id="setid('finA', data.svcledgerid)" class="text-danger"></span>
 
                     <br v-show="([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6">
                     <span v-show="([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6" style="margin-right:120px;">
-                      <input type="radio" v-model="form.radio[data.svcledgerid]" value="amount">Enter Amount &nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" v-model="form.radio[data.svcledgerid]" value="awb">Enter AWB No.
+                      <input type="radio" name="radio" v-model="form.radio[data.svcledgerid]" value="awb"> Enter AWB No. &nbsp;&nbsp;&nbsp;&nbsp;
+                      <input type="radio" name="radio" v-model="form.radio[data.svcledgerid]" value="amount"> Enter Amount
                       <span v-show="!form.radio[data.svcledgerid]" v-bind:id="setid('finRadio', data.svcledgerid)" class="text-danger" style="margin-right: -110px;"></span>
                     </span>
-                    <br v-show="([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6">
 
-                    <input v-show="(([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6) && form.radio[data.svcledgerid]=='amount'" v-model="form.RecAmt[data.svcledgerid]" v-bind:name="setid('RecAmt', data.svcledgerid)" v-bind:id="setid('RecAmt', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('RecAmt'+data.svcledgerid) }" type="text" placeholder="Enter Recovery Amount">
+                    <br v-show="([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6">
+                    <input v-show="(([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6) && form.radio[data.svcledgerid]=='amount'" v-model="form.RecAmt[data.svcledgerid]" v-bind:name="setid('RecAmt', data.svcledgerid)" v-bind:id="setid('RecAmt', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('RecAmt'+data.svcledgerid) }" type="text" placeholder="Enter Recovery Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8||event.keyCode == 46">
                     <span v-show="!form.RecAmt[data.svcledgerid] && form.radio[data.svcledgerid]=='amount'" v-bind:id="setid('finRec', data.svcledgerid)" class="text-danger"></span>
 
                     <input v-show="(([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6) && form.radio[data.svcledgerid]=='awb'" v-model="form.AWBNo[data.svcledgerid]" v-bind:name="setid('AWBNo', data.svcledgerid)" v-bind:id="setid('AWBNo', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('AWBNo'+data.svcledgerid) }" type="text" placeholder="Enter AWB Number">
-                    <span v-show="(([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6) && form.radio[data.svcledgerid]=='awb'" class="text" style="font-size: 11px; color: rgb(255, 0, 0);">Note: Please enter comma (,) seperated AWB number.</span>
+                    <span v-show="(([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6) && form.radio[data.svcledgerid]=='awb'" class="text" style="font-size: 11px; color: rgb(0, 0, 0);">Note: Please enter comma (,) seperated AWB number.</span>
                     <br v-show="(([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6) && form.radio[data.svcledgerid]=='awb'">
                     <span v-show="!form.AWBNo[data.svcledgerid] && form.radio[data.svcledgerid]=='awb'" v-bind:id="setid('finDR', data.svcledgerid)" class="text-danger"></span>
 
-                    <span v-show="(data.statusid != 6)"><br><button class="btn btn-sm btn-primary" type="submit" :disabled = "(data.statusid == 6) || (form.button[data.svcledgerid])" ><i class="fa fa-dot-circle-o"></i> Submit</button></span>
+                    <span v-show="(data.statusid != 6)"><button class="btn btn-sm btn-primary" type="submit" :disabled = "(data.statusid == 6) || (form.button[data.svcledgerid])" ><i class="fa fa-dot-circle-o"></i> Submit</button></span>
                 </form>
                 </td>
                 <td class="text-center">{{data.deposittype}}</td>

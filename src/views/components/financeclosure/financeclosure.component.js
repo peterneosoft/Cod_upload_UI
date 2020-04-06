@@ -251,6 +251,7 @@ export default {
             let finance = result.data.data;
             finance.forEach((fin,key)=>{
               this.form.finreason[fin.svcledgerid] = fin.financereasonid;
+              this.form.radio[fin.svcledgerid] = 'awb';
 
               if(!fin.financereasonid){
                 this.form.finreason[fin.svcledgerid] = '';
@@ -288,6 +289,7 @@ export default {
           }else{
               this.StatusVal = "Transaction Open"
           }
+          this.pageno = this.pagecount = 0;
           this.GetFinanceledgerData(event);
          }
       }).catch(() => {
@@ -383,7 +385,7 @@ export default {
             financeconfirmdate: financeconfirmdate,
             confirmamount: confirmamount,
             AWBNo: (this.form.AWBNo[this.elem])?this.form.AWBNo[this.elem]:new Array(),
-            recoveryamount: this.AWBAmount,
+            recoveryamount: (this.AWBAmount)?this.AWBAmount:0,
             hubid: findata.hubid,
             username: this.localuserid,
             deliverydate: findata.deliverydate,

@@ -75,9 +75,9 @@ td{
 }
 
 .text-danger {
-    color: #f86c6b !important;
+    color: rgb(255, 0, 0) !important;
     font-weight: bold;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
 }
 
 table.scroll {
@@ -100,4 +100,10 @@ table.scroll thead th {
 
 table.scroll thead th:last-child {
     width: 156px; /* 140px + 16px scrollbar width */
+}
+
+input,
+input::-webkit-input-placeholder {
+    font-size: 13px;
+    line-height: 1;
 }
