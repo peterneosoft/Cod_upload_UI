@@ -228,6 +228,7 @@
                 <td class="text-center">{{data.balanceoutstanding}}</td>
                 <td class="text-center">{{StatusVal}}</td>
                 <td class="text-center">
+                  <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="form.subLoading[data.svcledgerid]" />
                   <form v-on:submit.prevent="onUpdate(data.svcledgerid, data)">
                     <select style="width: 220px;" v-model="form.finreason[data.svcledgerid]"  v-bind:name="setid('finreason', data.svcledgerid)" v-bind:id="setid('finreason', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('finreason'+data.svcledgerid) }" :disabled="data.statusid == 6 ? true : false">
                       <option value="">--Select--</option>
@@ -259,7 +260,7 @@
                     <br v-show="(([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6) && form.radio[data.svcledgerid]=='awb'">
                     <span v-show="!form.AWBNo[data.svcledgerid] && form.radio[data.svcledgerid]=='awb'" v-bind:id="setid('finDR', data.svcledgerid)" class="text-danger"></span>
 
-                    <span v-show="(data.statusid != 6)"><button class="btn btn-sm btn-primary" type="submit" :disabled = "(data.statusid == 6) || (form.button[data.svcledgerid])" ><i class="fa fa-dot-circle-o"></i> Submit</button></span>
+                    <span v-show="(data.statusid != 6)"><button class="btn btn-sm btn-primary" @click = "form.subLoading[data.svcledgerid] = 'true'" type="submit" :disabled = "(data.statusid == 6) || (form.button[data.svcledgerid])" ><i class="fa fa-dot-circle-o"></i> Submit</button></span>
                 </form>
                 </td>
                 <td class="text-center">{{data.deposittype}}</td>

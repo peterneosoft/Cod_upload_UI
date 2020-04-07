@@ -46,7 +46,8 @@ export default {
           hide: [],
           button:[],
           radio:[],
-          RecAmt:[]
+          RecAmt:[],
+          subLoading:[]
       },
       zoneAmtList: [],
       totalzoneamt: '0.00',
@@ -252,6 +253,7 @@ export default {
             finance.forEach((fin,key)=>{
               this.form.finreason[fin.svcledgerid] = fin.financereasonid;
               this.form.radio[fin.svcledgerid] = 'awb';
+              this.form.subLoading[fin.svcledgerid] = false;
 
               if(!fin.financereasonid){
                 this.form.finreason[fin.svcledgerid] = '';
@@ -291,7 +293,9 @@ export default {
           }
           this.pageno = this.pagecount = 0;
           this.GetFinanceledgerData(event);
-         }
+        }else{
+          this.$alertify.error('Error Occured');
+        }
       }).catch(() => {
         console.log('errors exist', this.errors)
       });
@@ -376,7 +380,7 @@ export default {
         insertflag=1;
       }
 
-      this.form.button[ledgerid] = true;
+      this.form.button[ledgerid] = true; this.form.subLoading[ledgerid] = true;
 
       if(insertflag){
         this.input = ({
@@ -412,10 +416,10 @@ export default {
           } else {
             this.$alertify.error(response.data.message)
           }
-          this.form.button[ledgerid] = false;
+          this.form.button[ledgerid] = false; this.form.subLoading[ledgerid] = false;
         })
         .catch((httpException) => {
-          this.form.button[ledgerid] = false;
+          this.form.button[ledgerid] = false; this.form.subLoading[ledgerid] = false;
           console.error('exception is:::::::::', httpException)
           this.$alertify.error('Error Occured');
         });
@@ -426,7 +430,7 @@ export default {
       if(elem){
          this.elem = ''; this.AWBAmount = ''; this.findata = []; this.elem = elem; this.findata = findata;
 
-        let finreasonid = this.form.finreason[this.elem];
+        let finreasonid = this.form.finreason[this.elem]; this.form.subLoading[this.elem] = false;
 
         if((finreasonid == 125 || finreasonid == 218) && (this.form.radio[this.elem]==null || this.form.radio[this.elem]=="")){
 
@@ -470,13 +474,13 @@ export default {
           this.updateSVCFinanceledger(this.elem, findata);
         }
       }else{
-        console.log('errors exist', elem)
+        console.log('errors exist', elem); this.form.subLoading[elem] = false;
         return false;
       }
     },
 
     resetForm() {
-      this.zone = ''; this.HubId = []; this.pageno = this.resultCount = 0; this.listFinanceledgerData = []; this.status = 1;
+      this.zone = ''; this.HubId = this.hubList = []; this.pageno = this.resultCount = 0; this.listFinanceledgerData = []; this.status = 1;
       this.$validator.reset();
       this.errors.clear();
     },
@@ -498,7 +502,7 @@ export default {
     },
 
     scrollWin() {
-      if(this.zone && this.HubId.length>0 && this.status) window.scrollBy(0, 1000);
+      if(this.zone && this.HubId.HubID && this.status) window.scrollBy(0, 1000);
     },
 
     showReasonAWBNo(ele){

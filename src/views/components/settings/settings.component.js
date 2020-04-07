@@ -153,7 +153,7 @@ export default {
             this.isLoading            = false;
             let totalRows             = result.data.count;
             this.resultCount          = result.data.count;
-            console.log('hubnamearr==', this.hubnamearr);
+
             if (totalRows < 10) {
                 this.pagecount = 1
             } else {
