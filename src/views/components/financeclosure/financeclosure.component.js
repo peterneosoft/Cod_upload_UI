@@ -319,31 +319,54 @@ export default {
       this.RecExcModalShow = false
     },
 
-    cardawbno(elem, findata){
-      this.AWBAmount = 0;
+    cardawbno(AWBNo, elem, findata, AWBAmount){
+      let awbArr = []; this.AWBAmount = 0; this.DisputeArr = []; this.form.subLoading[elem] = true;
+
+      if(AWBNo){
+        awbArr.push({ ReasonID:this.form.finreason[this.elem], AWBNo:this.checkAWB(AWBNo) });
+      }else{
+        awbArr.push({ ReasonID:this.form.finreason[this.elem], AWBNo:[], ReasonAmt:(AWBAmount)?AWBAmount:'0' });
+      }
+
       axios({
           method: 'POST',
-          'url': apiUrl.api_url + 'checkAWBNo',
-          'data': ({AWBNo: this.form.AWBNo[this.elem]}),
+          'url': apiUrl.api_url + 'getAWBNo',
+          'data': ({DisputeArr: awbArr}),
           headers: {
               'Authorization': 'Bearer '+this.myStr
           }
       })
       .then((awbres) => {
         if (awbres.data.code == 200) {
-          if(awbres.data.invalidAwbNo){
-            this.$alertify.error("Some of AWB numbers are invalid, please check: "+awbres.data.invalidAwbNo); return false;
+          if(awbres.data.invalidAwb.length>0){
+            this.$alertify.error("Some of AWB numbers are invalid, please check: "+awbres.data.invalidAwb.join(', ')); return false;
           }else{
-            this.AWBAmount = awbres.data.shipment_amount;
+            this.AWBAmount = awbres.data.total;
+            this.DisputeArr = awbres.data.result;
             this.showCardModal(this.AWBAmount, elem, findata);
           }
         } else{
           this.$alertify.error("AWB numbers are invalid, please check."); return false;
         }
+         this.form.subLoading[elem] = false;
       })
       .catch((httpException) => {
-        this.$alertify.error('Error occured'); return false;
+         this.form.subLoading[elem] = false; this.$alertify.error('Error occured'); return false;
       });
+    },
+
+    checkAWB(awbno){
+
+      if(awbno){
+        if(/\s/g.test(awbno) == true || awbno.indexOf(',') > -1){
+          awbno =awbno.replace(/,\s*$/, "").replace(/ /g,'').split(',');
+        }
+        if(Array.isArray(awbno) == false){
+          awbno = new Array(awbno);
+        }
+
+        return awbno;
+      }
     },
 
     updateSVCFinanceledger(elem, findata) {
@@ -388,7 +411,7 @@ export default {
             financereasonid: parseInt(finreasonid),
             financeconfirmdate: financeconfirmdate,
             confirmamount: confirmamount,
-            AWBNo: (this.form.AWBNo[this.elem])?this.form.AWBNo[this.elem]:new Array(),
+            AWBNo: (this.form.AWBNo[this.elem])?new Array(this.form.AWBNo[this.elem]):new Array(),
             recoveryamount: (this.AWBAmount)?this.AWBAmount:0,
             hubid: findata.hubid,
             username: this.localuserid,
@@ -452,21 +475,13 @@ export default {
 
           if(this.form.AWBNo[this.elem] && this.form.radio[this.elem]=="awb"){
 
-            if(/\s/g.test(this.form.AWBNo[this.elem]) == true || this.form.AWBNo[this.elem].indexOf(',') > -1){
-              this.form.AWBNo[this.elem] = this.form.AWBNo[this.elem].replace(/,\s*$/, "").replace(/ /g,'').split(',');
-            }
-
-            if(this.form.AWBNo[this.elem] && Array.isArray(this.form.AWBNo[this.elem]) == false){
-              this.form.AWBNo[this.elem] = new Array(this.form.AWBNo[this.elem]);
-            }
-
             document.getElementById("finDR"+this.elem).innerHTML="";  this.form.RecAmt[this.elem] = '';
-            this.cardawbno(this.form.AWBNo[this.elem], this.elem, findata);
           }else if(this.form.RecAmt[this.elem] && this.form.radio[this.elem]=="amount"){
 
             document.getElementById("finRec"+this.elem).innerHTML=""; this.form.AWBNo[this.elem] = ''; this.AWBAmount = this.form.RecAmt[this.elem];
-            this.showCardModal(this.AWBAmount, this.elem, findata);
           }
+
+          this.cardawbno(this.form.AWBNo[this.elem], this.elem, findata, this.form.RecAmt[this.elem]);
           document.getElementById("finRadio"+this.elem).innerHTML="";
         }else{
           this.form.AWBNo[this.elem] = ''; this.AWBAmount = ''; this.form.RecAmt[this.elem] = '';
