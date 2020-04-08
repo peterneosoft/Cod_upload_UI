@@ -323,6 +323,7 @@ export default {
       let awbArr = []; this.AWBAmount = 0; this.DisputeArr = []; this.form.subLoading[elem] = true;
 
       if(AWBNo){
+        this.form.AWBNo[this.elem] = this.checkAWB(AWBNo);
         awbArr.push({ ReasonID:this.form.finreason[this.elem], AWBNo:this.checkAWB(AWBNo) });
       }else{
         awbArr.push({ ReasonID:this.form.finreason[this.elem], AWBNo:[], ReasonAmt:(AWBAmount)?AWBAmount:'0' });
@@ -411,7 +412,7 @@ export default {
             financereasonid: parseInt(finreasonid),
             financeconfirmdate: financeconfirmdate,
             confirmamount: confirmamount,
-            AWBNo: (this.form.AWBNo[this.elem])?new Array(this.form.AWBNo[this.elem]):new Array(),
+            AWBNo: (this.form.AWBNo[this.elem])? this.form.AWBNo[this.elem] : new Array(),
             recoveryamount: (this.AWBAmount)?this.AWBAmount:0,
             hubid: findata.hubid,
             username: this.localuserid,
