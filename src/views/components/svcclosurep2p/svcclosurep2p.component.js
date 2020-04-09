@@ -483,7 +483,7 @@ export default {
       let DepositReasonExcepAmount = ''; this.unmatchedAmt = 0;
       DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount));
 
-      if(this.amoimp || this.CardAmount > 0){ //65
+      if(this.CardAmount > 0){ //65
         //DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat((this.ReasonAmount)?this.ReasonAmount:'0')+parseFloat(this.CardAmount)));
         DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.CardAmount)));
       }
@@ -512,7 +512,7 @@ export default {
         let ClosingBalance = 0;
 
         if(this.unmatchedAmt > 0 && this.unmatchedAmt <= 5){
-          ClosingBalance = 0; this.unmatchedAmt = 0;
+          this.unmatchedAmt = 0;
         }else{
           if((DepositReasonExcepAmount < TolatCollection) && (this.unmatchedAmt>0)){
 
@@ -522,7 +522,7 @@ export default {
               return false;
             }else{
 
-              if((this.amoimp || this.CardAmount > 0) && !this.lowdis){ //65
+              if((this.CardAmount>0) && !this.lowdis && (this.unmatchedAmt>0)){ //65
                 this.$alertify.error("Total outstanding COD amount and deposit amount including other charges or sum of Dispute AWB amount is should be same, please check.");
                 return false;
               }else{
@@ -537,8 +537,8 @@ export default {
             error.innerHTML      = "Deposit amount including other or sum of Dispute AWB amount charges should not be greater than total outstanding COD amount, please check.";
             error.style.display  = "block"; return false;
           }
-          ClosingBalance = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositAmount)));
         }
+        ClosingBalance = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositAmount)));
 
         let NoteCountArr = []; let DenominationIDArr = [];
         if(this.DenominationArr.length > 0){
@@ -551,7 +551,7 @@ export default {
         let OpeningBalance = parseFloat(this.closingBalance);
         let CODAmount = parseFloat(Math.round(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)));
 
-        if(this.lowdis || ClosingBalance=='0'){
+        if(this.lowdis || this.unmatchedAmt==0){
           this.disableButton = true; this.subLoading = true;
           this.input = ({
               DepositDate: this.DepositDate,
