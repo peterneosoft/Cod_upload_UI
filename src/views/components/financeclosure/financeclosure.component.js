@@ -320,7 +320,7 @@ export default {
     },
 
     cardawbno(AWBNo, elem, findata, AWBAmount){
-      let awbArr = []; this.AWBAmount = 0; this.DisputeArr = []; this.form.subLoading[elem] = true;
+      let awbArr = []; this.AWBAmount = 0; this.DisputeArr = [];
 
       if(AWBNo){
         this.form.AWBNo[this.elem] = this.checkAWB(AWBNo);
@@ -349,10 +349,9 @@ export default {
         } else{
           this.$alertify.error("AWB numbers are invalid, please check."); return false;
         }
-         this.form.subLoading[elem] = false;
       })
       .catch((httpException) => {
-         this.form.subLoading[elem] = false; this.$alertify.error('Error occured'); return false;
+         this.$alertify.error('Error occured'); return false;
       });
     },
 
