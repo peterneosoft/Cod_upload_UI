@@ -679,8 +679,8 @@
                   <span v-if="data.exceptionamt==0">{{data.exceptionamt}}</span>
                 </td>
                 <td class="text-center">
-                  <span @click="showReasonAWBNo(data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.cardissueamt!=0">{{data.cardissueamt}}</span>
-                  <span v-if="data.cardissueamt==0">{{data.cardissueamt}}</span>
+                  <span @click="showReasonAWBNo(data.cardawbno)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.cardawbno.length>0">{{data.cardissueamt}}</span>
+                  <span v-if="data.cardawbno.length<=0">{{data.cardissueamt}}</span>
                 </td>
                 <!-- <td class="text-center">
                   <span @click="showRecExcAWBNo('recovery', data.othercharges, data.recoveryawb)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.othercharges!=0">{{data.othercharges}}</span>

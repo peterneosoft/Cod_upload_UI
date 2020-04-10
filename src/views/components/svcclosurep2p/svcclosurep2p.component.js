@@ -755,7 +755,7 @@ export default {
 
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
-         document.getElementById("d_a").style.display = "none";
+         document.getElementById("d_a").style.display = "none"; this.DisputeArr = [];
 
          if(result){
            if((this.tot_amt != 0 && this.tot_amt != parseInt(this.Deposit_Amount))||!this.tot_amt){
@@ -910,11 +910,7 @@ export default {
       if(ele>0){
         let AWBArr = {}; AWBArr['awb'] = []
 
-        if(eletyp == 'recovery'){
-          AWBArr['Reason'] = "Self Debit/Client Recovery"
-        }else if(eletyp == 'exception'){
-          AWBArr['Reason'] = "Exception"
-        }
+        AWBArr['Reason'] = "Exception"
 
         eleawb = eleawb.split(',');
         if(eleawb.length>0){
