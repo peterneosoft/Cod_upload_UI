@@ -247,7 +247,7 @@ export default {
        }
 
        let NoteCountArr = []; let DenominationIDArr = [];
-       console.log('DenominationArr==', this.DenominationArr);
+
        if(this.DenominationArr.length > 0){
          this.DenominationArr.forEach(function (denomi) {
            NoteCountArr.push(parseInt(document.getElementById("mo"+denomi).value) / parseInt(denomi));
@@ -325,7 +325,7 @@ export default {
       this.assignArr = this.cardArr = this.cashArr = this.ndrArr = this.prepaidArr = this.walletArr = this.payphiArr = this.awbArr = this.codArr = [];
       this.SR_Name = this.Deposit_Amount = this.Reason = this.tot_amt = this.awbnotype = '';
 
-      this.DisputeArr = this. DenomDetail = []; this.CardAmount = 0;
+      this.DisputeArr = this.DenomDetail = []; this.CardAmount = 0;
 
       this.castheft = this.prevpenbal = this.sriss = this.lowdis = this.cariss = this.codimpr = this.selfrec = this.cassnat = this.paychg = this.codnttim = this.theftstol = this.wrongdel = false;
       this.castheftAWBNo = this.prevpenbalAWBNo = this.srissAWBNo = this.carissAWBNo = this.codimprAWBNo = this.selfrecAWBNo = this.cassnatAWBNo = this.paychgAWBNo = this.codnttimAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = '';
@@ -557,6 +557,7 @@ export default {
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
          if(result){
+          this.DisputeArr = []; this.CardAmount = 0;
           if((this.tot_amt != '0' && this.tot_amt != parseInt(this.Deposit_Amount))||!this.tot_amt){
             let error = document.getElementById("d_a");
              error.innerHTML = "Total denomination & deposit amount should be same, please check.";
