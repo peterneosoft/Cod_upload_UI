@@ -140,6 +140,7 @@
                     <span class="input-group-text"><i class="fa fa-file"></i></span>
                   </div>
                 </div>
+                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Upload multiple deposit slip one by one.<br></span>
                 <span v-show="errors.has('DepositSlip')" id="dps" class="text-danger">Deposit slip is required.</span>
                 <a v-bind:title='`${file.name}`' v-for="file in uploadFileList" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:25px; color:#4b8cbb; margin: 10px 15px 1px 10px;"></i></a>
               </div>
@@ -209,6 +210,7 @@
                     <span class="input-group-text"><i class="fa fa-file"></i></span>
                   </div>
                 </div>
+                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Upload multiple reason slip one by one.<br></span>
                 <span v-show="errors.has('ReasonSlip')" id="rss" class="text-danger">Reason slip used for tax payment/ imprest is required.</span>
                 <a v-bind:title='`${file.name}`' v-for="file in reasonFileList" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:25px; color:#4b8cbb; margin: 10px 15px 1px 10px;"></i></a>
               </div>

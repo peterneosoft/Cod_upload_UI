@@ -599,15 +599,14 @@ export default {
             if (response.data.errorCode == 0) {
               this.$alertify.success(response.data.msg);
               this.disableButton = false; this.subLoading = false;
-              window.scrollBy(0, 1000);
-              this.resetForm(event);
+              window.scrollBy(0, 1000); this.resetForm(event);
             } else if (response.data.errorCode == -1) {
               this.$alertify.error(response.data.msg)
             }
           })
           .catch((httpException) => {
-              this.disableButton = false; this.subLoading = false;
-              this.$alertify.error('Error occured')
+            this.disableButton = false; this.subLoading = false;
+            this.$alertify.error('Error occured')
           });
         }else{
           this.$alertify.error('Error occured')
@@ -617,21 +616,25 @@ export default {
 
     //function is used for upload files on AWS s3bucket
     onUpload(event){
-      this.disableButton = true; this.subLoading = true;
+      this.disableButton = true;
+
+      if(event.target.files.length<=0){
+        this.disableButton = false; return false;
+      }
+
       this.selectedFile = event.target.files[0];
 
       var name = this.selectedFile.name;
       if(this.selectedFile.size>5242880){
         this.$alertify.error(event.srcElement.placeholder + " Failed! Upload Max File Size Should Not Be Greater Than 5 MB");
-        this.disableButton = false; this.subLoading = false;
-        this.DepositSlip = '';
-        return false;
+        this.disableButton = false; this.DepositSlip = ''; return false;
       }
+
       if ( /\.(jpe?g|png|gif|bmp|xls|xlsx|csv|doc|docx|rtf|wks|wps|wpd|excel|xlr|pps|pdf|ods|odt)$/i.test(this.selectedFile.name) ){
         name = this.selectedFile.name;
       }else{
         this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg, .jpeg, .gif, .bmp, .xls, .xlsx, .pdf, .ods, .csv, .doc, .odt, .docx, .rtf, .wks, .wps, .wpd, .excel, .xlr, .pps");
-        this.disableButton = false; this.subLoading = false;
+        this.disableButton = false;
         this.DepositSlip = this.selectedFile = '';
         return false;
       }
@@ -661,6 +664,7 @@ export default {
           this.getS3bucketFiles();
         }
       }, error => {
+        this.ReasonLoading = false; this.DepositLoading = false; this.disableButton = false;
         console.error(error)
       });
     },
@@ -681,7 +685,7 @@ export default {
         }
       })
       .then(result => {
-
+        this.disableButton = false;
         if(Reason){
           this.ReasonLoading = false;
           this.reasonFileList = result.data.data;
@@ -697,8 +701,8 @@ export default {
           error.innerHTML      = "";
           error.style.display  = "none";
         }
-        this.disableButton = false; this.subLoading = false;
       }, error => {
+        this.disableButton = false; this.ReasonLoading = false; this.DepositLoading = false;
         console.error(error)
       })
     },
@@ -790,7 +794,7 @@ export default {
     },
 
     resetForm(event) {
-      this.DepositLoading = false; this.ReasonLoading = false;
+      this.DepositLoading = false; this.ReasonLoading = false; this.disableButton = false; this.subLoading = false;
       this.BatchID = Math.floor(Math.random() * (Math.pow(10,5)));
       this.pageno = this.tot_amt = this.unmatchedAmt = this.CardAmount = 0;
       this.uploadFileList = []; this.reasonFileList = []; this.BankList = []; this.exception = []; this.exceptionList = []; this.exceptionArr = [];
