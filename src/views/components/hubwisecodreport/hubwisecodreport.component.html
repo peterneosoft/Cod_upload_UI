@@ -187,7 +187,14 @@
           <div class="col-12">
             <div class="card-headerfrm" style="margin-bottom: 15px;">
               <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result
-                <span v-show="exportf" style="margin-left: 85%; cursor: pointer;" @click="exportreport()">
+                ( &nbsp;
+                  <font style="font-size: 13px;">
+                    <span class="dot1"></span> Carry Forward Scheduler Entry
+                    <span class="dot2"></span> Amount Used For Tax Payment/Imprest
+                    <span class="dot3"></span> Excess OR Less Amount Received
+                  </font>
+                &nbsp; )
+                <span v-show="exportf" style="margin-left: 10%; cursor: pointer;" @click="exportreport()">
                   <button class="btn btn-sm btn-success" type="button">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="excelLoading" />
                     <i class="fa fa-download"></i> Export
@@ -225,7 +232,7 @@
                   <tr v-if="resultCount==0">
                     <td colspan="20" align="center">No record found</td>
                   </tr>
-                  <tr v-for="(CODLedger_List,index) in CODLedgerReports ">
+                  <tr v-for="(CODLedger_List,index) in CODLedgerReports" v-bind:class="`${CODLedger_List.createdby == 'schedular@xpressbees.com' ? 'scheduler' : '' || CODLedger_List.reasonid == 65 ? 'other' : '' || ([84,124,187].includes(CODLedger_List.financereasonid)) ? 'mismatched' : ''}`">
                     <td class="text-center">{{pageno+index+1}}</td>
                     <td class="text-center">{{CODLedger_List.zonename}}</td>
                     <td class="text-center">{{CODLedger_List.hubname}}</td>
