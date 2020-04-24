@@ -4,7 +4,7 @@
     <div class="col-md-12 mb-2">
       <div class="card">
         <div v-if="ShowHideCron==0" @click = "ShowHideCron = '1'" class="card-header filter_main" style="cursor: pointer;">
-          <i class="fa fa-plus plus"></i> SVC Cron Job
+          <i class="fa fa-plus plus"></i> SVC Cron Job Run/ Search
         </div>
         <div v-if="ShowHideCron==1" @click = "ShowHideCron = '0'" class="card-header filter_main" style="cursor: pointer;">
           <i class="fa fa-minus minus"></i> SVC Cron Job
@@ -67,10 +67,10 @@
     <div class="col-md-12 mb-2">
       <div class="card">
         <div v-if="ShowHideFilter==0" @click = "ShowHideFilter = '1'" class="card-header filter_main" style="cursor: pointer;">
-          <i class="fa fa-plus plus"></i> AWB Difference
+          <i class="fa fa-plus plus"></i> AWB Difference Search
         </div>
         <div v-if="ShowHideFilter==1" @click = "ShowHideFilter = '0'" class="card-header filter_main" style="cursor: pointer;">
-          <i class="fa fa-minus minus"></i> AWB Difference
+          <i class="fa fa-minus minus"></i> AWB Difference Search
         </div>
         <b-collapse v-bind:class="`${ShowHideFilter == '1' ? 'show' : 'hide'}`" id="collapse1">
           <div class="card-body">

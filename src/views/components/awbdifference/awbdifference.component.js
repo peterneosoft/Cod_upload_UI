@@ -66,8 +66,8 @@ export default {
     this.urltoken = window.localStorage.getItem('accessuserToken');
 
     this.getSVCCronStatus();
-    //this.getZoneData();
-    //this.awbDifference();
+    this.getZoneData();
+    this.awbDifference();
   },
 
   methods: {
@@ -249,6 +249,8 @@ export default {
         if(result.data.code == 200){
           this.$alertify.success('Cron SVC hub ids processed successfully.');
           this.getSVCCronStatus();
+        }else{
+          this.$alertify.error('Error Occured.');
         }
       }, error => {
         this.runLoading = false; console.error(error); this.$alertify.error('Error Occured');
