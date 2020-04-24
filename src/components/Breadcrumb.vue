@@ -112,7 +112,6 @@ export default {
         })
         .then(result => {
           if(result.data.code==200){
-            this.$alertify.success('result.data.msg');
 
             let newArr = []; newArr.push(HubObj);
             let hubEncrypt = CryptoJS.AES.encrypt(JSON.stringify(newArr), "Key");
@@ -122,6 +121,7 @@ export default {
             if(window.localStorage.getItem('accesshubdata')){
               location.reload();
             }
+            this.$alertify.success(result.data.msg);
           }else{
             this.$alertify.error(result.data.msg);
           }
