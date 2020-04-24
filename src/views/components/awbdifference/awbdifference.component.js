@@ -19,6 +19,7 @@ export default {
   data() {
     return {
       resultSUCount:0,
+      resultSUCODCount:0,
       resultDBCount:0,
       resultDiffCount:0,
       SUList:[],
@@ -37,7 +38,15 @@ export default {
       pageno: 0,
       pagecount: 0,
       urltoken:'',
-      ShowHideFilter:0
+      ShowHideFilter:0,
+      ShowHideCron:0,
+      crondate:'',
+      cronrundate:'',
+      hubids:'',
+      cronLoading:false,
+      cronDiffList:'',
+      cronDiffCount:0,
+      runLoading:false
     }
   },
   computed: {
@@ -56,8 +65,9 @@ export default {
 
     this.urltoken = window.localStorage.getItem('accessuserToken');
 
-    this.getZoneData();
-    this.awbDifference();
+    this.getSVCCronStatus();
+    //this.getZoneData();
+    //this.awbDifference();
   },
 
   methods: {
@@ -137,7 +147,7 @@ export default {
       .then(result => {
         this.closuredate = result.data.date;
         this.SUList = this.DBList  = this.DiffList = [];
-        this.resultSUCount = this.resultDBCount = this.resultDiffCount = 0;
+        this.resultSUCount = this.resultDBCount = this.resultDiffCount = this.resultSUCODCount = 0;
 
         if(result.data.code == 200){
           this.SUList = result.data.SUdata;
@@ -145,6 +155,7 @@ export default {
           this.DiffList  = result.data.DiffData;
 
           this.resultSUCount = (this.SUList.TotalCnt>0)?1:0;
+          this.resultSUCODCount = (this.SUList.TotalCODCnt>0)?1:0;
           this.resultDBCount = (this.DBList.DBTotalCODCnt>0)?1:0;
           this.resultDiffCount = (this.DiffList.TotalCODdiffCnt > 0)?1:0;
 
@@ -171,10 +182,101 @@ export default {
 
     resetForm() {
       this.deliverydate = this.HubId = this.zone = '';
-      this.resultSUCount = this.resultDBCount = this.resultDiffCount = 0; this.pageno = this.pagecount = 1;
+      this.resultSUCount = this.resultSUCODCount = this.resultDBCount = this.resultDiffCount = 0; this.pageno = this.pagecount = 1;
       this.SUList = this.DBList  = this.hubList = this.DiffList = [];
       this.$validator.reset();
       this.errors.clear();
+    },
+
+    //to get failed svc hub id cron data
+    getSVCCronStatus() {
+      this.cronLoading = this.runLoading = true;
+
+      if(this.crondate){
+        this.input = ({ crondate:this.crondate })
+      }else{
+        this.input = {}
+      }
+
+      axios({
+        method: 'POST',
+        url: apiUrl.api_url + 'getSVCCronStatus',
+        data: this.input,
+        headers: {
+          'Authorization': 'Bearer '+this.urltoken
+        }
+      })
+      .then(result => {
+        this.cronrundate = result.data.crondate;
+        this.cronDiffList = ''; this.cronDiffCount = 0;
+
+        if(result.data.code == 200){
+          this.cronDiffList  = result.data.hubArr.join(', ');
+          this.cronDiffCount = result.data.hubArr.length;
+        }
+
+        this.cronLoading = this.runLoading = false;
+      }, error => {
+        this.cronLoading = this.runLoading = false; console.error(error); this.$alertify.error('Error Occured');
+      })
+    },
+
+    //run cron job for failed svc hub ids
+    svcCronRun() {
+      this.runLoading = true;
+
+      if(/\s/g.test(this.hubids) == true || this.hubids.indexOf(',') > -1){
+        this.hubids = this.hubids.replace(/"|'| |,\s*$/g,'').split(',');
+      }
+      if(Array.isArray(this.hubids) == false){
+        this.hubids = new Array(this.hubids);
+      }
+
+      this.input = ({
+        hubArr:this.hubids
+      })
+
+      axios({
+        method: 'POST',
+        url: apiUrl.api_url + 'svccroninsertion',
+        data: this.input,
+        headers: {
+          'Authorization': 'Bearer '+this.urltoken
+        }
+      })
+      .then(result => {
+        this.runLoading = false;
+        if(result.data.code == 200){
+          this.$alertify.success('Cron SVC hub ids processed successfully.');
+          this.getSVCCronStatus();
+        }
+      }, error => {
+        this.runLoading = false; console.error(error); this.$alertify.error('Error Occured');
+      })
+    },
+
+    cronSubmit() {
+      if(this.hubids){
+        let error = document.getElementById("chi"); error.style.display  = "none";
+        this.svcCronRun();
+      }else{
+        let error = document.getElementById("chi"); error.innerHTML = "Cron Hub Ids is required."; error.style.display = "block"; return false;
+      }
+    },
+
+    getCronStatus() {
+      if(this.crondate){
+        let error = document.getElementById("cd"); error.style.display  = "none";
+        this.getSVCCronStatus();
+      }else{
+        let error = document.getElementById("cd"); error.innerHTML = "Cron date is required."; error.style.display = "block"; return false;
+      }
+    },
+
+    resetCron() {
+      this.crondate = this.hubids = ''; this.cronLoading = this.runLoading = false; this.cronDiffList = ''; this.cronDiffCount = 0;
+      let error1 = document.getElementById("cd"); error1.style.display  = "none";
+      let error2 = document.getElementById("chi"); error2.style.display  = "none";
     },
   }
 }

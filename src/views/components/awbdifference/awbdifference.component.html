@@ -1,5 +1,69 @@
 <section class="user">
   <div class="animated fadeIn">
+
+    <div class="col-md-12 mb-2">
+      <div class="card">
+        <div v-if="ShowHideCron==0" @click = "ShowHideCron = '1'" class="card-header filter_main" style="cursor: pointer;">
+          <i class="fa fa-plus plus"></i> SVC Cron Job
+        </div>
+        <div v-if="ShowHideCron==1" @click = "ShowHideCron = '0'" class="card-header filter_main" style="cursor: pointer;">
+          <i class="fa fa-minus minus"></i> SVC Cron Job
+        </div>
+        <b-collapse v-bind:class="`${ShowHideCron == '1' ? 'show' : 'hide'}`" id="collapse1">
+          <div class="card-body">
+            <form>
+              <div class="form-group row">
+                <div class="col-md-4">
+                  <label>Cron Date <font color="red">*</font></label>
+                  <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
+                    <b-form-input id="crondate" type="date" name="crondate" v-model="crondate"></b-form-input>
+                  </b-input-group>
+                  <span id="cd" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6">
+                  <label>Cron Hub Ids <font color="red">*</font></label>
+                  <b-input-group>
+                    <textarea rows="2" name = "hubids" id="hubids" ref="textarea" v-model="hubids" placeholder="Enter Hub Ids..." v-bind:class="{'form-control': true}"></textarea>
+                  </b-input-group>
+                  <small class="text-muted"><font color="red">Note: * Only accept comma (,) separated hub ids.</font></small>
+                  <br>
+                  <span id="chi" class="text-danger"></span>
+                </div>
+              </div>
+
+              <div class="card-footer">
+                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="runLoading" />
+                <button class="btn btn-sm btn-success" type="button" @click="getCronStatus()"><i class="fa fa-search"></i> Search Failed Cron Hub Ids</button>
+                &nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;
+                <button class="btn btn-sm btn-primary" type="button" @click="cronSubmit()"><i class="fa fa-dot-circle-o"></i> Run Cron</button>
+                <button class="btn btn-sm btn-danger" @click="resetCron()" type="reset"><i class="fa fa-ban"></i> Clear</button><br>
+                <small class="text-muted">Note: * For Search Failed Cron Hub Ids, no need to fill 'Cron Hub Ids' input field & For Run Cron, no need to fill 'Cron Date' input field.</small>
+              </div>
+            </form>
+          </div>
+        </b-collapse>
+        <div class="card-body">
+          <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="cronLoading" />
+          <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+            <thead>
+              <tr class="text-primary">
+                <th colspan="2" class="text-center tableheader"><b>Failed Cron Hub Ids</b>&nbsp;&nbsp;<span style="font-size:13px;"><b>({{cronrundate}})</b></span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="cronDiffCount==0">
+                <td align="center">All cron records found</td>
+              </tr>
+              <tr v-if="cronDiffCount>0">
+                <td class="text-center">{{cronDiffList}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
     <div class="col-md-12 mb-2">
       <div class="card">
         <div v-if="ShowHideFilter==0" @click = "ShowHideFilter = '1'" class="card-header filter_main" style="cursor: pointer;">
@@ -128,23 +192,23 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-if="resultSUCount==0">
+              <tr v-if="resultSUCODCount==0">
                 <td colspan="2" align="center">No record found</td>
               </tr>
 
-              <tr v-if="resultSUCount>0">
+              <tr v-if="SUList.CODcashCnt>0">
                 <td class="text-center"><strong>Cash</strong></td>
                 <td class="text-center">{{SUList.cashArr}}</td>
               </tr>
-              <tr v-if="resultSUCount>0">
+              <tr v-if="SUList.CODcardCnt>0">
                 <td class="text-center"><strong>Card</strong></td>
                 <td class="text-center">{{SUList.cardArr}}</td>
               </tr>
-              <tr v-if="resultSUCount>0">
+              <tr v-if="SUList.CODpayphiCnt>0">
                 <td class="text-center"><strong>Payphi</strong></td>
                 <td class="text-center">{{SUList.payphiArr}}</td>
               </tr>
-              <tr v-if="resultSUCount>0">
+              <tr v-if="SUList.CODwalletCnt>0">
                 <td class="text-center"><strong>Wallet</strong></td>
                 <td class="text-center">{{SUList.walletArr}}</td>
               </tr>
@@ -168,25 +232,24 @@
                  <td colspan="6" align="center">No record found</td>
                </tr>
 
-               <tr v-if="resultDBCount>0">
+               <tr v-if="DBList.DBCODcashCnt>0">
                  <td class="text-center"><strong>Cash</strong></td>
                  <td class="text-center">{{DBList.DBcashArr}}</td>
                </tr>
-               <tr v-if="resultDBCount>0">
+               <tr v-if="DBList.DBCODcardCnt>0">
                  <td class="text-center"><strong>Card</strong></td>
                  <td class="text-center">{{DBList.DBcardArr}}</td>
                </tr>
-               <tr v-if="resultDBCount>0">
+               <tr v-if="DBList.DBCODpayphiCnt>0">
                  <td class="text-center"><strong>Payphi</strong></td>
                  <td class="text-center">{{DBList.DBpayphiArr}}</td>
                </tr>
-               <tr v-if="resultDBCount>0">
+               <tr v-if="DBList.DBCODwalletCnt>0">
                  <td class="text-center"><strong>Wallet</strong></td>
                  <td class="text-center">{{DBList.DBwalletArr}}</td>
                </tr>
              </tbody>
-           </table><br>
-           <paginate :page-count="pagecount" :page-range="2" :margin-pages="2" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'"></paginate>
+           </table>
          </div>
       </div>
   </div>
