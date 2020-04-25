@@ -56,6 +56,8 @@ export default {
       casstolAWBNo: '',
       theftstolAWBNo: '',
       wrongdelAWBNo: '',
+      srabscAWBNo: '',
+      srtpsrAWBNo: '',
       carissReason: '',
       cassnatReason: '',
       deldisReason: '',
@@ -64,6 +66,8 @@ export default {
       casstolReason: '',
       theftstolReason: '',
       wrongdelReason: '',
+      srabscReason: '',
+      srtpsrReason: '',
       CardAmount: 0,
       DisputeArr: [],
       cardM: 1,
@@ -102,6 +106,8 @@ export default {
       casstol:false,
       theftstol:false,
       wrongdel:false,
+      srabsc:false,
+      srtpsr:false,
       modalAWBNoShow:false,
       awbnotype:'',
       awbnumber:'',
@@ -432,6 +438,10 @@ export default {
       if(this.theftstolAWBNo) awbArr.push({ ReasonID:this.theftstolReason, AWBNo:this.checkAWB(this.theftstolAWBNo) });
 
       if(this.wrongdelAWBNo) awbArr.push({ ReasonID:this.wrongdelReason, AWBNo:this.checkAWB(this.wrongdelAWBNo) });
+
+      if(this.srabscAWBNo) awbArr.push({ ReasonID:this.srabscReason, AWBNo:this.checkAWB(this.srabscAWBNo) });
+
+      if(this.srtpsrAWBNo) awbArr.push({ ReasonID:this.srtpsrReason, AWBNo:this.checkAWB(this.srtpsrAWBNo) });
 
       if(this.lowdis) awbArr.push({ ReasonID:this.lowdisReason, AWBNo:[] });
 
@@ -769,7 +779,7 @@ export default {
           }else{
             //78,152,186
 
-            if(this.amoimp || this.cariss || this.deldis || this.paychg || this.cassnat || this.casstol || this.theftstol || this.vendrec || this.wrongdel || this.lowdis){
+            if(this.amoimp || this.cariss || this.deldis || this.paychg || this.cassnat || this.casstol || this.theftstol || this.vendrec || this.wrongdel || this.srabsc || this.srtpsr || this.lowdis){
               this.cardawbno(event);
             }else{
               if(event.target[6].id=="DepositSlip" && this.uploadFileList.length<=0){
@@ -800,9 +810,9 @@ export default {
       this.uploadFileList = []; this.reasonFileList = []; this.BankList = []; this.exception = []; this.exceptionList = []; this.exceptionArr = [];
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.ReasonSlip = this.Reason = '';
       this.DisputeArr = [];
-      this.amoimp = this.vendrec = this.deldis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = this.lowdis = false;
-      this.ReasonAmount = this.vendrecAWBNo = this.deldisAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = '';
-      this.amoimpReason = this.vendrecReason = this.deldisReason = this.cassnatReason = this.carissReason = this.paychgReason = this.casstolReason = this.theftstolReason = this.wrongdelReason = this.lowdisReason = '';
+      this.amoimp = this.vendrec = this.deldis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = this.srabsc = this.srtpsr = this.lowdis = false;
+      this.ReasonAmount = this.vendrecAWBNo = this.deldisAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.srabscAWBNo = this.srtpsrAWBNo = '';
+      this.amoimpReason = this.vendrecReason = this.deldisReason = this.cassnatReason = this.carissReason = this.paychgReason = this.casstolReason = this.theftstolReason = this.wrongdelReason = this.srabscReason = this.srtpsrReason = this.lowdisReason = '';
       $('#denomlist input[type="text"]').val(0); $('#denomlist input[type="number"]').val('');
       document.getElementById("d_a").style.display = "none";
       this.GetShipmentUpdate();
@@ -829,8 +839,8 @@ export default {
 
     changeDepType(){ //change deposit Amount
      this.unmatchedAmt = this.CardAmount = 0; this.Reason = ''; this.ReasonAmount = ''; this.DisputeArr = []; this.reasonFileList = [];
-     this.amoimp = this.vendrec = this.deldis = this.lowdis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = false;
-     this.ReasonAmount = this.vendrecAWBNo = this.deldisAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = '';
+     this.amoimp = this.vendrec = this.deldis = this.lowdis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = this.srabsc = this.srtpsr = false;
+     this.ReasonAmount = this.vendrecAWBNo = this.deldisAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.srabscAWBNo = this.srtpsrAWBNo = '';
 
       $('input[name="reason"]').each(function() {
   			this.checked = false;
@@ -875,6 +885,10 @@ export default {
           this.wrongdel = true; this.wrongdelReason = Reason;
         }else if((process.env.NODE_ENV == 'development' && Reason == 80) || (process.env.NODE_ENV == 'production' && Reason == 80)){
           this.lowdis = true; this.lowdisReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 324) || (process.env.NODE_ENV == 'production' && Reason == 129)){
+          this.srabsc = true; this.srabscReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 325) || (process.env.NODE_ENV == 'production' && Reason == 130)){
+          this.srtpsr = true; this.srtpsrReason = Reason;
         }
       }else{
         if(Reason == 65){
@@ -897,6 +911,10 @@ export default {
           this.wrongdel = false; this.wrongdelAWBNo = ''; this.wrongdelReason = '';
         }else if((process.env.NODE_ENV == 'development' && Reason == 80) || (process.env.NODE_ENV == 'production' && Reason == 80)){
           this.lowdis = false; this.lowdisReason = '';
+        }else if((process.env.NODE_ENV == 'development' && Reason == 324) || (process.env.NODE_ENV == 'production' && Reason == 129)){
+          this.srabsc = false; this.srabscAWBNo = ''; this.srabscReason = '';
+        }else if((process.env.NODE_ENV == 'development' && Reason == 325) || (process.env.NODE_ENV == 'production' && Reason == 130)){
+          this.srtpsr = false; this.srtpsrAWBNo = ''; this.srtpsrReason = '';
         }
       }
     },

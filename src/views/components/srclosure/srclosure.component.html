@@ -208,6 +208,17 @@
                 <span id="awb_n" v-show="errors.has('codnttimAWBNo')" class="text-danger">COD not closed in time AWB No. is required.</span>
               </div>
 
+              <div class="form-group" v-show="srabsc">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">AWB No. <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="srabscAWBNo" type="text" name="srabscAWBNo" title="Enter SR absconding AWB No." placeholder="SR absconding AWB No." v-validate="`${srabsc ? 'required' : ''}`"
+                  v-model="srabscAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('srabscAWBNo') }">
+                </div>
+                <span id="awb_n" v-show="errors.has('srabscAWBNo')" class="text-danger">SR absconding AWB No. is required.</span>
+              </div>
+
               <div class="card-footer">
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="subLoading" />
                 <button v-bind:disabled="disableButton" class="btn btn-sm btn-primary" type="submit">

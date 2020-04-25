@@ -248,7 +248,7 @@ export default {
         this.runLoading = false;
         if(result.data.code == 200){
           this.$alertify.success('Cron SVC hub ids processed successfully.');
-          this.getSVCCronStatus();
+          this.resetCron();
         }else{
           this.$alertify.error('Error Occured.');
         }
@@ -279,6 +279,7 @@ export default {
       this.crondate = this.hubids = ''; this.cronLoading = this.runLoading = false; this.cronDiffList = ''; this.cronDiffCount = 0;
       let error1 = document.getElementById("cd"); error1.style.display  = "none";
       let error2 = document.getElementById("chi"); error2.style.display  = "none";
+      this.getSVCCronStatus();
     },
   }
 }

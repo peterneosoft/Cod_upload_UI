@@ -83,6 +83,7 @@ export default {
       carissAWBNo: '',
       cassnatAWBNo: '',
       selfrecAWBNo: '',
+      srabscAWBNo: '',
       paychgAWBNo: '',
       codimprAWBNo: '',
       codnttimAWBNo: '',
@@ -95,6 +96,7 @@ export default {
       carissReason: '',
       cassnatReason: '',
       selfrecReason: '',
+      srabscReason: '',
       paychgReason: '',
       codimprReason: '',
       codnttimReason: '',
@@ -107,6 +109,7 @@ export default {
       cariss:false,
       codimpr:false,
       selfrec:false,
+      srabsc:false,
       cassnat:false,
       paychg:false,
       codnttim:false,
@@ -327,9 +330,9 @@ export default {
 
       this.DisputeArr = this.DenomDetail = []; this.CardAmount = 0;
 
-      this.castheft = this.prevpenbal = this.sriss = this.lowdis = this.cariss = this.codimpr = this.selfrec = this.cassnat = this.paychg = this.codnttim = this.theftstol = this.wrongdel = false;
-      this.castheftAWBNo = this.prevpenbalAWBNo = this.srissAWBNo = this.carissAWBNo = this.codimprAWBNo = this.selfrecAWBNo = this.cassnatAWBNo = this.paychgAWBNo = this.codnttimAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = '';
-      this.castheftReason = this.prevpenbalReason = this.srissReason = this.lowdisReason = this.carissReason = this.codimprReason = this.selfrecReason = this.cassnatReason = this.paychgReason = this.codnttimReason = this.theftstolReason = this.wrongdelReason = '';
+      this.castheft = this.prevpenbal = this.sriss = this.lowdis = this.cariss = this.codimpr = this.selfrec = this.srabsc = this.cassnat = this.paychg = this.codnttim = this.theftstol = this.wrongdel = false;
+      this.castheftAWBNo = this.prevpenbalAWBNo = this.srissAWBNo = this.carissAWBNo = this.codimprAWBNo = this.selfrecAWBNo = this.srabscAWBNo = this.cassnatAWBNo = this.paychgAWBNo = this.codnttimAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = '';
+      this.castheftReason = this.prevpenbalReason = this.srissReason = this.lowdisReason = this.carissReason = this.codimprReason = this.selfrecReason = this.srabscReason = this.cassnatReason = this.paychgReason = this.codnttimReason = this.theftstolReason = this.wrongdelReason = '';
 
       this.PendingCOD = this.TodaysCOD = this.TotalAmount = this.TodaysShipmentCount = this.TodaysCash = this.TodaysPayphi = this.TodaysWallet = this.TodaysCard = this.TodaysCashCount = this.TodaysPayphiCount = this.TodaysWalletCount = this.TodaysCardCount = 0;
       this.deliveredCODArr = this.deliveredCashArr = this.deliveredPayphiArr = this.deliveredWalletArr = this.deliveredCardArr = [];
@@ -564,7 +567,7 @@ export default {
              error.style.display = "block";
 
           }else{
-            if(this.castheft || this.prevpenbal || this.sriss || this.lowdis || this.cariss || this.codimpr || this.selfrec || this.cassnat || this.paychg || this.codnttim || this.theftstol || this.wrongdel){
+            if(this.castheft || this.prevpenbal || this.sriss || this.lowdis || this.cariss || this.codimpr || this.selfrec || this.srabsc || this.cassnat || this.paychg || this.codnttim || this.theftstol || this.wrongdel){
               this.cardawbno(event);
             }else{
               let error = document.getElementById("d_a");
@@ -676,6 +679,8 @@ export default {
           this.paychg = true; this.paychgReason = Reason;
         }else if((process.env.NODE_ENV == 'development' && Reason == 251) || (process.env.NODE_ENV == 'production' && Reason == 126)){
           this.selfrec = true; this.selfrecReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 323) || (process.env.NODE_ENV == 'production' && Reason == 128)){
+          this.srabsc = true; this.srabscReason = Reason;
         }
 
       }else{
@@ -703,6 +708,8 @@ export default {
           this.paychg = false; this.paychgAWBNo = ''; this.paychgReason = '';
         }else if((process.env.NODE_ENV == 'development' && Reason == 251) || (process.env.NODE_ENV == 'production' && Reason == 126)){
           this.selfrec = false; this.selfrecAWBNo = ''; this.selfrecReason = '';
+        }else if((process.env.NODE_ENV == 'development' && Reason == 323) || (process.env.NODE_ENV == 'production' && Reason == 128)){
+          this.srabsc = false; this.srabscAWBNo = ''; this.srabscReason = '';
         }
       }
     },
@@ -746,6 +753,8 @@ export default {
       if(this.codimprAWBNo) awbArr.push({ ReasonID:this.codimprReason, AWBNo:this.checkAWB(this.codimprAWBNo) });
 
       if(this.selfrecAWBNo) awbArr.push({ ReasonID:this.selfrecReason, AWBNo:this.checkAWB(this.selfrecAWBNo) });
+
+      if(this.srabscAWBNo) awbArr.push({ ReasonID:this.srabscReason, AWBNo:this.checkAWB(this.srabscAWBNo) });
 
       if(this.lowdis) awbArr.push({ ReasonID:this.lowdisReason, AWBNo:[] });
 

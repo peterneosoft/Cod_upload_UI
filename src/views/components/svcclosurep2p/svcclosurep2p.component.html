@@ -335,6 +335,36 @@
                 <span id="awb_n" v-show="errors.has('wrongdelAWBNo')" class="text-danger"><br>Wrong Delivered Shipments AWB No. is required.</span>
               </div>
 
+              <div class="form-group" v-show="srabsc">
+                <div class="input-group">
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="srabscAWBNo" type="text" name="srabscAWBNo" title="Enter SR absconding AWB No." placeholder="SR absconding AWB No." v-validate="`${srabsc ? 'required' : ''}`"
+                  v-model="srabscAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('srabscAWBNo') }" style="margin-right: -5px;">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-truck"></i></span>
+                  </div>
+                </div>
+                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Please enter comma (,) seperated AWB number.</span>
+                <span id="awb_n" v-show="errors.has('srabscAWBNo')" class="text-danger"><br>SR absconding AWB No. is required.</span>
+              </div>
+
+              <div class="form-group" v-show="srtpsr">
+                <div class="input-group">
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="srtpsrAWBNo" type="text" name="srtpsrAWBNo" title="Enter Short payment by SR AWB No." placeholder="Short payment by SR AWB No." v-validate="`${srtpsr ? 'required' : ''}`"
+                  v-model="srtpsrAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('srtpsrAWBNo') }" style="margin-right: -5px;">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-truck"></i></span>
+                  </div>
+                </div>
+                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Please enter comma (,) seperated AWB number.</span>
+                <span id="awb_n" v-show="errors.has('srtpsrAWBNo')" class="text-danger"><br>Short payment by SR AWB No. is required.</span>
+              </div>
+
               <!-- <div class="form-group" v-show="cariss || cassnat || deldis || paychg || vendrec || casstol || theftstol || wrongdel">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
