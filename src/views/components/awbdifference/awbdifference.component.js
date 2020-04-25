@@ -233,7 +233,7 @@ export default {
       }
 
       this.input = ({
-        hubArr:this.hubids
+        hubArr:this.hubids.map(Number)
       })
 
       axios({
