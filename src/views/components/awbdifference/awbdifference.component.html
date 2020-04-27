@@ -44,11 +44,11 @@
           </div>
         </b-collapse>
         <div class="card-body">
-          <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="cronLoading" />
           <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+            <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="cronLoading" />
             <thead>
               <tr class="text-primary">
-                <th colspan="2" class="text-center tableheader"><b>Failed Cron Hub Ids</b>&nbsp;&nbsp;<span style="font-size:13px;"><b>({{cronrundate}})</b></span></th>
+                <th class="text-center tableheader"><b>Failed Cron Hub Ids</b>&nbsp;&nbsp;<span style="font-size:13px;"><b>({{cronrundate}})</b></span></th>
               </tr>
             </thead>
             <tbody>
@@ -57,6 +57,23 @@
               </tr>
               <tr v-if="cronDiffCount>0">
                 <td class="text-center">{{cronDiffList}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="table-bordered table-hover tbl datatables" style="width:100%; margin-top: 2%;">
+            <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="hubidLoading" />
+            <thead>
+              <tr class="text-primary">
+                <th class="text-center tableheader"><b>All Cron Hub Ids</b>&nbsp;&nbsp;<span style="font-size:13px;"><b>({{hubarrlength}})</b></span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="hubarrlength==0">
+                <td align="center">No record found</td>
+              </tr>
+              <tr v-if="hubarrlength>0">
+                <td class="text-center">{{hubidarr}}</td>
               </tr>
             </tbody>
           </table>
@@ -108,6 +125,16 @@
                 </div>
               </div>
 
+              <div class="form-group row">
+                <div class="col-md-6">
+                  <label>Hub Ids to Check AWB Difference</label>
+                  <b-input-group>
+                    <textarea rows="2" name = "awbhubids" id="awbhubids" ref="textarea" v-model="awbhubids" placeholder="Enter Hub Ids..." v-bind:class="{'form-control': true}"></textarea>
+                  </b-input-group>
+                  <small class="text-muted"><font color="red">Note: * Only accept comma (,) separated hub ids.</font></small>
+                </div>
+              </div>
+
               <div class="card-footer">
                 <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
                 <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
@@ -118,9 +145,43 @@
       </div>
     </div>
 
+    <div class="col-12" v-if="awbhubids">
+      <div class="card-headerfrm" style="margin-bottom: 15px;">
+        <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;SU & DB Result Count For Multiple Hubs&nbsp;&nbsp;<span style="font-size:13px;"><b>({{allddate}})</b></span></h4>
+        <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+        <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+          <thead>
+            <tr class="text-primary">
+              <th colspan="2" class="text-center tableheader"><b>SU & DB AWB Number Count For Multiple Hubs</b></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="allSUList">
+              <td class="text-center"><strong>SU</strong></td>
+              <td class="text-center">COD Count:&nbsp;&nbsp;{{allSUList.SUtotal}},
+                &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Cash Count:&nbsp;&nbsp;{{allSUList.SUcashCnt}},
+                &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Card Count:&nbsp;&nbsp;{{allSUList.SUcardCnt}},
+                &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Payphi Count:&nbsp;&nbsp;{{allSUList.SUpayphiCnt}},
+                &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Wallet Count:&nbsp;&nbsp;{{allSUList.SUwalletCnt}}
+              </td>
+            </tr>
+            <tr v-if="allDBList">
+              <td class="text-center"><strong>DB</strong></td>
+              <td class="text-center">COD Count:&nbsp;&nbsp;{{allDBList.DBTotalCODCnt}},
+                &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Cash Count:&nbsp;&nbsp;{{allDBList.DBCODcashCnt}},
+                &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Card Count:&nbsp;&nbsp;{{allDBList.DBCODcardCnt}},
+                &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Payphi Count:&nbsp;&nbsp;{{allDBList.DBCODpayphiCnt}},
+                &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Wallet Count:&nbsp;&nbsp;{{allDBList.DBCODwalletCnt}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+     </div>
+
      <div class="col-12">
        <div class="card-headerfrm" style="margin-bottom: 15px;">
-         <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; AWB Difference Result&nbsp;&nbsp;<span style="font-size:13px;"><b>({{closuredate}})</b></span></h4>
+         <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; AWB Difference Result&nbsp;&nbsp;<span style="font-size:13px;"><b>({{HubNm}}&nbsp;&nbsp;:&nbsp;&nbsp;{{closuredate}})</b></span></h4>
          <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
          <table class="table-bordered table-hover tbl datatables" style="width:100%;">
            <thead>
@@ -147,7 +208,7 @@
 
       <div class="col-12" v-if="resultSUCount>0 || resultDBCount>0">
         <div class="card-headerfrm" style="margin-bottom: 15px;">
-          <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;SU & DB Result Count&nbsp;&nbsp;<span style="font-size:13px;"><b>({{closuredate}})</b></span></h4>
+          <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;SU & DB Result Count&nbsp;&nbsp;<span style="font-size:13px;"><b>({{HubNm}}&nbsp;&nbsp;:&nbsp;&nbsp;{{closuredate}})</b></span></h4>
           <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
           <table class="table-bordered table-hover tbl datatables" style="width:100%;">
             <thead>
@@ -183,7 +244,7 @@
 
       <div class="col-12">
         <div class="card-headerfrm" style="margin-bottom: 15px;">
-          <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Shipment Update Result&nbsp;&nbsp;<span style="font-size:13px;"><b>({{closuredate}})</b></span></h4>
+          <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Shipment Update Result&nbsp;&nbsp;<span style="font-size:13px;"><b>({{HubNm}}&nbsp;&nbsp;:&nbsp;&nbsp;{{closuredate}})</b></span></h4>
           <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
           <table class="table-bordered table-hover tbl datatables" style="width:100%;">
             <thead>
@@ -219,7 +280,7 @@
 
        <div class="col-12">
          <div class="card-headerfrm" style="margin-bottom: 15px;">
-           <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; DB Result&nbsp;&nbsp;<span style="font-size:13px;"><b>({{closuredate}})</b></span></h4>
+           <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; DB Result&nbsp;&nbsp;<span style="font-size:13px;"><b>({{HubNm}}&nbsp;&nbsp;:&nbsp;&nbsp;{{closuredate}})</b></span></h4>
            <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
            <table class="table-bordered table-hover tbl datatables" style="width:100%;">
              <thead>
