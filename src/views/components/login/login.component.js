@@ -91,8 +91,13 @@ export default {
         window.localStorage.setItem('accessuserdata', '');
         window.localStorage.setItem('isLoggedIn',false);
         window.localStorage.setItem('accessuserToken', '');
+        window.localStorage.setItem('accessrole', '');
 
         if(response.data.token!=''){
+          if(response.data.urlDetails && response.data.urlDetails.length === 2 && response.data.urlDetails[1].name.replace(/ /g,'').toLowerCase() == 'srclosure'){
+            window.localStorage.setItem('accessrole', 'executive-sr');
+          }
+
           let permissionEncrypt = CryptoJS.AES.encrypt(JSON.stringify(response.data.urlDetails), "Key");
           let usersEncrupt = CryptoJS.AES.encrypt(JSON.stringify(response.data.userinfo), "Key");
           window.localStorage.setItem('accesspermissiondata', permissionEncrypt);

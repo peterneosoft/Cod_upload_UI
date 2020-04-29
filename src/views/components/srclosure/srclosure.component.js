@@ -135,7 +135,8 @@ export default {
       TodaysPayphiCount:0,
       TodaysWalletCount:0,
       TodaysCardCount:0,
-      codArr:[]
+      codArr:[],
+      userRole:''
     }
   },
 
@@ -164,6 +165,9 @@ export default {
 
     var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');
+
+    this.userRole = '';
+    this.userRole = window.localStorage.getItem('accessrole');
 
     this.srStatus();
   },
@@ -607,7 +611,8 @@ export default {
     srStatus() {
       this.srLoading = true;
       this.input = ({
-        hubid:[this.localhubid]
+        hubid:[this.localhubid],
+        userRole:this.userRole ? this.userRole : ''
       })
 
       axios({
