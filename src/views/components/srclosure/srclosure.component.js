@@ -62,7 +62,8 @@ export default {
       SRLedgerDetails:false,
       modalShow:false,
       localhubid: 0,
-      localusername: 0,
+      localusername: '',
+      localuserid: 0,
       myStr:"",
       show:false,
       urltoken:"",
@@ -161,12 +162,12 @@ export default {
     var bytes             = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
     var userdetail        = JSON.parse(plaintext);
-    this.localusername      = userdetail.username;
+    this.localuserid      = userdetail.userid;
+    this.localusername    = userdetail.username;
 
     var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');
 
-    this.userRole = '';
     this.userRole = window.localStorage.getItem('accessrole');
 
     this.srStatus();
@@ -612,7 +613,8 @@ export default {
       this.srLoading = true;
       this.input = ({
         hubid:[this.localhubid],
-        userRole:this.userRole ? this.userRole : ''
+        userRole:this.userRole ? this.userRole : '',
+        userid:this.localuserid
       })
 
       axios({
