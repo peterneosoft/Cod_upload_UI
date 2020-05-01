@@ -43,7 +43,13 @@ export default {
       agentLoading:false,
       agentList:[],
       Agent_Name:'',
-      SRArr:[]
+      SRArr:[],
+      searchview:'',
+      selected: 'sr',
+      options: [
+        { text: 'SR Closure Search', value: 'sr' },
+        { text: 'Agent Closure Search', value: 'agent' }
+      ],
     }
   },
   computed: {
@@ -59,43 +65,44 @@ export default {
     var hubdetail         = JSON.parse(plaintext);
     this.localhubid       = hubdetail[0].HubID;
     this.urltoken = window.localStorage.getItem('accessuserToken');
+    this.GetDeliveryAgentData();
     this.GetAgentData();
     this.srStatus();
   },
 
   methods: {
     //to get SR List
-    // GetDeliveryAgentData(){
-    //   this.srLoading = true;
-    //    var hubEncrypt = window.localStorage.getItem('accesshubdata')
-    //    var hubbytes  = CryptoJS.AES.decrypt(hubEncrypt.toString(), 'Key');
-    //    var hubtext = hubbytes.toString(CryptoJS.enc.Utf8);
-    //    var hubArr=JSON.parse(hubtext);
-    //
-    //    this.input = ({
-    //        hubid: [hubArr[0].HubID]
-    //    })
-    //
-    //    axios({
-    //        method: 'POST',
-    //        url: apiUrl.api_url + 'external/GetdeliveryAgentsFromHubId',
-    //        data: this.input,
-    //        headers: {
-    //          'Authorization': 'Bearer '+this.urltoken
-    //        }
-    //      })
-    //      .then(result => {
-    //        this.srLoading = false;
-    //        if(result.data.code == 200){
-    //          this.SRList = result.data.data;
-    //        }else{
-    //           this.$alertify.error("SR Not Found")
-    //        }
-    //      }, error => {
-    //        this.srLoading = false;
-    //        console.error(error)
-    //      })
-    // },
+    GetDeliveryAgentData(){
+      this.srLoading = true;
+       var hubEncrypt = window.localStorage.getItem('accesshubdata')
+       var hubbytes  = CryptoJS.AES.decrypt(hubEncrypt.toString(), 'Key');
+       var hubtext = hubbytes.toString(CryptoJS.enc.Utf8);
+       var hubArr=JSON.parse(hubtext);
+
+       this.input = ({
+           hubid: [hubArr[0].HubID]
+       })
+
+       axios({
+           method: 'POST',
+           url: apiUrl.api_url + 'external/GetdeliveryAgentsFromHubId',
+           data: this.input,
+           headers: {
+             'Authorization': 'Bearer '+this.urltoken
+           }
+         })
+         .then(result => {
+           this.srLoading = false;
+           if(result.data.code == 200){
+             this.SRList = result.data.data;
+           }else{
+              this.$alertify.error("SR not found")
+           }
+         }, error => {
+           this.srLoading = false;
+           console.error(error)
+         })
+    },
 
     getPaginationData(pageNum) {
         this.pageno = (pageNum - 1) * 10
@@ -113,7 +120,7 @@ export default {
       this.SRLedgerList = [];
       this.isLoading = true; this.srLedger = true; this.srStatusLedger = this.srStatusLoading = false;
       this.input = ({
-        srid: this.SR_Name.srid ? this.SR_Name.srid: this.SRArr,
+        srid: this.SR_Name.srid ? [this.SR_Name.srid]: this.SRArr,
         hubid:this.localhubid,
         fromdate:this.fromDate,
         todate:this.toDate,
@@ -149,12 +156,17 @@ export default {
     },
 
     onSubmit: function(event) {
-      this.$validator.validateAll().then((result) => {
-         if(result){
-           this.pageno = 0;
+      this.$validator.validateAll().then(() => {
+       if(this.SR_Name===null) this.SR_Name = '';
+
+       if(this.selected){
+         if(((this.selected=='agent' && this.Agent_Name) || (this.selected=='sr' && this.SR_Name)) && (this.fromDate && this.toDate)){
+           this.pageno = 0; document.getElementById("opt").innerHTML="";
            this.getMonthlySRLedgerDetails();
          }
-        //event.target.reset();
+       }else{
+         document.getElementById("opt").innerHTML="Please choose atleast one search option ( SR Closure OR Agent Closure )."; return false;
+       }
       }).catch(() => {
         console.log('errors exist', this.errors)
       });
@@ -164,6 +176,7 @@ export default {
       this.fromDate = this.toDate = this.SR_Name = this.Agent_Name = ''; this.SRList = this.SRLedgerList = this.DisputeArr = this. DenomDetail = [];
       this.resultCount = this.pageno = 0; document.getElementById("fdate").innerHTML="";
       this.$validator.reset(); this.errors.clear();
+      this.GetDeliveryAgentData();
     },
 
     srStatus() {
@@ -251,19 +264,20 @@ export default {
       })
     },
 
-    GetDeliveryAgentData(){
-      this.srLoading = true; this.SRArr = []; this.SR_Name = '';
-       var hubEncrypt = window.localStorage.getItem('accesshubdata')
-       var hubbytes  = CryptoJS.AES.decrypt(hubEncrypt.toString(), 'Key');
-       var hubtext = hubbytes.toString(CryptoJS.enc.Utf8);
-       var hubArr=JSON.parse(hubtext);
+    GetAgentSRData(){
+      if(this.Agent_Name){
+        this.srLoading = true; this.SRArr = this.SRList = []; this.SR_Name = '';
+         var hubEncrypt = window.localStorage.getItem('accesshubdata')
+         var hubbytes  = CryptoJS.AES.decrypt(hubEncrypt.toString(), 'Key');
+         var hubtext = hubbytes.toString(CryptoJS.enc.Utf8);
+         var hubArr=JSON.parse(hubtext);
 
-       this.input = ({
-           id: this.Agent_Name.id,
-           hubid: hubArr[0].HubID
-       })
+         this.input = ({
+             id: this.Agent_Name.id,
+             hubid: hubArr[0].HubID
+         })
 
-       axios({
+         axios({
            method: 'POST',
            url: apiUrl.api_url + 'getSRAgentList',
            data: this.input,
@@ -282,6 +296,14 @@ export default {
          }, error => {
            this.srLoading = false; console.error(error)
          })
+       }
     },
+
+    changeRadio(ele){
+      this.SRArr = this.SRList = []; this.SR_Name = '';
+      if(ele == 'sr'){
+        this.GetDeliveryAgentData();
+      }
+    }
   }
 }

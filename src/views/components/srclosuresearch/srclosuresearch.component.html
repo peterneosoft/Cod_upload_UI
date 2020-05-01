@@ -7,12 +7,18 @@
         </div>
         <div class="card-body">
           <form  v-on:submit.prevent="onSubmit">
+            <b-form-fieldset>
+              <b-form-radio name="searchview" @input="changeRadio(selected)" id="searchview" :plain="true" :options="options" v-model="selected"></b-form-radio>
+              <span id="opt" class="text-danger"></span>
+              <hr style="margin-top: 0rem; margin-bottom: 0rem;">
+            </b-form-fieldset>
+
             <div class="form-group row">
-              <div class="col-md-5">
+              <div class="col-md-5" v-if="selected=='agent'">
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="agentLoading" />
                 <label>Agent Name <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
-                      <Multiselect :options="agentList" @input="GetDeliveryAgentData" placeholder="Select Agent Name" name="Agent_Name" id="Agent_Name" v-model="Agent_Name" label="name" track-by="id"  v-validate="{required: true}" v-bind:class="{'error': errors.has('Agent_Name') }" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6; z-index:999">
+                      <Multiselect :options="agentList" @input="GetAgentSRData" placeholder="Select Agent Name" name="Agent_Name" id="Agent_Name" v-model="Agent_Name" label="name" track-by="id"  v-validate="`${selected=='agent' ? 'required' : ''}`" v-bind:class="{'error': errors.has('Agent_Name')}" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6; z-index:999">
                         <template slot="noResult"><p>No Record Found.</p></template>
                       </Multiselect>
                   </b-input-group>
@@ -21,12 +27,13 @@
 
               <div class="col-md-5">
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="srLoading" />
-                <label>SR Name</label>
+                <label>SR Name <font color="red" v-if="selected=='sr'">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
-                      <Multiselect :options="SRList" placeholder="Select SR Name" name="SR_Name" id="SR_Name" v-model="SR_Name" label="name" track-by="srid" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6; z-index:999">
+                      <Multiselect :options="SRList" placeholder="Select SR Name" name="SR_Name" id="SR_Name" v-model="SR_Name" v-bind:label="`${selected=='sr' ? 'srname' : 'name'}`" track-by="srid" :optionHeight="100" v-validate="`${selected=='sr' ? 'required' : ''}`" v-bind:class="{'error': errors.has('SR_Name')}" :hide-selected="false" style="border: 1px solid #c2cfd6; z-index:999">
                         <template slot="noResult"><p>No Record Found.</p></template>
                       </Multiselect>
                   </b-input-group>
+                  <span v-show="errors.has('SR_Name')" class="text-danger">SR name is required.</span>
               </div>
             </div>
 
