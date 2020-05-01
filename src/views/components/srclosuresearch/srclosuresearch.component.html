@@ -8,17 +8,29 @@
         <div class="card-body">
           <form  v-on:submit.prevent="onSubmit">
             <div class="form-group row">
-              <div class="col-md-4">
-                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="srLoading" />
-                <label>SR Name <font color="red">*</font></label>
+              <div class="col-md-5">
+                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="agentLoading" />
+                <label>Agent Name <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
-                      <Multiselect  :options="SRList" placeholder="Select SR Name" name="SR_Name" id="SR_Name" v-model="SR_Name" label="srname" track-by="srid"  v-validate="{required: true}" v-bind:class="{'error': errors.has('SR_Name') }" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6; z-index:999">
+                      <Multiselect :options="agentList" @input="GetDeliveryAgentData" placeholder="Select Agent Name" name="Agent_Name" id="Agent_Name" v-model="Agent_Name" label="name" track-by="id"  v-validate="{required: true}" v-bind:class="{'error': errors.has('Agent_Name') }" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6; z-index:999">
                         <template slot="noResult"><p>No Record Found.</p></template>
                       </Multiselect>
                   </b-input-group>
-                  <span v-show="errors.has('SR_Name')" class="text-danger">SR name is required.</span>
+                  <span v-show="errors.has('Agent_Name')" class="text-danger">Agent name is required.</span>
               </div>
 
+              <div class="col-md-5">
+                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="srLoading" />
+                <label>SR Name</label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                      <Multiselect :options="SRList" placeholder="Select SR Name" name="SR_Name" id="SR_Name" v-model="SR_Name" label="name" track-by="srid" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6; z-index:999">
+                        <template slot="noResult"><p>No Record Found.</p></template>
+                      </Multiselect>
+                  </b-input-group>
+              </div>
+            </div>
+
+            <div class="form-group row">
               <div class="col-md-4">
                 <label>From ( Created ) Date <font color="red">*</font></label>
                 <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">

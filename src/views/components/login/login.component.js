@@ -93,7 +93,7 @@ export default {
         window.localStorage.setItem('accessuserToken', '');
         window.localStorage.setItem('accessrole', '');
 
-        if(response.data.token!=''){
+        if(response.data.token && response.data.token!=''){
           if(response.data.urlDetails && response.data.urlDetails.length === 2 && response.data.urlDetails[1].name.replace(/ /g,'').toLowerCase() == 'srclosure'){
             window.localStorage.setItem('accessrole', 'executive-sr');
           }
@@ -110,26 +110,20 @@ export default {
           let permissiondata = JSON.parse(permissiondataplaintext);
 
           if(response.data.code==200){
-              this.isLoading = false;
-              this.$router.push(permissiondata[0].url);
-              location.reload(true)
+              this.isLoading = false; this.$router.push(permissiondata[0].url); location.reload(true)
           }else{
-            this.isLoading = false;
-            this.$alertify.error("Logging Failed");
+            this.isLoading = false; this.$alertify.error(response.data.message);
           }
 
           let hubEncrypt = CryptoJS.AES.encrypt(JSON.stringify(response.data.hubData), "Key");
           window.localStorage.setItem('accesshubdata', hubEncrypt);
         }else{
-          this.isLoading = false;
-          this.$alertify.error("Logging Failed");
+          this.isLoading = false; this.$alertify.error(response.data.message);
         }
 
       })
       .catch((httpException) => {
-        this.isLoading = false;
-        this.$alertify.error("Logging Failed");
-        console.error('exception is:::::::::', httpException)
+        this.isLoading = false; this.$alertify.error("Logging Failed"); console.error('exception is:::::::::', httpException)
       })
     },
     onSubmit: function(event) {
@@ -140,6 +134,11 @@ export default {
       }).catch(() => {
         console.log('errors exist', this.errors)
       });
+    },
+
+    resetForm() {
+      this.username = this.password = ''; this.isLoading = false;
+      this.$validator.reset(); this.errors.clear();
     },
   }
 }
