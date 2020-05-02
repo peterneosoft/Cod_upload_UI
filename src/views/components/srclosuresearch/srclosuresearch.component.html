@@ -168,6 +168,7 @@
           <thead>
             <tr class="text-primary">
               <th class="text-center tableheader"><b>#</b></th>
+              <th class="text-center tableheader"><b>SR Name</b></th>
               <th class="text-center tableheader"><b>Delivery Date</b></th>
               <th class="text-center tableheader"><b>COD Receivable ( <i class="fa fa-rupee"></i> )</b></th>
               <th class="text-center tableheader"><b>Paid Amount ( <i class="fa fa-rupee"></i> )</b></th>
@@ -178,12 +179,13 @@
           </thead>
           <tbody>
             <tr v-if="resultCount==0">
-              <td colspan="7" align="center">No record found</td>
+              <td colspan="8" align="center">No record found</td>
             </tr>
             <tr v-for="(SL_List,index) in SRLedgerList ">
               <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
-              <td>{{SL_List.deliverydate}}</td>
-              <td>{{SL_List.codamount}}</td>
+              <td class="text-center">{{SL_List.SRName}}</td>
+              <td class="text-center">{{SL_List.deliverydate}}</td>
+              <td class="text-center">{{SL_List.codamount}}</td>
               <td class="text-center">
                 <span @click="showDenomDetail(SL_List.denomination)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="SL_List.creditamount!=0">{{SL_List.creditamount}}</span>
                 <span v-if="SL_List.creditamount==0">{{SL_List.creditamount}}</span>
@@ -192,8 +194,8 @@
                 <span @click="showReasonAWBNo(SL_List.awbno)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="SL_List.debitamount!=0">{{SL_List.debitamount}}</span>
                 <span v-if="SL_List.debitamount==0">{{SL_List.debitamount}}</span>
               </td>
-              <td>{{SL_List.createddate}}</td>
-              <td>{{SL_List.createdby}}</td>
+              <td class="text-center">{{SL_List.createddate}}</td>
+              <td class="text-center">{{SL_List.createdby}}</td>
             </tr>
           </tbody>
 
