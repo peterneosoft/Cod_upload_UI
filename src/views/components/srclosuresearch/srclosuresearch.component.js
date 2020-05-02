@@ -173,7 +173,7 @@ export default {
     },
 
     resetForm() {
-      this.fromDate = this.toDate = this.SR_Name = this.Agent_Name = ''; this.SRList = this.SRLedgerList = this.DisputeArr = this. DenomDetail = [];
+      this.fromDate = this.toDate = this.SR_Name = this.Agent_Name = ''; this.SRList = this.SRLedgerList = this.DisputeArr = this.DenomDetail = [];
       this.resultCount = this.pageno = 0; document.getElementById("fdate").innerHTML="";
       this.$validator.reset(); this.errors.clear();
       this.GetDeliveryAgentData();
