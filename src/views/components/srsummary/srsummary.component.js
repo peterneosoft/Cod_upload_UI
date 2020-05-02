@@ -49,8 +49,8 @@ export default {
       searchview:'',
       selected: 'sr',
       options: [
-        { text: 'SR Closure Search', value: 'sr' },
-        { text: 'Agent Closure Search', value: 'agent' }
+        { text: 'SR Search', value: 'sr' },
+        { text: 'Agent Search', value: 'agent' }
       ],
     }
   },
