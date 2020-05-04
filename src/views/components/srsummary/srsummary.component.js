@@ -49,8 +49,8 @@ export default {
       searchview:'',
       selected: 'sr',
       options: [
-        { text: 'SR Search', value: 'sr' },
-        { text: 'Agent Search', value: 'agent' }
+        { text: 'SR Summary', value: 'sr' },
+        { text: 'Agent Summary', value: 'agent' }
       ],
     }
   },
@@ -90,7 +90,7 @@ export default {
        if(this.SR_Name===null) this.SR_Name = '';
        console.log('this.selected==', this.selected);
        if(this.selected){
-         if(((this.selected=='agent' && this.Agent_Name) || (this.selected=='sr' && this.SR_Name)) && (this.deliverydate)){
+         if(((this.selected=='agent' && this.Agent_Name) || (this.selected=='sr')) && (this.deliverydate)){
            this.pageno = 0; document.getElementById("opt").innerHTML="";
            this.getSRSummary();
          }
@@ -113,7 +113,7 @@ export default {
 
       this.input = ({
         hubid:this.localhubid,
-        srid: this.SR_Name.srid ? [this.SR_Name.srid]: this.SRArr,
+        srid: (this.SR_Name.srid) ? [this.SR_Name.srid]: (this.SRArr && this.SRArr.length>0) ? this.SRArr: (this.Agent_Name.id) ? [this.Agent_Name.id] : new Array(),
         deliverydate:this.deliverydate
       })
 
@@ -150,6 +150,7 @@ export default {
 
       this.input = ({
         hubid:this.localhubid,
+        srid: (this.SR_Name.srid) ? [this.SR_Name.srid]: (this.SRArr && this.SRArr.length>0) ? this.SRArr: (this.Agent_Name.id) ? [this.Agent_Name.id] : new Array(),
         deliverydate:this.deliverydate
       })
 
@@ -328,7 +329,7 @@ export default {
     },
 
     changeRadio(ele){
-      this.SRArr = this.SRList = []; this.SR_Name = '';
+      this.SRArr = this.SRList = []; this.SR_Name = this.Agent_Name = '';
       if(ele == 'sr'){
         this.GetDeliveryAgentData();
       }
