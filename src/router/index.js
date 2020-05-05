@@ -35,6 +35,7 @@ import PaymentMode from '@/views/components/paymentmode'
 import SRSummary from '@/views/components/srsummary'
 import AWBDifference from '@/views/components/awbdifference'
 import SRPendingLimit from '@/views/components/srpendinglimit'
+import HubWiseTracking from '@/views/components/hubwisetracking'
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -250,6 +251,23 @@ const router = new Router({
               },
               {
                 name: 'AWB Difference'
+              }
+            ]
+          },
+        },
+        {
+          path: 'hubwisetracking',
+          name: 'Hub Wise Tracking',
+          component: HubWiseTracking,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'Hub Wise Tracking'
               }
             ]
           },

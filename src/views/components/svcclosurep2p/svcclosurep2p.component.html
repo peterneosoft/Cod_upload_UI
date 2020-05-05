@@ -162,7 +162,7 @@
                 <span v-show="errors.has('Reason')" class="text-danger">{{unmatchedAmt}} Rs is remaining amount, please select reason.</span>
               </div> -->
 
-              <div class="multiselect" v-show="unmatchedAmt != 0">
+              <div class="multiselect" v-show="unmatchedAmt > 0">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Reason <font color="red">&nbsp;*</font></span>
@@ -184,7 +184,7 @@
                 <span class="text-danger">Note: {{unmatchedAmt}} Rs is remaining amount, please select reason.</span>
               </div>
 
-              <div class="form-group" v-if="unmatchedAmt != 0 && amoimp">
+              <div class="form-group" v-if="unmatchedAmt > 0 && amoimp">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Reason Amount <font color="red">&nbsp;*</font></span>
