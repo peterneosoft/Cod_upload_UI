@@ -191,8 +191,8 @@
                 <span v-if="SL_List.creditamount==0">{{SL_List.creditamount}}</span>
               </td>
               <td class="text-center">
-                <span @click="showReasonAWBNo(SL_List.awbno)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="SL_List.debitamount!=0">{{SL_List.debitamount}}</span>
-                <span v-if="SL_List.debitamount==0">{{SL_List.debitamount}}</span>
+                <span @click="showReasonAWBNo(SL_List.awbno)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="SL_List.awbno">{{SL_List.debitamount}}</span>
+                <span v-if="SL_List.awbno==null">{{SL_List.debitamount}}</span>
               </td>
               <td class="text-center">{{SL_List.createddate}}</td>
               <td class="text-center">{{SL_List.createdby}}</td>

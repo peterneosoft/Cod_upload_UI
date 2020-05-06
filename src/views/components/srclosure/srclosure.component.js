@@ -136,6 +136,8 @@ export default {
       TodaysPayphiCount:0,
       TodaysWalletCount:0,
       TodaysCardCount:0,
+      ExData:0,
+      ExmodalShow:false,
       codArr:[],
       userRole:''
     }
@@ -207,6 +209,7 @@ export default {
 
     closeStatusRoleModal() {
        this.modalShow = false
+       this.ExmodalShow = false
        this.cardModalShow = false
        this.ReasonModalShow = false
        this.DenomDetailModalShow = false
@@ -214,11 +217,10 @@ export default {
 
     saveSRClosure(event){
 
-       let statusAmount = "";
+       let statusAmount = ""; document.getElementById("d_a").style.display = "none"; this.RemainData = 0;
 
-       let TotalAmt = (document.getElementById("Tot_Amt")).textContent;
-       let IntTotalAmt = parseInt(TotalAmt)
-       let IntDeposit_Amount = parseInt(this.Deposit_Amount)
+       let TotalAmt = parseInt(this.TotalAmount);
+       let IntDeposit_Amount = parseInt(this.Deposit_Amount);
 
        if(this.CardAmount > 0){
          IntDeposit_Amount = parseFloat(Math.round(IntDeposit_Amount+parseFloat(this.CardAmount)));
@@ -227,27 +229,29 @@ export default {
        let Balanc = 0;
        let insertflag= 0;
 
-       if(IntDeposit_Amount > TotalAmt){
-         this.$alertify.error("Deposit amount should not be greater than total amount, please check.");
-
+       if((this.CardAmount > 0) && (IntDeposit_Amount > TotalAmt)){
+         this.Regionshow = true;
+         this.$alertify.error("Deposit amount including sum of Dispute AWB amount should not be greater than total outstanding COD amount, please check.");
          let error            = document.getElementById("d_a");
-         error.innerHTML      = "Deposit amount should not be greater than total amount, please check.";
+         error.innerHTML      = "Deposit amount including sum of Dispute AWB amount should not be greater than total outstanding COD amount, please check.";
          error.style.display  = "block"; return false;
-       }
+       }else if((this.CardAmount==0) && (IntDeposit_Amount > TotalAmt)){
 
-       if(IntTotalAmt > IntDeposit_Amount){
+         insertflag=1;
+         this.Regionshow = false;
+         statusAmount = "Extra Amount";
+         Balanc = TotalAmt - IntDeposit_Amount ;
+       }else if(IntDeposit_Amount < TotalAmt){
+
          Balanc = TotalAmt - IntDeposit_Amount ;
          this.showModal(Balanc)
          this.Regionshow = true
          statusAmount = "Less Amount"
+
          if(this.lowdis || Balanc<=0){
            insertflag=1;
            this.hideModal()
          }
-       }else if(IntTotalAmt < IntDeposit_Amount){
-         insertflag=1;
-         this.Regionshow = false
-         statusAmount = "Extra Amount"
        }else{
          insertflag=1;
          this.Regionshow = false
@@ -270,7 +274,7 @@ export default {
            hubid: this.localhubid,
            status: statusAmount,
            creditamount: this.Deposit_Amount,
-           debitamount:  parseFloat(Math.round(TotalAmt-parseInt(this.Deposit_Amount))),
+           debitamount:  parseFloat(Math.round(Balanc)),
            todayscod: this.TodaysCOD,
            reasonid: '',
            islessamountaccept: false,
@@ -341,6 +345,7 @@ export default {
 
       this.PendingCOD = this.TodaysCOD = this.TotalAmount = this.TodaysShipmentCount = this.TodaysCash = this.TodaysPayphi = this.TodaysWallet = this.TodaysCard = this.TodaysCashCount = this.TodaysPayphiCount = this.TodaysWalletCount = this.TodaysCardCount = 0;
       this.deliveredCODArr = this.deliveredCashArr = this.deliveredPayphiArr = this.deliveredWalletArr = this.deliveredCardArr = [];
+      document.getElementById("d_a").style.display = "none";
       this.$validator.reset(); this.errors.clear(); document.getElementById('srform').reset();
     },
 
@@ -566,18 +571,25 @@ export default {
       this.$validator.validateAll().then((result) => {
          if(result){
           this.DisputeArr = []; this.CardAmount = 0;
+
           if((this.tot_amt != '0' && this.tot_amt != parseInt(this.Deposit_Amount))||!this.tot_amt){
             let error = document.getElementById("d_a");
              error.innerHTML = "Total denomination & deposit amount should be same, please check.";
              error.style.display = "block";
 
           }else{
-            if(this.castheft || this.prevpenbal || this.sriss || this.lowdis || this.cariss || this.codimpr || this.selfrec || this.srabsc || this.cassnat || this.paychg || this.codnttim || this.theftstol || this.wrongdel){
-              this.cardawbno(event);
+            if(parseInt(this.Deposit_Amount) > parseInt(this.TotalAmount)){
+              this.Regionshow = false;
+
+              this.showExModal(parseInt(parseInt(this.Deposit_Amount) - parseInt(this.TotalAmount)));
             }else{
-              let error = document.getElementById("d_a");
-              error.innerHTML = "Deposit amount is required"; error.style.display = "None";
-              this.saveSRClosure(event)
+              if(this.castheft || this.prevpenbal || this.sriss || this.lowdis || this.cariss || this.codimpr || this.selfrec || this.srabsc || this.cassnat || this.paychg || this.codnttim || this.theftstol || this.wrongdel){
+                this.cardawbno(event);
+              }else{
+                let error = document.getElementById("d_a"); error.style.display = "None";
+
+                this.saveSRClosure(event)
+              }
             }
           }
         }
@@ -818,6 +830,20 @@ export default {
       this.DenomDetail = eleawb;
 
       this.$refs.myDenomDetailModalRef.show();
+    },
+
+    showExModal(Balanc){
+       this.$refs.myExModalRef.show(Balanc)
+       this.ExData = Balanc;
+    },
+
+    hideExModal(ele) {
+      if(ele == 0){
+        this.$refs.myExModalRef.hide()
+        this.saveSRClosure(event);
+      }else{
+        this.$refs.myExModalRef.hide()
+      }
     },
   }
 }

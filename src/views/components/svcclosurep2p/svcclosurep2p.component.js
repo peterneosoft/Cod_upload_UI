@@ -112,7 +112,9 @@ export default {
       awbnotype:'',
       awbnumber:'',
       expanded:false,
-      subLoading:false
+      subLoading:false,
+      ExData:0,
+      ExmodalShow:false
     }
   },
 
@@ -183,6 +185,7 @@ export default {
       this.cardModalShow = false
       this.ReasonModalShow = false
       this.RecExcModalShow = false
+      this.ExmodalShow = false
     },
 
     GetShipmentUpdate() {
@@ -514,8 +517,7 @@ export default {
           DepositAmount = DepositAmount - p2pamt;
         }
 
-        let error = document.getElementById("d_a");
-        error.style.display  = "none";
+        document.getElementById("d_a").style.display = "none";
 
         this.unmatchedAmt = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositReasonExcepAmount)));
 
@@ -540,11 +542,12 @@ export default {
                 this.hideModal();
               }
             }
-          }else if(DepositReasonExcepAmount > TolatCollection){
+          }else if((this.CardAmount > 0) && (DepositReasonExcepAmount > TolatCollection)){
+            this.unmatchedAmt = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(this.Deposit_Amount)));
             this.$alertify.error("Deposit amount including other charges or sum of Dispute AWB amount should not be greater than total outstanding COD amount, please check.");
 
             let error            = document.getElementById("d_a");
-            error.innerHTML      = "Deposit amount including other or sum of Dispute AWB amount charges should not be greater than total outstanding COD amount, please check.";
+            error.innerHTML      = "Deposit amount including other charges or sum of Dispute AWB amount should not be greater than total outstanding COD amount, please check.";
             error.style.display  = "block"; return false;
           }
         }
@@ -561,7 +564,7 @@ export default {
         let OpeningBalance = parseFloat(this.closingBalance);
         let CODAmount = parseFloat(Math.round(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)));
 
-        if(this.lowdis || this.unmatchedAmt==0){
+        if(this.lowdis || this.unmatchedAmt<=0){
           this.disableButton = true; this.subLoading = true;
           this.input = ({
               DepositDate: this.DepositDate,
@@ -769,31 +772,39 @@ export default {
 
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
-         document.getElementById("d_a").style.display = "none"; this.DisputeArr = [];
+         document.getElementById("d_a").style.display = "none"; this.DisputeArr = []; this.CardAmount = 0;
 
          if(result){
+
            if((this.tot_amt != 0 && this.tot_amt != parseInt(this.Deposit_Amount))||!this.tot_amt){
+
               let error = document.getElementById("d_a");
               error.innerHTML = "Total denomination & deposit amount should be same, please check.";
               error.style.display = "block";
           }else{
-            //78,152,186
 
-            if(this.amoimp || this.cariss || this.deldis || this.paychg || this.cassnat || this.casstol || this.theftstol || this.vendrec || this.wrongdel || this.srabsc || this.srtpsr || this.lowdis){
-              this.cardawbno(event);
+            //78,152,186
+            if(parseInt(Math.round(parseFloat(this.Deposit_Amount))) > parseInt(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))))){
+              this.unmatchedAmt = 0;
+              this.showExModal(parseInt(parseInt(Math.round(parseFloat(this.Deposit_Amount))) - parseInt(Math.round(parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount)))));
             }else{
-              if(event.target[6].id=="DepositSlip" && this.uploadFileList.length<=0){
-                let error = document.getElementById("dps");
-                error.innerHTML      = "Deposit slip is required.";
-                error.style.display  = "block";
-                return false;
-              }else if(event.target[9].id=="ReasonSlip" && this.reasonFileList.length<=0){
-                let error = document.getElementById("rss");
-                error.innerHTML      = "Reason slip used for tax payment/ imprest is required.";
-                error.style.display  = "block";
-                return false;
+
+              if(this.amoimp || this.cariss || this.deldis || this.paychg || this.cassnat || this.casstol || this.theftstol || this.vendrec || this.wrongdel || this.srabsc || this.srtpsr || this.lowdis){
+
+                this.cardawbno(event);
               }else{
-                this.saveSvcClosure(event);
+
+                if(event.target[6].id=="DepositSlip" && this.uploadFileList.length<=0){
+
+                  let error = document.getElementById("dps"); error.innerHTML = "Deposit slip is required.";
+                  error.style.display  = "block"; return false;
+                }else if(event.target[9].id=="ReasonSlip" && this.reasonFileList.length<=0){
+
+                  let error = document.getElementById("rss"); error.innerHTML = "Reason slip used for tax payment/ imprest is required.";
+                  error.style.display  = "block"; return false;
+                }else{
+                  this.saveSvcClosure(event);
+                }
               }
             }
           }
@@ -952,6 +963,20 @@ export default {
       }
 
       this.$refs.myRecExcModalRef.show();
+    },
+
+    showExModal(Balanc){
+       this.$refs.myExModalRef.show(Balanc)
+       this.ExData = Balanc;
+    },
+
+    hideExModal(ele) {
+      if(ele == 0){
+        this.$refs.myExModalRef.hide()
+        this.saveSvcClosure(event);
+      }else{
+        this.$refs.myExModalRef.hide()
+      }
     },
   }
 }
