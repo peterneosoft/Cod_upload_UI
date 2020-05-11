@@ -63,26 +63,30 @@
                 <thead>
                   <tr class="text-primary">
                     <th class="text-center tableheader"><b>#</b></th>
-                    <th class="text-center tableheader"><b>Hub Name</b></th>
-                    <th class="text-center tableheader"><b>Client name</b></th>
-                    <th class="text-center tableheader"><b>Delivery Date</b></th>
-                    <th class="text-center tableheader"><b>Dispute Reason</b></th>
+                    <th class="text-center tableheader"><b>Zone</b></th>
+                    <th class="text-center tableheader"><b>Hub/ SVC Name</b></th>
+                    <th class="text-center tableheader"><b>RSC Name</b></th>
                     <th class="text-center tableheader"><b>AWB Number</b></th>
+                    <th class="text-center tableheader"><b>Delivery Date</b></th>
                     <th class="text-center tableheader"><b>Dispute Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Dispute Reason</b></th>
+                    <th class="text-center tableheader"><b>Client name</b></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td colspan="7" align="center">No record found</td>
+                    <td colspan="9" align="center">No record found</td>
                   </tr>
                   <tr v-for="(dispute,index) in DisputeReport">
                     <td class="text-center">{{pageno+index+1}}</td>
+                    <td class="text-center">{{dispute.Zone}}</td>
                     <td class="text-center">{{dispute.HubName}}</td>
-                    <td class="text-center">{{dispute.ClientName}}</td>
-                    <td class="text-center">{{dispute.DeliveryDate}}</td>
-                    <td class="text-center">{{dispute.Reason}}</td>
+                    <td class="text-center">{{dispute.rscowner}}</td>
                     <td class="text-center">{{dispute.AWB}}</td>
+                    <td class="text-center">{{dispute.DeliveryDate}}</td>
                     <td class="text-center">{{dispute.Amount}}</td>
+                    <td class="text-center">{{dispute.Reason}}</td>
+                    <td class="text-center">{{dispute.ClientName}}</td>
                   </tr>
                 </tbody>
               </table><br>
