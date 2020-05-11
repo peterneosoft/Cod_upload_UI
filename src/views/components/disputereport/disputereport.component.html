@@ -3,11 +3,12 @@
     <div class="col-md-12 mb-2">
         <div class="card">
           <div class="card-header filter_main">
-            <i class=" fa fa-filter filter"></i> COD Outstanding Report
+            <i class=" fa fa-filter filter"></i> Dispute Report
           </div>
           <div class="card-body">
             <form  v-on:submit.prevent="onSubmit">
               <div class="form-group row">
+
                 <div class="col-md-4">
                   <label>Zone <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
@@ -19,7 +20,7 @@
                   <span v-show="errors.has('zone')" class="text-danger">Zone is required.</span>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-5">
                   <label>Hub / SVC</label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="hubLoading" />
@@ -29,18 +30,6 @@
                   </b-input-group>
                 </div>
 
-                <div class="col-md-4">
-                  <label>RSC / SVC</label>
-                  <b-input-group left="<i class='fa fa-list'></i>">
-                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="RSCLoading" />
-                    <Multiselect :options="RSCList" placeholder="Select RSC / SVC" v-bind:multiple="multipleRSC()" v-bind:disabled="disableHub" name="RSCName" id="RSCName" v-model="RSCName" label="HubName" track-by="HubName" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
-                     <template slot="noResult"><p>No Record Found.</p></template>
-                    </Multiselect>
-                  </b-input-group>
-                </div>
-              </div>
-
-              <div class="form-group row">
                 <div class="col-md-3">
                   <label>Till Date <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
@@ -74,28 +63,26 @@
                 <thead>
                   <tr class="text-primary">
                     <th class="text-center tableheader"><b>#</b></th>
-                    <th class="text-center tableheader"><b>Zone</b></th>
-                    <th class="text-center tableheader"><b>Hub/SVC Name</b></th>
-                    <th class="text-center tableheader"><b>RSC Name</b></th>
-                    <th class="text-center tableheader"><b>Till Date</b></th>
-                    <th class="text-center tableheader"><b>Pending COD ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Hub Name</b></th>
+                    <th class="text-center tableheader"><b>Client name</b></th>
+                    <th class="text-center tableheader"><b>Delivery Date</b></th>
+                    <th class="text-center tableheader"><b>Dispute Reason</b></th>
+                    <th class="text-center tableheader"><b>AWB Number</b></th>
                     <th class="text-center tableheader"><b>Dispute Amount ( <i class="fa fa-rupee"></i> )</b></th>
-                    <th class="text-center tableheader"><b>Total Outstanding ( <i class="fa fa-rupee"></i> )</b></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td colspan="8" align="center">No record found</td>
+                    <td colspan="7" align="center">No record found</td>
                   </tr>
-                  <tr v-for="(CODOutstanding,index) in CODOutstandingReport">
+                  <tr v-for="(dispute,index) in DisputeReport">
                     <td class="text-center">{{pageno+index+1}}</td>
-                    <td class="text-center">{{CODOutstanding.zonename}}</td>
-                    <td class="text-center">{{CODOutstanding.hubname}}</td>
-                    <td class="text-center">{{CODOutstanding.rscowner}}</td>
-                    <td class="text-center">{{CODOutstanding.createddate}}</td>
-                    <td class="text-center">{{CODOutstanding.pendingcod}}</td>
-                    <td class="text-center">{{CODOutstanding.DisputeAmt}}</td>
-                    <td class="text-center">{{CODOutstanding.closingbalance}}</td>
+                    <td class="text-center">{{dispute.HubName}}</td>
+                    <td class="text-center">{{dispute.ClientName}}</td>
+                    <td class="text-center">{{dispute.DeliveryDate}}</td>
+                    <td class="text-center">{{dispute.Reason}}</td>
+                    <td class="text-center">{{dispute.AWB}}</td>
+                    <td class="text-center">{{dispute.Amount}}</td>
                   </tr>
                 </tbody>
               </table><br>

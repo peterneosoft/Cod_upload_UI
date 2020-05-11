@@ -36,6 +36,7 @@ import SRSummary from '@/views/components/srsummary'
 import AWBDifference from '@/views/components/awbdifference'
 import SRPendingLimit from '@/views/components/srpendinglimit'
 import HubWiseTracking from '@/views/components/hubwisetracking'
+import DisputeReport from '@/views/components/disputereport'
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -268,6 +269,23 @@ const router = new Router({
               },
               {
                 name: 'Hub Wise Tracking'
+              }
+            ]
+          },
+        },
+        {
+          path: 'disputereport',
+          name: 'Dispute Report',
+          component: DisputeReport,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'Dispute Report'
               }
             ]
           },
