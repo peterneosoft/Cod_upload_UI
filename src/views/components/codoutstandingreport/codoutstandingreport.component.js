@@ -41,7 +41,8 @@ export default {
       SearchHubIds:[],
       SearchRSCIds:[],
       reportlink:'',
-      tilldate:''
+      tilldate:'',
+      SearchZoneIds:[]
     }
   },
 
@@ -61,7 +62,20 @@ export default {
 
   methods: {
     multiple(){
-      return true;
+      let key = this.zone.length-1;
+      if(this.zone.length>0 && this.zone[key].hubzoneid == 0){
+        this.SearchZoneIds = [];
+        this.zone = this.zone[key];
+
+        for (let item of this.zoneList) {
+          if (item.hubzoneid != 0) {
+            this.SearchZoneIds.push(item);
+          }
+        }
+      }
+
+      if(this.zone.hubzoneid == 0){ return false; }
+      else{ this.SearchZoneIds = []; return true; }
     },
 
     multipleHub(){
@@ -98,23 +112,23 @@ export default {
       else{ this.SearchRSCIds = []; return true; }
     },
 
-    addHubData(event) {
-      let zData = []; this.zoneIdArr = [];
+    addHubData() {
+      let zData = this.zoneIdArr = this.hubList = this.RSCList = []; this.HubId = this.RSCName = []; this.disableHub = false;
+      if($.isArray(this.zone) === false){
+        this.zone = new Array(this.zone);
+      }
+
       this.zone.forEach(function (val) {
-        if (val.hubzoneid != '0'){
-          zData.push({'hubzoneid':val.hubzoneid, 'hubzonename':val.hubzonename});
-        }
+        zData.push({'hubzoneid':val.hubzoneid, 'hubzonename':val.hubzonename});
       });
 
+      this.zoneIdArr = zData;
+
       if(zData.length===1){
-        this.disableHub = false;
-        this.zoneIdArr = zData;
         this.getHubData(zData[0].hubzoneid);
         this.getRSCData(zData[0].hubzoneid);
       }else{
-        this.hubList = []; this.HubId = []; this.RSCList = []; this.RSCName = [];
         this.disableHub = true;
-        this.zoneIdArr = zData;
       }
     },
 
@@ -123,39 +137,13 @@ export default {
         this.getCODOutstandingReport()
     },
 
-    exportCODOutstandingData(){
+    exportCODOutstandingData(zData, hubIdArr){
 
-      let hubArr = []; let RSCArr = []; this.reportlink = '';
-
-      if(this.SearchHubIds.length>0){
-        hubArr = this.SearchHubIds;
-      }else{
-        if($.isArray(this.HubId) === false){
-          this.HubId = new Array(this.HubId);
-        }
-
-        this.HubId.forEach(function (val) {
-          hubArr.push(val.HubID);
-        });
-      }
-
-      if(this.SearchRSCIds.length>0){
-        RSCArr = this.SearchRSCIds;
-      }else{
-        if($.isArray(this.RSCName) === false){
-          this.RSCName = new Array(this.RSCName);
-        }
-
-        this.RSCName.forEach(function (val) {
-          RSCArr.push(val.HubID);
-        });
-      }
-
-      let hubIdArr = [...new Set([].concat(...hubArr.concat(RSCArr)))];
+      this.reportlink = '';
 
       this.input = ({
           hubid: hubIdArr,
-          zoneid: this.zoneIdArr,
+          zoneid: zData,
           tilldate:this.tilldate
       })
       axios({
@@ -246,7 +234,17 @@ export default {
     getCODOutstandingReport(){
       this.isLoading = true;
 
-      let hubArr = []; let RSCArr = [];
+      let zData = []; let hubArr = []; let RSCArr = [];
+
+      if(this.SearchZoneIds.length>0){
+        zData = this.SearchZoneIds;
+      }else{
+
+        this.zone.forEach(function (val) {
+          zData.push(val);
+        });
+      }
+
       if(this.SearchHubIds.length>0){
         hubArr = this.SearchHubIds;
       }else{
@@ -275,7 +273,7 @@ export default {
 
       this.input = ({
           hubid: hubIdArr,
-          zoneid: this.zoneIdArr,
+          zoneid: zData,
           tilldate:this.tilldate,
           status: this.status,
           offset:this.pageno,
@@ -301,7 +299,7 @@ export default {
                  this.pagecount = Math.ceil(totalRows / 10)
              }
 
-             this.exportCODOutstandingData();
+             this.exportCODOutstandingData(zData, hubIdArr);
            }else{
              this.CODOutstandingReport = [];
              this.isLoading = false;
@@ -329,7 +327,7 @@ export default {
         })
         .then(result => {
           this.zoneLoading = false;
-          this.zoneList = result.data.zone.data;
+          this.zoneList = [{hubzoneid:'0', hubzonename:'All Zone', hubzonecode:'All Zone'}].concat(result.data.zone.data);
         }, error => {
           this.zoneLoading = false;
           console.error(error)
@@ -354,12 +352,12 @@ export default {
           }
         })
         .then(result => {
-          this.hubLoading = false;
-          this.HubId = [];
-          this.hubList = [{HubID:'0', HubName:'All Hub', HubCode:'All Hub'}].concat(result.data.hub.data);
+          this.hubLoading = false; this.HubId = []; this.hubList = [];
+          if(result.data.hub.code == 200){
+            this.hubList = [{HubID:'0', HubName:'All Hub', HubCode:'All Hub'}].concat(result.data.hub.data);
+          }
         }, error => {
-          this.hubLoading = false;
-          console.error(error)
+          this.hubLoading = false; console.error(error)
         })
     },
 
@@ -381,12 +379,12 @@ export default {
           }
         })
         .then(result => {
-          this.RSCLoading = false;
-          this.RSCName=[];
-          this.RSCList = [{HubID:'0', HubName:'All RSC', HubCode:'All RSC'}].concat(result.data.rsc.data);
+          this.RSCLoading = false; this.RSCName = []; this.RSCList = [];
+          if(result.data.rsc.code == 200){
+            this.RSCList = [{HubID:'0', HubName:'All RSC', HubCode:'All RSC'}].concat(result.data.rsc.data);
+          }
         }, error => {
-          this.RSCLoading = false;
-          console.error(error)
+          this.RSCLoading = false; console.error(error)
         })
     },
 
