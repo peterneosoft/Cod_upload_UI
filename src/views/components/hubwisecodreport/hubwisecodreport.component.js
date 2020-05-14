@@ -312,7 +312,7 @@ export default {
              } else {
                  this.pagecount = Math.ceil(totalRows / 10)
              }
-             //this.exportHubWiswData(zData, hubIdArr);
+             this.exportHubWiswData(zData, hubIdArr);
            }else{
              this.CODLedgerReports = [];
              this.isLoading = false;
