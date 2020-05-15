@@ -215,12 +215,12 @@
                     <th class="text-center tableheader"><b>Opening Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>COD Receivable <br>( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Exception Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
-                    <th class="text-center tableheader"><b>Deposit Type</b></th>
-                    <th class="text-center tableheader"><b>Bank Name</b></th>
-                    <th class="text-center tableheader"><b>Deposit Date</b></th>
                     <th class="text-center tableheader"><b>Bank Deposit Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Dispute Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>SVC Outstanding Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Bank Name</b></th>
+                    <th class="text-center tableheader"><b>Deposit Type</b></th>
+                    <th class="text-center tableheader"><b>Deposit Date</b></th>
                     <th class="text-center tableheader"><b>Finance Confirmed Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Finance Outstanding Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Finance Confirmed Date</b></th>
@@ -247,15 +247,15 @@
                       <span @click="showRecExcAWBNo('exception', CODLedger_List.exceptionamt, CODLedger_List.awbno)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="CODLedger_List.exceptionamt!=0">{{CODLedger_List.exceptionamt}}</span>
                       <span v-if="CODLedger_List.exceptionamt==0">{{CODLedger_List.exceptionamt}}</span>
                     </td>
-                    <td class="text-center">{{CODLedger_List.deposittype}}</td>
-                    <td class="text-center">{{CODLedger_List.bank}}</td>
-                    <td class="text-center">{{CODLedger_List.depositdate}}</td>
                     <td class="text-center">{{CODLedger_List.bankdeposit}}</td>
                     <td class="text-center">
                       <span @click="showReasonAWBNo(CODLedger_List.cardawbno)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="CODLedger_List.cardissueamt!=0">{{CODLedger_List.cardissueamt}}</span>
                       <span v-if="CODLedger_List.cardissueamt==0">{{CODLedger_List.cardissueamt}}</span>
                     </td>
                     <td class="text-center">{{CODLedger_List.svcoutstandingamt}}</td>
+                    <td class="text-center">{{CODLedger_List.bank}}</td>
+                    <td class="text-center">{{CODLedger_List.deposittype}}</td>
+                    <td class="text-center">{{CODLedger_List.depositdate}}</td>
                     <td class="text-center">{{CODLedger_List.financeconfirmamount}}</td>
                     <td class="text-center">{{CODLedger_List.balanceLogic}}</td>
                     <td class="text-center">{{CODLedger_List.financeconfirmdate}}</td>

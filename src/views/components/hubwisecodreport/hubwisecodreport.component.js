@@ -320,9 +320,8 @@ export default {
            }
           },
            error => {
-             this.isLoading = false;
-             console.error(error)
-             this.$alertify.error('Error Occured');
+             this.CODLedgerReports = []; this.resultCount = 0; this.isLoading = false;
+             console.error(error); this.$alertify.error('Error Occured');
         })
     },
 

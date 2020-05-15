@@ -41,7 +41,7 @@ export default {
       SearchHubIds:[],
       SearchRSCIds:[],
       reportlink:'',
-      tilldate:'',
+      deliverydate:'',
       SearchZoneIds:[]
     }
   },
@@ -52,7 +52,7 @@ export default {
 
   mounted() {
     var date = new Date();
-    tilldate.max = date.toISOString().split("T")[0];
+    deliverydate.max = date.toISOString().split("T")[0];
 
     var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');
@@ -144,7 +144,7 @@ export default {
       this.input = ({
           hubid: hubIdArr,
           zoneid: zData,
-          tilldate:this.tilldate
+          deliverydate:this.deliverydate
       })
       axios({
           method: 'POST',
@@ -274,7 +274,7 @@ export default {
       this.input = ({
           hubid: hubIdArr,
           zoneid: zData,
-          tilldate:this.tilldate,
+          deliverydate:this.deliverydate,
           status: this.status,
           offset:this.pageno,
           limit:10
@@ -307,9 +307,8 @@ export default {
            }
           },
            error => {
-             this.isLoading = false;
-             console.error(error)
-             this.$alertify.error('Error Occured');
+             this.CODOutstandingReport = []; this.isLoading = false; this.resultCount = 0;
+             console.error(error); this.$alertify.error('Error Occured');
         })
     },
 
@@ -400,7 +399,7 @@ export default {
     },
 
     resetForm() {
-      this.tilldate = this.zone = ''; this.hubList = this.HubId = this.RSCList = this.RSCName = this.CODOutstandingReport = [];
+      this.deliverydate = this.zone = ''; this.hubList = this.HubId = this.RSCList = this.RSCName = this.CODOutstandingReport = [];
       this.exportf = this.disableHub = false; this.pageno = this.resultCount = 0;
       this.$validator.reset(); this.errors.clear();
     },
