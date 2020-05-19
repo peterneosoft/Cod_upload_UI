@@ -78,7 +78,7 @@ export default {
     this.getSVCCronStatus();
     this.GetHubSettingsData();
     this.getZoneData();
-    this.awbDifference();
+    //this.awbDifference();
   },
 
   methods: {
