@@ -3,7 +3,7 @@
     <div class="col-md-12 mb-2">
         <div class="card">
           <div class="card-header filter_main">
-            <i class=" fa fa-filter filter"></i> Change Shipment Payment Mode
+            <i class=" fa fa-filter filter"></i> Change Order Type
           </div>
           <div class="card-body">
             <form  v-on:submit.prevent="onSubmit">
@@ -11,30 +11,38 @@
                 <div class="col-md-4">
                   <label>Shipment Id <font color="red">*</font></label>
                   <b-input-group>
-                    <input class="form-control" id="shipmentid" type="text" v-on:change="getShipmentReport()" name="shipmentid" placeholder="Enter Shipping Id" v-validate="{required: true}" v-model="shipmentid" v-bind:class="{'form-control': true, 'error': errors.has('shipmentid') }">
+                    <input class="form-control" id="shipmentid" type="text" v-on:change="getShipmentReport()" name="shipmentid" placeholder="Enter Shipment Id" v-validate="{required: true}" v-model="shipmentid" v-bind:class="{'form-control': true, 'error': errors.has('shipmentid') }">
                   </b-input-group>
                   <span v-show="errors.has('shipmentid')" class="text-danger">Shipment Id is required.</span>
                 </div>
 
                 <div class="col-md-4">
-                  <label>Epayment Type <font color="red">*</font></label>
-                  <select class="form-control" id="epaymenttype" name="epaymenttype" v-on:change="GetEpaymentName" v-model="epaymenttype" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('epaymenttype') }">
+                  <label>Order Type <font color="red">*</font></label>
+                  <select class="form-control" id="ordertype" name="ordertype" v-model="ordertype" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('ordertype') }">
                     <option value="">--Select--</option>
-                    <option value="cash">Cash</option>
-                    <option value="wallet">Wallet</option>
-                    <option value="payphi">Payphi</option>
-                    <option value="card">Card</option>
+                    <option value="COD">COD</option>
+                    <option value="PrePaid">PrePaid</option>
                   </select>
-                  <span v-show="errors.has('epaymenttype')" class="text-danger">Epayment type is required.</span>
+                  <span v-show="errors.has('ordertype')" class="text-danger">Order type is required.</span>
                 </div>
+
                 <div class="col-md-4">
-                  <label>Epayment Name <font color="red">*</font></label>
-                  <select disabled class="form-control" id="epaymentname" v-model="epaymentname" name="epaymentname" v-validate="{required: true}"
-                  v-bind:class="{'form-control': true, 'error': errors.has('epaymentname') }" style="margin-right: -8px;">
+                  <label>Status <font color="red">*</font></label>
+                  <select class="form-control" id="status" name="status" v-model="status" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('status') }">
                     <option value="">--Select--</option>
-                    <option v-for="Epayment_obj in EpaymentNameList" v-bind:value="Epayment_obj.EpaymentType" >{{Epayment_obj.EpaymentName}}</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="InScan">InScan</option>
                   </select>
-                  <span v-show="errors.has('epaymentname')" class="text-danger">Epayment name is required.</span>
+                  <span v-show="errors.has('status')" class="text-danger">Status is required.</span>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <div class="col-md-4">
+                  <label>Net Payment </label>
+                  <b-input-group>
+                    <input class="form-control" id="netpayment" type="text" name="netpayment" placeholder="Enter Net Payment" v-model="netpayment" v-bind:class="{'form-control': true}">
+                  </b-input-group>
                 </div>
               </div>
               <div class="form-group row">
@@ -63,8 +71,7 @@
                     <th class="text-center tableheader"><b>Shipment Id</b></th>
                     <th class="text-center tableheader"><b>Status</b></th>
                     <th class="text-center tableheader"><b>Shipment Status</b></th>
-                    <th class="text-center tableheader"><b>Epayment Type</b></th>
-                    <th class="text-center tableheader"><b>Epayment Name</b></th>
+                    <th class="text-center tableheader"><b>Order Type</b></th>
                     <th class="text-center tableheader"><b>COD Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Hub Name</b></th>
                     <th class="text-center tableheader"><b>Last Modified By</b></th>
@@ -73,15 +80,14 @@
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td colspan="10" align="center">No record found</td>
+                    <td colspan="9" align="center">No record found</td>
                   </tr>
                   <tr v-for="(shipmentobj,index) in shipmentList">
                     <td class="text-center">{{pageno+index+1}}</td>
                     <td class="text-center">{{shipmentobj.ShippingID}}</td>
                     <td class="text-center">{{shipmentobj.Status}}</td>
                     <td class="text-center">{{shipmentobj.ShipmentStatus}}</td>
-                    <td class="text-center">{{shipmentobj.EpaymentType}}</td>
-                    <td class="text-center">{{shipmentobj.EpaymentName}}</td>
+                    <td class="text-center">{{shipmentobj.OrderType}}</td>
                     <td class="text-center">{{shipmentobj.NetPayment}}</td>
                     <td class="text-center">{{shipmentobj.CurrentHubName}}</td>
                     <td class="text-center">{{shipmentobj.LastModifiedBy}}</td>
@@ -104,7 +110,7 @@
                </button>
              </div>
              <div class="modal-bodyfrm">
-               <h5 style="font-size: 15px; padding: 10px; color:red;">Are you sure, you want to change shipment epayment type from `{{OEpayType}}` to `{{NEpayType}}`</h5>
+               <h5 style="font-size: 15px; padding: 10px; color:red;">Are you sure, you want to update shipment order type from `{{OOrderType}}` to `{{NOrderType}}`</h5>
              </div>
              <div class="modal-footerfrm">
              <center>

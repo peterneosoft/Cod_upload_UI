@@ -5,16 +5,13 @@ import {
 } from 'vee-validate'
 import Paginate from 'vuejs-paginate'
 import VueElementLoading from 'vue-element-loading';
-import Multiselect from 'vue-multiselect'
-import 'vue-multiselect/dist/vue-multiselect.min.css';
 import CryptoJS from 'crypto-js';
 
 export default {
-  name: 'changeshipmentstatus',
+  name: 'ordertype',
   components: {
     Paginate,
-    VueElementLoading,
-    Multiselect
+    VueElementLoading
   },
   props: [],
 
@@ -24,17 +21,15 @@ export default {
       pageno:0,
       pagecount:0,
       resultCount:0,
-      epaymenttype:'',
-      epaymentname:'',
-      OEpayType:'',
-      NEpayType:'',
-      eptype:'',
-      epname:'',
+      netpayment:'',
+      ordertype:'',
+      status:'',
+      OOrderType:'',
+      NOrderType:'',
       hubid:'',
       shipmentLoading:false,
       submitLoading:false,
       confModalShow:false,
-      EpaymentNameList:[],
       shipmentList:[]
     }
   },
@@ -52,13 +47,6 @@ export default {
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
     var userdetail        = JSON.parse(plaintext);
     this.localuserid      = userdetail.username;
-
-    this.EpaymentNameList = [
-      {'EpaymentType':'cash', 'EpaymentName':'Cash'},
-      {'EpaymentType':'wallet', 'EpaymentName':'PayTM'},
-      {'EpaymentType':'payphi', 'EpaymentName':'Payphi'},
-      {'EpaymentType':'card', 'EpaymentName':'Mosambee'},
-    ];
   },
 
   methods: {
@@ -68,7 +56,7 @@ export default {
     hideConfModal(ele) {
       if(ele == 0){
         this.$refs.myConfModalRef.hide()
-        this.updatePaymentMode();
+        this.updateOrderType();
       }else{
         this.$refs.myConfModalRef.hide();
       }
@@ -77,20 +65,20 @@ export default {
       this.confModalShow = false
     },
 
-    updatePaymentMode(event) {
+    updateOrderType(event) {
       this.submitLoading = true;
 
       this.input = ({
           ShippingID: this.shipmentid,
-          lastmodifiedby: this.localuserid,
-          EPaymentTypeFrom:this.OEpayType,
-          EPaymentType: this.eptype,
-          EPaymentName: this.epname,
-          hubid: this.hubid
+          OrderTypeFrom:this.OOrderType,
+          OrderTypeTo: this.ordertype,
+          NetPayment: (this.netpayment != '' ? this.netpayment : 0),
+          Status: this.status,
+          username: this.localuserid
       })
       axios({
           method: 'POST',
-          'url': apiUrl.api_url + 'updatepaymentmode',
+          'url': apiUrl.api_url + 'updateOrderType',
           'data': this.input,
           headers: {
               'Authorization': 'Bearer '+this.myStr
@@ -145,7 +133,7 @@ export default {
             this.shipmentLoading  = this.submitLoading = false;
             this.shipmentList     = result.data.data;
             this.hubid            = this.shipmentList[0].CurrentHubID;
-            this.OEpayType        = this.shipmentList[0].EpaymentType;
+            this.OOrderType       = this.shipmentList[0].OrderType;
             this.resultCount      = result.data.count;
             this.pagecount        = 1
           }else{
@@ -158,10 +146,6 @@ export default {
           console.error(error)
           this.$alertify.error('Error Occured');
         })
-    },
-
-    GetEpaymentName() {
-      this.epaymentname = this.epaymenttype;
     },
 
     onSubmit: function(event) {
@@ -180,10 +164,7 @@ export default {
           if(Array.isArray(this.shipmentid) == true){
             this.shipmentid = this.shipmentid.toString();
           }
-          this.NEpayType    = this.epaymenttype.charAt(0).toUpperCase() + this.epaymenttype.slice(1);
-          this.eptype = event.target[1].selectedOptions[0].text;
-          this.epname = event.target[2].selectedOptions[0].text;
-
+          this.NOrderType   = this.ordertype;
           this.showConfirmationModal(event);
         }
       }).catch(() => {
@@ -192,8 +173,8 @@ export default {
     },
 
     resetForm() {
-      this.pageno = this.resultCount = 0; this.shipmentList = []; this.shipmentLoading = false; this.epaymenttype = this.epaymentname = '';
-      this.OEpayType = this.NEpayType = this.eptype = this.epname = this.hubid = '';
+      this.pageno = this.resultCount = 0; this.shipmentList = []; this.shipmentLoading = false;
+      this.ordertype = this.status = this.OOrderType = this.NOrderType = this.hubid = this.netpayment = '';
       this.$validator.reset(); this.errors.clear();
     },
   }

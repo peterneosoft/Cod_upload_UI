@@ -37,6 +37,7 @@ import AWBDifference from '@/views/components/awbdifference'
 import SRPendingLimit from '@/views/components/srpendinglimit'
 import HubWiseTracking from '@/views/components/hubwisetracking'
 import DisputeReport from '@/views/components/disputereport'
+import OrderType from '@/views/components/ordertype'
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -286,6 +287,23 @@ const router = new Router({
               },
               {
                 name: 'Dispute Report'
+              }
+            ]
+          },
+        },
+        {
+          path: 'ordertype',
+          name: 'Order Type',
+          component: OrderType,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'Order Type'
               }
             ]
           },
