@@ -114,7 +114,8 @@ export default {
       expanded:false,
       subLoading:false,
       ExData:0,
-      ExmodalShow:false
+      ExmodalShow:false,
+      financeclosingamt:0
     }
   },
 
@@ -236,6 +237,7 @@ export default {
     },
 
     GetPendingCODAmt() {
+      this.financeclosingamt = 0;
       this.input = ({
           hubid: this.localhubid
       })
@@ -252,6 +254,7 @@ export default {
         if(result.data.rows.length > 0){
           this.pendingCODAmt = parseFloat(Math.round(result.data.rows[0].closingbalance));
           this.closingBalance = result.data.rows[0].closingbalance;
+          this.financeclosingamt = result.data.rows[0].financeclosingamt;
 
           if(result.data.rows[0].totalamtdeposit > result.data.rows[0].p2pamt){
             this.p2pAmount = 0;
@@ -597,7 +600,8 @@ export default {
               DenominationID: DenominationIDArr,
               exceptionId: this.exceptionArr,
               exceptionAmount: this.exceptionAmount,
-              hubIsRSC: this.localhubIsRSC
+              hubIsRSC: this.localhubIsRSC,
+              financeclosingamt: this.financeclosingamt
           })
 
           axios({
