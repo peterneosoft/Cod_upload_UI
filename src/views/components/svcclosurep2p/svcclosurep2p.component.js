@@ -601,7 +601,7 @@ export default {
               exceptionId: this.exceptionArr,
               exceptionAmount: this.exceptionAmount,
               hubIsRSC: this.localhubIsRSC,
-              financeclosingamt: this.financeclosingamt
+              financeclosingamt: parseInt(this.financeclosingamt)
           })
 
           axios({
