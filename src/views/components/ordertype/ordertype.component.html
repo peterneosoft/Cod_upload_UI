@@ -18,7 +18,7 @@
 
                 <div class="col-md-4">
                   <label>Order Type <font color="red">*</font></label>
-                  <select class="form-control" id="ordertype" name="ordertype" v-model="ordertype" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('ordertype') }">
+                  <select class="form-control" id="ordertype" name="ordertype" v-on:change="changeNetPaym()" v-model="ordertype" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('ordertype') }">
                     <option value="">--Select--</option>
                     <option value="COD">COD</option>
                     <option value="PrePaid">PrePaid</option>
@@ -27,26 +27,13 @@
                 </div>
 
                 <div class="col-md-4">
-                  <label>Status <font color="red">*</font></label>
-                  <select class="form-control" id="status" name="status" v-model="status" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('status') }">
-                    <option value="">--Select--</option>
-                    <option value="Delivered">Delivered</option>
-                    <option value="InScan">InScan</option>
-                  </select>
-                  <span v-show="errors.has('status')" class="text-danger">Status is required.</span>
-                </div>
-              </div>
-
-              <div class="form-group row">
-                <div class="col-md-4">
                   <label>Net Payment </label>
                   <b-input-group>
-                    <input class="form-control" id="netpayment" type="text" name="netpayment" placeholder="Enter Net Payment" v-model="netpayment" v-bind:class="{'form-control': true}">
+                    <input class="form-control" v-bind:disabled="ordertype != 'COD'" id="netpayment" type="text" name="netpayment" placeholder="Enter Net Payment" v-model="netpayment" v-bind:class="{'form-control': true}">
                   </b-input-group>
                 </div>
               </div>
-              <div class="form-group row">
-              </div>
+
               <div class="card-footer">
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="submitLoading" />
                 <button class="btn btn-sm btn-primary" title="Check Shipment Detail" @click="getShipmentReport()" type="button"><i class="fa fa-search"></i> Search</button>&nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;

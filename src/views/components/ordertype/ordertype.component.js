@@ -85,15 +85,17 @@ export default {
           }
       })
       .then((response) => {
-        if (response.data.errorCode == 0) {
-          this.submitLoading = false;
+
+        if (response.data.code == 200) {
+
           this.$alertify.success(response.data.msg);
           this.getShipmentReport();
           this.resetForm();
-        } else if (response.data.errorCode == -1) {
-          this.submitLoading = false;
+        }else{
+
           this.$alertify.error(response.data.msg);
         }
+        this.submitLoading = false;
       })
       .catch((httpException) => {
           this.submitLoading = false;
@@ -133,6 +135,7 @@ export default {
             this.shipmentLoading  = this.submitLoading = false;
             this.shipmentList     = result.data.data;
             this.hubid            = this.shipmentList[0].CurrentHubID;
+            this.status           = this.shipmentList[0].Status;
             this.OOrderType       = this.shipmentList[0].OrderType;
             this.resultCount      = result.data.count;
             this.pagecount        = 1
@@ -177,5 +180,9 @@ export default {
       this.ordertype = this.status = this.OOrderType = this.NOrderType = this.hubid = this.netpayment = '';
       this.$validator.reset(); this.errors.clear();
     },
+
+    changeNetPaym(){
+      if(this.ordertype!='COD') this.netpayment = '';
+    }
   }
 }
