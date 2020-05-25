@@ -42,7 +42,7 @@
 
               <div class="form-group row">
                 <div class="col-md-3">
-                  <label>Delivery Date <font color="red">*</font></label>
+                  <label>Till Delivery Date <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
                     <b-form-input id="deliverydate" type="date" name="deliverydate" v-validate="{required: true}"
                     v-model="deliverydate" v-bind:class="{'form-control': true, 'error': errors.has('deliverydate') }"></b-form-input>
@@ -78,9 +78,9 @@
                     <th class="text-center tableheader"><b>Hub/SVC Name</b></th>
                     <th class="text-center tableheader"><b>RSC Name</b></th>
                     <th class="text-center tableheader"><b>Delivery Date</b></th>
-                    <th class="text-center tableheader"><b>Pending COD ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Dispute Amount ( <i class="fa fa-rupee"></i> )</b></th>
-                    <th class="text-center tableheader"><b>Total Outstanding ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>SVC Outstanding Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Finance Outstanding Amount ( <i class="fa fa-rupee"></i> )</b></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -93,9 +93,9 @@
                     <td class="text-center">{{CODOutstanding.hubname}}</td>
                     <td class="text-center">{{CODOutstanding.rscowner}}</td>
                     <td class="text-center">{{CODOutstanding.deliverydate}}</td>
-                    <td class="text-center">{{CODOutstanding.pendingcod}}</td>
                     <td class="text-center">{{CODOutstanding.DisputeAmt}}</td>
-                    <td class="text-center">{{CODOutstanding.closingbalance}}</td>
+                    <td class="text-center">{{CODOutstanding.svcoutstanding}}</td>
+                    <td class="text-center">{{CODOutstanding.financeoutstanding}}</td>
                   </tr>
                 </tbody>
               </table><br>

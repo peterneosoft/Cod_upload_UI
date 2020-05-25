@@ -52,6 +52,7 @@ export default {
 
   mounted() {
     var date = new Date();
+    date.setDate(date.getDate() - 2);
     deliverydate.max = date.toISOString().split("T")[0];
 
     var userToken = window.localStorage.getItem('accessuserToken')
