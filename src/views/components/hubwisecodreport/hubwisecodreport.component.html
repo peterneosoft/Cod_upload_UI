@@ -82,7 +82,7 @@
             <div role="document">
               <div class="modal-content" style="width: 150%;">
                 <div class="modal-headerfrm">
-                  <h5 class="modal-title" style="font-size: 1rem;">Dispute Reason & AWB No/Amount</h5>
+                  <h5 class="modal-title" style="font-size: 1rem;">Dispute/ Other Reason AWB No & Amount</h5>
                   <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
                     <span aria-hidden="true" style="color: white;">×</span>
                   </button>
@@ -216,6 +216,7 @@
                     <th class="text-center tableheader"><b>COD Receivable <br>( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Exception Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Bank Deposit Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Other Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Dispute Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>SVC Outstanding Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Bank Name</b></th>
@@ -231,7 +232,7 @@
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td colspan="21" align="center">No record found</td>
+                    <td colspan="22" align="center">No record found</td>
                   </tr>
                   <tr v-for="(CODLedger_List,index) in CODLedgerReports" v-bind:class="`${(CODLedger_List.createdby == 'schedular@xpressbees.com') || (CODLedger_List.deposittype) == '' ? 'scheduler' : '' || CODLedger_List.reasonid == 65 ? 'other' : '' || ([84,124,187].includes(CODLedger_List.financereasonid)) ? 'mismatched' : ''}`">
                     <td class="text-center">{{pageno+index+1}}</td>
@@ -248,6 +249,10 @@
                       <span v-if="CODLedger_List.exceptionamt==0">{{CODLedger_List.exceptionamt}}</span>
                     </td>
                     <td class="text-center">{{CODLedger_List.bankdeposit}}</td>
+                    <td class="text-center">
+                      <span @click="showReasonAWBNo(CODLedger_List.otherArr)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="CODLedger_List.otherAmt!=0">{{CODLedger_List.otherAmt}}</span>
+                      <span v-if="CODLedger_List.otherAmt==0">{{CODLedger_List.otherAmt}}</span>
+                    </td>
                     <td class="text-center">
                       <span @click="showReasonAWBNo(CODLedger_List.cardawbno)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="CODLedger_List.cardissueamt!=0">{{CODLedger_List.cardissueamt}}</span>
                       <span v-if="CODLedger_List.cardissueamt==0">{{CODLedger_List.cardissueamt}}</span>
