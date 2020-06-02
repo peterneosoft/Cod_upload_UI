@@ -47,7 +47,8 @@ export default {
           button:[],
           radio:[],
           RecAmt:[],
-          subLoading:[]
+          subLoading:[],
+          comment:[]
       },
       zoneAmtList: [],
       totalzoneamt: '0.00',
@@ -417,7 +418,8 @@ export default {
             username: this.localuserid,
             deliverydate: findata.deliverydate,
             formatdeldate: findata.formatdeldate,
-            bankid: findata.bankid
+            bankid: findata.bankid,
+            comment: this.form.comment[this.elem]
         })
         axios({
             method: 'POST',
@@ -433,6 +435,8 @@ export default {
             this.form.finreason = [];
             this.form.financeconfirmdate = [];
             this.form.confirmamount = [];
+            this.form.RecAmt = [];
+            this.form.comment = [];
             this.form.hide[ledgerid] = ledgerid;
             this.GetFinanceledgerData();
 
