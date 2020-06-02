@@ -488,6 +488,8 @@ export default {
           this.cardawbno(this.form.AWBNo[this.elem], this.elem, findata, this.form.RecAmt[this.elem]);
           document.getElementById("finRadio"+this.elem).innerHTML="";
         }else{
+          if(finreasonid!=84 && finreasonid!=124 && finreasonid!=187 && finreasonid!=125 && finreasonid!=218) this.form.comment[this.elem] = '';
+
           this.form.AWBNo[this.elem] = ''; this.AWBAmount = ''; this.form.RecAmt[this.elem] = '';
           document.getElementById("finDR"+this.elem).innerHTML=""; document.getElementById("finRec"+this.elem).innerHTML=""; document.getElementById("finRadio"+this.elem).innerHTML="";
           this.updateSVCFinanceledger(this.elem, findata);

@@ -97,7 +97,8 @@
                     <span class="input-group-text"><i class="fa fa-exchange"></i></span>
                   </div>
                 </div>
-                <span v-show="errors.has('TransactionID')" class="text-danger">Transaction id is required.</span>
+                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Enter comma (,) separated transaction ids.</span>
+                <span v-show="errors.has('TransactionID')" class="text-danger"><br>Transaction id is required.</span>
               </div>
 
               <div class="form-group" v-if="exceptionList.length>0">
