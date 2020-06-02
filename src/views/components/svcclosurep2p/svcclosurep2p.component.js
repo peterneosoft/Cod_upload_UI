@@ -115,7 +115,9 @@ export default {
       subLoading:false,
       ExData:0,
       ExmodalShow:false,
-      financeclosingamt:0
+      financeclosingamt:0,
+      commentModalShow:false,
+      comment:''
     }
   },
 
@@ -187,6 +189,7 @@ export default {
       this.ReasonModalShow = false
       this.RecExcModalShow = false
       this.ExmodalShow = false
+      this.commentModalShow = false
     },
 
     GetShipmentUpdate() {
@@ -981,6 +984,12 @@ export default {
       }else{
         this.$refs.myExModalRef.hide()
       }
+    },
+
+    showComment(ele){
+      this.comment = [];
+      this.comment = ele;
+      this.$refs.myCommentModalRef.show();
     },
   }
 }

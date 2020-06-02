@@ -687,6 +687,22 @@
           </div>
         </div>
       </b-modal>
+
+      <b-modal ref="myCommentModalRef" v-model="commentModalShow" id=#confirmationmodal title="Confirmation">
+        <div role="document">
+          <div class="modal-content">
+            <div class="modal-headerfrm">
+              <h5 class="modal-title">Finance Comment</h5>
+              <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
+                <span aria-hidden="true" style="color: white;">×</span>
+              </button>
+            </div>
+            <div class="modal-bodyfrm">
+              <h5 style="font-size:1rem; color:lightslategray;">{{comment}}</h5>
+            </div>
+          </div>
+        </div>
+      </b-modal>
     </div>
 
     <div class="row">
@@ -753,7 +769,10 @@
                 <td class="text-center">{{data.closingbalance}}</td>
                 <td class="text-center" v-if="data.statusid==1">Open</td>
                 <td class="text-center" v-if="data.statusid==6">Close</td>
-                <td class="text-center">{{data.financereason}}</td>
+                <td class="text-center">
+                  <span @click="showComment(data.comment)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.comment">{{data.financereason}}</span>
+                  <span v-show="(['',null].includes(data.comment))">{{data.financereason}}</span>
+                </td>
                 <td class="text-center">
                   <span v-bind:id='`${"vrl"+data.svcledgerid}`' v-if="data.files.length>0 && data.createdby!='schedular@xpressbees.com' && data.othercharges == '0.00'" @click="showHideImages(data.svcledgerid, 'vrl')" style="color: blue; cursor: pointer; text-decoration: underline;">Deposit</span>
                   <span v-bind:id='`${"vri"+data.svcledgerid}`' style="display: none;">

@@ -48,7 +48,9 @@ export default {
       ReasonModalShow:false,
       RecExcModalShow:false,
       DisputeArr:[],
-      SearchZoneIds:[]
+      SearchZoneIds:[],
+      commentModalShow:false,
+      comment:''
     }
   },
 
@@ -421,6 +423,7 @@ export default {
     closeStatusRoleModal() {
       this.ReasonModalShow = false
       this.RecExcModalShow = false
+      this.commentModalShow = false
     },
 
     showReasonAWBNo(ele){
@@ -460,6 +463,12 @@ export default {
       }
 
       this.$refs.myRecExcModalRef.show();
+    },
+
+    showComment(ele){
+      this.comment = [];
+      this.comment = ele;
+      this.$refs.myCommentModalRef.show();
     },
   }
 }
