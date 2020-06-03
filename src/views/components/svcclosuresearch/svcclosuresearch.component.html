@@ -138,6 +138,22 @@
           </div>
         </div>
       </b-modal>
+
+      <b-modal ref="myCommentModalRef" v-model="commentModalShow" id=#confirmationmodal title="Confirmation">
+        <div role="document">
+          <div class="modal-content">
+            <div class="modal-headerfrm">
+              <h5 class="modal-title">Finance Comment</h5>
+              <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
+                <span aria-hidden="true" style="color: white;">×</span>
+              </button>
+            </div>
+            <div class="modal-bodyfrm">
+              <h5 style="font-size:0.9rem; color:black;">{{comment}}</h5>
+            </div>
+          </div>
+        </div>
+      </b-modal>
     </div>
 
     <div class="col-12">
@@ -193,7 +209,10 @@
               <td class="text-center">{{data.actualrecamt}}</td>
               <td class="text-center">{{data.closingbalance}}</td>
               <td class="text-center">{{data.status}}</td>
-              <td class="text-center">{{data.finreason}}</td>
+              <td class="text-center">
+                <span @click="showComment(data.comment)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.comment">{{data.finreason}}</span>
+                <span v-show="(['',null].includes(data.comment))">{{data.finreason}}</span>
+              </td>
               <td class="text-center">{{data.deposittype}}</td>
               <td class="text-center">{{data.bank}}</td>
               <td class="text-center">

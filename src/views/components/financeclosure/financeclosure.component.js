@@ -65,7 +65,9 @@ export default {
       elem:'',
       DisputeArr:[],
       ReasonModalShow:false,
-      RecExcModalShow:false
+      RecExcModalShow:false,
+      commentModalShow:false,
+      comment:''
     }
   },
 
@@ -318,6 +320,7 @@ export default {
       this.cardModalShow = false
       this.ReasonModalShow = false
       this.RecExcModalShow = false
+      this.commentModalShow = false
     },
 
     cardawbno(AWBNo, elem, findata, AWBAmount){
@@ -565,6 +568,12 @@ export default {
       }
 
       this.$refs.myRecExcModalRef.show();
+    },
+
+    showComment(ele){
+      this.comment = [];
+      this.comment = ele;
+      this.$refs.myCommentModalRef.show();
     },
   }
 }

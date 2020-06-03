@@ -169,6 +169,22 @@
           </div>
         </div>
       </b-modal>
+
+      <b-modal ref="myCommentModalRef" v-model="commentModalShow" id=#confirmationmodal title="Confirmation">
+        <div role="document">
+          <div class="modal-content">
+            <div class="modal-headerfrm">
+              <h5 class="modal-title">Finance Comment</h5>
+              <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
+                <span aria-hidden="true" style="color: white;">×</span>
+              </button>
+            </div>
+            <div class="modal-bodyfrm">
+              <h5 style="font-size:0.9rem; color:black;">{{comment}}</h5>
+            </div>
+          </div>
+        </div>
+      </b-modal>
     </div>
 
     <div class="row">
@@ -264,8 +280,12 @@
                     <textarea rows="2" v-show="([84,124,187,125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6" v-model="form.comment[data.svcledgerid]" v-bind:name="setid('comment', data.svcledgerid)" v-bind:id="setid('comment', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true}" ref="textarea" placeholder="Enter Comment..."></textarea>
 
                     <span v-show="(data.statusid != 6)"><button class="btn btn-sm btn-primary" @click = "form.subLoading[data.svcledgerid] = 'true'" type="submit" :disabled = "(data.statusid == 6) || (form.button[data.svcledgerid])" ><i class="fa fa-dot-circle-o"></i> Submit</button></span>
-                </form>
+                  </form>
                 </td>
+                <!-- <td class="text-center" v-show="data.statusid == 6">
+                  <span @click="showComment(data.comment)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.comment">{{data.financereason}}</span>
+                  <span v-show="(['',null].includes(data.comment))">{{data.financereason}}</span>
+                </td> -->
                 <td class="text-center">{{data.deposittype}}</td>
                 <td class="text-center">{{data.bank}}</td>
                 <td class="text-center">
