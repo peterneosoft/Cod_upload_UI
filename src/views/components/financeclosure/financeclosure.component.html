@@ -243,7 +243,7 @@
                 </td> -->
                 <td class="text-center">{{data.balanceoutstanding}}</td>
                 <td class="text-center">{{StatusVal}}</td>
-                <td class="text-center">
+                <td class="text-center" v-show="data.statusid != 6">
                   <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="form.subLoading[data.svcledgerid]" />
                   <form v-on:submit.prevent="onUpdate(data.svcledgerid, data)">
                     <select style="width: 220px;" v-model="form.finreason[data.svcledgerid]"  v-bind:name="setid('finreason', data.svcledgerid)" v-bind:id="setid('finreason', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('finreason'+data.svcledgerid) }" :disabled="data.statusid == 6 ? true : false">
@@ -282,10 +282,10 @@
                     <span v-show="(data.statusid != 6)"><button class="btn btn-sm btn-primary" @click = "form.subLoading[data.svcledgerid] = 'true'" type="submit" :disabled = "(data.statusid == 6) || (form.button[data.svcledgerid])" ><i class="fa fa-dot-circle-o"></i> Submit</button></span>
                   </form>
                 </td>
-                <!-- <td class="text-center" v-show="data.statusid == 6">
+                <td class="text-center" v-show="data.statusid == 6">
                   <span @click="showComment(data.comment)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.comment">{{data.financereason}}</span>
                   <span v-show="(['',null].includes(data.comment))">{{data.financereason}}</span>
-                </td> -->
+                </td>
                 <td class="text-center">{{data.deposittype}}</td>
                 <td class="text-center">{{data.bank}}</td>
                 <td class="text-center">
