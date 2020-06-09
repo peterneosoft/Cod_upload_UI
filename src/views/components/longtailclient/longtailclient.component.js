@@ -57,7 +57,7 @@ export default {
     var userToken         = window.localStorage.getItem('accessuserToken');
     this.myStr            = userToken.replace(/"/g, '');
 
-    this.GetClientData();
+    //this.GetClientData();
     this.getCODLTCRemittanceDetails ();
 
     var date = new Date();
