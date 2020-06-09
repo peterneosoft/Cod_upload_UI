@@ -1,0 +1,106 @@
+<section class="user">
+  <!-- <div class="col-md-12 mb-2">
+    <div class="card">
+      <div v-if="Search==0" @click = "Search = '1'" class="card-header filter_main" style="cursor: pointer;">
+        <i class="fa fa-plus plus"></i>Long Tail Client Search
+      </div>
+      <div v-if="Search==1" @click = "Search = '0'" class="card-header filter_main" style="cursor: pointer;">
+        <i class="fa fa-minus minus"></i>Long Tail Client Search
+      </div>
+      <b-collapse v-bind:class="`${Search == '1' ? 'show' : 'hide'}`" id="collapse1">
+        <div class="card-body">
+          <div class="form-group row">
+            <div class="col-md-5">
+              <label>Client Name <font color="red">*</font></label>
+              <b-input-group left="<i class='fa fa-list'></i>">
+                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="clientLoading" />
+                <Multiselect :options="ClientList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                  <template slot="noResult"><p>No Record Found.</p></template>
+                </Multiselect>
+              </b-input-group>
+              <span id="clienterr" class="text-danger"></span>
+            </div>
+          </div>
+          <div class="card-footer">
+            <button class="btn btn-sm btn-primary" @click="onSearch" type="submit"><i class="fa fa-search"></i> Search</button>
+            <button class="btn btn-sm btn-danger" @click="resetSearch" type="reset"><i class="fa fa-ban"></i> Clear</button>
+          </div>
+        </div>
+      </b-collapse>
+    </div>
+  </div> -->
+
+  <div class="animated fadeIn">
+    <b-modal ref="myModalRef" v-model="modalShow" id=#confirmationmodal title="Confirmation">
+      <div role="document">
+        <div class="modal-content">
+          <div class="modal-headerfrm">
+            <h5 class="modal-title">Remittance Alert</h5>
+            <button type="button" class="close" @click="closeModal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-bodyfrm">
+            <h5 style="font-size:1rem; color:red; line-height: 1.5 !important;">{{ofd}}</h5>
+          </div>
+          <div class="modal-footerfrm">
+          <center><button type="button"  @click="modalShow = false" class="btn btn-success" style="background-color: #20a8d8;">OK</button></center>
+          </div>
+        </div>
+      </div>
+    </b-modal>
+
+    <div class="col-12">
+      <div class="card-headerfrm" style="margin-bottom: 15px;">
+        <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
+        <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+        <table class="table-bordered table-hover tbl datatables scrolltb" style="width:100%;">
+          <thead>
+            <tr class="text-primary">
+              <th class="text-center tableheader"><b>#</b></th>
+              <th class="text-center tableheader"><b>From Date</b></th>
+              <th class="text-center tableheader"><b>To / Delivery Date</b></th>
+              <th class="text-center tableheader"><b>Client</b></th>
+              <th class="text-center tableheader"><b>Shipment Count</b></th>
+              <th class="text-center tableheader"><b>COD Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>Exception Count</b></th>
+              <th class="text-center tableheader"><b>Exception Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>Paid Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>Action</b></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="resultCount==0">
+              <td colspan="10" align="center">No record found</td>
+            </tr>
+            <tr v-if="resultCount>0" v-for="(data,index) in listPendingRemittanceData">
+              <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
+              <td>
+                <b-form-input type="hidden" v-model="form.oldFromDate[data.ClientId]" v-bind:name="setid('oldFromDate', data.ClientId)" v-bind:id="setid('oldFromDate', data.ClientId)"></b-form-input>
+                <b-input-group left="<i class='fa fa-calendar'></i>" title="Change From Date">
+                  <b-form-input disabled @change="onChangeDate(form.FromDate[data.ClientId], form.toDate[data.ClientId], data.ClientId)" type="date" v-model="form.FromDate[data.ClientId]" v-bind:name="setid('FromDate', data.ClientId)" v-bind:id="setid('FromDate', data.ClientId)" class="form-control"></b-form-input>
+                </b-input-group>
+                <span v-bind:id="setid('fdate', data.ClientId)" class="text-danger"></span>
+              </td>
+              <td>
+                <b-input-group left="<i class='fa fa-calendar'></i>" title="Change To / Delivery Date">
+                  <b-form-input @change="onChangeDate(form.FromDate[data.ClientId], form.toDate[data.ClientId], data.ClientId)" type="date" v-model="form.toDate[data.ClientId]" v-bind:name="setid('toDate', data.ClientId)" v-bind:id="setid('toDate', data.ClientId)" class="form-control"></b-form-input>
+                </b-input-group>
+                <span v-bind:id="setid('tdate', data.ClientId)" class="text-danger"></span>
+              </td>
+              <td>{{data.CompanyName}}</td>
+              <td>{{data.ShipmentCount}}</td>
+              <td>{{data.CODAmount}}</td>
+              <td>{{data.ExceptionCount}}</td>
+              <td>{{data.ExceptionAmount}}</td>
+              <td>{{data.PaidAmount}}</td>
+              <td><button class="btn btn-sm btn-primary" @click="onRemittance(form.FromDate[data.ClientId], form.toDate[data.ClientId], data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button></td>
+            </tr>
+          </tbody>
+        </table><br>
+        <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+        </paginate>
+      </div>
+    </div>
+  </div>
+</section>

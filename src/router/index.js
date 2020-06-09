@@ -38,6 +38,7 @@ import SRPendingLimit from '@/views/components/srpendinglimit'
 import HubWiseTracking from '@/views/components/hubwisetracking'
 import DisputeReport from '@/views/components/disputereport'
 import OrderType from '@/views/components/ordertype'
+import LongTailClient from '@/views/components/longtailclient'
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -389,6 +390,23 @@ const router = new Router({
               },
               {
                 name: 'Manual COD Remittance'
+              }
+            ]
+          },
+        },
+        {
+          path: 'LongTailClient',
+          name: 'Long Tail Client',
+          component: LongTailClient,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'Long Tail Client'
               }
             ]
           },

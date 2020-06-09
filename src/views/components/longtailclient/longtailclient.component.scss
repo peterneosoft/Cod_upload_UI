@@ -1,0 +1,32 @@
+.block_hgt{
+  height: 95px;
+}
+
+.fnt_blk_icon{
+  font-size: 30px;
+}
+
+td{
+  font-size: 12px;
+  font-family: Roboto;
+}
+
+.scrolltb {
+  //display: block;
+  overflow-x: auto;
+  // white-space: nowrap;
+}
+
+.show{
+  display: block !important;
+}
+
+.hide{
+  display: none !important;
+}
+
+.text-danger {
+    color: #f86c6b !important;
+    font-weight: bold;
+    font-size: 0.8rem;
+}
