@@ -387,7 +387,12 @@ export default {
         })
         .then(result => {
           if(result.data.Reasons.code==200){
-            this.ReasonList = result.data.Reasons.data.filter(item => (item['ReasonsID'] != 186 && item['ReasonsID'] != 123));
+            if(this.localhubIsRSC == true){
+              this.ReasonList = result.data.Reasons.data.filter(item => (item['ReasonsID'] != 186 && item['ReasonsID'] != 123 && item['ReasonsID'] != 65 &&
+              item['ReasonsID'] != 82 && item['ReasonsID'] != 324 && item['ReasonsID'] != 325 && item['ReasonsID'] != 129 && item['ReasonsID'] != 130 && item['ReasonsID'] != 77));
+            }else{
+              this.ReasonList = result.data.Reasons.data.filter(item => (item['ReasonsID'] != 186 && item['ReasonsID'] != 123));
+            }
           }else{
             console.log('Error', result.data.Reasons.message);
           }
