@@ -287,7 +287,7 @@ export default {
       }else if(this.DepositType==2){
         DepositType = 'CashPickup';
       }else{
-        DepositType = 'NEFT';
+        DepositType = 'IMPS';
       }
 
       this.input = ({
