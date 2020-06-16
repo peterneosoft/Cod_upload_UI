@@ -39,6 +39,7 @@ import HubWiseTracking from '@/views/components/hubwisetracking'
 import DisputeReport from '@/views/components/disputereport'
 import OrderType from '@/views/components/ordertype'
 import LongTailClient from '@/views/components/longtailclient'
+import EPaymentReco from '@/views/components/epaymentreco'
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -407,6 +408,23 @@ const router = new Router({
               },
               {
                 name: 'Long Tail Client'
+              }
+            ]
+          },
+        },
+        {
+          path: 'EPaymentReco',
+          name: 'E-Payment Reco',
+          component: EPaymentReco,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'E-Payment Reconciliation'
               }
             ]
           },

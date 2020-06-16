@@ -58,6 +58,7 @@ export default {
       {'EpaymentType':'wallet', 'EpaymentName':'PayTM'},
       {'EpaymentType':'payphi', 'EpaymentName':'Payphi'},
       {'EpaymentType':'card', 'EpaymentName':'Mosambee'},
+      {'EpaymentType':'razorpay', 'EpaymentName':'Razorpay'},
     ];
   },
 

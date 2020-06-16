@@ -52,6 +52,10 @@ export default {
         { text: 'SR Summary', value: 'sr' },
         { text: 'Agent Summary', value: 'agent' }
       ],
+      totalCashAmt:0,
+      totalPayphiAmt:0,
+      totalCardAmt:0,
+      totalWalletAmt:0
     }
   },
   computed: {
@@ -104,6 +108,7 @@ export default {
 
     resetForm() {
       this.deliverydate = this.deldate = this.reportlink = this.SR_Name = this.Agent_Name = ''; this.srSummaryList = this.SRList = []; this.resultCount = this.pageno = this.pagecount = 0;
+      this.totalCashAmt = this.totalPayphiAmt = this.totalCardAmt = this.totalWalletAmt = 0;
       this.exportf = false; this.$validator.reset(); this.errors.clear();
       this.GetDeliveryAgentData();
     },
@@ -129,14 +134,20 @@ export default {
         this.isLoading = false;
 
         if(result.data.code == 200){
-          this.deldate        = result.data.date
-          this.srSummaryList  = result.data.SRlist
+          this.deldate        = result.data.date;
+          this.srSummaryList  = result.data.SRlist;
           this.resultCount    = result.data.SRlist.length;
+
+          this.totalCashAmt = result.data.totalCashAmt;
+          this.totalPayphiAmt = result.data.totalPayphiAmt;
+          this.totalCardAmt = result.data.totalCardAmt;
+          this.totalWalletAmt = result.data.totalWalletAmt;
           this.pagecount      = 1;
 
           this.exportf = true;
         }else{
           this.srSummaryList = []; this.resultCount = this.pagecount = 0; this.exportf = false;
+          this.totalCashAmt = this.totalPayphiAmt = this.totalCardAmt = this.totalWalletAmt = 0;
         }
       }, error => {
         this.isLoading = this.exportf = false;

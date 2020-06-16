@@ -1,0 +1,104 @@
+<section class="user">
+  <div class="animated fadeIn">
+    <div class="col-md-12 mb-2">
+      <div class="card">
+        <div class="card-header filter_main">
+          <i class=" fa fa-bars barcolor"></i>  E-Payment MIS [COD] Upload
+        </div>
+        <div class="card-body">
+          <form v-on:submit.prevent="onSubmit">
+            <div class="form-group row">
+              <div class="col-md-2">
+                <label>E-Payment Type <font color="red">*</font></label>
+                <select class="form-control" id="epaymenttype" name="epaymenttype" v-model="epaymenttype" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('epaymenttype') }" style="height: 45px;">
+                  <option value="">--Select--</option>
+                  <option value="cash">Cash</option>
+                  <option value="wallet">Wallet</option>
+                  <option value="payphi">Payphi</option>
+                  <option value="card">Card</option>
+                  <option value="razorpay">Razorpay</option>
+                </select>
+                <span v-show="errors.has('epaymenttype')" class="text-danger">E-Payment type is required.</span>
+              </div>
+
+              <div class="col-md-3">
+                <label>From ( Delivery ) Date <font color="red">*</font></label>
+                <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
+                  <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}"
+                  v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
+                </b-input-group>
+                <span v-show="errors.has('fromDate')" class="text-danger">From date is required. </span>
+                <span id="fdate" class="text-danger"></span>
+              </div>
+
+              <div class="col-md-3">
+                <label>To ( Delivery ) Date <font color="red">*</font></label>
+                <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
+                  <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}"
+                  v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
+                </b-input-group>
+                <span v-show="errors.has('toDate')" class="text-danger">To date is required. </span>
+              </div>
+
+              <div class="col-md-4">
+                <label>Upload MIS (E-Payment) File <font color="red">&nbsp;*</font></label>
+                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
+                <b-input-group left="<i class='fa fa-file'></i>" style="height: 45px;">
+                  <input type="file" placeholder="Upload File" name="paymentfile" id="paymentfile" v-validate="{required: true}"
+                    v-bind:class="{'form-control': true, 'error': errors.has('paymentfile') }">
+                </b-input-group>
+                <small class="text-muted"><font color="red">Note: * Only .csv files allowed to upload.</font></small>
+                <label v-show="errors.has('paymentfile')" class="text-danger">MIS (E-Payment) file is required.</label>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button v-bind:disabled="disbutton" class="btn btn-sm btn-primary" type="submit" ><i class="fa fa-search" ></i> Show</button>
+              <button v-bind:disabled="disbutton" class="btn btn-sm btn-danger" type="reset" @click="resetData"><i class="fa fa-ban"></i> Clear</button>
+            </div>
+          </form>
+        </div>
+       </div>
+      </div>
+      <div class="col-12">
+        <div class="card-headerfrm" style="margin-bottom: 15px;">
+          <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;E-Payment MIS Upload Details
+            <span v-show="exportf" style="margin-left: 35%; cursor: pointer;" @click="exportreport()">
+              <button class="btn btn-sm btn-success" type="button">
+                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="excelLoading" />
+                <i class="fa fa-download"></i> Export
+              </button>
+            </span>
+          </h4>
+          <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="misLoading" />
+          <table class="table-bordered table-hover tbl datatables scrolltb" style="width:100%;">
+            <thead>
+              <tr class="text-primary">
+                <th class="text-center tableheader"><b>#</b></th>
+                <th class="text-center tableheader"><b>Delivery Date</b></th>
+                <th class="text-center tableheader"><b>E-Payment Type</b></th>
+                <th class="text-center tableheader"><b>No. Of Shipments</b></th>
+                <th class="text-center tableheader"><b>Actual COD Amount</b></th>
+                <th class="text-center tableheader"><b>Received Amount</b></th>
+                <th class="text-center tableheader"><b>Balance Receivable</b></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="resultCount==0">
+                <td colspan="7" align="center">No record found</td>
+              </tr>
+              <tr v-for="(data,index) in listClientCODRemittanceData">
+                <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
+                <td>{{data.deliverydate}}</td>
+                <td>{{data.epaymenttype}}</td>
+                <td>{{data.shipments}}</td>
+                <td>{{data.actualamount}}</td>
+                <td>{{data.receivedamount}}</td>
+                <td>{{data.balance}}</td>
+              </tr>
+            </tbody>
+          </table><br>
+          <paginate  v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'"  :container-class="'pagination'"></paginate>
+        </div>
+      </div>
+   </div>
+</section>
