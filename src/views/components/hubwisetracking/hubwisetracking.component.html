@@ -99,6 +99,17 @@
               <td class="text-center" @click="showShippingidModal('Wallet AWB Numbers', val.walletArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{val.wallet}}</u></td>
               <td class="text-center">{{val.walletAmt}}</td>
             </tr>
+
+            <tr v-if="resultCount>0">
+              <td colspan="5" class="text-center"><strong>Total</strong></td>
+              <td class="text-center"><strong>{{totalCashAmt}}</strong></td>
+              <td class="text-center">&nbsp;</td>
+              <td class="text-center"><strong>{{totalPayphiAmt}}</strong></td>
+              <td class="text-center">&nbsp;</td>
+              <td class="text-center"><strong>{{totalCardAmt}}</strong></td>
+              <td class="text-center">&nbsp;</td>
+              <td class="text-center"><strong>{{totalWalletAmt}}</strong></td>
+            </tr>
           </tbody>
 
         </table><br>

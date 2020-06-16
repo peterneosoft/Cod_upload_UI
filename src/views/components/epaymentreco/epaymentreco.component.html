@@ -44,7 +44,7 @@
                 <label>Upload MIS (E-Payment) File <font color="red">&nbsp;*</font></label>
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
                 <b-input-group left="<i class='fa fa-file'></i>" style="height: 45px;">
-                  <input type="file" placeholder="Upload File" name="paymentfile" id="paymentfile" v-validate="{required: true}"
+                  <input type="file" placeholder="Upload File" @change="onUpload" name="paymentfile" id="paymentfile" v-validate="{required: true}"
                     v-bind:class="{'form-control': true, 'error': errors.has('paymentfile') }">
                 </b-input-group>
                 <small class="text-muted"><font color="red">Note: * Only .csv files allowed to upload.</font></small>

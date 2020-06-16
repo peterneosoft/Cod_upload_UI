@@ -90,15 +90,12 @@ export default {
       }
     },
 
-    uploadFile(){
-      this.selectedFile = event.target;
-      console.log(this.selectedFile);
-      if ( /\.(csv)$/i.test(this.selectedFile.name) ){
-        var name = event.target.name + "." +this.selectedFile.name.split(".").pop();
-      }
-
+    ePaymentReco(){
       this.input = ({
-          filename: name,
+          filename: this.filename,
+          fromdate: this.fromDate,
+          todate: this.toDate,
+          epaymenttype: this.epaymenttype,
           username: this.localusername,
       })
       this.isLoading = this.disbutton = true;
@@ -151,7 +148,7 @@ export default {
     onSubmit: function(res) {
       this.$validator.validateAll().then((result) => {
         if(result){
-          this.uploadFile()
+          this.ePaymentReco()
           event.target.reset();
        }
       }).catch(() => {
