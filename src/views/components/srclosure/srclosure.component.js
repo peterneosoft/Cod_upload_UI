@@ -159,6 +159,7 @@ export default {
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
     var hubdetail         = JSON.parse(plaintext);
     this.localhubid       = hubdetail[0].HubID;
+    this.localhubIsRSC    = hubdetail[0].IsRSC;
 
     var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
     var bytes             = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
@@ -479,7 +480,15 @@ export default {
           }
         })
         .then(result => {
-          this.ReasonList = result.data.Reasons.data.filter(item => (item['ReasonsID'] != 251 && item['ReasonsID'] != 126 && item['ReasonsID'] != 185 && item['ReasonsID'] != 122));
+          if(result.data.Reasons.code==200){
+            if(this.localhubIsRSC == true){
+              this.ReasonList = result.data.Reasons.data.filter(item => (item['ReasonsID'] != 251 && item['ReasonsID'] != 126 && item['ReasonsID'] != 185 && item['ReasonsID'] != 122 && item['ReasonsID'] != 74 && item['ReasonsID'] != 75 && item['ReasonsID'] != 323 && item['ReasonsID'] != 66 && item['ReasonsID'] != 128));
+            }else{
+              this.ReasonList = result.data.Reasons.data.filter(item => (item['ReasonsID'] != 251 && item['ReasonsID'] != 126 && item['ReasonsID'] != 185 && item['ReasonsID'] != 122));
+            }
+          }else{
+            console.log('Error', result.data.Reasons.message);
+          }
         }, error => {
           console.error(error)
         })
