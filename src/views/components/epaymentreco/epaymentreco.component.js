@@ -19,8 +19,6 @@ export default {
       filename: "",
       paymentfile: "",
       s3link: "",
-      success: 0,
-      failed: 0,
       isLoading: false,
       Loading: false,
       downLoading:false,
@@ -33,7 +31,12 @@ export default {
       resultCount:0,
       exportf:false,
       excelLoading:false,
-      listClientCODRemittanceData:[]
+      listClientCODRemittanceData:[],
+      mshipment:[],
+      matchedshipment:[],
+      ept:'',
+      pageno:0,
+      pagecount:0
     }
   },
 
@@ -108,13 +111,18 @@ export default {
           }
         })
         .then(result => {
-          this.isLoading = this.disbutton = false;
-          this.failed = result.data.failed;
-          this.success = result.data.success;
-          this.s3link = result.data.s3link;
+          console.log('result.data==', result.data);
+          this.isLoading  = this.disbutton = false;
+          this.s3link     = result.data.s3link;
 
           if(result.data.code == 200){
-            this.filename = "";
+            this.filename = ""; let matchedshipment = []; this.ept = this.epaymenttype.toUpperCase();
+            this.mshipment = Object.keys(result.data.data.matchedshipment).map((key) => [key, result.data.data.matchedshipment[key]]);
+            this.mshipment.forEach(function (dd) {
+              matchedshipment.push({'deliverydate':dd[0], 'shipments':dd[1].length-1, 'actualCODAmt':dd[1][dd[1].length-1]['actualCODAmt'], 'receivedCODAmt':dd[1][dd[1].length-1]['receivedCODAmt'], 'balanceCODAmt':parseFloat(parseFloat(dd[1][dd[1].length-1]['actualCODAmt'])-parseFloat(dd[1][dd[1].length-1]['receivedCODAmt'])).toFixed(2)});
+            });
+            this.resultCount = matchedshipment.length;
+            this.matchedshipment = matchedshipment;
             this.$alertify.success(result.data.message);
           }
         }, error => {

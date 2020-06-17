@@ -95,8 +95,8 @@
           </center>
         </div>
 
-        <div class="col-md-6" v-show="amountComponent">
-          <div class="card-headerfrm" style="margin-bottom: 15px;">
+        <div class="col-md-6">
+          <div class="card-headerfrm" style="margin-bottom: 15px;" v-show="amountComponent">
             <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="amountLoading" />
             <table class="table-bordered table-hover tbl datatables tableBodyScroll" width="460">
               <thead>
@@ -120,10 +120,8 @@
               </tbody>
             </table>
           </div>
-        </div>
 
-        <div class="col-md-6" v-show="collectionComponent">
-          <b-card-group deck>
+          <b-card-group deck class="card-headerfrm" v-show="collectionComponent">
            <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="collectionLoading" />
            <div class="card text-dark bg-success my-2" style=" ">
               <div class="card-body">
@@ -142,6 +140,27 @@
             </div>
           </b-card-group>
         </div>
+
+        <!-- <div class="col-md-6" v-show="collectionComponent">
+          <b-card-group deck>
+           <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="collectionLoading" />
+           <div class="card text-dark bg-success my-2" style=" ">
+              <div class="card-body">
+                <b style="font-weight: bold;"><p>Top Collection</p><hr style="border-top: 1px solid rgb(0, 0, 0);">
+                <p class="card-text">{{maxCOD.hubname}}</p>
+                <p class="card-text"><i class="fa fa-rupee"></i> {{maxCOD.received}}</p></b>
+              </div>
+            </div>
+
+            <div class="card text-dark bg-danger my-2" style= "">
+              <div class="card-body">
+                <b style="font-weight: bold;"><p>Least Collection</p><hr style="border-top: 1px solid rgb(0, 0, 0);">
+                <p class="card-text">{{minCOD.hubname}}</p>
+                <p class="card-text"><i class="fa fa-rupee"></i> {{minCOD.received}}</p></b>
+              </div>
+            </div>
+          </b-card-group>
+        </div> -->
       </div>
     </div>
 

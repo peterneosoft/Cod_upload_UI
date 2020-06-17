@@ -167,7 +167,7 @@ export default {
 
     this.getZoneData();
     this.getHubWiseCollectionData();
-    this.getPieShipmentPercent();
+    //this.getPieShipmentPercent();
 
     var date = new Date();
     ToDate.max = FromDate.max = date.toISOString().split("T")[0];
@@ -185,7 +185,7 @@ export default {
     for (var i = 0; i < childrenArr.length; i++) {
         if (childrenArr[i].name === 'searchComponent') this.searchComponent = true;
         if (childrenArr[i].name === 'barComponent') this.barComponent = true;
-        if (childrenArr[i].name === 'pieComponent') this.pieComponent = true;
+        if (childrenArr[i].name === 'pieComponent') this.pieComponent = false;
         if (childrenArr[i].name === 'amountComponent') this.amountComponent = true;
         if (childrenArr[i].name === 'collectionComponent') this.collectionComponent = true;
     }
@@ -364,7 +364,7 @@ export default {
           this.amountLoading = false; this.barLoading = false; this.pieLoading = false; this.collectionLoading = false; this.Search = 1;
           return false;
         }else{
-          this.getPieShipmentPercentSearch()
+          //this.getPieShipmentPercentSearch()
           this.getHubWiseCollectionDataSearch()
         }
       }else{
@@ -379,7 +379,7 @@ export default {
         .then(result => {
           if(result.data.code == 200){
             this.hubArray.push(result.data.hubids)
-            this.getPieShipmentPercentSearch()
+            //this.getPieShipmentPercentSearch()
             this.getHubWiseCollectionDataSearch()
           }else{
             this.hubCollectionList  = [];
