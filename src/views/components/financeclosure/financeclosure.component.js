@@ -129,7 +129,7 @@ export default {
         })
         .then(result => {
           this.allZoneLoading = false;
-          if(result.data.zone.data.length > 0) this.zoneList = result.data.zone.data;
+          if(result.data.zone.data.length > 0) this.zoneList = [{hubzoneid:'0', hubzonename:'All Zone', hubzonecode:'All Zone'}].concat(result.data.zone.data);
         }, error => {
           this.allZoneLoading = false; this.HubId = this.hubList = [];
           console.error(error)
@@ -160,32 +160,44 @@ export default {
 
     //to get Hub List According to Zone
     getHubData() {
-      if(this.zone==""){
-        return false;
-      }
+      if(this.zone=="") return false;
 
-      this.HubId = this.hubList = [];
+      this.HubId = this.hubList = []; this.hubLoading = true;
+      console.log('this.zone==', this.zone);
 
-      this.hubLoading = true;
-      this.input = ({
-          zoneid: this.zone
-      })
+      if(this.zone==0){
+        axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'external/getallhubs',
+          'data': {},
+          headers: {
+            'Authorization': 'Bearer '+this.myStr
+          }
+        }).then(result => {
+          this.hubLoading = false;
+          if(result.data.hub.code==200) this.hubList = result.data.hub.data;
+        }, error => {
+          this.hubLoading = false; console.error(error);
+        });
+      }else{
+        this.input = ({
+            zoneid: this.zone
+        })
 
-      axios({
+        axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/getzonehub',
           'data': this.input,
           headers: {
             'Authorization': 'Bearer '+this.myStr
           }
-        })
-        .then(result => {
+        }).then(result => {
           this.hubLoading = false;
-          if(result.data.hub.data.length > 0) this.hubList = [{HubID:'0', HubName:'All Hub', HubCode:'All Hub'}].concat(result.data.hub.data);
+          if(result.data.hub.code==200) this.hubList = [{HubID:'0', HubName:'All Hub', HubCode:'All Hub'}].concat(result.data.hub.data);
         }, error => {
-          this.hubLoading = false;
-          console.error(error)
-        })
+          this.hubLoading = false; console.error(error);
+        });
+      }
     },
 
     GetReasonList(){

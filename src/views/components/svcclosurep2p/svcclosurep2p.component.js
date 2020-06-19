@@ -178,7 +178,17 @@ export default {
     hideCardModal(ele) {
       if(ele == 0){
         this.$refs.myCardModalRef.hide()
-        this.saveSvcClosure(event);
+        if(this.uploadFileList.length<=0){
+
+          let error = document.getElementById("dps"); error.innerHTML = "Deposit slip is required.";
+          error.style.display  = "block"; return false;
+        }else if(this.amoimp && this.reasonFileList.length<=0){
+
+          let error = document.getElementById("rss"); error.innerHTML = "Reason slip used for tax payment/ imprest is required.";
+          error.style.display  = "block"; return false;
+        }else{
+          this.saveSvcClosure();
+        }
       }else{
         this.$refs.myCardModalRef.hide()
       }
@@ -502,7 +512,7 @@ export default {
       }
     },
 
-    saveSvcClosure(event) {
+    saveSvcClosure() {
       let DepositAmount = parseInt(this.Deposit_Amount);
       let DepositReasonExcepAmount = ''; this.unmatchedAmt = 0;
       DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount));
@@ -624,7 +634,7 @@ export default {
             if (response.data.errorCode == 0) {
               this.$alertify.success(response.data.msg);
               this.disableButton = false; this.subLoading = false;
-              window.scrollBy(0, 1000); this.resetForm(event);
+              window.scrollBy(0, 1000); this.resetForm();
             } else if (response.data.errorCode == -1) {
               this.$alertify.error(response.data.msg)
             }
@@ -682,7 +692,6 @@ export default {
         }
       })
       .then(res => {
-
         if(event.target.id=="ReasonSlip"){
           this.getS3bucketFiles('Reason');
         }else{
@@ -815,7 +824,7 @@ export default {
                   let error = document.getElementById("rss"); error.innerHTML = "Reason slip used for tax payment/ imprest is required.";
                   error.style.display  = "block"; return false;
                 }else{
-                  this.saveSvcClosure(event);
+                  this.saveSvcClosure();
                 }
               }
             }
@@ -826,7 +835,7 @@ export default {
       });
     },
 
-    resetForm(event) {
+    resetForm() {
       this.DepositLoading = false; this.ReasonLoading = false; this.disableButton = false; this.subLoading = false;
       this.BatchID = Math.floor(Math.random() * (Math.pow(10,5)));
       this.pageno = this.tot_amt = this.unmatchedAmt = this.CardAmount = 0;
@@ -985,7 +994,7 @@ export default {
     hideExModal(ele) {
       if(ele == 0){
         this.$refs.myExModalRef.hide()
-        this.saveSvcClosure(event);
+        this.saveSvcClosure();
       }else{
         this.$refs.myExModalRef.hide()
       }
