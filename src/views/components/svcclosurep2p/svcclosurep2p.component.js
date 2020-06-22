@@ -38,7 +38,7 @@ export default {
       DenominationList: [],
       StatusID: 0,
       FinanceConfirmAmount: 0,
-      BatchID : Math.floor(Math.random() * (Math.pow(10,5))),
+      BatchID : '',
       DenominationArr: [],
       listSVCledgerData: [],
       ShipmentUpdateList: [],
@@ -153,6 +153,8 @@ export default {
     date.setDate(date.getDate() - 1);
     this.DeliveryDate = date.toISOString().split("T")[0];
 
+    this.BatchID = this.localhubid+''+Math.floor(Math.random() * (Math.pow(10,5)));
+    console.log('this.BatchIDi==', this.BatchID);
     await this.GetDenominationData();
     await this.GetShipmentUpdate();
     //await this.GetBankData();
@@ -178,17 +180,7 @@ export default {
     hideCardModal(ele) {
       if(ele == 0){
         this.$refs.myCardModalRef.hide()
-        if(this.uploadFileList.length<=0){
-
-          let error = document.getElementById("dps"); error.innerHTML = "Deposit slip is required.";
-          error.style.display  = "block"; return false;
-        }else if(this.amoimp && this.reasonFileList.length<=0){
-
-          let error = document.getElementById("rss"); error.innerHTML = "Reason slip used for tax payment/ imprest is required.";
-          error.style.display  = "block"; return false;
-        }else{
-          this.saveSvcClosure();
-        }
+        this.saveSvcClosure();
       }else{
         this.$refs.myCardModalRef.hide()
       }
@@ -513,6 +505,16 @@ export default {
     },
 
     saveSvcClosure() {
+      if(this.amoimp && this.reasonFileList.length<=0){
+        let error = document.getElementById("rss"); error.innerHTML = "Reason slip used for tax payment/ imprest is required Or please check file extension.";
+        error.style.display  = "block"; return false;
+      }
+
+      if(this.uploadFileList && this.uploadFileList.length<=0){
+        let error = document.getElementById("dps"); error.innerHTML = "Deposit slip is required Or please check file extension.";
+        error.style.display  = "block"; return false;
+      }
+
       let DepositAmount = parseInt(this.Deposit_Amount);
       let DepositReasonExcepAmount = ''; this.unmatchedAmt = 0;
       DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount));
@@ -814,18 +816,7 @@ export default {
 
                 this.cardawbno(event);
               }else{
-
-                if(event.target[6].id=="DepositSlip" && this.uploadFileList.length<=0){
-
-                  let error = document.getElementById("dps"); error.innerHTML = "Deposit slip is required.";
-                  error.style.display  = "block"; return false;
-                }else if(event.target[9].id=="ReasonSlip" && this.reasonFileList.length<=0){
-
-                  let error = document.getElementById("rss"); error.innerHTML = "Reason slip used for tax payment/ imprest is required.";
-                  error.style.display  = "block"; return false;
-                }else{
-                  this.saveSvcClosure();
-                }
+                this.saveSvcClosure();
               }
             }
           }
@@ -837,7 +828,8 @@ export default {
 
     resetForm() {
       this.DepositLoading = false; this.ReasonLoading = false; this.disableButton = false; this.subLoading = false;
-      this.BatchID = Math.floor(Math.random() * (Math.pow(10,5)));
+      this.BatchID = this.localhubid+''+Math.floor(Math.random() * (Math.pow(10,5)));
+      console.log('this.BatchIDrr==', this.BatchID);
       this.pageno = this.tot_amt = this.unmatchedAmt = this.CardAmount = 0;
       this.uploadFileList = []; this.reasonFileList = []; this.BankList = []; this.exception = []; this.exceptionList = []; this.exceptionArr = [];
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.ReasonSlip = this.Reason = '';
