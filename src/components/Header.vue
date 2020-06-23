@@ -103,7 +103,7 @@
         </template>
       <!-- <b-dropdown-item @click="editProfile()"><i class="fa fa-user"></i> Profile</b-dropdown-item>
       <b-dropdown-item @click="changepassword"><i class="fa fa-sign-out"></i> Change Password</b-dropdown-item> -->
-      <b-dropdown-item @click="logout"><i class="fa fa-lock"></i> Logout</b-dropdown-item>
+      <b-dropdown-item id="logout" @click="logout"><i class="fa fa-lock"></i> Logout</b-dropdown-item>
     </b-nav-item-dropdown>
   </b-nav>
 
@@ -124,26 +124,27 @@ export default {
     }
   },
   mounted() {
-  //console.log(window.localStorage.getItem('accessuserToken'));
-  axios({
-    method: 'POST',
-      'url': apiUrl.api_url + 'appvalidatetoken',
-      'data': {},
-      headers: {
+    axios({
+      method: 'POST',
+        'url': apiUrl.api_url + 'appvalidatetoken',
+        'data': {},
+        headers: {
           'Authorization': 'Bearer '+window.localStorage.getItem('accessuserToken')
-           }
+        }
      })
-     .then((response) => {
+   .then((response) => {
        //console.log('response==', response)
 
     },(error)=>{
-    console.log('error==', error);
+      console.log('error==', error);
       if(error.response.status===401){
         localStorage.removeItem('accesshubdata')
         localStorage.removeItem('accesspermissiondata')
         localStorage.removeItem('accessuserdata')
         localStorage.removeItem('accessuserToken')
         localStorage.removeItem('isLoggedIn')
+        localStorage.removeItem('logoutTime')
+        localStorage.removeItem('accessrole')
         this.$router.push('/login')
       }
     });
@@ -199,6 +200,9 @@ export default {
         localStorage.removeItem('accesspermissiondata')
         localStorage.removeItem('accessuserdata')
         localStorage.removeItem('accessuserToken')
+        localStorage.removeItem('isLoggedIn')
+        localStorage.removeItem('logoutTime')
+        localStorage.removeItem('accessrole')
         this.$router.push('/login')
       })
       .catch((httpException) => {

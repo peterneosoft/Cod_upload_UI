@@ -92,6 +92,7 @@ export default {
         window.localStorage.setItem('isLoggedIn',false);
         window.localStorage.setItem('accessuserToken', '');
         window.localStorage.setItem('accessrole', '');
+        window.localStorage.setItem('logoutTime', '');
 
         if(response.data.token && response.data.token!=''){
           if(response.data.urlDetails && response.data.urlDetails.length === 2 && response.data.urlDetails[1].name.replace(/ /g,'').toLowerCase() == 'srclosure'){
@@ -104,13 +105,14 @@ export default {
           window.localStorage.setItem('accessuserdata', usersEncrupt);
           window.localStorage.setItem('isLoggedIn',true);
           window.localStorage.setItem('accessuserToken', response.data.token);
+          window.localStorage.setItem('logoutTime', new Date().setHours(new Date().getHours() + 1));
           permissionEncrypt = window.localStorage.getItem('accesspermissiondata')
           let permissiondatabytes = CryptoJS.AES.decrypt(permissionEncrypt.toString(), 'Key');
           let permissiondataplaintext = permissiondatabytes.toString(CryptoJS.enc.Utf8);
           let permissiondata = JSON.parse(permissiondataplaintext);
 
           if(response.data.code==200){
-              this.isLoading = false; this.$router.push(permissiondata[0].url); location.reload(true)
+              this.isLoading = false; this.$router.push(permissiondata[0].url); //location.reload(true)
           }else{
             this.isLoading = false; this.$alertify.error(response.data.message);
           }
