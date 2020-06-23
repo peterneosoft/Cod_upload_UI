@@ -381,7 +381,7 @@
                 <span id="awb_n" v-show="errors.has('AWBNo')" class="text-danger"><br>AWB number is required.</span>
               </div> -->
 
-              <div class="card-footer">
+              <div class="card-footer" v-show="formfooter">
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="subLoading" />
                 <button v-bind:disabled="disableButton" class="btn btn-sm btn-primary" type="submit"><i class="fa fa-dot-circle-o"></i> Save</button>
                 <button v-bind:disabled="disableButton" class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>

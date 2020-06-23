@@ -105,7 +105,7 @@ export default {
           window.localStorage.setItem('accessuserdata', usersEncrupt);
           window.localStorage.setItem('isLoggedIn',true);
           window.localStorage.setItem('accessuserToken', response.data.token);
-          window.localStorage.setItem('logoutTime', new Date().setHours(new Date().getHours() + 1));
+          window.localStorage.setItem('logoutTime', new Date().setHours(new Date().getHours() + 8));
           permissionEncrypt = window.localStorage.getItem('accesspermissiondata')
           let permissiondatabytes = CryptoJS.AES.decrypt(permissionEncrypt.toString(), 'Key');
           let permissiondataplaintext = permissiondatabytes.toString(CryptoJS.enc.Utf8);

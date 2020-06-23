@@ -117,7 +117,8 @@ export default {
       ExmodalShow:false,
       financeclosingamt:0,
       commentModalShow:false,
-      comment:''
+      comment:'',
+      formfooter:false
     }
   },
 
@@ -154,7 +155,6 @@ export default {
     this.DeliveryDate = date.toISOString().split("T")[0];
 
     this.BatchID = this.localhubid+''+Math.floor(Math.random() * (Math.pow(10,5)));
-    console.log('this.BatchIDi==', this.BatchID);
     await this.GetDenominationData();
     await this.GetShipmentUpdate();
     //await this.GetBankData();
@@ -270,6 +270,7 @@ export default {
           this.penAmtLoading = false;
         }
         this.TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))));
+        this.formfooter = true;
       }, error => {
         this.penAmtLoading = false;
         console.error(error);
@@ -635,7 +636,7 @@ export default {
           .then((response) => {
             if (response.data.errorCode == 0) {
               this.$alertify.success(response.data.msg);
-              this.disableButton = false; this.subLoading = false;
+              this.disableButton = false; this.subLoading = false; this.formfooter = false;
               window.scrollBy(0, 1000); this.resetForm();
             } else if (response.data.errorCode == -1) {
               this.$alertify.error(response.data.msg)
@@ -829,7 +830,6 @@ export default {
     resetForm() {
       this.DepositLoading = false; this.ReasonLoading = false; this.disableButton = false; this.subLoading = false;
       this.BatchID = this.localhubid+''+Math.floor(Math.random() * (Math.pow(10,5)));
-      console.log('this.BatchIDrr==', this.BatchID);
       this.pageno = this.tot_amt = this.unmatchedAmt = this.CardAmount = 0;
       this.uploadFileList = []; this.reasonFileList = []; this.BankList = []; this.exception = []; this.exceptionList = []; this.exceptionArr = [];
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.ReasonSlip = this.Reason = '';
