@@ -46,7 +46,6 @@ export default {
       uploadFileList: [],
       reasonFileList: [],
       ReasonAmount: '',
-      //AWBNo: '',
       lowdisReason:'',
       carissAWBNo: '',
       cassnatAWBNo: '',
@@ -117,8 +116,7 @@ export default {
       ExmodalShow:false,
       financeclosingamt:0,
       commentModalShow:false,
-      comment:'',
-      formfooter:false
+      comment:''
     }
   },
 
@@ -156,11 +154,10 @@ export default {
 
     this.BatchID = this.localhubid+''+Math.floor(Math.random() * (Math.pow(10,5)));
     await this.GetDenominationData();
-    await this.GetShipmentUpdate();
-    //await this.GetBankData();
+    await this.GetSVCExceptionData();
     await this.GetReasonList();
     await this.GetSVCledgerData();
-    await this.GetSVCExceptionData();
+    await this.GetShipmentUpdate();
   },
 
   methods: {
@@ -270,7 +267,7 @@ export default {
           this.penAmtLoading = false;
         }
         this.TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))));
-        this.formfooter = true;
+        this.disableButton = false;
       }, error => {
         this.penAmtLoading = false;
         console.error(error);
@@ -278,7 +275,7 @@ export default {
     },
 
     GetBankData() {
-      this.bankLoading = true;
+      this.bankLoading = true; this.disableButton = true;
       this.BankList = []; this.BankMasterId = '';
       if(this.DepositType=='' || this.DepositType==null){
         return false;
@@ -304,10 +301,13 @@ export default {
         headers: {
           'Authorization': 'Bearer '+this.myStr
         }
-      }).then(result => {
+      }).then(async result => {
         if(result.data.result.code==200){
           this.bankLoading = false;
           this.BankList = result.data.result.data;
+
+          await this.GetSVCExceptionData();
+          await this.GetShipmentUpdate();
         }else {
           this.bankLoading = false;
           this.BankList=[];
@@ -636,7 +636,7 @@ export default {
           .then((response) => {
             if (response.data.errorCode == 0) {
               this.$alertify.success(response.data.msg);
-              this.disableButton = false; this.subLoading = false; this.formfooter = false;
+              this.disableButton = false; this.subLoading = false;
               window.scrollBy(0, 1000); this.resetForm();
             } else if (response.data.errorCode == -1) {
               this.$alertify.error(response.data.msg)
@@ -839,9 +839,9 @@ export default {
       this.amoimpReason = this.vendrecReason = this.deldisReason = this.cassnatReason = this.carissReason = this.paychgReason = this.casstolReason = this.theftstolReason = this.wrongdelReason = this.srabscReason = this.srtpsrReason = this.lowdisReason = '';
       $('#denomlist input[type="text"]').val(0); $('#denomlist input[type="number"]').val('');
       document.getElementById("d_a").style.display = "none";
+      this.GetSVCExceptionData();
       this.GetShipmentUpdate();
       this.GetSVCledgerData();
-      this.GetSVCExceptionData();
       this.$validator.reset(); this.errors.clear(); document.getElementById('svcform').reset();
     },
 
