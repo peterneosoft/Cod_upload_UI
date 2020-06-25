@@ -119,10 +119,11 @@ export default {
             window.localStorage.setItem('accesshubdata', hubEncrypt);
 
             if(window.localStorage.getItem('accesshubdata')){
-              document.getElementById('logout').click(); //location.reload();
+              //document.getElementById('logout').click();
+              location.reload();
             }
-            //this.$alertify.success(result.data.msg);
-            this.$alertify.success('Hub Updated Successfully, Please Re-login.');
+            this.$alertify.success(result.data.msg);
+            //this.$alertify.success('Hub Updated Successfully, Please Re-login.');
           }else{
             this.$alertify.error(result.data.msg);
           }
