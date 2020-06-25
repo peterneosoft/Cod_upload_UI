@@ -112,7 +112,8 @@ export default {
           let permissiondata = JSON.parse(permissiondataplaintext);
 
           if(response.data.code==200){
-              this.isLoading = false; this.$router.push(permissiondata[0].url); //location.reload(true)
+              this.isLoading = false;
+              this.$router.push(permissiondata[0].url); location.reload(true)
           }else{
             this.isLoading = false; this.$alertify.error(response.data.message);
           }
