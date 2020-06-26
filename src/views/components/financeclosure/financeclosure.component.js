@@ -67,7 +67,8 @@ export default {
       ReasonModalShow:false,
       RecExcModalShow:false,
       commentModalShow:false,
-      comment:''
+      comment:'',
+      DepositType: ''
     }
   },
 
@@ -163,7 +164,6 @@ export default {
       if(this.zone=="") return false;
 
       this.HubId = this.hubList = []; this.hubLoading = true;
-      console.log('this.zone==', this.zone);
 
       if(this.zone==0){
         axios({
@@ -246,7 +246,8 @@ export default {
             offset: this.pageno,
             limit: 10,
             hubid: hubArr,
-            statusid: this.status
+            statusid: this.status,
+            deposittype: this.DepositType
         })
         this.isLoading = true;
         axios({
@@ -300,7 +301,7 @@ export default {
       this.$validator.validateAll().then((result) => {
         if(result){
           this.HubID = this.HubId.HubID;
-          this.StatusVal = event.target[2].selectedOptions[0].attributes.title.nodeValue;
+          this.StatusVal = event.target[3].selectedOptions[0].attributes.title.nodeValue;
           if(this.StatusVal == "Close"){
               this.StatusVal = "Transaction Closed"
           }else{
@@ -516,7 +517,7 @@ export default {
     },
 
     resetForm() {
-      this.zone = ''; this.HubId = this.hubList = []; this.pageno = this.resultCount = 0; this.listFinanceledgerData = []; this.status = 1;
+      this.zone = this.DepositType = ''; this.HubId = this.hubList = []; this.pageno = this.resultCount = 0; this.listFinanceledgerData = []; this.status = 1;
       this.$validator.reset();
       this.errors.clear();
     },
