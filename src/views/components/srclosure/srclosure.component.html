@@ -131,7 +131,7 @@
                 <span id="awb_n" v-show="errors.has('wrongdelAWBNo')" class="text-danger">Shpmt updation issue(Wrong Delivered/Lost Cases) AWB No. is required.</span>
               </div>
 
-              <div class="form-group" v-if="Regionshow && sriss">
+              <!-- <div class="form-group" v-if="Regionshow && sriss">
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text">AWB No. <font color="red">&nbsp;*</font></span>
@@ -140,6 +140,19 @@
                   v-model="srissAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('srissAWBNo') }">
                 </div>
                 <span id="awb_n" v-show="errors.has('srissAWBNo')" class="text-danger">SR Issue (Short Payment by SR) AWB No. is required.</span>
+              </div> -->
+              <div class="form-group" v-if="Regionshow && sriss">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Amount <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="srtpsrAmt" type="text" name="srtpsrAmt" title="Enter SR Issue (Short Payment by SR) amount" placeholder="Enter SR Issue (Short Payment by SR) amount" v-validate="`${sriss ? 'required' : ''}`"
+                  v-model="srtpsrAmt" v-bind:class="{'form-control': true, 'error': errors.has('srtpsrAmt') }" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-rupee"></i></span>
+                  </div>
+                </div>
+                <span v-show="errors.has('srtpsrAmt')" class="text-danger">SR Issue (Short Payment by SR) amount is required.</span>
               </div>
 
               <div class="form-group" v-if="Regionshow && theftstol">
@@ -180,10 +193,10 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text">AWB No. <font color="red">&nbsp;*</font></span>
                   </div>
-                  <input class="form-control" id="carissAWBNo" type="text" name="carissAWBNo" title="Enter Card/Wallet/Payphi issue AWB number" placeholder="Card/Wallet/Payphi issue AWB No." v-validate="`${cariss ? 'required' : ''}`"
+                  <input class="form-control" id="carissAWBNo" type="text" name="carissAWBNo" title="Enter Card AWB number" placeholder="Card AWB No." v-validate="`${cariss ? 'required' : ''}`"
                   v-model="carissAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('carissAWBNo') }">
                 </div>
-                <span id="awb_n" v-show="errors.has('carissAWBNo')" class="text-danger">Card/Wallet/Payphi issue AWB No. is required.</span>
+                <span id="awb_n" v-show="errors.has('carissAWBNo')" class="text-danger">Card AWB No. is required.</span>
               </div>
 
               <div class="form-group" v-if="Regionshow && selfrec">
@@ -217,6 +230,39 @@
                   v-model="srabscAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('srabscAWBNo') }">
                 </div>
                 <span id="awb_n" v-show="errors.has('srabscAWBNo')" class="text-danger">SR absconding AWB No. is required.</span>
+              </div>
+
+              <div class="form-group" v-if="Regionshow && nddiss">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">AWB No. <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="nddissAWBNo" type="text" name="nddissAWBNo" title="Enter Non-Delivery dispute AWB number" placeholder="Non-Delivery dispute AWB No." v-validate="`${nddiss ? 'required' : ''}`"
+                  v-model="nddissAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('nddissAWBNo') }">
+                </div>
+                <span id="awb_n" v-show="errors.has('nddissAWBNo')" class="text-danger">Non-Delivery dispute AWB No. is required.</span>
+              </div>
+
+              <div class="form-group" v-if="Regionshow && waliss">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">AWB No. <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="walissAWBNo" type="text" name="walissAWBNo" title="Enter Wallet AWB number" placeholder="Wallet AWB No." v-validate="`${waliss ? 'required' : ''}`"
+                  v-model="walissAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('walissAWBNo') }">
+                </div>
+                <span id="awb_n" v-show="errors.has('walissAWBNo')" class="text-danger">Wallet AWB No. is required.</span>
+              </div>
+
+              <div class="form-group" v-if="Regionshow && paypiss">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">AWB No. <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="paypissAWBNo" type="text" name="paypissAWBNo" title="Enter Payphi AWB number" placeholder="Payphi AWB No." v-validate="`${paypiss ? 'required' : ''}`"
+                  v-model="paypissAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('paypissAWBNo') }">
+                </div>
+                <span id="awb_n" v-show="errors.has('paypissAWBNo')" class="text-danger">Payphi AWB No. is required.</span>
               </div>
 
               <div class="card-footer">

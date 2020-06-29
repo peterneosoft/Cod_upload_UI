@@ -49,17 +49,18 @@ export default {
       lowdisReason:'',
       carissAWBNo: '',
       cassnatAWBNo: '',
-      deldisAWBNo: '',
       paychgAWBNo: '',
       vendrecAWBNo: '',
       casstolAWBNo: '',
       theftstolAWBNo: '',
       wrongdelAWBNo: '',
       srabscAWBNo: '',
-      srtpsrAWBNo: '',
+      nddissAWBNo: '',
+      walissAWBNo: '',
+      paypissAWBNo: '',
+      srtpsrAmt: '',
       carissReason: '',
       cassnatReason: '',
-      deldisReason: '',
       paychgReason: '',
       vendrecReason: '',
       casstolReason: '',
@@ -67,6 +68,9 @@ export default {
       wrongdelReason: '',
       srabscReason: '',
       srtpsrReason: '',
+      nddissReason: '',
+      walissReason: '',
+      paypissReason: '',
       CardAmount: 0,
       DisputeArr: [],
       cardM: 1,
@@ -98,7 +102,6 @@ export default {
       lowdis:false,
       amoimp:false,
       vendrec:false,
-      deldis:false,
       cassnat:false,
       cariss:false,
       paychg:false,
@@ -107,6 +110,9 @@ export default {
       wrongdel:false,
       srabsc:false,
       srtpsr:false,
+      nddiss: false,
+      waliss: false,
+      paypiss: false,
       modalAWBNoShow:false,
       awbnotype:'',
       awbnumber:'',
@@ -438,13 +444,11 @@ export default {
     },
 
     cardawbno(event){
-      let awbArr = []; this.DisputeArr = []; this.CardAmount = 0;
+      let awbArr = []; this.DisputeArr = []; this.CardAmount = 0; this.subLoading = this.disableButton = true;
 
       if(this.carissAWBNo) awbArr.push({ ReasonID:this.carissReason, AWBNo:this.checkAWB(this.carissAWBNo) });
 
       if(this.cassnatAWBNo) awbArr.push({ ReasonID:this.cassnatReason, AWBNo:this.checkAWB(this.cassnatAWBNo) });
-
-      if(this.deldisAWBNo) awbArr.push({ ReasonID:this.deldisReason, AWBNo:this.checkAWB(this.deldisAWBNo) });
 
       if(this.paychgAWBNo) awbArr.push({ ReasonID:this.paychgReason, AWBNo:this.checkAWB(this.paychgAWBNo) });
 
@@ -458,11 +462,17 @@ export default {
 
       if(this.srabscAWBNo) awbArr.push({ ReasonID:this.srabscReason, AWBNo:this.checkAWB(this.srabscAWBNo) });
 
-      if(this.srtpsrAWBNo) awbArr.push({ ReasonID:this.srtpsrReason, AWBNo:this.checkAWB(this.srtpsrAWBNo) });
+      if(this.srtpsrAmt) awbArr.push({ ReasonID:this.srtpsrReason, AWBNo:[], ReasonAmt:(this.srtpsrAmt)?this.srtpsrAmt:'0' });
 
       if(this.lowdis) awbArr.push({ ReasonID:this.lowdisReason, AWBNo:[] });
 
       if(this.amoimp) awbArr.push({ ReasonID:this.amoimpReason, AWBNo:[], ReasonAmt:(this.ReasonAmount)?this.ReasonAmount:'0' });
+
+      if(this.nddissAWBNo) awbArr.push({ ReasonID:this.nddissReason, AWBNo:this.checkAWB(this.nddissAWBNo) });
+
+      if(this.walissAWBNo) awbArr.push({ ReasonID:this.walissReason, AWBNo:this.checkAWB(this.walissAWBNo) });
+
+      if(this.paypissAWBNo) awbArr.push({ ReasonID:this.paypissReason, AWBNo:this.checkAWB(this.paypissAWBNo) });
 
       axios({
         method: 'POST',
@@ -485,8 +495,10 @@ export default {
         } else{
           this.$alertify.error("AWB numbers are invalid, please check."); return false;
         }
+        this.subLoading = this.disableButton = false;
       })
       .catch((httpException) => {
+        this.subLoading = this.disableButton = false;
         this.$alertify.error('Error occured'); return false;
       });
     },
@@ -813,7 +825,7 @@ export default {
               this.showExModal(parseInt(parseInt(Math.round(parseFloat(this.Deposit_Amount))) - parseInt(Math.round(parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount)))));
             }else{
 
-              if(this.amoimp || this.cariss || this.deldis || this.paychg || this.cassnat || this.casstol || this.theftstol || this.vendrec || this.wrongdel || this.srabsc || this.srtpsr || this.lowdis){
+              if(this.amoimp || this.cariss || this.paychg || this.cassnat || this.casstol || this.theftstol || this.vendrec || this.wrongdel || this.srabsc || this.srtpsr || this.lowdis || this.nddissReason || this.walissReason || this.paypissReason){
 
                 this.cardawbno(event);
               }else{
@@ -834,9 +846,9 @@ export default {
       this.uploadFileList = []; this.reasonFileList = []; this.BankList = []; this.exception = []; this.exceptionList = []; this.exceptionArr = [];
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.ReasonSlip = this.Reason = '';
       this.DisputeArr = [];
-      this.amoimp = this.vendrec = this.deldis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = this.srabsc = this.srtpsr = this.lowdis = false;
-      this.ReasonAmount = this.vendrecAWBNo = this.deldisAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.srabscAWBNo = this.srtpsrAWBNo = '';
-      this.amoimpReason = this.vendrecReason = this.deldisReason = this.cassnatReason = this.carissReason = this.paychgReason = this.casstolReason = this.theftstolReason = this.wrongdelReason = this.srabscReason = this.srtpsrReason = this.lowdisReason = '';
+      this.amoimp = this.vendrec = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = this.srabsc = this.srtpsr = this.lowdis = this.nddiss = this.waliss = this.paypiss = false;
+      this.ReasonAmount = this.vendrecAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.srabscAWBNo = this.srtpsrAmt = this.nddissAWBNo = this.walissAWBNo = this.paypissAWBNo = '';
+      this.amoimpReason = this.vendrecReason = this.cassnatReason = this.carissReason = this.paychgReason = this.casstolReason = this.theftstolReason = this.wrongdelReason = this.srabscReason = this.srtpsrReason = this.lowdisReason = this.nddissReason = this.walissReason = this.paypissReason = '';
       $('#denomlist input[type="text"]').val(0); $('#denomlist input[type="number"]').val('');
       document.getElementById("d_a").style.display = "none";
       this.GetSVCExceptionData();
@@ -863,8 +875,8 @@ export default {
 
     changeDepType(){ //change deposit Amount
      this.unmatchedAmt = this.CardAmount = 0; this.Reason = ''; this.ReasonAmount = ''; this.DisputeArr = []; this.reasonFileList = [];
-     this.amoimp = this.vendrec = this.deldis = this.lowdis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = this.srabsc = this.srtpsr = false;
-     this.ReasonAmount = this.vendrecAWBNo = this.deldisAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.srabscAWBNo = this.srtpsrAWBNo = '';
+     this.amoimp = this.vendrec = this.lowdis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = this.srabsc = this.srtpsr = this.nddiss = this.waliss = this.paypiss = false;
+     this.ReasonAmount = this.vendrecAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.srabscAWBNo = this.srtpsrAmt = this.nddissAWBNo = this.walissAWBNo = this.paypissAWBNo = '';
 
       $('input[name="reason"]').each(function() {
   			this.checked = false;
@@ -893,8 +905,6 @@ export default {
           this.amoimp = true; this.amoimpReason = Reason;
         }else if((process.env.NODE_ENV == 'development' && Reason == 119) || (process.env.NODE_ENV == 'production' && Reason == 98)){
           this.vendrec = true; this.vendrecReason = Reason;
-        }else if((process.env.NODE_ENV == 'development' && Reason == 152) || (process.env.NODE_ENV == 'production' && Reason == 121)){
-          this.deldis = true; this.deldisReason = Reason;
         }else if((process.env.NODE_ENV == 'development' && Reason == 77) || (process.env.NODE_ENV == 'production' && Reason == 77)){
           this.cassnat = true; this.cassnatReason = Reason;
         }else if((process.env.NODE_ENV == 'development' && Reason == 78) || (process.env.NODE_ENV == 'production' && Reason == 78)){
@@ -913,14 +923,18 @@ export default {
           this.srabsc = true; this.srabscReason = Reason;
         }else if((process.env.NODE_ENV == 'development' && Reason == 325) || (process.env.NODE_ENV == 'production' && Reason == 130)){
           this.srtpsr = true; this.srtpsrReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 152) || (process.env.NODE_ENV == 'production' && Reason == 121)){
+          this.nddiss = true; this.nddissReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 327) || (process.env.NODE_ENV == 'production' && Reason == 327)){
+          this.waliss = true; this.walissReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 328) || (process.env.NODE_ENV == 'production' && Reason == 328)){
+          this.paypiss = true; this.paypissReason = Reason;
         }
       }else{
         if(Reason == 65){
           this.amoimp = false; this.ReasonAmount = ''; this.reasonFileList = []; this.amoimpReason = '';
         }else if((process.env.NODE_ENV == 'development' && Reason == 119) || (process.env.NODE_ENV == 'production' && Reason == 98)){
           this.vendrec = false; this.vendrecAWBNo = ''; this.vendrecReason = '';
-        }else if((process.env.NODE_ENV == 'development' && Reason == 152) || (process.env.NODE_ENV == 'production' && Reason == 121)){
-          this.deldis = false; this.deldisAWBNo = ''; this.deldisReason = '';
         }else if((process.env.NODE_ENV == 'development' && Reason == 77) || (process.env.NODE_ENV == 'production' && Reason == 77)){
           this.cassnat = false; this.cassnatAWBNo = ''; this.cassnatReason = '';
         }else if((process.env.NODE_ENV == 'development' && Reason == 78) || (process.env.NODE_ENV == 'production' && Reason == 78)){
@@ -938,7 +952,13 @@ export default {
         }else if((process.env.NODE_ENV == 'development' && Reason == 324) || (process.env.NODE_ENV == 'production' && Reason == 129)){
           this.srabsc = false; this.srabscAWBNo = ''; this.srabscReason = '';
         }else if((process.env.NODE_ENV == 'development' && Reason == 325) || (process.env.NODE_ENV == 'production' && Reason == 130)){
-          this.srtpsr = false; this.srtpsrAWBNo = ''; this.srtpsrReason = '';
+          this.srtpsr = false; this.srtpsrAmt = ''; this.srtpsrReason = '';
+        }else if((process.env.NODE_ENV == 'development' && Reason == 152) || (process.env.NODE_ENV == 'production' && Reason == 121)){
+          this.nddiss = false; this.nddissAWBNo = ''; this.nddissReason = '';
+        }else if((process.env.NODE_ENV == 'development' && Reason == 327) || (process.env.NODE_ENV == 'production' && Reason == 327)){
+          this.waliss = false; this.walissAWBNo = ''; this.walissReason = '';
+        }else if((process.env.NODE_ENV == 'development' && Reason == 328) || (process.env.NODE_ENV == 'production' && Reason == 328)){
+          this.paypiss = false; this.paypissAWBNo = ''; this.paypissReason = '';
         }
       }
     },

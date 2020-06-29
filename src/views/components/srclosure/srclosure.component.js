@@ -80,7 +80,7 @@ export default {
       modalSRNameShow:false,
       castheftAWBNo: '',
       prevpenbalAWBNo: '',
-      srissAWBNo: '',
+      srtpsrAmt: '',
       carissAWBNo: '',
       cassnatAWBNo: '',
       selfrecAWBNo: '',
@@ -90,6 +90,9 @@ export default {
       codnttimAWBNo: '',
       theftstolAWBNo: '',
       wrongdelAWBNo: '',
+      nddissAWBNo: '',
+      walissAWBNo: '',
+      paypissAWBNo: '',
       castheftReason:'',
       prevpenbalReason:'',
       srissReason: '',
@@ -103,6 +106,9 @@ export default {
       codnttimReason: '',
       theftstolReason: '',
       wrongdelReason: '',
+      nddissReason: '',
+      walissReason: '',
+      paypissReason: '',
       castheft:false,
       prevpenbal:false,
       sriss:false,
@@ -116,6 +122,9 @@ export default {
       codnttim:false,
       theftstol:false,
       wrongdel:false,
+      nddiss: false,
+      waliss: false,
+      paypiss: false,
       CardAmount: 0,
       DisputeArr: [],
       expanded:false,
@@ -340,9 +349,9 @@ export default {
 
       this.DisputeArr = this.DenomDetail = []; this.CardAmount = 0;
 
-      this.castheft = this.prevpenbal = this.sriss = this.lowdis = this.cariss = this.codimpr = this.selfrec = this.srabsc = this.cassnat = this.paychg = this.codnttim = this.theftstol = this.wrongdel = false;
-      this.castheftAWBNo = this.prevpenbalAWBNo = this.srissAWBNo = this.carissAWBNo = this.codimprAWBNo = this.selfrecAWBNo = this.srabscAWBNo = this.cassnatAWBNo = this.paychgAWBNo = this.codnttimAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = '';
-      this.castheftReason = this.prevpenbalReason = this.srissReason = this.lowdisReason = this.carissReason = this.codimprReason = this.selfrecReason = this.srabscReason = this.cassnatReason = this.paychgReason = this.codnttimReason = this.theftstolReason = this.wrongdelReason = '';
+      this.castheft = this.prevpenbal = this.sriss = this.lowdis = this.cariss = this.codimpr = this.selfrec = this.srabsc = this.cassnat = this.paychg = this.codnttim = this.theftstol = this.wrongdel = this.nddiss = this.waliss = this.paypiss = false;
+      this.castheftAWBNo = this.prevpenbalAWBNo = this.srtpsrAmt = this.carissAWBNo = this.codimprAWBNo = this.selfrecAWBNo = this.srabscAWBNo = this.cassnatAWBNo = this.paychgAWBNo = this.codnttimAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.nddissAWBNo = this.walissAWBNo = this.paypissAWBNo = '';
+      this.castheftReason = this.prevpenbalReason = this.srissReason = this.lowdisReason = this.carissReason = this.codimprReason = this.selfrecReason = this.srabscReason = this.cassnatReason = this.paychgReason = this.codnttimReason = this.theftstolReason = this.wrongdelReason = this.nddissReason = this.walissReason = this.paypissReason = '';
 
       this.PendingCOD = this.TodaysCOD = this.TotalAmount = this.TodaysShipmentCount = this.TodaysCash = this.TodaysPayphi = this.TodaysWallet = this.TodaysCard = this.TodaysCashCount = this.TodaysPayphiCount = this.TodaysWalletCount = this.TodaysCardCount = 0;
       this.deliveredCODArr = this.deliveredCashArr = this.deliveredPayphiArr = this.deliveredWalletArr = this.deliveredCardArr = [];
@@ -592,7 +601,7 @@ export default {
 
               this.showExModal(parseInt(parseInt(this.Deposit_Amount) - parseInt(this.TotalAmount)));
             }else{
-              if(this.castheft || this.prevpenbal || this.sriss || this.lowdis || this.cariss || this.codimpr || this.selfrec || this.srabsc || this.cassnat || this.paychg || this.codnttim || this.theftstol || this.wrongdel){
+              if(this.castheft || this.prevpenbal || this.sriss || this.lowdis || this.cariss || this.codimpr || this.selfrec || this.srabsc || this.cassnat || this.paychg || this.codnttim || this.theftstol || this.wrongdel || this.nddissReason || this.walissReason || this.paypissReason){
                 this.cardawbno(event);
               }else{
                 let error = document.getElementById("d_a"); error.style.display = "None";
@@ -709,6 +718,12 @@ export default {
           this.selfrec = true; this.selfrecReason = Reason;
         }else if((process.env.NODE_ENV == 'development' && Reason == 323) || (process.env.NODE_ENV == 'production' && Reason == 128)){
           this.srabsc = true; this.srabscReason = Reason;
+        }else if(Reason == 326){
+          this.nddiss = true; this.nddissReason = Reason;
+        }else if(Reason == 329){
+          this.waliss = true; this.walissReason = Reason;
+        }else if(Reason == 330){
+          this.paypiss = true; this.paypissReason = Reason;
         }
 
       }else{
@@ -723,7 +738,7 @@ export default {
         }else if(Reason == 73){
           this.wrongdel = false; this.wrongdelAWBNo = ''; this.wrongdelReason = '';
         }else if(Reason == 74){
-          this.sriss = false; this.srissAWBNo = ''; this.srissReason = '';
+          this.sriss = false; this.srtpsrAmt = ''; this.srissReason = '';
         }else if(Reason == 75){
           this.theftstol = false; this.theftstolAWBNo = ''; this.theftstolReason = '';
         }else if(Reason == 76){
@@ -738,6 +753,12 @@ export default {
           this.selfrec = false; this.selfrecAWBNo = ''; this.selfrecReason = '';
         }else if((process.env.NODE_ENV == 'development' && Reason == 323) || (process.env.NODE_ENV == 'production' && Reason == 128)){
           this.srabsc = false; this.srabscAWBNo = ''; this.srabscReason = '';
+        }else if(Reason == 326){
+          this.nddiss = false; this.nddissAWBNo = ''; this.nddissReason = '';
+        }else if(Reason == 329){
+          this.waliss = false; this.walissAWBNo = ''; this.walissReason = '';
+        }else if(Reason == 330){
+          this.paypiss = false; this.paypissAWBNo = ''; this.paypissReason = '';
         }
       }
     },
@@ -757,7 +778,8 @@ export default {
     },
 
     cardawbno(event){
-      this.disableButton = true; this.subLoading = true;
+      this.subLoading = this.disableButton = true;
+
       let awbArr = []; this.DisputeArr = []; this.CardAmount = 0;
 
       if(this.carissAWBNo) awbArr.push({ ReasonID:this.carissReason, AWBNo:this.checkAWB(this.carissAWBNo) });
@@ -770,7 +792,7 @@ export default {
 
       if(this.prevpenbalAWBNo) awbArr.push({ ReasonID:this.prevpenbalReason, AWBNo:this.checkAWB(this.prevpenbalAWBNo) });
 
-      if(this.srissAWBNo) awbArr.push({ ReasonID:this.srissReason, AWBNo:this.checkAWB(this.srissAWBNo) });
+      if(this.srtpsrAmt) awbArr.push({ ReasonID:this.srissReason, AWBNo:[], ReasonAmt:(this.srtpsrAmt)?this.srtpsrAmt:'0' });
 
       if(this.theftstolAWBNo) awbArr.push({ ReasonID:this.theftstolReason, AWBNo:this.checkAWB(this.theftstolAWBNo) });
 
@@ -786,6 +808,14 @@ export default {
 
       if(this.lowdis) awbArr.push({ ReasonID:this.lowdisReason, AWBNo:[] });
 
+      if(this.nddissAWBNo) awbArr.push({ ReasonID:this.nddissReason, AWBNo:this.checkAWB(this.nddissAWBNo) });
+
+      if(this.walissAWBNo) awbArr.push({ ReasonID:this.walissReason, AWBNo:this.checkAWB(this.walissAWBNo) });
+
+      if(this.paypissAWBNo) awbArr.push({ ReasonID:this.paypissReason, AWBNo:this.checkAWB(this.paypissAWBNo) });
+
+      this.subLoading = this.disableButton = true;
+
       axios({
         method: 'POST',
         'url': apiUrl.api_url + 'getAWBNo',
@@ -795,7 +825,7 @@ export default {
         }
       })
       .then((awbres) => {
-        this.disableButton = false; this.subLoading = false;
+
         if (awbres.data.code == 200) {
           if(awbres.data.invalidAwb.length>0){
             this.$alertify.error("Some of AWB numbers are invalid, please check: "+awbres.data.invalidAwb.join(', ')); return false;
@@ -807,9 +837,10 @@ export default {
         } else{
           this.$alertify.error("AWB numbers are invalid, please check."); return false;
         }
+        this.subLoading = this.disableButton = false;
       })
       .catch((httpException) => {
-        this.disableButton = false; this.subLoading = false;
+        this.subLoading = this.disableButton = false;
         this.$alertify.error('Error occured'); return false;
       });
     },

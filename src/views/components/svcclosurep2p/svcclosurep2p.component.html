@@ -221,14 +221,14 @@
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
                   </div>
-                  <input class="form-control" id="carissAWBNo" type="text" name="carissAWBNo" title="Enter Card/Wallet/Payphi issue AWB number" placeholder="Card/Wallet/Payphi issue AWB No." v-validate="`${cariss ? 'required' : ''}`"
+                  <input class="form-control" id="carissAWBNo" type="text" name="carissAWBNo" title="Enter Card AWB number" placeholder="Card AWB No." v-validate="`${cariss ? 'required' : ''}`"
                   v-model="carissAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('carissAWBNo') }" style="margin-right: -5px;">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-truck"></i></span>
                   </div>
                 </div>
                 <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Please enter comma (,) seperated AWB number.</span>
-                <span id="awb_n" v-show="errors.has('carissAWBNo')" class="text-danger"><br>Card/Wallet/Payphi issue AWB No. is required.</span>
+                <span id="awb_n" v-show="errors.has('carissAWBNo')" class="text-danger"><br>Card AWB No. is required.</span>
               </div>
 
               <div class="form-group" v-if="unmatchedAmt > 0 && cassnat">
@@ -244,21 +244,6 @@
                 </div>
                 <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Please enter comma (,) seperated AWB number.</span>
                 <span id="awb_n" v-show="errors.has('cassnatAWBNo')" class="text-danger"><br>Cash/shipmet snatched by Customer AWB No. is required.</span>
-              </div>
-
-              <div class="form-group" v-if="unmatchedAmt > 0 && deldis">
-                <div class="input-group">
-                  <div class="input-group-prepend" style="width: 140px;">
-                    <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
-                  </div>
-                  <input class="form-control" id="deldisAWBNo" type="text" name="deldisAWBNo" title="Enter Delivery Dispute AWB No." placeholder="Delivery Dispute AWB No." v-validate="`${deldis ? 'required' : ''}`"
-                  v-model="deldisAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('deldisAWBNo') }" style="margin-right: -5px;">
-                  <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-truck"></i></span>
-                  </div>
-                </div>
-                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Please enter comma (,) seperated AWB number.</span>
-                <span id="awb_n" v-show="errors.has('deldisAWBNo')" class="text-danger"><br>Delivery Dispute AWB No. is required.</span>
               </div>
 
               <div class="form-group" v-if="unmatchedAmt > 0 && paychg">
@@ -351,7 +336,7 @@
                 <span id="awb_n" v-show="errors.has('srabscAWBNo')" class="text-danger"><br>SR absconding AWB No. is required.</span>
               </div>
 
-              <div class="form-group" v-if="unmatchedAmt > 0 && srtpsr">
+              <!-- <div class="form-group" v-if="unmatchedAmt > 0 && srtpsr">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
@@ -364,6 +349,52 @@
                 </div>
                 <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Please enter comma (,) seperated AWB number.</span>
                 <span id="awb_n" v-show="errors.has('srtpsrAWBNo')" class="text-danger"><br>Short payment by SR AWB No. is required.</span>
+              </div> -->
+              <div class="form-group" v-if="unmatchedAmt > 0 && srtpsr">
+                <div class="input-group">
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">Amount <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="srtpsrAmt" type="text" name="srtpsrAmt" title="Enter short payment by SR amount" placeholder="Short payment by SR amount" v-validate="`${srtpsr ? 'required' : ''}`"
+                  v-model="srtpsrAmt" v-bind:class="{'form-control': true, 'error': errors.has('srtpsrAmt') }" style="margin-right: -5px;" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-rupee"></i></span>
+                  </div>
+                </div>
+                <span v-show="errors.has('srtpsrAmt')" class="text-danger">Short payment by SR amount is required.</span>
+              </div>
+
+              <div class="form-group" v-if="unmatchedAmt > 0 && nddiss">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">AWB No. <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="nddissAWBNo" type="text" name="nddissAWBNo" title="Enter Non-Delivery dispute AWB number" placeholder="Non-Delivery dispute AWB No." v-validate="`${nddiss ? 'required' : ''}`"
+                  v-model="nddissAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('nddissAWBNo') }">
+                </div>
+                <span id="awb_n" v-show="errors.has('nddissAWBNo')" class="text-danger">Non-Delivery dispute AWB No. is required.</span>
+              </div>
+
+              <div class="form-group" v-if="unmatchedAmt > 0 && waliss">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">AWB No. <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="walissAWBNo" type="text" name="walissAWBNo" title="Enter Wallet AWB number" placeholder="Wallet AWB No." v-validate="`${waliss ? 'required' : ''}`"
+                  v-model="walissAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('walissAWBNo') }">
+                </div>
+                <span id="awb_n" v-show="errors.has('walissAWBNo')" class="text-danger">Wallet AWB No. is required.</span>
+              </div>
+
+              <div class="form-group" v-if="unmatchedAmt > 0 && paypiss">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">AWB No. <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="paypissAWBNo" type="text" name="paypissAWBNo" title="Enter Payphi AWB number" placeholder="Payphi AWB No." v-validate="`${paypiss ? 'required' : ''}`"
+                  v-model="paypissAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('paypissAWBNo') }">
+                </div>
+                <span id="awb_n" v-show="errors.has('paypissAWBNo')" class="text-danger">Payphi AWB No. is required.</span>
               </div>
 
               <div class="card-footer">
