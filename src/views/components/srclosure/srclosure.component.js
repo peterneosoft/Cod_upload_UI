@@ -814,8 +814,6 @@ export default {
 
       if(this.paypissAWBNo) awbArr.push({ ReasonID:this.paypissReason, AWBNo:this.checkAWB(this.paypissAWBNo) });
 
-      this.subLoading = this.disableButton = true;
-
       axios({
         method: 'POST',
         'url': apiUrl.api_url + 'getAWBNo',
@@ -825,6 +823,7 @@ export default {
         }
       })
       .then((awbres) => {
+        this.subLoading = this.disableButton = false;
 
         if (awbres.data.code == 200) {
           if(awbres.data.invalidAwb.length>0){
@@ -837,7 +836,6 @@ export default {
         } else{
           this.$alertify.error("AWB numbers are invalid, please check."); return false;
         }
-        this.subLoading = this.disableButton = false;
       })
       .catch((httpException) => {
         this.subLoading = this.disableButton = false;

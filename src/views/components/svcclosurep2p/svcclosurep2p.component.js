@@ -483,6 +483,7 @@ export default {
         }
       })
       .then((awbres) => {
+        this.subLoading = this.disableButton = false;
 
         if (awbres.data.code == 200) {
           if(awbres.data.invalidAwb.length>0){
@@ -495,7 +496,6 @@ export default {
         } else{
           this.$alertify.error("AWB numbers are invalid, please check."); return false;
         }
-        this.subLoading = this.disableButton = false;
       })
       .catch((httpException) => {
         this.subLoading = this.disableButton = false;
