@@ -718,11 +718,11 @@ export default {
           this.selfrec = true; this.selfrecReason = Reason;
         }else if((process.env.NODE_ENV == 'development' && Reason == 323) || (process.env.NODE_ENV == 'production' && Reason == 128)){
           this.srabsc = true; this.srabscReason = Reason;
-        }else if(Reason == 326){
+        }else if((process.env.NODE_ENV == 'development' && Reason == 326) || (process.env.NODE_ENV == 'production' && Reason == 131)){
           this.nddiss = true; this.nddissReason = Reason;
-        }else if(Reason == 329){
+        }else if((process.env.NODE_ENV == 'development' && Reason == 329) || (process.env.NODE_ENV == 'production' && Reason == 132)){
           this.waliss = true; this.walissReason = Reason;
-        }else if(Reason == 330){
+        }else if((process.env.NODE_ENV == 'development' && Reason == 330) || (process.env.NODE_ENV == 'production' && Reason == 133)){
           this.paypiss = true; this.paypissReason = Reason;
         }
 
@@ -753,11 +753,11 @@ export default {
           this.selfrec = false; this.selfrecAWBNo = ''; this.selfrecReason = '';
         }else if((process.env.NODE_ENV == 'development' && Reason == 323) || (process.env.NODE_ENV == 'production' && Reason == 128)){
           this.srabsc = false; this.srabscAWBNo = ''; this.srabscReason = '';
-        }else if(Reason == 326){
+        }else if((process.env.NODE_ENV == 'development' && Reason == 326) || (process.env.NODE_ENV == 'production' && Reason == 131)){
           this.nddiss = false; this.nddissAWBNo = ''; this.nddissReason = '';
-        }else if(Reason == 329){
+        }else if((process.env.NODE_ENV == 'development' && Reason == 329) || (process.env.NODE_ENV == 'production' && Reason == 132)){
           this.waliss = false; this.walissAWBNo = ''; this.walissReason = '';
-        }else if(Reason == 330){
+        }else if((process.env.NODE_ENV == 'development' && Reason == 330) || (process.env.NODE_ENV == 'production' && Reason == 133)){
           this.paypiss = false; this.paypissAWBNo = ''; this.paypissReason = '';
         }
       }
