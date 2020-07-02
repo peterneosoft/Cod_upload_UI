@@ -12,7 +12,7 @@
                 <label>Zone <font color="red">*</font></label>
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="zoneLoading" />
-                  <select v-bind:disabled="disableButton" name="zone" id="zone" class="form-control" style="height: 44px;" v-model="zone" v-on:change="getHubData" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('zone') }">
+                  <select v-bind:disabled="disableZone" name="zone" id="zone" class="form-control" style="height: 44px;" v-model="zone" v-on:change="getHubData" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('zone') }">
                     <option value="">--Select--</option>
                     <option v-for="zone_obj in zoneList" v-bind:value="zone_obj.hubzoneid" >{{zone_obj.hubzonename}}</option>
                   </select>
@@ -24,7 +24,7 @@
                 <label>Hub Name <font color="red">*</font></label>
                 <b-input-group left="<i class='fa fa-list'></i>">
                   <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="hubLoading" />
-                  <Multiselect v-bind:disabled="disableButton" :options="hubList" @select="handleSelect" @input="addHubData" name="HubId" id="HubId" v-model="HubId" v-validate="{required: true}" v-bind:class="{'error': errors.has('HubId') }" placeholder="Select Hub" label="HubName" track-by="HubID" :optionHeight="100" :preselect-first="false" v-bind:multiple="multiple()" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                  <Multiselect :options="hubList" @select="handleSelect" @input="addHubData" name="HubId" id="HubId" v-model="HubId" v-validate="{required: true}" v-bind:class="{'error': errors.has('HubId') }" placeholder="Select Hub" label="HubName" track-by="HubID" :optionHeight="100" :preselect-first="false" v-bind:multiple="multiple()" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
                      <template slot="noResult"><p>No Record Found.</p></template>
                      <template slot="selection" slot-scope="{ HubId, search, isOpen }">
                        <span class="multiselect__single" v-if="HubId.length">{{ HubId.length }} options selected</span>
@@ -40,8 +40,9 @@
               </div>
             </div>
             <div class="card-footer">
-              <button class="btn btn-sm btn-primary" v-bind:disabled="disableButton" type="submit"><i class="fa fa-dot-circle-o"></i> Submit</button>
-              <button class="btn btn-sm btn-danger" v-bind:disabled="disableButton" type="reset" @click="resetForm()"><i class="fa fa-ban"></i> Clear</button>
+              <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="subLoading" />
+              <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-dot-circle-o"></i> Submit</button>
+              <button class="btn btn-sm btn-danger" type="reset" @click="resetForm()"><i class="fa fa-ban"></i> Clear</button>
             </div>
           </form>
         </div>
@@ -56,6 +57,7 @@
           <thead>
             <tr class="text-primary">
               <th class="text-center tableheader"><b>#</b></th>
+              <th class="text-center tableheader"><b>Zone</b></th>
               <th class="text-center tableheader"><b>Hub Name</b></th>
               <th class="text-center tableheader"><b>Modified Date</b></th>
               <th class="text-center tableheader"><b>Action</b></th>
@@ -63,11 +65,12 @@
           </thead>
           <tbody>
             <tr v-if="resultCount==0">
-              <td colspan="4" align="center">No record found</td>
+              <td colspan="5" align="center">No record found</td>
             </tr>
-            <tr v-for="(data,index) in listHubSettingsData">
+            <tr v-for="(data,index) in listHubSettingsData" v-if="data.zoneid">
               <td scope="row" class="text-center"><strong>{{index+1}}</strong></td>
-              <td>{{hubName}}</td>
+              <td>{{data.zoneName}}</td>
+              <td>{{data.harr}}</td>
               <td>{{data.lastmodifieddate}}</td>
               <td class="text-center"><i @click.prevent="getHubSettingRowData(data, resultCount), editHubSetting = 'true'" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></td>
             </tr>

@@ -20,7 +20,9 @@ export default {
       pagecount: 0,
       isLoading: false,
       resultCount: 0,
+      settingid:'',
       zone:'',
+      hubzone:'',
       HubId:[],
       count: 0,
       hubList: [],
@@ -34,7 +36,8 @@ export default {
       hubName:'',
       values:'',
       editHubSetting: false,
-      disableButton: true,
+      subLoading: false,
+      disableZone: false,
       zoneLoading: false,
       hubLoading: false
     }
@@ -100,7 +103,6 @@ export default {
       if(this.zone==""){
         return false;
       }
-
       this.input = ({
           zoneid: this.zone
       })
@@ -145,10 +147,6 @@ export default {
         .then(result => {
           if(result.data.code == 200){
             this.listHubSettingsData  = result.data.data;
-            this.hubnamearr           = result.data.data[0].hubnamearr;
-            this.hubName              = result.data.data[0].harr;
-            this.hubarr               = result.data.data[0].hubnamearr;
-            this.hubidname            = result.data.data[0].hubnamearr;
 
             this.isLoading            = false;
             let totalRows             = result.data.count;
@@ -160,9 +158,7 @@ export default {
                 this.pagecount = Math.ceil(totalRows / 10)
             }
           }else{
-            this.disableButton = false;
-            this.resultCount  = 0;
-            this.isLoading = false;
+            this.resultCount  = 0; this.isLoading = false;
           }
         }, error => {
           console.error(error)
@@ -212,15 +208,17 @@ export default {
       this.$validator.reset();
       this.errors.clear();
 
-      this.zone           = "";
+      this.disableZone = true;
+
       this.hubList        = [];
       this.HubId          = [];
 
       this.settingid      = data.settingid;
-      this.hubnamearr     = this.hubidname;
-      this.HubId          = this.hubidname;
-      this.disableButton  = false;
-      this.getZoneData();
+      this.zone           = data.zoneid;
+      this.hubnamearr     = data.hubnamearr;
+      this.hubarr         = data.hubnamearr;
+      this.HubId          = data.hubnamearr;
+      this.getHubData();
     },
 
     //to get pagination
@@ -236,9 +234,11 @@ export default {
           hData.push(val.HubID);
       });
 
-      this.disableButton = false;
+      this.subLoading = true;
 
       this.input = ({
+          settingid: this.settingid,
+          zoneid: this.zone,
           hubid: hData,
           createdby: this.localuserid
       });
@@ -252,16 +252,15 @@ export default {
           }
       })
       .then(response => {
+        this.subLoading = false;
         if (response.data.errorCode == 0) {
-          this.$alertify.success(response.data.msg);
-          this.resetForm(event);
+          this.$alertify.success(response.data.msg); this.resetForm(event);
         } else if (response.data.errorCode == -1) {
           this.$alertify.error(response.data.msg)
         }
       })
       .catch((httpException) => {
-          console.error('exception is:::::::::', httpException)
-          this.$alertify.error('Error Occured');
+          console.error('exception is:::::::::', httpException); this.$alertify.error('Error Occured');
       });
     },
 
@@ -276,11 +275,9 @@ export default {
     },
 
     resetForm() {
-      this.zone = ''; this.HubId = []; this.hubList = [];
-      this.$validator.reset();
-      this.errors.clear();
-      this.editHubSetting = false;
-      this.disableButton = true;
+      this.zone = this.settingid = ''; this.HubId = []; this.hubList = this.listHubSettingsData = [];
+      this.$validator.reset(); this.errors.clear();
+      this.editHubSetting = this.disableZone = false;
       this.GetHubSettingsData();
     },
   }
