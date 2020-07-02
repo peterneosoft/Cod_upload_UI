@@ -234,7 +234,7 @@ export default {
           hData.push(val.HubID);
       });
 
-      this.subLoading = true;
+      this.subLoading = this.isLoading = true;
 
       this.input = ({
           settingid: this.settingid,
@@ -242,7 +242,6 @@ export default {
           hubid: hData,
           createdby: this.localuserid
       });
-      this.isLoading = true;
       axios({
           method: 'POST',
           'url': apiUrl.api_url + 'savehubsettings',
@@ -252,7 +251,7 @@ export default {
           }
       })
       .then(response => {
-        this.subLoading = false;
+        this.subLoading = this.isLoading = false;
         if (response.data.errorCode == 0) {
           this.$alertify.success(response.data.msg); this.resetForm(event);
         } else if (response.data.errorCode == -1) {
