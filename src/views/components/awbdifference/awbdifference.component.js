@@ -307,7 +307,7 @@ export default {
 
       axios({
           method: 'POST',
-          url: apiUrl.api_url + 'gethubsettingsdata',
+          url: apiUrl.api_url + 'gethubsettingids',
           'data': this.input,
           headers: {
             'Authorization': 'Bearer '+this.urltoken
@@ -316,8 +316,8 @@ export default {
         .then(result => {
           this.hubarrlength = 0; this.hubidarr = '';
           if(result.data.code == 200){
-            this.hubarrlength = result.data.data[0].hubid.length;
-            this.hubidarr = result.data.data[0].hubid.join(', ');
+            this.hubarrlength = result.data.data.length;
+            this.hubidarr = result.data.data.join(', ');
           }
           this.hubidLoading  = false;
         }, error => {
