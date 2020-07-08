@@ -68,6 +68,27 @@
     </div>
   </div>
 
+  <div class="col-md-12 mb-2" v-show="searchComponent">
+    <b-card style="height: 350px;">
+      <div slot="header">
+        <i class=" fa fa-bars barcolor"></i> <strong>Zone&nbsp;&nbsp;({{zdate}})</strong>
+      </div>
+      <div class="card-body" style="height: 388px;">
+        <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="zoneLoading" />
+        <form action="" method="post" class="form-horizontal">
+          <div class="form-group row">
+            <div class="col-md-3" v-for="zone_obj in zoneAmtList">
+              <div class="card border-primary">
+                <div class="card-header">{{zone_obj.hubzonename}}</div>
+                <div class="card-body"><i class="fa fa-rupee"></i> {{zone_obj.zoneamount}}</div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </b-card>
+  </div>
+
   <div class="col-md-12 mb-2">
     <b-card>
       <div slot="header">

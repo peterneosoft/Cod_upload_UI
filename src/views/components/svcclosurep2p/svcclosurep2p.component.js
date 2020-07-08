@@ -122,7 +122,9 @@ export default {
       ExmodalShow:false,
       financeclosingamt:0,
       commentModalShow:false,
-      comment:''
+      comment:'',
+      ConfmodalShow:false,
+      hideCM:1
     }
   },
 
@@ -171,7 +173,7 @@ export default {
       return true;
     },
     showModal(Balanc){
-      this.$refs.myModalRef.show(Balanc)
+      this.$refs.myModalRef.show(Balanc);
       this.RemainData = Balanc;
     },
     hideModal() {
@@ -181,11 +183,17 @@ export default {
       this.$refs.myCardModalRef.show(CardAmount)
     },
     hideCardModal(ele) {
+      this.$refs.myCardModalRef.hide();
+      if(ele == 0) this.saveSvcClosure();
+    },
+    showConfModal(){
+      this.$refs.myConfModalRef.show();
+    },
+    hideConfModal(ele) {
+      this.$refs.myConfModalRef.hide();
       if(ele == 0){
-        this.$refs.myCardModalRef.hide()
+        this.hideCM = 0;
         this.saveSvcClosure();
-      }else{
-        this.$refs.myCardModalRef.hide()
       }
     },
     closeStatusRoleModal() {
@@ -195,6 +203,7 @@ export default {
       this.RecExcModalShow = false
       this.ExmodalShow = false
       this.commentModalShow = false
+      this.ConfmodalShow = false
     },
 
     GetShipmentUpdate() {
@@ -599,7 +608,9 @@ export default {
 
         let OpeningBalance = parseFloat(this.closingBalance);
         let CODAmount = parseFloat(Math.round(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)));
-
+        if(this.hideCM==1){
+          this.showConfModal(); return false;
+        }
         if(this.lowdis || this.unmatchedAmt<=0){
           this.disableButton = true; this.subLoading = true;
           this.input = ({
@@ -646,6 +657,7 @@ export default {
               }
           })
           .then((response) => {
+            this.hideCM = 1;
             if (response.data.errorCode == 0) {
               this.$alertify.success(response.data.msg);
               this.disableButton = false; this.subLoading = false;
@@ -655,11 +667,11 @@ export default {
             }
           })
           .catch((httpException) => {
-            this.disableButton = false; this.subLoading = false;
+            this.hideCM = 1; this.disableButton = false; this.subLoading = false;
             this.$alertify.error('Error occured')
           });
         }else{
-          this.$alertify.error('Error occured')
+          this.hideCM = 1; this.$alertify.error('Error occured')
         }
       }
     },

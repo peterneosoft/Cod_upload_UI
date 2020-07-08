@@ -148,7 +148,9 @@ export default {
       ExData:0,
       ExmodalShow:false,
       codArr:[],
-      userRole:''
+      userRole:'',
+      ConfmodalShow:false,
+      hideCM:1
     }
   },
 
@@ -223,6 +225,59 @@ export default {
        this.cardModalShow = false
        this.ReasonModalShow = false
        this.DenomDetailModalShow = false
+       this.ConfmodalShow = false
+    },
+
+    showCardModal(CardAmount){
+      this.$refs.myCardModalRef.show(CardAmount)
+    },
+
+    hideCardModal(ele) {
+      if(ele == 0){
+        this.$refs.myCardModalRef.hide()
+        this.saveSRClosure(event);
+      }else{
+        this.$refs.myCardModalRef.hide()
+      }
+    },
+
+    showReasonAWBNo(ele){
+      this.DisputeArr = [];
+      this.DisputeArr = ele;
+      this.$refs.myReasonModalRef.show();
+    },
+
+    showDenomDetail(eleawb){
+
+      this.DenomDetail = [];
+      this.DenomDetail = eleawb;
+
+      this.$refs.myDenomDetailModalRef.show();
+    },
+
+    showExModal(Balanc){
+       this.$refs.myExModalRef.show(Balanc)
+       this.ExData = Balanc;
+    },
+
+    hideExModal(ele) {
+      if(ele == 0){
+        this.$refs.myExModalRef.hide()
+        this.saveSRClosure(event);
+      }else{
+        this.$refs.myExModalRef.hide()
+      }
+    },
+
+    showConfModal(){
+      this.$refs.myConfModalRef.show();
+    },
+    hideConfModal(ele) {
+      this.$refs.myConfModalRef.hide();
+      if(ele == 0){
+        this.hideCM = 0;
+        this.saveSRClosure();
+      }
     },
 
     saveSRClosure(event){
@@ -236,37 +291,44 @@ export default {
          IntDeposit_Amount = parseFloat(Math.round(IntDeposit_Amount+parseFloat(this.CardAmount)));
        }
 
-       let Balanc = 0;
-       let insertflag= 0;
+       let Balanc = 0; let insertflag= 0;
 
        if((this.CardAmount > 0) && (IntDeposit_Amount > TotalAmt)){
          this.Regionshow = true;
          this.$alertify.error("Deposit amount including sum of Dispute AWB amount should not be greater than total outstanding COD amount, please check.");
+
          let error            = document.getElementById("d_a");
          error.innerHTML      = "Deposit amount including sum of Dispute AWB amount should not be greater than total outstanding COD amount, please check.";
          error.style.display  = "block"; return false;
        }else if((this.CardAmount==0) && (IntDeposit_Amount > TotalAmt)){
 
-         insertflag=1;
-         this.Regionshow = false;
-         statusAmount = "Extra Amount";
-         Balanc = TotalAmt - IntDeposit_Amount ;
+         insertflag=1; this.Regionshow = false; statusAmount = "Extra Amount";
+         Balanc = TotalAmt - IntDeposit_Amount;
        }else if(IntDeposit_Amount < TotalAmt){
 
-         Balanc = TotalAmt - IntDeposit_Amount ;
-         this.showModal(Balanc)
-         this.Regionshow = true
-         statusAmount = "Less Amount"
+         Balanc = TotalAmt - IntDeposit_Amount;
+         this.Regionshow = true; statusAmount = "Less Amount"
 
          if(this.lowdis || Balanc<=0){
-           insertflag=1;
-           this.hideModal()
+           insertflag=1; this.hideModal()
+         }else{
+           this.showModal(Balanc); return false;
          }
        }else{
          insertflag=1;
-         this.Regionshow = false
-         statusAmount = "Equal Amount"
+
+         if(this.CardAmount > 0){
+           statusAmount = "Less Amount";
+         }else{
+           this.Regionshow = false; statusAmount = "Equal Amount";
+           this.DisputeArr = []; this.CardAmount = 0;
+           this.castheft = this.prevpenbal = this.sriss = this.lowdis = this.cariss = this.codimpr = this.selfrec = this.srabsc = this.cassnat = this.paychg = this.codnttim = this.theftstol = this.wrongdel = this.nddiss = this.waliss = this.paypiss = false;
+           this.castheftAWBNo = this.prevpenbalAWBNo = this.srtpsrAmt = this.carissAWBNo = this.codimprAWBNo = this.selfrecAWBNo = this.srabscAWBNo = this.cassnatAWBNo = this.paychgAWBNo = this.codnttimAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.nddissAWBNo = this.walissAWBNo = this.paypissAWBNo = '';
+           this.castheftReason = this.prevpenbalReason = this.srissReason = this.lowdisReason = this.carissReason = this.codimprReason = this.selfrecReason = this.srabscReason = this.cassnatReason = this.paychgReason = this.codnttimReason = this.theftstolReason = this.wrongdelReason = this.nddissReason = this.walissReason = this.paypissReason = '';
+         }
        }
+
+       if(Balanc<-1000){ this.$alertify.error('You have not permit to enter an extra amount more than 1000 Rs.'); return false;}
 
        let NoteCountArr = []; let DenominationIDArr = [];
 
@@ -276,8 +338,12 @@ export default {
            DenominationIDArr.push(parseInt(document.getElementById("moi"+denomi).value));
          });
        }
-
-       if(this.lowdis || insertflag == 1){
+       if(this.hideCM==1){
+         if(statusAmount == "Less Amount") this.Regionshow = true;
+         this.showConfModal(); return false;
+       }
+       console.log('Balanc==',Balanc);
+       if((this.lowdis || insertflag == 1) && Balanc>=-1000){
          this.disableButton = true; this.SRLedgerDetails = true; this.subLoading = true;
          this.input = ({
            srid: this.SR_Name,
@@ -302,36 +368,36 @@ export default {
                headers: {
                    'Authorization': 'Bearer '+this.myStr
                     }
-              })
-              .then((response) => {
-                this.disableButton = false; this.subLoading = false;
-                  if (response.data.code) {
-                    this.srStatus();
-                    this.$alertify.success(response.data.data);
+            })
+            .then((response) => {
+              this.disableButton = false; this.subLoading = false; this.hideCM = 1;
+                if (response.data.code) {
+                  this.srStatus();
+                  this.$alertify.success(response.data.data);
 
-                    if(Balanc > 0){
-                      this.GetSRLedgerDetails();
-                      this.getRightSRLedgerDetails();
-                      window.scrollBy(0, 1000);
-                    }else{
-                      this.RightSRLedger = this.SRLedgerDetails = false;
-                      this.SR_Name = '';
-                    }
-
-                    this.DenominationList.map(data=>{
-                      let countVal = document.getElementById(data.Denomination);
-                      let amountVal = document.getElementById("mo"+data.Denomination);
-                      countVal.value=""
-                      amountVal.value=0
-                    });
-                    this.resetData(event);
+                  if(Balanc > 0){
+                    this.GetSRLedgerDetails();
+                    this.getRightSRLedgerDetails();
+                    window.scrollBy(0, 1000);
+                  }else{
+                    this.RightSRLedger = this.SRLedgerDetails = false;
+                    this.SR_Name = '';
                   }
-              })
-              .catch((httpException) => {
-                this.disableButton = false; this.subLoading = false;
-                console.error('exception is:::::::::', httpException)
-                this.$alertify.error('Error Occured');
-              });
+
+                  this.DenominationList.map(data=>{
+                    let countVal = document.getElementById(data.Denomination);
+                    let amountVal = document.getElementById("mo"+data.Denomination);
+                    countVal.value=""
+                    amountVal.value=0
+                  });
+                  this.resetData(event);
+                }
+            })
+            .catch((httpException) => {
+              this.disableButton = false; this.subLoading = false; this.hideCM = 1;
+              console.error('exception is:::::::::', httpException)
+              this.$alertify.error('Error Occured');
+            });
        }
     },
 
@@ -598,16 +664,26 @@ export default {
           }else{
             if(parseInt(this.Deposit_Amount) > parseInt(this.TotalAmount)){
               this.Regionshow = false;
-
-              this.showExModal(parseInt(parseInt(this.Deposit_Amount) - parseInt(this.TotalAmount)));
-            }else{
+              if(parseInt(parseInt(this.TotalAmount)-parseInt(this.Deposit_Amount))<-1000){
+                this.$alertify.error('You have not permit to enter an extra amount more than 1000 Rs.'); return false;
+              }else{
+                this.showExModal(parseInt(parseInt(this.Deposit_Amount) - parseInt(this.TotalAmount)));
+              }
+            }else if(parseInt(this.Deposit_Amount) < parseInt(this.TotalAmount)){
+              this.Regionshow = true;
               if(this.castheft || this.prevpenbal || this.sriss || this.lowdis || this.cariss || this.codimpr || this.selfrec || this.srabsc || this.cassnat || this.paychg || this.codnttim || this.theftstol || this.wrongdel || this.nddissReason || this.walissReason || this.paypissReason){
                 this.cardawbno(event);
               }else{
-                let error = document.getElementById("d_a"); error.style.display = "None";
-
-                this.saveSRClosure(event)
+                this.saveSRClosure(event);
               }
+            }else{
+              this.Regionshow = false; let error = document.getElementById("d_a"); error.style.display = "None";
+
+              this.DisputeArr = []; this.CardAmount = 0;
+              this.castheft = this.prevpenbal = this.sriss = this.lowdis = this.cariss = this.codimpr = this.selfrec = this.srabsc = this.cassnat = this.paychg = this.codnttim = this.theftstol = this.wrongdel = this.nddiss = this.waliss = this.paypiss = false;
+              this.castheftAWBNo = this.prevpenbalAWBNo = this.srtpsrAmt = this.carissAWBNo = this.codimprAWBNo = this.selfrecAWBNo = this.srabscAWBNo = this.cassnatAWBNo = this.paychgAWBNo = this.codnttimAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.nddissAWBNo = this.walissAWBNo = this.paypissAWBNo = '';
+              this.castheftReason = this.prevpenbalReason = this.srissReason = this.lowdisReason = this.carissReason = this.codimprReason = this.selfrecReason = this.srabscReason = this.cassnatReason = this.paychgReason = this.codnttimReason = this.theftstolReason = this.wrongdelReason = this.nddissReason = this.walissReason = this.paypissReason = '';
+              this.saveSRClosure(event);
             }
           }
         }
@@ -841,47 +917,6 @@ export default {
         this.subLoading = this.disableButton = false;
         this.$alertify.error('Error occured'); return false;
       });
-    },
-
-    showCardModal(CardAmount){
-      this.$refs.myCardModalRef.show(CardAmount)
-    },
-
-    hideCardModal(ele) {
-      if(ele == 0){
-        this.$refs.myCardModalRef.hide()
-        this.saveSRClosure(event);
-      }else{
-        this.$refs.myCardModalRef.hide()
-      }
-    },
-
-    showReasonAWBNo(ele){
-      this.DisputeArr = [];
-      this.DisputeArr = ele;
-      this.$refs.myReasonModalRef.show();
-    },
-
-    showDenomDetail(eleawb){
-
-      this.DenomDetail = [];
-      this.DenomDetail = eleawb;
-
-      this.$refs.myDenomDetailModalRef.show();
-    },
-
-    showExModal(Balanc){
-       this.$refs.myExModalRef.show(Balanc)
-       this.ExData = Balanc;
-    },
-
-    hideExModal(ele) {
-      if(ele == 0){
-        this.$refs.myExModalRef.hide()
-        this.saveSRClosure(event);
-      }else{
-        this.$refs.myExModalRef.hide()
-      }
     },
   }
 }

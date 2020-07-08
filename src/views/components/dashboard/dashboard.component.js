@@ -137,7 +137,9 @@ export default {
             colorByPoint: true,
             data: []
          }]
-       }
+       },
+       zoneLoading:false,
+       zoneAmtList:[]
     }
   },
 
@@ -168,6 +170,7 @@ export default {
     this.getZoneData();
     this.getHubWiseCollectionData();
     //this.getPieShipmentPercent();
+    this.GetSumOfZoneHubAmtData();
 
     var date = new Date();
     ToDate.max = FromDate.max = date.toISOString().split("T")[0];
@@ -199,6 +202,29 @@ export default {
         this.calcModal = false
 
     },
+
+    //to get Hub List According to Zone
+    GetSumOfZoneHubAmtData() {
+      this.input = {}
+      this.zoneLoading = true;
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'getsumofzonehubamt',
+          'data': this.input,
+          headers: {
+            'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+          this.zoneLoading = false;
+          this.zoneAmtList = result.data.data;
+          this.zdate  = result.data.date;
+        }, error => {
+          this.zoneLoading = false;
+          console.error(error)
+        })
+    },
+
     //to get All Hub List
     getZoneData() {
       this.zone = this.state = this.city = ""; this.stateList = [];

@@ -68,7 +68,12 @@ export default {
       RecExcModalShow:false,
       commentModalShow:false,
       comment:'',
-      DepositType: ''
+      DepositType: '',
+      RSCLoading:false,
+      RSCList:[],
+      RSCName:[],
+      SearchRSCIds:[],
+      disableRSC:false
     }
   },
 
@@ -79,7 +84,7 @@ export default {
   created() {
     var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');
-    this.GetSumOfZoneHubAmtData();
+    //this.GetSumOfZoneHubAmtData();
   },
 
   mounted() {
@@ -110,6 +115,23 @@ export default {
 
       if(this.HubId.HubID == 0){ return false; }
       else{ this.SearchHubIds = []; return true; }
+    },
+
+    multipleRSC(){
+      let key = this.RSCName.length-1;
+      if(this.RSCName.length>0 && this.RSCName[key].HubID == 0){
+        this.SearchRSCIds = [];
+        this.RSCName = this.RSCName[key];
+
+        for (let item of this.RSCList) {
+          if (item.HubID != 0) {
+            this.SearchRSCIds.push(item.HubID);
+          }
+        }
+      }
+
+      if(this.RSCName.HubID == 0){ return false; }
+      else{ this.SearchRSCIds = []; return true; }
     },
 
     setid(name, key){
@@ -159,11 +181,24 @@ export default {
         })
     },
 
+    addHubData() {
+      let zData = this.zoneIdArr = this.hubList = this.RSCList = this.HubId = this.RSCName = [];
+      if(this.zone==""){
+        return false;
+      }else{
+        this.getHubData();
+        if(this.zone>0){
+          this.disableRSC=false;
+          this.getRSCData();
+        }else{
+          this.disableRSC=true;
+        }
+      }
+    },
+
     //to get Hub List According to Zone
     getHubData() {
-      if(this.zone=="") return false;
-
-      this.HubId = this.hubList = []; this.hubLoading = true;
+      this.hubLoading = true;
 
       if(this.zone==0){
         axios({
@@ -200,6 +235,30 @@ export default {
       }
     },
 
+    //to get All Zone Wise RSC List
+    getRSCData() {
+      this.RSCLoading = true;
+
+      this.input = ({
+          zoneid: this.zone
+      })
+
+      axios({
+        method: 'POST',
+        url: apiUrl.api_url + 'external/getzonersc',
+        'data': this.input,
+        headers: {
+          'Authorization': 'Bearer '+this.myStr
+        }
+      })
+      .then(result => {
+        this.RSCLoading = false;
+        if(result.data.rsc.code == 200) this.RSCList = [{HubID:'0', HubName:'All RSC', HubCode:'All RSC'}].concat(result.data.rsc.data);
+      }, error => {
+        this.RSCLoading = false; console.error(error)
+      })
+    },
+
     GetReasonList(){
       this.input = ({
         ReasonType:"Finance"
@@ -229,7 +288,8 @@ export default {
         $('span[id^="vri"]').hide();
         $('span[id^="vrl"]').show();
 
-        let hubArr = [];
+        let hubArr = []; let RSCArr = [];
+
         if(this.SearchHubIds.length>0){
           hubArr = this.SearchHubIds;
         }else{
@@ -242,10 +302,29 @@ export default {
           });
         }
 
+        if(this.SearchRSCIds.length>0){
+          RSCArr = this.SearchRSCIds;
+        }else{
+          if($.isArray(this.RSCName) === false){
+            this.RSCName = new Array(this.RSCName);
+          }
+
+          this.RSCName.forEach(function (val) {
+            RSCArr.push(val.HubID);
+          });
+        }
+
+        let hubIdArr = [...new Set([].concat(...hubArr.concat(RSCArr)))];
+
+        if(hubArr.length<=0 && RSCArr.length<=0){
+          document.getElementById("hubrsc").innerHTML="One selection is required either Hub and RSC."; return false;
+        }
+        document.getElementById("hubrsc").innerHTML="";
+
         this.input = ({
             offset: this.pageno,
             limit: 10,
-            hubid: hubArr,
+            hubid: hubIdArr,
             statusid: this.status,
             deposittype: this.DepositType
         })
@@ -301,7 +380,7 @@ export default {
       this.$validator.validateAll().then((result) => {
         if(result){
           this.HubID = this.HubId.HubID;
-          this.StatusVal = event.target[3].selectedOptions[0].attributes.title.nodeValue;
+          this.StatusVal = event.target[4].selectedOptions[0].attributes.title.nodeValue;
           if(this.StatusVal == "Close"){
               this.StatusVal = "Transaction Closed"
           }else{
@@ -517,7 +596,7 @@ export default {
     },
 
     resetForm() {
-      this.zone = this.DepositType = ''; this.HubId = this.hubList = []; this.pageno = this.resultCount = 0; this.listFinanceledgerData = []; this.status = 1;
+      this.zone = this.DepositType = ''; this.HubId = this.hubList = this.RSCList = []; this.RSCName = []; this.pageno = this.resultCount = 0; this.listFinanceledgerData = []; this.status = 1;
       this.$validator.reset();
       this.errors.clear();
     },

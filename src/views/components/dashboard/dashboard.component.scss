@@ -12754,3 +12754,14 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>th:first-child:before {
 .hide{
   display: none !important;
 }
+
+.card .border-primary {
+	border-color: #20a8d8 !important;
+}
+
+.card-header {
+    padding: .75rem 1.25rem;
+    border-bottom-color: #f0f3f5;
+		background-color: #f0f3f5 !important;;
+    height: 40px;
+}
