@@ -194,6 +194,8 @@ export default {
       if(ele == 0){
         this.hideCM = 0;
         this.saveSvcClosure();
+      }else{
+        this.unmatchedAmt = parseInt(parseInt(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))))-parseInt(Math.round(parseFloat(this.Deposit_Amount))));
       }
     },
     closeStatusRoleModal() {
@@ -208,7 +210,7 @@ export default {
 
     GetShipmentUpdate() {
 
-      axios({
+      /* axios({
           method: 'POST',
           'url': apiUrl.api_url + 'svcactualcodamt',
           'data': {
@@ -224,33 +226,35 @@ export default {
         if(result.data.rows.length > 0){
           this.yesterdayCODAmt = parseFloat(Math.round(0));
           this.GetPendingCODAmt();
-        }else{
+        }else{ */
 
-          axios({
-            method: 'POST',
-            url: apiUrl.api_url + 'external/getShipmentUpdate',
-            data: {
-                hubid: this.localhubid,
-                status: 'Delivered'
-            },
-            headers: {
-              'Authorization': 'Bearer '+this.myStr
-            }
-          }).then(result => {
-            var data = []; let yDayCODAmt = 0;
-            if(result.data.code==200){
-              this.yesterdayCODAmt = (result.data.shipmentupdate) ? parseFloat(Math.round(result.data.shipmentupdate)) : 0;
-            }
-            this.GetPendingCODAmt();
+      this.penAmtLoading = true; this.yesterdayCODAmt = 0;
 
-          }, error => {
-            console.error(error)
-          })
+      axios({
+        method: 'POST',
+        url: apiUrl.api_url + 'external/getShipmentUpdate',
+        data: {
+            hubid: this.localhubid,
+            status: 'Delivered'
+        },
+        headers: {
+          'Authorization': 'Bearer '+this.myStr
         }
+      }).then(result => {
+        var data = []; let yDayCODAmt = 0;
+        if(result.data.code==200){
+          this.yesterdayCODAmt = (result.data.shipmentupdate) ? parseFloat(Math.round(result.data.shipmentupdate)) : 0;
+        }
+        this.GetPendingCODAmt();
+
+      }, error => {
+        this.penAmtLoading = false; console.error(error);
+      })
+        /* }
       }, error => {
           this.penAmtLoading = false;
           console.error(error);
-      })
+      }) */
     },
 
     GetPendingCODAmt() {
@@ -276,16 +280,13 @@ export default {
           if(result.data.rows[0].totalamtdeposit > result.data.rows[0].p2pamt){
             this.p2pAmount = 0;
           }
-          this.penAmtLoading = false;
         }else{
           this.pendingCODAmt = 0;
-          this.penAmtLoading = false;
         }
         this.TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))));
-        this.disableButton = false;
+        this.penAmtLoading = false; this.disableButton = false;
       }, error => {
-        this.penAmtLoading = false;
-        console.error(error);
+        this.penAmtLoading = false; console.error(error);
       })
     },
 
@@ -580,7 +581,7 @@ export default {
             }else{
 
               if((this.CardAmount>0) && !this.lowdis && (this.unmatchedAmt>0)){ //65
-                this.$alertify.error("Total outstanding COD amount and deposit amount including other charges or sum of Dispute AWB amount is should be same, please check.");
+                this.$alertify.error("Total outstanding COD amount and deposit amount including sum of dispute amount is should be same, please check.");
                 return false;
               }else{
                 this.reasonFileList=[];
@@ -588,12 +589,14 @@ export default {
               }
             }
           }else if((this.CardAmount > 0) && (DepositReasonExcepAmount > TolatCollection)){
-            this.unmatchedAmt = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(this.Deposit_Amount)));
-            this.$alertify.error("Deposit amount including other charges or sum of Dispute AWB amount should not be greater than total outstanding COD amount, please check.");
+            if(parseInt(DepositReasonExcepAmount - TolatCollection) > 5){
+              this.unmatchedAmt = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(this.Deposit_Amount)));
+              this.$alertify.error("Deposit amount including sum of dispute amount should not be greater than total outstanding COD amount and extra amount should not more than 5 Rs.");
 
-            let error            = document.getElementById("d_a");
-            error.innerHTML      = "Deposit amount including other charges or sum of Dispute AWB amount should not be greater than total outstanding COD amount, please check.";
-            error.style.display  = "block"; return false;
+              let error            = document.getElementById("d_a");
+              error.innerHTML      = "Deposit amount including sum of dispute amount should not be greater than total outstanding COD amount and extra amount should not more than 5 Rs.";
+              error.style.display  = "block"; return false;
+            }
           }
         }
         ClosingBalance = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositAmount)));
@@ -830,15 +833,14 @@ export default {
               error.innerHTML = "Total denomination & deposit amount should be same, please check.";
               error.style.display = "block";
           }else{
+            this.unmatchedAmt = parseInt(parseInt(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))))-parseInt(Math.round(parseFloat(this.Deposit_Amount))));
 
             //78,152,186
             if(parseInt(Math.round(parseFloat(this.Deposit_Amount))) > parseInt(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))))){
               this.unmatchedAmt = 0;
               this.showExModal(parseInt(parseInt(Math.round(parseFloat(this.Deposit_Amount))) - parseInt(Math.round(parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount)))));
             }else{
-
               if(this.amoimp || this.cariss || this.paychg || this.cassnat || this.casstol || this.theftstol || this.vendrec || this.wrongdel || this.srabsc || this.srtpsr || this.lowdis || this.nddissReason || this.walissReason || this.paypissReason){
-
                 this.cardawbno(event);
               }else{
                 this.saveSvcClosure();

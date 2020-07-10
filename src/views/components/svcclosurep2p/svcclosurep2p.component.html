@@ -507,7 +507,10 @@
               <h5 style="font-size:1rem; color:red;">Are you sure to submit the SVC closure.</h5>
             </div>
             <div class="modal-footerfrm">
-            <center><button type="button" @click="hideConfModal('0')" class="btn btn-success" style="background-color: #20a8d8;">Ok</button></center>
+            <center>
+              <button type="button" @click="hideConfModal('0')" class="btn btn-success" style="background-color: #20a8d8;">Ok</button>
+              <button type="button" @click = "hideConfModal('1')" class="btn btn-danger" style="background-color: #f86c6b;">Cancel</button>
+            </center>
             </div>
           </div>
         </div>
@@ -751,11 +754,12 @@
                 <th class="text-center tableheader"><b>Status</b></th>
                 <th class="text-center tableheader"><b>Finance Reason</b></th>
                 <th class="text-center tableheader"><b>View Receipt</b></th>
+                <th class="text-center tableheader"><b>Created By</b></th>
               </tr>
             </thead>
             <tbody>
               <tr v-if="resultCount==0">
-                <td colspan="15" align="center">No record found</td>
+                <td colspan="16" align="center">No record found</td>
               </tr>
               <tr v-for="(data,index) in listSVCledgerData" v-bind:class="`${(data.createdby == 'schedular@xpressbees.com') || (data.deposittype == '') ? 'scheduler' : '' || data.reasonid == 65 ? 'other' : '' || ([84,124,187].includes(data.financereasonid)) ? 'mismatched' : ''}`">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
@@ -797,6 +801,7 @@
                     <a v-bind:title='`${file.name}`' v-for="file in data.reasonfiles" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
                   </span>
                 </td>
+                <td class="text-center">{{data.createdby}}</td>
               </tr>
             </tbody>
           </table><br>
