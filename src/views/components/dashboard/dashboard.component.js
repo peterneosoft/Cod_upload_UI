@@ -139,7 +139,8 @@ export default {
          }]
        },
        zoneLoading:false,
-       zoneAmtList:[]
+       zoneAmtList:[],
+       zdate:''
     }
   },
 

@@ -210,51 +210,49 @@ export default {
 
     GetShipmentUpdate() {
 
-      /* axios({
-          method: 'POST',
-          'url': apiUrl.api_url + 'svcactualcodamt',
-          'data': {
-              hubid: this.localhubid,
-              status: 'Delivered'
-          },
-          headers: {
-              'Authorization': 'Bearer '+this.myStr
-          }
+      axios({
+        method: 'POST',
+        'url': apiUrl.api_url + 'svcactualcodamt',
+        'data': {
+            hubid: this.localhubid,
+            status: 'Delivered'
+        },
+        headers: {
+            'Authorization': 'Bearer '+this.myStr
+        }
       })
       .then(result => {
         this.penAmtLoading = true;
         if(result.data.rows.length > 0){
           this.yesterdayCODAmt = parseFloat(Math.round(0));
           this.GetPendingCODAmt();
-        }else{ */
+        }else{
 
-      this.penAmtLoading = true; this.yesterdayCODAmt = 0;
+          axios({
+            method: 'POST',
+            url: apiUrl.api_url + 'external/getShipmentUpdate',
+            data: {
+                hubid: this.localhubid,
+                status: 'Delivered'
+            },
+            headers: {
+              'Authorization': 'Bearer '+this.myStr
+            }
+          }).then(result => {
+            var data = []; let yDayCODAmt = 0;
+            if(result.data.code==200){
+              this.yesterdayCODAmt = (result.data.shipmentupdate) ? parseFloat(Math.round(result.data.shipmentupdate)) : 0;
+            }
+            this.GetPendingCODAmt();
 
-      axios({
-        method: 'POST',
-        url: apiUrl.api_url + 'external/getShipmentUpdate',
-        data: {
-            hubid: this.localhubid,
-            status: 'Delivered'
-        },
-        headers: {
-          'Authorization': 'Bearer '+this.myStr
+          }, error => {
+            this.penAmtLoading = false; console.error(error);
+          })
         }
-      }).then(result => {
-        var data = []; let yDayCODAmt = 0;
-        if(result.data.code==200){
-          this.yesterdayCODAmt = (result.data.shipmentupdate) ? parseFloat(Math.round(result.data.shipmentupdate)) : 0;
-        }
-        this.GetPendingCODAmt();
-
-      }, error => {
-        this.penAmtLoading = false; console.error(error);
-      })
-        /* }
       }, error => {
           this.penAmtLoading = false;
           console.error(error);
-      }) */
+      })
     },
 
     GetPendingCODAmt() {
