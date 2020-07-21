@@ -708,7 +708,7 @@
         <div role="document">
           <div class="modal-content">
             <div class="modal-headerfrm">
-              <h5 class="modal-title">Finance Comment</h5>
+              <h5 class="modal-title">{{cType}}</h5>
               <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
                 <span aria-hidden="true" style="color: white;">×</span>
               </button>
@@ -755,11 +755,12 @@
                 <th class="text-center tableheader"><b>Finance Reason</b></th>
                 <th class="text-center tableheader"><b>View Receipt</b></th>
                 <th class="text-center tableheader"><b>Created By</b></th>
+                <th class="text-center tableheader"><b>Transaction Id</b></th>
               </tr>
             </thead>
             <tbody>
               <tr v-if="resultCount==0">
-                <td colspan="16" align="center">No record found</td>
+                <td colspan="17" align="center">No record found</td>
               </tr>
               <tr v-for="(data,index) in listSVCledgerData" v-bind:class="`${(data.createdby == 'schedular@xpressbees.com') || (data.deposittype == '') ? 'scheduler' : '' || data.reasonid == 65 ? 'other' : '' || ([84,124,187].includes(data.financereasonid)) ? 'mismatched' : ''}`">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
@@ -787,7 +788,7 @@
                 <td class="text-center" v-if="data.statusid==1">Open</td>
                 <td class="text-center" v-if="data.statusid==6">Close</td>
                 <td class="text-center">
-                  <span @click="showComment(data.comment)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.comment">{{data.financereason}}</span>
+                  <span @click="showComment(data.comment, 'c')" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.comment">{{data.financereason}}</span>
                   <span v-show="(['',null].includes(data.comment))">{{data.financereason}}</span>
                 </td>
                 <td class="text-center">
@@ -802,6 +803,10 @@
                   </span>
                 </td>
                 <td class="text-center">{{data.createdby}}</td>
+                <td class="text-center">
+                  <span @click="showComment(data.transactionid, 't')" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.transactionid && data.transactionid!=0">view</span>
+                  <span v-show="(['',null,0].includes(data.transactionid))"></span>
+                </td>
               </tr>
             </tbody>
           </table><br>

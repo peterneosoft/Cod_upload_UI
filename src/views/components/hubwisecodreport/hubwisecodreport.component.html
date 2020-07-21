@@ -186,7 +186,7 @@
             <div role="document">
               <div class="modal-content">
                 <div class="modal-headerfrm">
-                  <h5 class="modal-title">Finance Comment</h5>
+                  <h5 class="modal-title">{{cType}}</h5>
                   <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
                     <span aria-hidden="true" style="color: white;">×</span>
                   </button>
@@ -245,11 +245,12 @@
                     <!-- <th class="text-center tableheader"><b>Self Debit/ Recovery Amount <br>( <i class="fa fa-rupee"></i> )</b></th> -->
                     <th class="text-center tableheader"><b>Status</b></th>
                     <th class="text-center tableheader"><b>Closed by</b></th>
+                    <th class="text-center tableheader"><b>Transaction Id</b></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td colspan="23" align="center">No record found</td>
+                    <td colspan="24" align="center">No record found</td>
                   </tr>
                   <tr v-for="(CODLedger_List,index) in CODLedgerReports" v-bind:class="`${(CODLedger_List.createdby == 'schedular@xpressbees.com') || (CODLedger_List.deposittype) == '' ? 'scheduler' : '' || CODLedger_List.reasonid == 65 ? 'other' : '' || ([84,124,187].includes(CODLedger_List.financereasonid)) ? 'mismatched' : ''}`">
                     <td class="text-center">{{pageno+index+1}}</td>
@@ -282,7 +283,7 @@
                     <td class="text-center">{{CODLedger_List.balanceLogic}}</td>
                     <td class="text-center">{{CODLedger_List.financeconfirmdate}}</td>
                     <td class="text-center">
-                      <span @click="showComment(CODLedger_List.comment)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="CODLedger_List.comment">{{CODLedger_List.financereason}}</span>
+                      <span @click="showComment(CODLedger_List.comment, 'c')" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="CODLedger_List.comment">{{CODLedger_List.financereason}}</span>
                       <span v-show="(['',null].includes(CODLedger_List.comment))">{{CODLedger_List.financereason}}</span>
                     </td>
                     <!-- <td class="text-center">
@@ -291,6 +292,10 @@
                     </td> -->
                     <td class="text-center">{{CODLedger_List.StatusVal}}</td>
                     <td class="text-center">{{CODLedger_List.lastmodifiedby}}</td>
+                    <td class="text-center">
+                      <span @click="showComment(CODLedger_List.transactionid, 't')" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="CODLedger_List.transactionid && CODLedger_List.transactionid!=0">view</span>
+                      <span v-show="(['',null,0].includes(CODLedger_List.transactionid))">{{CODLedger_List.transactionid}}</span>
+                    </td>
                   </tr>
                 </tbody>
 

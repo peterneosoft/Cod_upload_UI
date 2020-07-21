@@ -68,6 +68,7 @@ export default {
       RecExcModalShow:false,
       commentModalShow:false,
       comment:'',
+      cType:'',
       DepositType: '',
       RSCLoading:false,
       RSCList:[],
@@ -662,9 +663,9 @@ export default {
       this.$refs.myRecExcModalRef.show();
     },
 
-    showComment(ele){
-      this.comment = [];
-      this.comment = ele;
+    showComment(ele, type){
+      this.comment = []; this.cType = ''; this.comment = ele;
+      if(type=='c') this.cType = 'Finance Comment'; else this.cType = 'Transaction Id';
       this.$refs.myCommentModalRef.show();
     },
   }

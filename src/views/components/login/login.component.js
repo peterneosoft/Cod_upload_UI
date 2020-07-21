@@ -95,35 +95,33 @@ export default {
         window.localStorage.setItem('logoutTime', '');
 
         if(response.data.token && response.data.token!=''){
-          if(response.data.urlDetails && response.data.urlDetails.length === 2 && response.data.urlDetails[1].name.replace(/ /g,'').toLowerCase() == 'srclosure'){
-            window.localStorage.setItem('accessrole', 'executive-sr');
-          }
 
           let permissionEncrypt = CryptoJS.AES.encrypt(JSON.stringify(response.data.urlDetails), "Key");
-          let usersEncrupt = CryptoJS.AES.encrypt(JSON.stringify(response.data.userinfo), "Key");
+          let usersEncrupt      = CryptoJS.AES.encrypt(JSON.stringify(response.data.userinfo), "Key");
+          let hubEncrypt        = CryptoJS.AES.encrypt(JSON.stringify(response.data.hubData), "Key");
+
           window.localStorage.setItem('accesspermissiondata', permissionEncrypt);
           window.localStorage.setItem('accessuserdata', usersEncrupt);
           window.localStorage.setItem('isLoggedIn',true);
           window.localStorage.setItem('accessuserToken', response.data.token);
           window.localStorage.setItem('logoutTime', new Date().setHours(new Date().getHours() + 8));
-          permissionEncrypt = window.localStorage.getItem('accesspermissiondata')
-          let permissiondatabytes = CryptoJS.AES.decrypt(permissionEncrypt.toString(), 'Key');
+          window.localStorage.setItem('accesshubdata', hubEncrypt);
+          window.localStorage.setItem('accessrole', response.data.userinfo.rolename);
+
+          permissionEncrypt           = window.localStorage.getItem('accesspermissiondata')
+          let permissiondatabytes     = CryptoJS.AES.decrypt(permissionEncrypt.toString(), 'Key');
           let permissiondataplaintext = permissiondatabytes.toString(CryptoJS.enc.Utf8);
-          let permissiondata = JSON.parse(permissiondataplaintext);
+          let permissiondata          = JSON.parse(permissiondataplaintext);
 
           if(response.data.code==200){
-              this.isLoading = false;
-              this.$router.push(permissiondata[0].url); location.reload(true)
+            this.$router.push(permissiondata[0].url); location.reload(true)
           }else{
-            this.isLoading = false; this.$alertify.error(response.data.message);
+            this.$alertify.error(response.data.message);
           }
-
-          let hubEncrypt = CryptoJS.AES.encrypt(JSON.stringify(response.data.hubData), "Key");
-          window.localStorage.setItem('accesshubdata', hubEncrypt);
         }else{
-          this.isLoading = false; this.$alertify.error(response.data.message);
+          this.$alertify.error(response.data.message);
         }
-
+        this.isLoading = false;
       })
       .catch((httpException) => {
         this.isLoading = false; this.$alertify.error("Logging Failed"); console.error('exception is:::::::::', httpException)

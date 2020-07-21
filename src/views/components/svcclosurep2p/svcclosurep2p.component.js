@@ -123,6 +123,7 @@ export default {
       financeclosingamt:0,
       commentModalShow:false,
       comment:'',
+      cType:'',
       ConfmodalShow:false,
       hideCM:1
     }
@@ -1024,9 +1025,9 @@ export default {
       }
     },
 
-    showComment(ele){
-      this.comment = [];
-      this.comment = ele;
+    showComment(ele, type){
+      this.comment = []; this.cType = ''; this.comment = ele;
+      if(type=='c') this.cType = 'Finance Comment'; else this.cType = 'Transaction Id';
       this.$refs.myCommentModalRef.show();
     },
   }
