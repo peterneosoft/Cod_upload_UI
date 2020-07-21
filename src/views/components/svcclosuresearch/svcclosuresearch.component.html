@@ -143,7 +143,7 @@
         <div role="document">
           <div class="modal-content">
             <div class="modal-headerfrm">
-              <h5 class="modal-title">Finance Comment</h5>
+              <h5 class="modal-title">{{cType}}</h5>
               <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
                 <span aria-hidden="true" style="color: white;">×</span>
               </button>
@@ -181,11 +181,12 @@
               <th class="text-center tableheader"><b>Bank Name</b></th>
               <th class="text-center tableheader"><b>View Receipt</b></th>
               <th class="text-center tableheader"><b>Created By</b></th>
+              <th class="text-center tableheader"><b>Transaction Id</b></th>
             </tr>
           </thead>
           <tbody>
             <tr v-if="resultCount==0">
-              <td colspan="17" align="center">No record found</td>
+              <td colspan="18" align="center">No record found</td>
             </tr>
             <tr v-for="(data,index) in listSearchSVCledgerData">
               <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
@@ -211,7 +212,7 @@
               <td class="text-center">{{data.closingbalance}}</td>
               <td class="text-center">{{data.status}}</td>
               <td class="text-center">
-                <span @click="showComment(data.comment)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.comment">{{data.finreason}}</span>
+                <span @click="showComment(data.comment, 'c')" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.comment">{{data.finreason}}</span>
                 <span v-show="(['',null].includes(data.comment))">{{data.finreason}}</span>
               </td>
               <td class="text-center">{{data.deposittype}}</td>
@@ -228,6 +229,10 @@
                 </span>
               </td>
               <td class="text-center">{{data.createdby}}</td>
+              <td class="text-center">
+                <span @click="showComment(data.transactionid, 't')" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.transactionid && data.transactionid!=0">view</span>
+                <span v-show="(['',null,0].includes(data.transactionid))"></span>
+              </td>
             </tr>
           </tbody>
         </table><br>

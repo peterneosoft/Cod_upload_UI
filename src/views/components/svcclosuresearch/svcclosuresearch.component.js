@@ -29,7 +29,8 @@ export default {
       ReasonModalShow:false,
       RecExcModalShow:false,
       commentModalShow:false,
-      comment:''
+      comment:'',
+      cType:''
     }
   },
 
@@ -191,9 +192,9 @@ export default {
       this.$refs.myRecExcModalRef.show();
     },
 
-    showComment(ele){
-      this.comment = [];
-      this.comment = ele;
+    showComment(ele, type){
+      this.comment = []; this.cType = ''; this.comment = ele;
+      if(type=='c') this.cType = 'Finance Comment'; else this.cType = 'Transaction Id';
       this.$refs.myCommentModalRef.show();
     },
   }
