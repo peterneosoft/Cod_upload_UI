@@ -125,7 +125,10 @@ export default {
       comment:'',
       cType:'',
       ConfmodalShow:false,
-      hideCM:1
+      ResetmodalShow:false,
+      reserdata:[],
+      hideCM:1,
+      role:''
     }
   },
 
@@ -136,6 +139,7 @@ export default {
 
   },
   async mounted() {
+    this.role             = window.localStorage.getItem('accessrole').toLowerCase();
 
     var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
     var bytes             = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
@@ -199,6 +203,16 @@ export default {
         this.unmatchedAmt = parseInt(parseInt(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))))-parseInt(Math.round(parseFloat(this.Deposit_Amount))));
       }
     },
+    showResetModal(data){
+      this.reserdata = []; this.reserdata = data;
+      this.$refs.myResetModalRef.show();
+    },
+    hideResetModal(ele) {
+      this.$refs.myResetModalRef.hide();
+      if(ele == 0){
+        this.resetSVCledger(this.reserdata);
+      }
+    },
     closeStatusRoleModal() {
       this.modalShow = false
       this.cardModalShow = false
@@ -207,6 +221,7 @@ export default {
       this.ExmodalShow = false
       this.commentModalShow = false
       this.ConfmodalShow = false
+      this.ResetmodalShow = false
     },
 
     GetShipmentUpdate() {
@@ -1030,5 +1045,59 @@ export default {
       if(type=='c') this.cType = 'Finance Comment'; else this.cType = 'Transaction Id';
       this.$refs.myCommentModalRef.show();
     },
+
+    resetSVCledger(data){
+      this.input = ({
+        actualrecamt: data.actualrecamt,
+        awbno: data.awbno,
+        awbnocount: data.awbnocount,
+        bankdeposit: data.bankdeposit,
+        bankdepositdate: data.bankdepositdate,
+        bankid: data.bankid,
+        bankname: data.bankname,
+        batchid: data.batchid,
+        cardawbno: data.cardawbno,
+        cardawbnocount: data.cardawbnocount,
+        cardissueamt: data.cardissueamt,
+        closingbalance: data.closingbalance,
+        codamount: data.codamount,
+        comment: data.comment,
+        createdby: this.localuserid,
+        deliverydate: data.deliverydate,
+        deposittype: data.deposittype,
+        deposittypeid: data.deposittypeid,
+        exceptionamt: data.exceptionamt,
+        files: data.files,
+        financereasonid: data.financereasonid,
+        openingbalance: data.openingbalance,
+        othercharges: data.othercharges,
+        reasonfiles: data.reasonfiles,
+        reasonid: data.reasonid,
+        recoveryawb: data.recoveryawb,
+        recoveryawbcount: data.recoveryawbcount,
+        statusid: data.statusid,
+        svcledgerid: data.svcledgerid,
+        transactionid: data.transactionid
+      });
+
+      axios({
+        method: 'POST',
+        'url': apiUrl.api_url + 'deleteSVCLedgerEntry',
+        'data': this.input,
+        headers: {
+          'Authorization': 'Bearer '+this.myStr
+        }
+      })
+      .then(response => {
+        if (response.data.errorCode == 0) {
+          this.$alertify.success(response.data.msg); this.resetForm();
+        } else if (response.data.errorCode == -1) {
+          this.$alertify.error(response.data.msg)
+        }
+      })
+      .catch((httpException) => {
+          console.error('exception is:::::::::', httpException); this.$alertify.error('Error Occured');
+      });
+    }
   }
 }
