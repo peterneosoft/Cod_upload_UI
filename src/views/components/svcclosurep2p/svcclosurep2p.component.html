@@ -832,7 +832,7 @@
                 </td>
                 <td class="text-center"> <!-- && data.formatdeldate >= editdate -->
                   <!-- <i v-if="role=='developer' && data.statusid != 6" @click="editFinanceledger(data, resultCount), form.editfin[data.svcledgerid] = 'false'" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i> -->
-                  <i v-if="role=='developer'" @click.prevent="showResetModal(data)" class="fa fa-trash text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
+                  <i v-if="role=='admin'" @click.prevent="showResetModal(data)" class="fa fa-trash text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
                 </td>
               </tr>
             </tbody>
