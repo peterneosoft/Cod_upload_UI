@@ -1049,36 +1049,15 @@ export default {
 
     resetSVCledger(data){
       this.input = ({
-        actualrecamt: data.actualrecamt,
-        awbno: data.awbno,
-        awbnocount: data.awbnocount,
-        bankdeposit: data.bankdeposit,
-        bankdepositdate: data.bankdepositdate,
-        bankid: data.bankid,
-        bankname: data.bankname,
-        batchid: data.batchid,
-        cardawbno: data.cardawbno,
-        cardawbnocount: data.cardawbnocount,
-        cardissueamt: data.cardissueamt,
-        closingbalance: data.closingbalance,
-        codamount: data.codamount,
-        comment: data.comment,
-        createdby: this.localuserid,
-        deliverydate: data.deliverydate,
-        deposittype: data.deposittype,
-        deposittypeid: data.deposittypeid,
-        exceptionamt: data.exceptionamt,
-        files: data.files,
-        financereasonid: data.financereasonid,
-        openingbalance: data.openingbalance,
-        othercharges: data.othercharges,
-        reasonfiles: data.reasonfiles,
-        reasonid: data.reasonid,
-        recoveryawb: data.recoveryawb,
-        recoveryawbcount: data.recoveryawbcount,
-        statusid: data.statusid,
         svcledgerid: data.svcledgerid,
-        transactionid: data.transactionid
+        hubid: this.localhubid,
+        openingbalance: data.openingbalance,
+        codamount: data.codamount,
+        bankdeposit: data.bankdeposit,
+        statusid: data.statusid,
+        financereasonid: data.financereasonid,
+        createdby: data.createdby,
+        username: this.localuserid,
       });
 
       axios({
@@ -1090,9 +1069,9 @@ export default {
         }
       })
       .then(response => {
-        if (response.data.errorCode == 0) {
+        if (response.data.code == 200) {
           this.$alertify.success(response.data.msg); this.resetForm();
-        } else if (response.data.errorCode == -1) {
+        } else {
           this.$alertify.error(response.data.msg)
         }
       })
