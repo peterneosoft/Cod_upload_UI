@@ -126,7 +126,8 @@ export default {
       cType:'',
       ConfmodalShow:false,
       ResetmodalShow:false,
-      reserdata:[],
+      resetdata:[],
+      resetDD:[],
       hideCM:1,
       role:''
     }
@@ -204,13 +205,13 @@ export default {
       }
     },
     showResetModal(data){
-      this.reserdata = []; this.reserdata = data;
+      this.resetdata = []; this.resetdata = data; this.resetDD = ''; this.resetDD = data.deliverydate;
       this.$refs.myResetModalRef.show();
     },
     hideResetModal(ele) {
       this.$refs.myResetModalRef.hide();
       if(ele == 0){
-        this.resetSVCledger(this.reserdata);
+        this.resetSVCledger(this.resetdata);
       }
     },
     closeStatusRoleModal() {
