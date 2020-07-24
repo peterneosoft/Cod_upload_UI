@@ -3,16 +3,33 @@
     <div class="col-md-12 mb-2">
         <div class="card">
           <div class="card-header filter_main">
-            <i class=" fa fa-filter filter"></i> COD Outstanding Report
+            <i class=" fa fa-filter filter"></i> COD Outstanding / Summary Report
           </div>
           <div class="card-body">
             <form  v-on:submit.prevent="onSubmit">
+              <b-form-fieldset>
+                <b-form-radio name="searchview" id="searchview" @input="getZoneData" :plain="true" :options="options" v-model="selected"></b-form-radio>
+                <span id="opt" class="text-danger"></span>
+                <hr style="margin-top: 0rem; margin-bottom: 0rem;">
+              </b-form-fieldset>
+
               <div class="form-group row">
-                <div class="col-md-4">
+                <div class="col-md-4" v-if="selected=='outstanding'">
                   <label>Zone <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="zoneLoading" />
                     <Multiselect :options="zoneList" name="zone" id="zone" v-model="zone" v-bind:multiple="multiple()" @input="addHubData" v-validate="{required: true}" v-bind:class="{'error': errors.has('zone') }" placeholder="Select Zone" label="hubzonename" track-by="hubzoneid" :optionHeight="100" :preselect-first="false" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                       <template slot="noResult"><p>No Record Found.</p></template>
+                    </Multiselect>
+                  </b-input-group>
+                  <span v-show="errors.has('zone')" class="text-danger">Zone is required.</span>
+                </div>
+
+                <div class="col-md-4" v-if="selected=='summary'">
+                  <label>Zone <font color="red">*</font></label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="zoneLoading" />
+                    <Multiselect :options="zoneList" name="zone" id="zone" v-model="zone" @input="addHubData" v-validate="{required: true}" v-bind:class="{'error': errors.has('zone') }" placeholder="Select Zone" label="hubzonename" track-by="hubzoneid" :optionHeight="100" :preselect-first="false" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
                        <template slot="noResult"><p>No Record Found.</p></template>
                     </Multiselect>
                   </b-input-group>
@@ -42,12 +59,13 @@
 
               <div class="form-group row">
                 <div class="col-md-3">
-                  <label>Bank Credit Date <font color="red">*</font></label>
+                  <label v-if="selected=='outstanding'">Bank Credit Date <font color="red">*</font></label>
+                  <label v-if="selected=='summary'">Delivery Date <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
                     <b-form-input id="deliverydate" type="date" name="deliverydate" v-validate="{required: true}"
                     v-model="deliverydate" v-bind:class="{'form-control': true, 'error': errors.has('deliverydate') }"></b-form-input>
                   </b-input-group>
-                  <span v-show="errors.has('deliverydate')" class="text-danger">Bank credit date is required. </span>
+                  <span v-show="errors.has('deliverydate')" class="text-danger">Date is required. </span>
                 </div>
               </div>
               <div class="card-footer">
@@ -58,7 +76,7 @@
           </div>
         </div>
 
-        <div class="row">
+        <div class="row" v-if="selected=='outstanding'">
           <div class="col-12">
             <div class="card-headerfrm" style="margin-bottom: 15px;">
               <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result
@@ -78,7 +96,6 @@
                     <th class="text-center tableheader"><b>Hub/SVC Name</b></th>
                     <th class="text-center tableheader"><b>RSC Name</b></th>
                     <th class="text-center tableheader"><b>Bank Credit Date</b></th>
-                    <!-- <th class="text-center tableheader"><b>Yesterday COD Amount ( <i class="fa fa-rupee"></i> )</b></th> -->
                     <th class="text-center tableheader"><b>SVC Outstanding Amount ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Finance Outstanding Amount ( <i class="fa fa-rupee"></i> )</b></th>
                   </tr>
@@ -93,7 +110,6 @@
                     <td class="text-center">{{CODOutstanding.hubname}}</td>
                     <td class="text-center">{{CODOutstanding.rscowner}}</td>
                     <td class="text-center">{{CODOutstanding.deliverydate}}</td>
-                    <!-- <td class="text-center">{{CODOutstanding.yestCOD}}</td> -->
                     <td class="text-center">{{CODOutstanding.svcoutstanding}}</td>
                     <td class="text-center">{{CODOutstanding.financeoutstanding}}</td>
                   </tr>
@@ -104,6 +120,49 @@
             </div>
          </div>
        </div>
+
+       <div class="row" v-if="selected=='summary'">
+         <div class="col-12">
+           <div class="card-headerfrm" style="margin-bottom: 15px;">
+             <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result
+               <span v-show="exportf" style="margin-left: 85%; cursor: pointer;" @click="exportreport()">
+                 <button class="btn btn-sm btn-success" type="button">
+                   <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="excelLoading" />
+                   <i class="fa fa-download"></i> Export
+                 </button>
+               </span>
+             </h4>
+             <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+             <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+               <thead>
+                 <tr class="text-primary">
+                   <th class="text-center tableheader"><b>#</b></th>
+                   <th class="text-center tableheader"><b>Zone</b></th>
+                   <th class="text-center tableheader"><b>Hub/SVC Name</b></th>
+                   <th class="text-center tableheader"><b>RSC Name</b></th>
+                   <th class="text-center tableheader"><b>Delivery Date</b></th>
+                   <th class="text-center tableheader"><b>COD Receivable ( <i class="fa fa-rupee"></i> )</b></th>
+                 </tr>
+               </thead>
+               <tbody>
+                 <tr v-if="resultCount==0">
+                   <td colspan="6" align="center">No record found</td>
+                 </tr>
+                 <tr v-for="(CODOutstanding,index) in CODOutstandingReport">
+                   <td class="text-center">{{pageno+index+1}}</td>
+                   <td class="text-center">{{CODOutstanding.zonename}}</td>
+                   <td class="text-center">{{CODOutstanding.hubname}}</td>
+                   <td class="text-center">{{CODOutstanding.rscowner}}</td>
+                   <td class="text-center">{{CODOutstanding.deliverydate}}</td>
+                   <td class="text-center">{{CODOutstanding.yestCOD}}</td>
+                 </tr>
+               </tbody>
+             </table><br>
+             <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+             </paginate>
+           </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>

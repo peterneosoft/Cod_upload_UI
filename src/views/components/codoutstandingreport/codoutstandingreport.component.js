@@ -41,8 +41,14 @@ export default {
       SearchHubIds:[],
       SearchRSCIds:[],
       reportlink:'',
+      SearchZoneIds:[],
       deliverydate:'',
-      SearchZoneIds:[]
+      searchview:'',
+      selected: 'outstanding',
+      options: [
+        { text: 'COD Outstanding', value: 'outstanding' },
+        { text: 'COD Summary', value: 'summary' }
+      ]
     }
   },
 
@@ -139,16 +145,23 @@ export default {
 
     exportCODOutstandingData(zData, hubIdArr){
 
-      this.reportlink = '';
+      this.reportlink = ''; let rep = '';
 
       this.input = ({
           hubid: hubIdArr,
           zoneid: zData,
           deliverydate:this.deliverydate
       })
+
+      if(this.selected=='summary' && this.deliverydate){
+        rep = apiUrl.api_url + 'exportCODSummaryReport';
+      }else if(this.selected=='outstanding' && this.deliverydate){
+        rep = apiUrl.api_url + 'exportCODOutstandingReport';
+      }
+
       axios({
           method: 'POST',
-          'url': apiUrl.api_url + 'exportCODOutstandingReport',
+          'url': rep,
           'data': this.input,
           headers: {
               'Authorization': 'Bearer '+this.myStr
@@ -314,8 +327,8 @@ export default {
 
     //to get All Zone List
     getZoneData() {
-      this.input = {}
-      this.zoneLoading = true;
+      this.input = {}; this.zoneLoading = true; this.disableHub = false;
+      this.zoneList = this.zone = this.HubId = this.hubList = this.RSCName = this.RSCList = [];
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/getallzones',
@@ -326,10 +339,10 @@ export default {
         })
         .then(result => {
           this.zoneLoading = false;
-          this.zoneList = [{hubzoneid:'0', hubzonename:'All Zone', hubzonecode:'All Zone'}].concat(result.data.zone.data);
+          if(this.selected=='summary') this.zoneList = result.data.zone.data;
+          else this.zoneList = [{hubzoneid:'0', hubzonename:'All Zone', hubzonecode:'All Zone'}].concat(result.data.zone.data);
         }, error => {
-          this.zoneLoading = false;
-          console.error(error)
+          this.zoneLoading = false; console.error(error)
         })
     },
 
@@ -387,11 +400,98 @@ export default {
         })
     },
 
+    getCODSummaryReport(){
+      this.isLoading = true;
+
+      let zData = []; let hubArr = []; let RSCArr = [];
+
+      if(this.SearchZoneIds.length>0){
+        zData = this.SearchZoneIds;
+      }else{
+
+        this.zone.forEach(function (val) {
+          zData.push(val);
+        });
+      }
+
+      if(this.SearchHubIds.length>0){
+        hubArr = this.SearchHubIds;
+      }else{
+        if($.isArray(this.HubId) === false){
+          this.HubId = new Array(this.HubId);
+        }
+
+        this.HubId.forEach(function (val) {
+          hubArr.push(val.HubID);
+        });
+      }
+
+      if(this.SearchRSCIds.length>0){
+        RSCArr = this.SearchRSCIds;
+      }else{
+        if($.isArray(this.RSCName) === false){
+          this.RSCName = new Array(this.RSCName);
+        }
+
+        this.RSCName.forEach(function (val) {
+          RSCArr.push(val.HubID);
+        });
+      }
+
+      let hubIdArr = [...new Set([].concat(...hubArr.concat(RSCArr)))];
+
+      this.input = ({
+          hubid: hubIdArr,
+          zoneid: zData,
+          deliverydate:this.deliverydate,
+          offset:this.pageno,
+          limit:10
+      })
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'getCODSummaryReport',
+          'data': this.input,
+          headers: {
+            'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+          if(result.data.code == 200){
+            this.CODSummaryReport = result.data.data;
+            this.isLoading = false;
+            let totalRows = result.data.count
+            this.resultCount = result.data.count
+            if (totalRows < 10) {
+                 this.pagecount = 1
+             } else {
+                 this.pagecount = Math.ceil(totalRows / 10)
+             }
+
+             this.exportCODOutstandingData(zData, hubIdArr);
+           }else{
+             this.CODOutstandingReport = [];
+             this.isLoading = false;
+             this.resultCount = 0;
+           }
+          },
+           error => {
+             this.CODSummaryReport = []; this.isLoading = false; this.resultCount = 0;
+             console.error(error); this.$alertify.error('Error Occured');
+        })
+    },
+
     onSubmit: function(event) {
-      this.$validator.validateAll().then((result) => {
-        if(result){
-          this.pageno = 0; this.exportf = false;
-          this.getCODOutstandingReport()
+      this.$validator.validateAll().then(() => {
+
+        if(this.selected){
+          this.pageno = 0; document.getElementById("opt").innerHTML=""; this.exportf = false;
+          if(this.selected=='summary' && this.deliverydate){
+            this.getCODSummaryReport();
+          }else if(this.selected=='outstanding' && this.deliverydate){
+            this.getCODOutstandingReport();
+          }
+        }else{
+          document.getElementById("opt").innerHTML="Please choose atleast one search option ( COD Outstanding OR COD Summary )."; return false;
         }
       }).catch(() => {
         console.log('errors exist', this.errors)
@@ -399,9 +499,9 @@ export default {
     },
 
     resetForm() {
-      this.deliverydate = this.zone = ''; this.hubList = this.HubId = this.RSCList = this.RSCName = this.CODOutstandingReport = [];
+      this.deliverydate = this.zone = this.selected = ''; this.hubList = this.HubId = this.RSCList = this.RSCName = this.CODOutstandingReport = [];
       this.exportf = this.disableHub = false; this.pageno = this.resultCount = 0;
       this.$validator.reset(); this.errors.clear();
-    },
+    }
   }
 }
