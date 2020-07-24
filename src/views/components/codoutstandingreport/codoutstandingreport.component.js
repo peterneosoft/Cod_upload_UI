@@ -499,7 +499,7 @@ export default {
     },
 
     resetForm() {
-      this.deliverydate = this.zone = this.selected = ''; this.hubList = this.HubId = this.RSCList = this.RSCName = this.CODOutstandingReport = [];
+      this.deliverydate = this.zone = ''; this.hubList = this.HubId = this.RSCList = this.RSCName = this.CODOutstandingReport = [];
       this.exportf = this.disableHub = false; this.pageno = this.resultCount = 0;
       this.$validator.reset(); this.errors.clear();
     }
