@@ -75,7 +75,7 @@
             </form>
           </div>
         </div>
-
+        
         <div class="row" v-if="selected=='outstanding'">
           <div class="col-12">
             <div class="card-headerfrm" style="margin-bottom: 15px;">
@@ -94,7 +94,7 @@
                     <th class="text-center tableheader"><b>#</b></th>
                     <th class="text-center tableheader"><b>Zone</b></th>
                     <th class="text-center tableheader"><b>Hub/SVC Name</b></th>
-                    <th class="text-center tableheader"><b>RSC Name</b></th>
+                    <!-- <th class="text-center tableheader"><b>RSC Name</b></th> -->
                     <th class="text-center tableheader"><b>Bank Credit Date</b></th>
                     <th class="text-center tableheader"><b>SVC Outstanding Amount ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Finance Outstanding Amount ( <i class="fa fa-rupee"></i> )</b></th>
@@ -102,13 +102,13 @@
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td colspan="7" align="center">No record found</td>
+                    <td colspan="6" align="center">No record found</td>
                   </tr>
                   <tr v-for="(CODOutstanding,index) in CODOutstandingReport">
                     <td class="text-center">{{pageno+index+1}}</td>
                     <td class="text-center">{{CODOutstanding.zonename}}</td>
                     <td class="text-center">{{CODOutstanding.hubname}}</td>
-                    <td class="text-center">{{CODOutstanding.rscowner}}</td>
+                    <!-- <td class="text-center">{{CODOutstanding.rscowner}}</td> -->
                     <td class="text-center">{{CODOutstanding.deliverydate}}</td>
                     <td class="text-center">{{CODOutstanding.svcoutstanding}}</td>
                     <td class="text-center">{{CODOutstanding.financeoutstanding}}</td>
@@ -139,22 +139,22 @@
                    <th class="text-center tableheader"><b>#</b></th>
                    <th class="text-center tableheader"><b>Zone</b></th>
                    <th class="text-center tableheader"><b>Hub/SVC Name</b></th>
-                   <th class="text-center tableheader"><b>RSC Name</b></th>
+                   <!-- <th class="text-center tableheader"><b>RSC Name</b></th> -->
                    <th class="text-center tableheader"><b>Delivery Date</b></th>
-                   <th class="text-center tableheader"><b>COD Receivable ( <i class="fa fa-rupee"></i> )</b></th>
+                   <th class="text-center tableheader"><b>COD Amount ( <i class="fa fa-rupee"></i> )</b></th>
                  </tr>
                </thead>
                <tbody>
                  <tr v-if="resultCount==0">
-                   <td colspan="6" align="center">No record found</td>
+                   <td colspan="5" align="center">No record found</td>
                  </tr>
-                 <tr v-for="(CODOutstanding,index) in CODOutstandingReport">
+                 <tr v-for="(CODSummary,index) in CODSummaryReport">
                    <td class="text-center">{{pageno+index+1}}</td>
-                   <td class="text-center">{{CODOutstanding.zonename}}</td>
-                   <td class="text-center">{{CODOutstanding.hubname}}</td>
-                   <td class="text-center">{{CODOutstanding.rscowner}}</td>
-                   <td class="text-center">{{CODOutstanding.deliverydate}}</td>
-                   <td class="text-center">{{CODOutstanding.yestCOD}}</td>
+                   <td class="text-center">{{CODSummary.zonename}}</td>
+                   <td class="text-center">{{CODSummary.hubname}}</td>
+                   <!-- <td class="text-center">{{CODSummary.rscowner}}</td> -->
+                   <td class="text-center">{{CODSummary.deliverydate}}</td>
+                   <td class="text-center">{{CODSummary.codamount}}</td>
                  </tr>
                </tbody>
              </table><br>

@@ -245,9 +245,7 @@ export default {
     }, **/
 
     getCODOutstandingReport(){
-      this.isLoading = true;
-
-      let zData = []; let hubArr = []; let RSCArr = [];
+      this.isLoading = true; let zData = []; let hubArr = []; let RSCArr = [];
 
       if(this.SearchZoneIds.length>0){
         zData = this.SearchZoneIds;
@@ -327,8 +325,9 @@ export default {
 
     //to get All Zone List
     getZoneData() {
-      this.input = {}; this.zoneLoading = true; this.disableHub = false;
+      this.input = {}; this.zoneLoading = true; this.exportf = this.disableHub = false;
       this.zoneList = this.zone = this.HubId = this.hubList = this.RSCName = this.RSCList = [];
+      this.CODSummaryReport = this.CODOutstandingReport = []; this.resultCount = 0;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/getallzones',
@@ -401,9 +400,7 @@ export default {
     },
 
     getCODSummaryReport(){
-      this.isLoading = true;
-
-      let zData = []; let hubArr = []; let RSCArr = [];
+      this.isLoading = true; let zData = []; let hubArr = []; let RSCArr = [];
 
       if(this.SearchZoneIds.length>0){
         zData = this.SearchZoneIds;
@@ -499,7 +496,7 @@ export default {
     },
 
     resetForm() {
-      this.deliverydate = this.zone = ''; this.hubList = this.HubId = this.RSCList = this.RSCName = this.CODOutstandingReport = [];
+      this.deliverydate = this.zone = ''; this.hubList = this.HubId = this.RSCList = this.RSCName = this.CODSummaryReport = this.CODOutstandingReport = [];
       this.exportf = this.disableHub = false; this.pageno = this.resultCount = 0;
       this.$validator.reset(); this.errors.clear();
     }
