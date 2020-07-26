@@ -55,7 +55,8 @@ export default {
       hubidLoading:false,
       hubarrlength:0,
       hubidarr:'',
-      awbhubids:''
+      awbhubids:'',
+      currDate:''
     }
   },
   computed: {
@@ -65,6 +66,8 @@ export default {
   mounted() {
     var date = new Date();
     deliverydate.max = date.toISOString().split("T")[0];
+
+    this.currDate = date.toLocaleString();
 
     var hubdetailEncrypt  = window.localStorage.getItem('accesshubdata')
     var bytes             = CryptoJS.AES.decrypt(hubdetailEncrypt.toString(), 'Key');

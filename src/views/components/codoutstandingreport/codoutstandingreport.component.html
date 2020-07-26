@@ -75,8 +75,8 @@
             </form>
           </div>
         </div>
-        
-        <div class="row" v-if="selected=='outstanding'">
+
+        <div class="row">
           <div class="col-12">
             <div class="card-headerfrm" style="margin-bottom: 15px;">
               <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result
@@ -96,13 +96,15 @@
                     <th class="text-center tableheader"><b>Hub/SVC Name</b></th>
                     <!-- <th class="text-center tableheader"><b>RSC Name</b></th> -->
                     <th class="text-center tableheader"><b>Bank Credit Date</b></th>
-                    <th class="text-center tableheader"><b>SVC Outstanding Amount ( <i class="fa fa-rupee"></i> )</b></th>
-                    <th class="text-center tableheader"><b>Finance Outstanding Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader" v-if="selected=='outstanding'"><b>SVC Outstanding Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader" v-if="selected=='outstanding'"><b>Finance Outstanding Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader" v-if="selected=='summary'"><b>COD Amount ( <i class="fa fa-rupee"></i> )</b></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td colspan="6" align="center">No record found</td>
+                    <td v-if="selected=='outstanding'" colspan="6" align="center">No record found</td>
+                    <td v-if="selected=='summary'" colspan="5" align="center">No record found</td>
                   </tr>
                   <tr v-for="(CODOutstanding,index) in CODOutstandingReport">
                     <td class="text-center">{{pageno+index+1}}</td>
@@ -110,8 +112,9 @@
                     <td class="text-center">{{CODOutstanding.hubname}}</td>
                     <!-- <td class="text-center">{{CODOutstanding.rscowner}}</td> -->
                     <td class="text-center">{{CODOutstanding.deliverydate}}</td>
-                    <td class="text-center">{{CODOutstanding.svcoutstanding}}</td>
-                    <td class="text-center">{{CODOutstanding.financeoutstanding}}</td>
+                    <td class="text-center" v-if="selected=='outstanding'">{{CODOutstanding.svcoutstanding}}</td>
+                    <td class="text-center" v-if="selected=='outstanding'">{{CODOutstanding.financeoutstanding}}</td>
+                    <td class="text-center" v-if="selected=='summary'">{{CODOutstanding.codamount}}</td>
                   </tr>
                 </tbody>
               </table><br>
@@ -120,49 +123,6 @@
             </div>
          </div>
        </div>
-
-       <div class="row" v-if="selected=='summary'">
-         <div class="col-12">
-           <div class="card-headerfrm" style="margin-bottom: 15px;">
-             <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result
-               <span v-show="exportf" style="margin-left: 85%; cursor: pointer;" @click="exportreport()">
-                 <button class="btn btn-sm btn-success" type="button">
-                   <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="excelLoading" />
-                   <i class="fa fa-download"></i> Export
-                 </button>
-               </span>
-             </h4>
-             <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
-             <table class="table-bordered table-hover tbl datatables" style="width:100%;">
-               <thead>
-                 <tr class="text-primary">
-                   <th class="text-center tableheader"><b>#</b></th>
-                   <th class="text-center tableheader"><b>Zone</b></th>
-                   <th class="text-center tableheader"><b>Hub/SVC Name</b></th>
-                   <!-- <th class="text-center tableheader"><b>RSC Name</b></th> -->
-                   <th class="text-center tableheader"><b>Delivery Date</b></th>
-                   <th class="text-center tableheader"><b>COD Amount ( <i class="fa fa-rupee"></i> )</b></th>
-                 </tr>
-               </thead>
-               <tbody>
-                 <tr v-if="resultCount==0">
-                   <td colspan="5" align="center">No record found</td>
-                 </tr>
-                 <tr v-for="(CODSummary,index) in CODSummaryReport">
-                   <td class="text-center">{{pageno+index+1}}</td>
-                   <td class="text-center">{{CODSummary.zonename}}</td>
-                   <td class="text-center">{{CODSummary.hubname}}</td>
-                   <!-- <td class="text-center">{{CODSummary.rscowner}}</td> -->
-                   <td class="text-center">{{CODSummary.deliverydate}}</td>
-                   <td class="text-center">{{CODSummary.codamount}}</td>
-                 </tr>
-               </tbody>
-             </table><br>
-             <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
-             </paginate>
-           </div>
-        </div>
-      </div>
     </div>
   </div>
 </section>

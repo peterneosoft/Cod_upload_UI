@@ -245,7 +245,7 @@ export default {
     }, **/
 
     getCODOutstandingReport(){
-      this.isLoading = true; let zData = []; let hubArr = []; let RSCArr = [];
+      this.isLoading = true; let zData = []; let hubArr = []; let RSCArr = []; let rep = '';
 
       if(this.SearchZoneIds.length>0){
         zData = this.SearchZoneIds;
@@ -290,9 +290,16 @@ export default {
           offset:this.pageno,
           limit:10
       })
+
+      if(this.selected=='summary' && this.deliverydate){
+        rep = apiUrl.api_url + 'getCODSummaryReport';
+      }else if(this.selected=='outstanding' && this.deliverydate){
+        rep = apiUrl.api_url + 'getCODOutstandingReport';
+      }
+
       axios({
           method: 'POST',
-          url: apiUrl.api_url + 'getCODOutstandingReport',
+          url: rep,
           'data': this.input,
           headers: {
             'Authorization': 'Bearer '+this.myStr
@@ -300,21 +307,20 @@ export default {
         })
         .then(result => {
           if(result.data.code == 200){
-            this.CODOutstandingReport = result.data.data;
-            this.isLoading = false;
-            let totalRows = result.data.count
-            this.resultCount = result.data.count
-            if (totalRows < 10) {
-                 this.pagecount = 1
-             } else {
-                 this.pagecount = Math.ceil(totalRows / 10)
-             }
 
+            this.CODOutstandingReport = result.data.data;
+            this.isLoading            = false;
+            let totalRows             = result.data.count
+            this.resultCount          = result.data.count
+
+            if (totalRows < 10) {
+               this.pagecount = 1
+             } else {
+               this.pagecount = Math.ceil(totalRows / 10)
+             }
              this.exportCODOutstandingData(zData, hubIdArr);
            }else{
-             this.CODOutstandingReport = [];
-             this.isLoading = false;
-             this.resultCount = 0;
+             this.CODOutstandingReport = []; this.isLoading = false; this.resultCount = 0;
            }
           },
            error => {
@@ -327,7 +333,7 @@ export default {
     getZoneData() {
       this.input = {}; this.zoneLoading = true; this.exportf = this.disableHub = false;
       this.zoneList = this.zone = this.HubId = this.hubList = this.RSCName = this.RSCList = [];
-      this.CODSummaryReport = this.CODOutstandingReport = []; this.resultCount = 0;
+      this.CODOutstandingReport = []; this.resultCount = 0;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/getallzones',
@@ -399,92 +405,11 @@ export default {
         })
     },
 
-    getCODSummaryReport(){
-      this.isLoading = true; let zData = []; let hubArr = []; let RSCArr = [];
-
-      if(this.SearchZoneIds.length>0){
-        zData = this.SearchZoneIds;
-      }else{
-
-        this.zone.forEach(function (val) {
-          zData.push(val);
-        });
-      }
-
-      if(this.SearchHubIds.length>0){
-        hubArr = this.SearchHubIds;
-      }else{
-        if($.isArray(this.HubId) === false){
-          this.HubId = new Array(this.HubId);
-        }
-
-        this.HubId.forEach(function (val) {
-          hubArr.push(val.HubID);
-        });
-      }
-
-      if(this.SearchRSCIds.length>0){
-        RSCArr = this.SearchRSCIds;
-      }else{
-        if($.isArray(this.RSCName) === false){
-          this.RSCName = new Array(this.RSCName);
-        }
-
-        this.RSCName.forEach(function (val) {
-          RSCArr.push(val.HubID);
-        });
-      }
-
-      let hubIdArr = [...new Set([].concat(...hubArr.concat(RSCArr)))];
-
-      this.input = ({
-          hubid: hubIdArr,
-          zoneid: zData,
-          deliverydate:this.deliverydate,
-          offset:this.pageno,
-          limit:10
-      })
-      axios({
-          method: 'POST',
-          url: apiUrl.api_url + 'getCODSummaryReport',
-          'data': this.input,
-          headers: {
-            'Authorization': 'Bearer '+this.myStr
-          }
-        })
-        .then(result => {
-          if(result.data.code == 200){
-            this.CODSummaryReport = result.data.data;
-            this.isLoading = false;
-            let totalRows = result.data.count
-            this.resultCount = result.data.count
-            if (totalRows < 10) {
-                 this.pagecount = 1
-             } else {
-                 this.pagecount = Math.ceil(totalRows / 10)
-             }
-
-             this.exportCODOutstandingData(zData, hubIdArr);
-           }else{
-             this.CODOutstandingReport = [];
-             this.isLoading = false;
-             this.resultCount = 0;
-           }
-          },
-           error => {
-             this.CODSummaryReport = []; this.isLoading = false; this.resultCount = 0;
-             console.error(error); this.$alertify.error('Error Occured');
-        })
-    },
-
     onSubmit: function(event) {
       this.$validator.validateAll().then(() => {
-
         if(this.selected){
           this.pageno = 0; document.getElementById("opt").innerHTML=""; this.exportf = false;
-          if(this.selected=='summary' && this.deliverydate){
-            this.getCODSummaryReport();
-          }else if(this.selected=='outstanding' && this.deliverydate){
+          if((this.selected=='summary' || this.selected=='outstanding') && this.deliverydate){
             this.getCODOutstandingReport();
           }
         }else{
@@ -496,7 +421,7 @@ export default {
     },
 
     resetForm() {
-      this.deliverydate = this.zone = ''; this.hubList = this.HubId = this.RSCList = this.RSCName = this.CODSummaryReport = this.CODOutstandingReport = [];
+      this.deliverydate = this.zone = ''; this.hubList = this.HubId = this.RSCList = this.RSCName = this.CODOutstandingReport = [];
       this.exportf = this.disableHub = false; this.pageno = this.resultCount = 0;
       this.$validator.reset(); this.errors.clear();
     }
