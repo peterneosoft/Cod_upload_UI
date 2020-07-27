@@ -95,7 +95,8 @@
                     <th class="text-center tableheader"><b>Zone</b></th>
                     <th class="text-center tableheader"><b>Hub/SVC Name</b></th>
                     <!-- <th class="text-center tableheader"><b>RSC Name</b></th> -->
-                    <th class="text-center tableheader"><b>Bank Credit Date</b></th>
+                    <th class="text-center tableheader" v-if="selected=='outstanding'"><b>Bank Credit Date</b></th>
+                    <th class="text-center tableheader" v-if="selected=='summary'"><b>Delivery Date</b></th>
                     <th class="text-center tableheader" v-if="selected=='outstanding'"><b>SVC Outstanding Amount ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader" v-if="selected=='outstanding'"><b>Finance Outstanding Amount ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader" v-if="selected=='summary'"><b>COD Amount ( <i class="fa fa-rupee"></i> )</b></th>
