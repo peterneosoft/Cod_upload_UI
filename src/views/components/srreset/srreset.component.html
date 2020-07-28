@@ -1,0 +1,162 @@
+<section class="user">
+  <div class="animated fadeIn">
+    <div class="col-md-12 mb-2">
+      <div class="card">
+          <div class="card-header filter_main">
+            <i class=" fa fa-filter filter"></i>  Reset - SR Ledger
+          </div>
+          <div class="card-body">
+            <form  v-on:submit.prevent="onSubmit">
+              <b-form-fieldset>
+                <b-form-radio name="searchview" @input="changeRadio(selected)" id="searchview" :plain="true" :options="options" v-model="selected"></b-form-radio>
+                <span id="opt" class="text-danger"></span>
+                <hr style="margin-top: 0rem; margin-bottom: 0rem;">
+              </b-form-fieldset>
+
+              <div class="form-group row">
+                <div class="col-md-4">
+                  <label>Zone <font color="red">*</font></label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="zoneLoading" />
+                    <Multiselect :options="zoneList" name="zone" id="zone" v-model="zone" @input="getHubData" v-validate="{required: true}" v-bind:class="{'error': errors.has('zone') }" placeholder="Select Zone" label="hubzonename" track-by="hubzoneid" :optionHeight="100" :preselect-first="false" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                       <template slot="noResult"><p>No Record Found.</p></template>
+                    </Multiselect>
+                  </b-input-group>
+                  <span v-show="errors.has('zone')" class="text-danger">Zone is required.</span>
+                </div>
+
+                <div class="col-md-4">
+                  <label>Hub / SVC <font color="red">*</font></label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="hubLoading" />
+                    <Multiselect :options="hubList" @input="addHubData" placeholder="Select Hub / Svc" name="HubId" id="HubId" v-model="HubId" v-validate="{required: true}" v-bind:class="{'error': errors.has('HubId') }" label="HubName" track-by="HubID" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
+                     <template slot="noResult"><p>No Record Found.</p></template>
+                    </Multiselect>
+                  </b-input-group>
+                  <span v-show="errors.has('HubId')" class="text-danger">Hub / SVC is required.</span>
+                </div>
+
+                <div class="col-md-4" v-if="selected=='agent'">
+                  <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="agentLoading" />
+                  <label>Agent Name <font color="red">*</font></label>
+                    <b-input-group left="<i class='fa fa-list'></i>">
+                        <Multiselect :options="agentList" @input="GetAgentSRData" placeholder="Select Agent Name" name="Agent_Name" id="Agent_Name" v-model="Agent_Name" label="name" track-by="id"  v-validate="`${selected=='agent' ? 'required' : ''}`" v-bind:class="{'error': errors.has('Agent_Name')}" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6; z-index:999">
+                          <template slot="noResult"><p>No Record Found.</p></template>
+                        </Multiselect>
+                    </b-input-group>
+                    <span v-show="errors.has('Agent_Name')" class="text-danger">Agent name is required.</span>
+                </div>
+
+                <div class="col-md-4">
+                  <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="srLoading" />
+                  <label>SR Name <font color="red" v-if="selected=='sr'">*</font></label>
+                    <b-input-group left="<i class='fa fa-list'></i>">
+                        <Multiselect :options="SRList" placeholder="Select SR Name" name="SR_Name" id="SR_Name" v-model="SR_Name" v-bind:label="`${selected=='sr' ? 'srname' : 'name'}`" track-by="srid" :optionHeight="100" v-validate="`${selected=='sr' ? 'required' : ''}`" v-bind:class="{'error': errors.has('SR_Name')}" :hide-selected="false" style="border: 1px solid #c2cfd6; z-index:999">
+                          <template slot="noResult"><p>No Record Found.</p></template>
+                        </Multiselect>
+                    </b-input-group>
+                    <span v-show="errors.has('SR_Name')" class="text-danger">SR name is required.</span>
+                </div>
+
+                <div class="col-md-4">
+                  <label>From ( Created ) Date <font color="red">*</font></label>
+                  <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
+                    <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}"
+                    v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
+                  </b-input-group>
+                  <span v-show="errors.has('fromDate')" class="text-danger">From date is required. </span>
+                  <span id="fdate" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-4">
+                  <label>To ( Created ) Date <font color="red">*</font></label>
+                  <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
+                    <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}"
+                    v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
+                  </b-input-group>
+                  <span v-show="errors.has('toDate')" class="text-danger">To date is required. </span>
+                </div>
+              </div>
+
+              <div class="card-footer">
+                <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+                <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>&nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;
+                <button class="btn btn-sm btn-success" title="Today's SR Closure Status" @click="srStatus()" type="button"><i class="fa fa-search"></i> SR Closure Status</button>
+                <br>
+                <small class="text-muted"><font color="red">Note: * For SR Closure Staus, no need to fill above input field.</font></small>
+              </div>
+            </form>
+          </div>
+
+          <b-modal ref="myResetModalRef" v-model="ResetmodalShow"  id=#confirmationmodal title="Confirmation">
+            <div role="document">
+              <div class="modal-content">
+                <div class="modal-headerfrm">
+                  <h5 class="modal-title">Confirmation</h5>
+                  <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <div class="modal-bodyfrm">
+                  <h5 style="font-size:1rem; color:red;">Are you sure to {{resetType}} the SVC closure for delivery date {{resetDD}}.</h5>
+                </div>
+                <div class="modal-footerfrm">
+                <center>
+                  <button type="button" @click="hideResetModal('0', resetType)" class="btn btn-success" style="background-color: #20a8d8;">Yes</button>
+                  <button type="button" @click = "hideResetModal('1')" class="btn btn-danger" style="background-color: #f86c6b;">No</button>
+                </center>
+                </div>
+              </div>
+            </div>
+          </b-modal>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card-headerfrm" style="margin-bottom: 15px;">
+              <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result</h4>
+              <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+              <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+                <thead>
+                  <tr class="text-primary">
+                    <th class="text-center tableheader"><b>#</b></th>
+                    <th class="text-center tableheader"><b>SR Name</b></th>
+                    <th class="text-center tableheader"><b>Delivery Date</b></th>
+                    <th class="text-center tableheader"><b>COD Receivable ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Paid Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Pending Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Created Date</b></th>
+                    <th class="text-center tableheader"><b>Created By</b></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-if="resultCount==0">
+                    <td colspan="8" align="center">No record found</td>
+                  </tr>
+                  <tr v-for="(SL_List,index) in SRLedgerList ">
+                    <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
+                    <td class="text-center">{{SL_List.SRName}}</td>
+                    <td class="text-center">{{SL_List.deliverydate}}</td>
+                    <td class="text-center">{{SL_List.codamount}}</td>
+                    <td class="text-center">
+                      <span @click="showDenomDetail(SL_List.denomination)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="SL_List.creditamount!=0">{{SL_List.creditamount}}</span>
+                      <span v-if="SL_List.creditamount==0">{{SL_List.creditamount}}</span>
+                    </td>
+                    <td class="text-center">
+                      <span @click="showReasonAWBNo(SL_List.awbno)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="SL_List.awbno">{{SL_List.debitamount}}</span>
+                      <span v-if="SL_List.awbno==null">{{SL_List.debitamount}}</span>
+                    </td>
+                    <td class="text-center">{{SL_List.createddate}}</td>
+                    <td class="text-center">{{SL_List.createdby}}</td>
+                  </tr>
+                </tbody>
+
+              </table><br>
+              <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+              </paginate>
+            </div>
+           </div>
+       </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,159 @@
+<section class="user">
+  <div class="animated fadeIn">
+    <div class="col-md-12 mb-2">
+        <div class="card">
+          <div class="card-header filter_main">
+            <i class=" fa fa-filter filter"></i> Reset - SVC Ledger
+          </div>
+          <div class="card-body">
+            <form v-on:submit.prevent="onSubmit">
+              <div class="form-group row">
+                <div class="col-md-4">
+                  <label>Zone <font color="red">*</font></label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="zoneLoading" />
+                    <Multiselect :options="zoneList" name="zone" id="zone" v-model="zone" @input="getHubData" v-validate="{required: true}" v-bind:class="{'error': errors.has('zone') }" placeholder="Select Zone" label="hubzonename" track-by="hubzoneid" :optionHeight="100" :preselect-first="false" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                       <template slot="noResult"><p>No Record Found.</p></template>
+                    </Multiselect>
+                  </b-input-group>
+                  <span v-show="errors.has('zone')" class="text-danger">Zone is required.</span>
+                </div>
+
+                <div class="col-md-4">
+                  <label>Hub / SVC <font color="red">*</font></label>
+                  <b-input-group left="<i class='fa fa-list'></i>">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="hubLoading" />
+                    <Multiselect :options="hubList" placeholder="Select Hub / Svc" name="HubId" id="HubId" v-model="HubId" v-validate="{required: true}" v-bind:class="{'error': errors.has('HubId') }" label="HubName" track-by="HubID" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
+                     <template slot="noResult"><p>No Record Found.</p></template>
+                    </Multiselect>
+                  </b-input-group>
+                  <span v-show="errors.has('HubId')" class="text-danger">Hub / SVC is required.</span>
+                </div>
+              </div>
+              <div class="card-footer">
+                <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+                <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
+              </div>
+            </form>
+          </div>
+
+          <b-modal ref="myResetModalRef" v-model="ResetmodalShow"  id=#confirmationmodal title="Confirmation">
+            <div role="document">
+              <div class="modal-content">
+                <div class="modal-headerfrm">
+                  <h5 class="modal-title">Confirmation</h5>
+                  <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
+                <div class="modal-bodyfrm">
+                  <h5 style="font-size:1rem; color:red;">Are you sure to {{resetType}} the SVC closure for delivery date {{resetDD}}.</h5>
+                </div>
+                <div class="modal-footerfrm">
+                <center>
+                  <button type="button" @click="hideResetModal('0', resetType)" class="btn btn-success" style="background-color: #20a8d8;">Yes</button>
+                  <button type="button" @click = "hideResetModal('1')" class="btn btn-danger" style="background-color: #f86c6b;">No</button>
+                </center>
+                </div>
+              </div>
+            </div>
+          </b-modal>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card-headerfrm" style="margin-bottom: 15px;">
+              <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result&nbsp;
+                ( &nbsp;
+                  <span v-if="resultCount>0" style="font-size:13px;"><b>{{resultdate}}&nbsp;:&nbsp;</b></span>&nbsp;
+                  <font style="font-size: 13px;">
+                    <span class="dot1"></span> System Closure
+                    <span class="dot2"></span> Tax Payment/Imprest
+                    <span class="dot3"></span> Amount Mismatched
+                  </font>
+                &nbsp; )
+              </h4>
+              <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+              <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="upLoading" />
+              <table class="table-bordered table-hover tbl datatables scrolltb" style="width:100%;">
+                <thead>
+                  <tr class="text-primary">
+                    <th class="text-center tableheader"><b>#</b></th>
+                    <th class="text-center tableheader"><b>Hub/SVC Name</b></th>
+                    <th class="text-center tableheader"><b>Delivery Date</b></th>
+                    <th class="text-center tableheader"><b>Deposit Date</b></th>
+                    <th class="text-center tableheader"><b>Opening Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>COD Receivable ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Bank Deposited Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Closing Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Finance Confirmed Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Deposit Slip</b></th>
+                    <th class="text-center tableheader"><b>Status</b></th>
+                    <th class="text-center tableheader"><b>Created by</b></th>
+                    <th class="text-center tableheader" style="width: 80px;"><b>Action</b></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-if="resultCount==0">
+                    <td colspan="13" align="center">No record found</td>
+                  </tr>
+                  <tr v-for="(CODLedger_List,index) in CODLedgerReports" v-bind:class="`${(CODLedger_List.createdby == 'schedular@xpressbees.com') || (CODLedger_List.deposittype) == '' ? 'scheduler' : '' || CODLedger_List.reasonid == 65 ? 'other' : '' || ([84,124,187].includes(CODLedger_List.financereasonid)) ? 'mismatched' : ''}`">
+                    <td class="text-center">{{pageno+index+1}}</td>
+                    <td class="text-center">{{HubId.HubName}}</td>
+                    <td class="text-center">{{CODLedger_List.deliverydate}}</td>
+                    <td class="text-center">{{CODLedger_List.bankdepositdate}}</td>
+                    <td class="text-center">{{CODLedger_List.openingbalance}}</td>
+                    <td class="text-center">
+                      <span v-bind:id='`${"cax"+CODLedger_List.svcledgerid}`'>{{CODLedger_List.codamount}}</span>
+
+                      <span v-bind:id='`${"cau"+CODLedger_List.svcledgerid}`' style="display: none;">
+                        <input v-model="form.codamount[CODLedger_List.svcledgerid]" v-bind:class="{'form-control': true }" type="text" placeholder="COD Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="height: 30px;font-size: 13px;">
+                        <span v-bind:id="setLedgid('camt', CODLedger_List.svcledgerid)" class="text-danger"></span>
+                      </span>
+                    </td>
+                    <td class="text-center">
+                      <span v-bind:id='`${"bdx"+CODLedger_List.svcledgerid}`'>{{CODLedger_List.bankdeposit}}</span>
+
+                      <span v-bind:id='`${"bdu"+CODLedger_List.svcledgerid}`' style="display: none;">
+                        <input v-model="form.depamount[CODLedger_List.svcledgerid]" v-bind:class="{'form-control': true }" type="text" placeholder="Bank Deposit Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="height: 30px;font-size: 13px;">
+                        <span v-bind:id="setLedgid('depamt', CODLedger_List.svcledgerid)" class="text-danger"></span>
+                      </span>
+                    </td>
+                    <td class="text-center">{{CODLedger_List.closingbalance}}</td>
+                    <td class="text-center">{{CODLedger_List.actualrecamt}}</td>
+                    <td class="text-center">
+                      <span v-bind:id='`${"vrl"+CODLedger_List.svcledgerid}`' v-if="CODLedger_List.files.length>0 && CODLedger_List.createdby!='schedular@xpressbees.com' && CODLedger_List.othercharges == '0.00'" @click="showHideImages(CODLedger_List.svcledgerid, 'vrl')" style="color: blue; cursor: pointer; text-decoration: underline;">Deposit</span>
+                      <span v-bind:id='`${"vri"+CODLedger_List.svcledgerid}`' style="display: none;">
+                        <a v-bind:title='`${file.name}`' v-for="file in CODLedger_List.files" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
+                      </span>
+
+                      <span v-bind:id='`${"vrrl"+CODLedger_List.svcledgerid}`' v-if="(CODLedger_List.reasonfiles.length>0 && CODLedger_List.createdby!='schedular@xpressbees.com')" @click="showHideImages(CODLedger_List.svcledgerid, 'vrrl')" style="color: blue; cursor: pointer; text-decoration: underline;"><br>Other</span>
+                      <span v-bind:id='`${"vrri"+CODLedger_List.svcledgerid}`' style="display: none;">
+                        <a v-bind:title='`${file.name}`' v-for="file in CODLedger_List.reasonfiles" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
+                      </span>
+
+                      <span v-bind:id='`${"dps"+CODLedger_List.svcledgerid}`' style="display: none;">
+                        <input @change="onUpload(CODLedger_List)" class="form-control" type="file" placeholder="Upload Deposit Slip" v-bind:name="setLedgid('depslip', CODLedger_List.svcledgerid)" v-bind:id="setLedgid('depslip', CODLedger_List.svcledgerid)"
+                          v-bind:class="{'form-control': true}" style="width: 120px; border: 0; background-color: transparent; font-size: 12px;">
+                        <span v-bind:id="setLedgid('depslip', CODLedger_List.svcledgerid)" class="text-danger"></span>
+                      </span>
+                    </td>
+                    <td class="text-center" v-if="CODLedger_List.statusid==1">Open</td>
+                    <td class="text-center" v-if="CODLedger_List.statusid==6">Close</td>
+                    <td class="text-center">{{CODLedger_List.createdby}}</td>
+                    <td class="text-center">
+                      <span v-bind:id='`${"ed"+CODLedger_List.svcledgerid}`'><i v-if="role=='admin' && CODLedger_List.statusid != 6 && (CODLedger_List.createdby != 'schedular@xpressbees.com' && CODLedger_List.deposittype != '')" @click.prevent="editLedger(CODLedger_List.svcledgerid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
+                      <span v-bind:id='`${"up"+CODLedger_List.svcledgerid}`' style="display: none;"><i @click.prevent="showUpdateModal(CODLedger_List)" class="fa fa-floppy-o text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
+                      <i v-if="role=='admin' && (CODLedger_List.createdby != 'schedular@xpressbees.com' && CODLedger_List.deposittype != '')" @click.prevent="showResetModal(CODLedger_List)" class="fa fa-trash text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
+                    </td>
+                  </tr>
+                </tbody>
+              </table><br>
+              <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+              </paginate>
+            </div>
+         </div>
+       </div>
+    </div>
+  </div>
+</section>

@@ -40,6 +40,8 @@ import DisputeReport from '@/views/components/disputereport'
 import OrderType from '@/views/components/ordertype'
 import LongTailClient from '@/views/components/longtailclient'
 import EPaymentReco from '@/views/components/epaymentreco'
+import SVCReset from '@/views/components/svcreset'
+import SRReset from '@/views/components/srreset'
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -425,6 +427,40 @@ const router = new Router({
               },
               {
                 name: 'E-Payment Reconciliation'
+              }
+            ]
+          },
+        },
+        {
+          path: 'svcledger',
+          name: 'SVC Ledger',
+          component: SVCReset,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'Reset SVC Ledger'
+              }
+            ]
+          },
+        },
+        {
+          path: 'srledger',
+          name: 'SR Ledger',
+          component: SRReset,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'Reset SR Ledger'
               }
             ]
           },
