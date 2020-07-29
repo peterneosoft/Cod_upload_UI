@@ -47,7 +47,7 @@
                   </button>
                 </div>
                 <div class="modal-bodyfrm">
-                  <h5 style="font-size:1rem; color:red;">Are you sure to {{resetType}} the SVC closure for delivery date {{resetDD}}.</h5>
+                  <h5 style="font-size:1rem; color:red;">Are you sure to {{resetType}} for delivery date {{resetDD}}.</h5>
                 </div>
                 <div class="modal-footerfrm">
                 <center>
@@ -79,7 +79,6 @@
                 <thead>
                   <tr class="text-primary">
                     <th class="text-center tableheader"><b>#</b></th>
-                    <th class="text-center tableheader"><b>Hub/SVC Name</b></th>
                     <th class="text-center tableheader"><b>Delivery Date</b></th>
                     <th class="text-center tableheader"><b>Deposit Date</b></th>
                     <th class="text-center tableheader"><b>Opening Amount ( <i class="fa fa-rupee"></i> )</b></th>
@@ -87,6 +86,7 @@
                     <th class="text-center tableheader"><b>Bank Deposited Amount ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Closing Amount ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Finance Confirmed Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Finance Closing Amount ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Deposit Slip</b></th>
                     <th class="text-center tableheader"><b>Status</b></th>
                     <th class="text-center tableheader"><b>Created by</b></th>
@@ -99,16 +99,15 @@
                   </tr>
                   <tr v-for="(CODLedger_List,index) in CODLedgerReports" v-bind:class="`${(CODLedger_List.createdby == 'schedular@xpressbees.com') || (CODLedger_List.deposittype) == '' ? 'scheduler' : '' || CODLedger_List.reasonid == 65 ? 'other' : '' || ([84,124,187].includes(CODLedger_List.financereasonid)) ? 'mismatched' : ''}`">
                     <td class="text-center">{{pageno+index+1}}</td>
-                    <td class="text-center">{{HubId.HubName}}</td>
                     <td class="text-center">{{CODLedger_List.deliverydate}}</td>
                     <td class="text-center">{{CODLedger_List.bankdepositdate}}</td>
                     <td class="text-center">{{CODLedger_List.openingbalance}}</td>
                     <td class="text-center">
-                      <span v-bind:id='`${"cax"+CODLedger_List.svcledgerid}`'>{{CODLedger_List.codamount}}</span>
+                      <span v-if="role!='admin'">{{CODLedger_List.codamount}}</span>
+                      <span v-if="role=='admin'" v-bind:id='`${"cax"+CODLedger_List.svcledgerid}`'>{{CODLedger_List.codamount}}</span>
 
-                      <span v-bind:id='`${"cau"+CODLedger_List.svcledgerid}`' style="display: none;">
+                      <span v-if="role=='admin'" v-bind:id='`${"cau"+CODLedger_List.svcledgerid}`' style="display: none;">
                         <input v-model="form.codamount[CODLedger_List.svcledgerid]" v-bind:class="{'form-control': true }" type="text" placeholder="COD Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="height: 30px;font-size: 13px;">
-                        <span v-bind:id="setLedgid('camt', CODLedger_List.svcledgerid)" class="text-danger"></span>
                       </span>
                     </td>
                     <td class="text-center">
@@ -121,6 +120,18 @@
                     </td>
                     <td class="text-center">{{CODLedger_List.closingbalance}}</td>
                     <td class="text-center">{{CODLedger_List.actualrecamt}}</td>
+                    <td class="text-center">
+                      <span v-if="role!='admin'">{{CODLedger_List.financeclosingamt}}</span>
+                      <span v-if="role=='admin'" v-bind:id='`${"fcx"+CODLedger_List.svcledgerid}`'>{{CODLedger_List.financeclosingamt}}</span>
+
+                      <span v-if="role=='admin'" v-bind:id='`${"fcu"+CODLedger_List.svcledgerid}`' style="display: none;">
+                        <input v-model="form.financeclosingamt[CODLedger_List.svcledgerid]" v-bind:class="{'form-control': true }" type="text" placeholder="Finance Closing Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="height: 30px;font-size: 13px;">
+                        <span v-bind:id="setLedgid('fcamt', CODLedger_List.svcledgerid)" class="text-danger"></span>
+                      </span>
+
+                      <span v-bind:id='`${"FCed"+CODLedger_List.svcledgerid}`'><i v-if="role=='admin'" @click.prevent="editFC(CODLedger_List.svcledgerid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer; float: right;"></i></span>
+                      <span v-bind:id='`${"FCup"+CODLedger_List.svcledgerid}`' style="display: none;"><i v-if="role=='admin'" @click.prevent="showFCUpdateModal(CODLedger_List)" class="fa fa-floppy-o text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
+                    </td>
                     <td class="text-center">
                       <span v-bind:id='`${"vrl"+CODLedger_List.svcledgerid}`' v-if="CODLedger_List.files.length>0 && CODLedger_List.createdby!='schedular@xpressbees.com' && CODLedger_List.othercharges == '0.00'" @click="showHideImages(CODLedger_List.svcledgerid, 'vrl')" style="color: blue; cursor: pointer; text-decoration: underline;">Deposit</span>
                       <span v-bind:id='`${"vri"+CODLedger_List.svcledgerid}`' style="display: none;">

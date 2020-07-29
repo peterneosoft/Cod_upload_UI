@@ -340,14 +340,8 @@ export default {
     resetSVCledger(data){
       this.upLoading = true;
       this.input = ({
-        ledgerdetailid: data.ledgerdetailid,
-        srid:           data.srid,
-        hubid:          this.HubId.HubID,
-        codamount:      data.codamount,
-        creditamount:   data.creditamount,
-        debitamount:    data.debitamount,
-        createdby:      data.createdby,
-        username:       this.localuserid
+        srledgerid: data.ledgerdetailid,
+        srid:       data.srid
       });
 
       axios({
@@ -377,7 +371,7 @@ export default {
       this.upLoading = true;
 
       if(this.form.creditamount[data.ledgerdetailid]<=0){
-        document.getElementById("depamt"+data.ledgerdetailid).innerHTML="Bank deposited amount is required."; return false;
+        document.getElementById("depamt"+data.ledgerdetailid).innerHTML="Bank deposited amount is required."; this.upLoading = false; return false;
       }else{
         document.getElementById("depamt"+data.ledgerdetailid).innerHTML="";
       }

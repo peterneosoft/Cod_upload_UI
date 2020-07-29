@@ -44,7 +44,8 @@ export default {
         depamount:[],
         depslip:[],
         finamount: [],
-        codamount: []
+        codamount: [],
+        financeclosingamt: []
       }
     }
   },
@@ -75,8 +76,8 @@ export default {
     },
 
     GetSVCledgerData() {
-      $('span[id^="cau"]').hide(); $('span[id^="bdu"]').hide(); $('span[id^="dps"]').hide(); $('span[id^="up"]').hide();
-      $('span[id^="cax"]').show(); $('span[id^="bdx"]').show(); $('span[id^="ed"]').show(); $('span[id^="vri"]').hide(); $('span[id^="vrl"]').show();
+      $('span[id^="cau"]').hide(); $('span[id^="bdu"]').hide(); $('span[id^="fcu"]').hide(); $('span[id^="dps"]').hide(); $('span[id^="up"]').hide();  $('span[id^="FCup"]').hide();
+      $('span[id^="cax"]').show(); $('span[id^="bdx"]').show(); $('span[id^="fcx"]').show(); $('span[id^="ed"]').show(); $('span[id^="FCed"]').show(); $('span[id^="vri"]').hide(); $('span[id^="vrl"]').show();
       this.input = ({
           offset: this.pageno,
           limit: 10,
@@ -108,10 +109,11 @@ export default {
 
           let ledger = result.data.data;
           ledger.forEach((svc,key)=>{
-            this.form.depamount[svc.svcledgerid]  = svc.bankdeposit;
-            this.form.codamount[svc.svcledgerid]  = svc.codamount;
-            this.form.finamount[svc.svcledgerid]  = svc.actualrecamt ? svc.actualrecamt : 0;
-            this.form.depslip[svc.svcledgerid]    = svc.batchid;
+            this.form.depamount[svc.svcledgerid]         = svc.bankdeposit;
+            this.form.codamount[svc.svcledgerid]         = svc.codamount;
+            this.form.finamount[svc.svcledgerid]         = svc.actualrecamt ? svc.actualrecamt : 0;
+            this.form.depslip[svc.svcledgerid]           = svc.batchid;
+            this.form.financeclosingamt[svc.svcledgerid] = svc.financeclosingamt;
           });
         }else{
           this.resultCount  = 0;
@@ -185,21 +187,23 @@ export default {
     },
 
     showResetModal(data){
-      this.resetdata = []; this.resetdata = data; this.resetDD = ''; this.resetDD = data.deliverydate; this.resetType = 'reset';
+      this.resetdata = []; this.resetdata = data; this.resetDD = ''; this.resetDD = data.deliverydate; this.resetType = 'reset SVC closure';
       this.$refs.myResetModalRef.show();
     },
 
     hideResetModal(ele, typ) {
       this.$refs.myResetModalRef.hide();
-      if(ele == 0 && typ == 'reset'){
+      if(ele == 0 && typ == 'reset SVC closure'){
         this.resetSVCledger(this.resetdata);
-      }else if(ele == 0 && typ == 'update'){
+      }else if(ele == 0 && typ == 'update SVC closure'){
         this.updateLedger(this.resetdata);
+      }else if(ele == 0 && typ == 'update SVC closure finance closing amount'){
+        this.updateFCLedger(this.resetdata);
       }
     },
 
     showUpdateModal(data){
-      this.resetdata = []; this.resetdata = data; this.resetDD = ''; this.resetDD = data.deliverydate; this.resetType = 'update';
+      this.resetdata = []; this.resetdata = data; this.resetDD = ''; this.resetDD = data.deliverydate; this.resetType = 'update SVC closure';
       this.$refs.myResetModalRef.show();
     },
 
@@ -248,7 +252,7 @@ export default {
       this.upLoading = true;
 
       if(this.form.depamount[data.svcledgerid]<=0){
-        document.getElementById("depamt"+data.svcledgerid).innerHTML="Bank deposited amount is required."; return false;
+        document.getElementById("depamt"+data.svcledgerid).innerHTML="Bank deposited amount is required."; this.upLoading = false; return false;
       }else{
         document.getElementById("depamt"+data.svcledgerid).innerHTML="";
       }
@@ -381,6 +385,52 @@ export default {
         $('#vri'+index).show();
         $('#vrl'+index).hide();
       }
+    },
+
+    editFC(index){
+      $('#fcx'+index).hide(); $('#FCed'+index).hide(); $('#fcu'+index).show(); $('#FCup'+index).show();
+    },
+
+    showFCUpdateModal(data){
+      this.resetdata = []; this.resetdata = data; this.resetDD = ''; this.resetDD = data.deliverydate; this.resetType = 'update SVC closure finance closing amount';
+      this.$refs.myResetModalRef.show();
+    },
+
+    updateFCLedger(data){
+
+      this.upLoading = true;
+
+      if(this.form.financeclosingamt[data.svcledgerid]<=0){
+        document.getElementById("fcamt"+data.svcledgerid).innerHTML="Finance closing amount is required."; this.upLoading = false; return false;
+      }else{
+        document.getElementById("fcamt"+data.svcledgerid).innerHTML="";
+      }
+
+      this.input = ({
+        svcledgerid:data.svcledgerid,
+        hubid:      this.HubId.HubID,
+        amount:     this.form.financeclosingamt[data.svcledgerid]
+      })
+      axios({
+        method: 'POST',
+        'url': apiUrl.api_url + 'updateFinanceClosing',
+        'data': this.input,
+        headers: {
+          'Authorization': 'Bearer '+this.myStr
+        }
+      })
+      .then(response => {
+        this.upLoading = false;
+        if (response.data.code == 200) {
+          this.$alertify.success(response.data.msg);
+          this.GetSVCledgerData()
+        } else {
+          this.$alertify.error(response.data.msg);
+        }
+      })
+      .catch((httpException) => {
+          console.error('exception is:::::::::', httpException); this.upLoading = false; this.$alertify.error('Error Occured');
+      });
     },
   }
 }
