@@ -95,7 +95,7 @@
                   </button>
                 </div>
                 <div class="modal-bodyfrm">
-                  <h5 style="font-size:1rem; color:red;">Are you sure to {{resetType}} the SVC closure for delivery date {{resetDD}}.</h5>
+                  <h5 style="font-size:1rem; color:red;">Are you sure to {{resetType}} the SR closure for delivery date {{resetDD}}.</h5>
                 </div>
                 <div class="modal-footerfrm">
                 <center>
@@ -148,7 +148,6 @@
 
                       <span v-bind:id='`${"bdu"+SL_List.ledgerdetailid}`' style="display: none;">
                         <input v-model="form.creditamount[SL_List.ledgerdetailid]" v-bind:class="{'form-control': true }" type="text" placeholder="Paid Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="height: 30px;font-size: 13px;">
-                        <span v-bind:id="setLedgid('depamt', SL_List.ledgerdetailid)" class="text-danger"></span>
                       </span>
                     </td>
                     <td class="text-center">
@@ -161,7 +160,7 @@
                     <td class="text-center">{{SL_List.createddate}}</td>
                     <td class="text-center">{{SL_List.createdby}}</td>
                     <td class="text-center">
-                      <span v-bind:id='`${"ed"+SL_List.ledgerdetailid}`'><i v-if="role=='admin' && (SL_List.createdby != 'schedular@xpressbees.com')" @click.prevent="editLedger(SL_List.ledgerdetailid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
+                      <span v-bind:id='`${"ed"+SL_List.ledgerdetailid}`'><i v-if="role=='admin'" @click.prevent="editLedger(SL_List.ledgerdetailid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
                       <span v-bind:id='`${"up"+SL_List.ledgerdetailid}`' style="display: none;"><i @click.prevent="showUpdateModal(SL_List)" class="fa fa-floppy-o text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
                       <i v-if="role=='admin' && (SL_List.createdby != 'schedular@xpressbees.com')" @click.prevent="showResetModal(SL_List)" class="fa fa-trash text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
                     </td>

@@ -125,9 +125,6 @@ export default {
       comment:'',
       cType:'',
       ConfmodalShow:false,
-      ResetmodalShow:false,
-      resetdata:[],
-      resetDD:[],
       hideCM:1,
       role:''
     }
@@ -204,16 +201,6 @@ export default {
         this.unmatchedAmt = parseInt(parseInt(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))))-parseInt(Math.round(parseFloat(this.Deposit_Amount))));
       }
     },
-    showResetModal(data){
-      this.resetdata = []; this.resetdata = data; this.resetDD = ''; this.resetDD = data.deliverydate;
-      this.$refs.myResetModalRef.show();
-    },
-    hideResetModal(ele) {
-      this.$refs.myResetModalRef.hide();
-      if(ele == 0){
-        this.resetSVCledger(this.resetdata);
-      }
-    },
     closeStatusRoleModal() {
       this.modalShow = false
       this.cardModalShow = false
@@ -222,7 +209,6 @@ export default {
       this.ExmodalShow = false
       this.commentModalShow = false
       this.ConfmodalShow = false
-      this.ResetmodalShow = false
     },
 
     GetShipmentUpdate() {
@@ -1046,38 +1032,5 @@ export default {
       if(type=='c') this.cType = 'Finance Comment'; else this.cType = 'Transaction Id';
       this.$refs.myCommentModalRef.show();
     },
-
-    resetSVCledger(data){
-      this.input = ({
-        svcledgerid: data.svcledgerid,
-        hubid: this.localhubid,
-        openingbalance: data.openingbalance,
-        codamount: data.codamount,
-        bankdeposit: data.bankdeposit,
-        statusid: data.statusid,
-        financereasonid: data.financereasonid,
-        createdby: data.createdby,
-        username: this.localuserid,
-      });
-
-      axios({
-        method: 'POST',
-        'url': apiUrl.api_url + 'deleteSVCLedgerEntry',
-        'data': this.input,
-        headers: {
-          'Authorization': 'Bearer '+this.myStr
-        }
-      })
-      .then(response => {
-        if (response.data.code == 200) {
-          this.$alertify.success(response.data.msg); this.resetForm();
-        } else {
-          this.$alertify.error(response.data.msg)
-        }
-      })
-      .catch((httpException) => {
-          console.error('exception is:::::::::', httpException); this.$alertify.error('Error Occured');
-      });
-    }
   }
 }

@@ -115,7 +115,6 @@
 
                       <span v-bind:id='`${"bdu"+CODLedger_List.svcledgerid}`' style="display: none;">
                         <input v-model="form.depamount[CODLedger_List.svcledgerid]" v-bind:class="{'form-control': true }" type="text" placeholder="Bank Deposit Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="height: 30px;font-size: 13px;">
-                        <span v-bind:id="setLedgid('depamt', CODLedger_List.svcledgerid)" class="text-danger"></span>
                       </span>
                     </td>
                     <td class="text-center">{{CODLedger_List.closingbalance}}</td>
@@ -153,9 +152,9 @@
                     <td class="text-center" v-if="CODLedger_List.statusid==6">Close</td>
                     <td class="text-center">{{CODLedger_List.createdby}}</td>
                     <td class="text-center">
-                      <span v-bind:id='`${"ed"+CODLedger_List.svcledgerid}`'><i v-if="role=='admin' && CODLedger_List.statusid != 6 && (CODLedger_List.createdby != 'schedular@xpressbees.com' && CODLedger_List.deposittype != '')" @click.prevent="editLedger(CODLedger_List.svcledgerid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
+                      <span v-bind:id='`${"ed"+CODLedger_List.svcledgerid}`'><i v-if="role=='admin'" @click.prevent="editLedger(CODLedger_List.svcledgerid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
                       <span v-bind:id='`${"up"+CODLedger_List.svcledgerid}`' style="display: none;"><i @click.prevent="showUpdateModal(CODLedger_List)" class="fa fa-floppy-o text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
-                      <i v-if="role=='admin' && (CODLedger_List.createdby != 'schedular@xpressbees.com' && CODLedger_List.deposittype != '')" @click.prevent="showResetModal(CODLedger_List)" class="fa fa-trash text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
+                      <i v-if="role=='admin' && (CODLedger_List.createdby != 'schedular@xpressbees.com')" @click.prevent="showResetModal(CODLedger_List)" class="fa fa-trash text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
                     </td>
                   </tr>
                 </tbody>

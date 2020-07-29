@@ -251,12 +251,6 @@ export default {
 
       this.upLoading = true;
 
-      if(this.form.depamount[data.svcledgerid]<=0){
-        document.getElementById("depamt"+data.svcledgerid).innerHTML="Bank deposited amount is required."; this.upLoading = false; return false;
-      }else{
-        document.getElementById("depamt"+data.svcledgerid).innerHTML="";
-      }
-
       this.input = ({
         svcledgerid:      data.svcledgerid,
         hubid:            this.HubId.HubID,
