@@ -40,10 +40,9 @@ export default {
       localuserid:'',
       myStr:'',
       form: {
-        depamount:[],
-        depslip:[],
-        finamount: [],
-        codamount: []
+        codamount: [],
+        creditamount:[],
+        debitamount: []
       },
       SR_Name:'',
       toDate:'',
@@ -193,6 +192,9 @@ export default {
     },
 
     getMonthlySRLedgerDetails(){
+      $('span[id^="cau"]').hide(); $('span[id^="bdu"]').hide(); $('span[id^="dbu"]').hide(); $('span[id^="up"]').hide();
+      $('span[id^="cax"]').show(); $('span[id^="bdx"]').show(); $('span[id^="dbx"]').show(); $('span[id^="ed"]').show();
+
       if(this.fromDate > this.toDate){
          document.getElementById("fdate").innerHTML="From date should not be greater than To date.";
          return false;
@@ -200,8 +202,7 @@ export default {
         document.getElementById("fdate").innerHTML="";
       }
 
-      this.SRLedgerList = [];
-      this.isLoading = true; this.srLedger = true;
+      this.SRLedgerList = []; this.isLoading = true;
       this.input = ({
         srid: this.SR_Name.srid ? [this.SR_Name.srid]: this.SRArr,
         hubid:this.HubId.HubID,
@@ -229,6 +230,13 @@ export default {
             } else {
                 this.pagecount = Math.ceil(totalRows / 10)
             }
+
+            let ledger = result.data.data.rows;
+            ledger.forEach((sr,key)=>{
+              this.form.codamount[sr.ledgerdetailid]    = sr.codamount;
+              this.form.creditamount[sr.ledgerdetailid] = sr.creditamount;
+              this.form.debitamount[sr.ledgerdetailid]  = sr.debitamount;
+            });
           }else{
             this.resultCount = 0;
           }
@@ -236,54 +244,6 @@ export default {
         }, error => {
           this.isLoading = false; console.error(error); this.$alertify.error('Error Occured');
         })
-    },
-
-    GetSVCledgerData() {
-      $('span[id^="cau"]').hide(); $('span[id^="bdu"]').hide(); $('span[id^="dps"]').hide(); $('span[id^="up"]').hide();
-      $('span[id^="cax"]').show(); $('span[id^="bdx"]').show(); $('span[id^="ed"]').show(); $('span[id^="vri"]').hide(); $('span[id^="vrl"]').show();
-      this.input = ({
-          offset: this.pageno,
-          limit: 10,
-          hubid: this.HubId.HubID
-      })
-      this.isLoading = true;
-      axios({
-          method: 'POST',
-          'url': apiUrl.api_url + 'svcledgermaster',
-          'data': this.input,
-          headers: {
-              'Authorization': 'Bearer '+this.myStr
-          }
-      })
-      .then(result => {
-        if(result.data.code == 200){
-          this.isLoading = false;
-
-          this.CODLedgerReports = result.data.data;
-          this.resultCount  = result.data.count;
-          this.resultdate  = result.data.date;
-
-          let totalRows     = result.data.count;
-          if (totalRows < 10) {
-              this.pagecount = 1
-          } else {
-              this.pagecount = Math.ceil(totalRows / 10)
-          }
-
-          let ledger = result.data.data;
-          ledger.forEach((svc,key)=>{
-            this.form.depamount[svc.svcledgerid]  = svc.bankdeposit;
-            this.form.codamount[svc.svcledgerid]  = svc.codamount;
-            this.form.finamount[svc.svcledgerid]  = svc.actualrecamt ? svc.actualrecamt : 0;
-            this.form.depslip[svc.svcledgerid]    = svc.batchid;
-          });
-        }else{
-          this.resultCount  = 0;
-          this.isLoading = false;
-        }
-      }, error => {
-          console.error(error)
-      })
     },
 
     //to get All Zone List
@@ -350,7 +310,7 @@ export default {
     },
 
     resetForm() {
-      this.zone=""; this.hubList=[]; this.HubId=[]; this.pageno = 0; this.CODLedgerReports = []; this.resultCount = 0;
+      this.zone=""; this.hubList=[]; this.HubId=[]; this.pageno = 0; this.SRLedgerList = []; this.resultCount = 0;
       this.$validator.reset(); this.errors.clear();
     },
 
@@ -380,20 +340,19 @@ export default {
     resetSVCledger(data){
       this.upLoading = true;
       this.input = ({
-        svcledgerid:      data.svcledgerid,
-        hubid:            this.HubId.HubID,
-        openingbalance:   data.openingbalance,
-        codamount:        data.codamount,
-        bankdeposit:      data.bankdeposit,
-        statusid:         data.statusid,
-        financereasonid:  data.financereasonid,
-        createdby:        data.createdby,
-        username:         this.localuserid
+        ledgerdetailid: data.ledgerdetailid,
+        srid:           data.srid,
+        hubid:          this.HubId.HubID,
+        codamount:      data.codamount,
+        creditamount:   data.creditamount,
+        debitamount:    data.debitamount,
+        createdby:      data.createdby,
+        username:       this.localuserid
       });
 
       axios({
         method: 'POST',
-        'url': apiUrl.api_url + 'deleteSVCLedgerEntry',
+        'url': apiUrl.api_url + 'deleteSRLedgerEntry',
         'data': this.input,
         headers: {
           'Authorization': 'Bearer '+this.myStr
@@ -403,7 +362,7 @@ export default {
         this.upLoading = false;
         if (response.data.code == 200) {
           this.$alertify.success(response.data.msg);
-          this.GetSVCledgerData()
+          this.getMonthlySRLedgerDetails()
         } else {
           this.$alertify.error(response.data.msg)
         }
@@ -417,26 +376,25 @@ export default {
 
       this.upLoading = true;
 
-      if(this.form.depamount[data.svcledgerid]<=0){
-        document.getElementById("depamt"+data.svcledgerid).innerHTML="Bank deposited amount is required."; return false;
+      if(this.form.creditamount[data.ledgerdetailid]<=0){
+        document.getElementById("depamt"+data.ledgerdetailid).innerHTML="Bank deposited amount is required."; return false;
       }else{
-        document.getElementById("depamt"+data.svcledgerid).innerHTML="";
+        document.getElementById("depamt"+data.ledgerdetailid).innerHTML="";
       }
 
       this.input = ({
-        svcledgerid:      data.svcledgerid,
-        hubid:            this.HubId.HubID,
-        openingbalance:   data.openingbalance,
-        codamount:        this.form.codamount[data.svcledgerid],
-        bankdeposit:      this.form.depamount[data.svcledgerid],
-        statusid:         data.statusid,
-        financereasonid:  data.financereasonid,
-        createdby:        data.createdby,
-        username:         this.localuserid
+        ledgerdetailid: data.ledgerdetailid,
+        srid:           data.srid,
+        hubid:          this.HubId.HubID,
+        codamount:      data.codamount,
+        creditamount:   data.creditamount,
+        debitamount:    data.debitamount,
+        createdby:      data.createdby,
+        username:       this.localuserid
       })
       axios({
         method: 'POST',
-        'url': apiUrl.api_url + 'updateSVCLedger',
+        'url': apiUrl.api_url + 'updateSRLedger',
         'data': this.input,
         headers: {
           'Authorization': 'Bearer '+this.myStr
@@ -446,7 +404,7 @@ export default {
         this.upLoading = false;
         if (response.data.code == 200) {
           this.$alertify.success(response.data.msg);
-          this.GetSVCledgerData()
+          this.getMonthlySRLedgerDetails()
         } else {
           this.$alertify.error(response.data.msg);
         }
@@ -461,8 +419,8 @@ export default {
     },
 
     editLedger(index){
-      $('#cax'+index).hide(); $('#bdx'+index).hide(); $('#ed'+index).hide(); $('#vrl'+index).hide(); $('#vri'+index).hide(); $('#vrrl'+index).hide(); $('#vrri'+index).hide();
-      $('#cau'+index).show(); $('#bdu'+index).show(); $('#dps'+index).show(); $('#up'+index).show();
+      $('#cax'+index).hide(); $('#bdx'+index).hide(); $('#dbx'+index).hide(); $('#ed'+index).hide();
+      $('#cau'+index).show(); $('#bdu'+index).show(); $('#dbu'+index).show(); $('#up'+index).show();
     },
   }
 }

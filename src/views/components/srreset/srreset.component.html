@@ -80,10 +80,7 @@
 
               <div class="card-footer">
                 <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
-                <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>&nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;
-                <button class="btn btn-sm btn-success" title="Today's SR Closure Status" @click="srStatus()" type="button"><i class="fa fa-search"></i> SR Closure Status</button>
-                <br>
-                <small class="text-muted"><font color="red">Note: * For SR Closure Staus, no need to fill above input field.</font></small>
+                <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
               </div>
             </form>
           </div>
@@ -116,6 +113,7 @@
             <div class="card-headerfrm" style="margin-bottom: 15px;">
               <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result</h4>
               <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+              <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="upLoading" />
               <table class="table-bordered table-hover tbl datatables" style="width:100%;">
                 <thead>
                   <tr class="text-primary">
@@ -127,6 +125,7 @@
                     <th class="text-center tableheader"><b>Pending Amount ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Created Date</b></th>
                     <th class="text-center tableheader"><b>Created By</b></th>
+                    <th class="text-center tableheader" style="width: 80px;"><b>Action</b></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -137,20 +136,37 @@
                     <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
                     <td class="text-center">{{SL_List.SRName}}</td>
                     <td class="text-center">{{SL_List.deliverydate}}</td>
-                    <td class="text-center">{{SL_List.codamount}}</td>
                     <td class="text-center">
-                      <span @click="showDenomDetail(SL_List.denomination)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="SL_List.creditamount!=0">{{SL_List.creditamount}}</span>
-                      <span v-if="SL_List.creditamount==0">{{SL_List.creditamount}}</span>
+                      <span v-bind:id='`${"cax"+SL_List.ledgerdetailid}`'>{{SL_List.codamount}}</span>
+
+                      <span v-bind:id='`${"cau"+SL_List.ledgerdetailid}`' style="display: none;">
+                        <input v-model="form.codamount[SL_List.ledgerdetailid]" v-bind:class="{'form-control': true }" type="text" placeholder="COD Receivable" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="height: 30px;font-size: 13px;">
+                      </span>
                     </td>
                     <td class="text-center">
-                      <span @click="showReasonAWBNo(SL_List.awbno)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="SL_List.awbno">{{SL_List.debitamount}}</span>
-                      <span v-if="SL_List.awbno==null">{{SL_List.debitamount}}</span>
+                      <span v-bind:id='`${"bdx"+SL_List.ledgerdetailid}`'>{{SL_List.creditamount}}</span>
+
+                      <span v-bind:id='`${"bdu"+SL_List.ledgerdetailid}`' style="display: none;">
+                        <input v-model="form.creditamount[SL_List.ledgerdetailid]" v-bind:class="{'form-control': true }" type="text" placeholder="Paid Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="height: 30px;font-size: 13px;">
+                        <span v-bind:id="setLedgid('depamt', SL_List.ledgerdetailid)" class="text-danger"></span>
+                      </span>
+                    </td>
+                    <td class="text-center">
+                      <span v-bind:id='`${"dbx"+SL_List.ledgerdetailid}`'>{{SL_List.debitamount}}</span>
+
+                      <span v-bind:id='`${"dbu"+SL_List.ledgerdetailid}`' style="display: none;">
+                        <input v-model="form.debitamount[SL_List.ledgerdetailid]" v-bind:class="{'form-control': true }" type="text" placeholder="Pending Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="height: 30px;font-size: 13px;">
+                      </span>
                     </td>
                     <td class="text-center">{{SL_List.createddate}}</td>
                     <td class="text-center">{{SL_List.createdby}}</td>
+                    <td class="text-center">
+                      <span v-bind:id='`${"ed"+SL_List.ledgerdetailid}`'><i v-if="role=='admin' && (SL_List.createdby != 'schedular@xpressbees.com')" @click.prevent="editLedger(SL_List.ledgerdetailid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
+                      <span v-bind:id='`${"up"+SL_List.ledgerdetailid}`' style="display: none;"><i @click.prevent="showUpdateModal(SL_List)" class="fa fa-floppy-o text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
+                      <i v-if="role=='admin' && (SL_List.createdby != 'schedular@xpressbees.com')" @click.prevent="showResetModal(SL_List)" class="fa fa-trash text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
+                    </td>
                   </tr>
                 </tbody>
-
               </table><br>
               <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
               </paginate>
