@@ -125,7 +125,6 @@
 
                       <span v-if="role=='admin'" v-bind:id='`${"fcu"+CODLedger_List.svcledgerid}`' style="display: none;">
                         <input v-model="form.financeclosingamt[CODLedger_List.svcledgerid]" v-bind:class="{'form-control': true }" type="text" placeholder="Finance Closing Amount" onkeypress="return event.charCode <= 57" style="height: 30px;font-size: 13px;">
-                        <span v-bind:id="setLedgid('fcamt', CODLedger_List.svcledgerid)" class="text-danger"></span>
                       </span>
 
                       <span v-bind:id='`${"FCed"+CODLedger_List.svcledgerid}`'><i v-if="role=='admin'" @click.prevent="editFC(CODLedger_List.svcledgerid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer; float: right;"></i></span>
