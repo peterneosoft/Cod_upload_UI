@@ -107,14 +107,14 @@
                       <span v-if="role=='admin'" v-bind:id='`${"cax"+CODLedger_List.svcledgerid}`'>{{CODLedger_List.codamount}}</span>
 
                       <span v-if="role=='admin'" v-bind:id='`${"cau"+CODLedger_List.svcledgerid}`' style="display: none;">
-                        <input v-model="form.codamount[CODLedger_List.svcledgerid]" v-bind:class="{'form-control': true }" type="text" placeholder="COD Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="height: 30px;font-size: 13px;">
+                        <input v-model="form.codamount[CODLedger_List.svcledgerid]" v-bind:class="{'form-control': true }" type="text" placeholder="COD Amount" onkeypress="return event.charCode <= 57" style="height: 30px;font-size: 13px;">
                       </span>
                     </td>
                     <td class="text-center">
                       <span v-bind:id='`${"bdx"+CODLedger_List.svcledgerid}`'>{{CODLedger_List.bankdeposit}}</span>
 
                       <span v-bind:id='`${"bdu"+CODLedger_List.svcledgerid}`' style="display: none;">
-                        <input v-model="form.depamount[CODLedger_List.svcledgerid]" v-bind:class="{'form-control': true }" type="text" placeholder="Bank Deposit Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="height: 30px;font-size: 13px;">
+                        <input v-model="form.depamount[CODLedger_List.svcledgerid]" v-bind:class="{'form-control': true }" type="text" placeholder="Bank Deposit Amount" onkeypress="return event.charCode <= 57" style="height: 30px;font-size: 13px;">
                       </span>
                     </td>
                     <td class="text-center">{{CODLedger_List.closingbalance}}</td>
@@ -124,7 +124,7 @@
                       <span v-if="role=='admin'" v-bind:id='`${"fcx"+CODLedger_List.svcledgerid}`'>{{CODLedger_List.financeclosingamt}}</span>
 
                       <span v-if="role=='admin'" v-bind:id='`${"fcu"+CODLedger_List.svcledgerid}`' style="display: none;">
-                        <input v-model="form.financeclosingamt[CODLedger_List.svcledgerid]" v-bind:class="{'form-control': true }" type="text" placeholder="Finance Closing Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57" style="height: 30px;font-size: 13px;">
+                        <input v-model="form.financeclosingamt[CODLedger_List.svcledgerid]" v-bind:class="{'form-control': true }" type="text" placeholder="Finance Closing Amount" onkeypress="return event.charCode <= 57" style="height: 30px;font-size: 13px;">
                         <span v-bind:id="setLedgid('fcamt', CODLedger_List.svcledgerid)" class="text-danger"></span>
                       </span>
 
