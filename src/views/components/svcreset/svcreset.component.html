@@ -142,7 +142,7 @@
                       </span>
 
                       <span v-bind:id='`${"dps"+CODLedger_List.svcledgerid}`' style="display: none;">
-                        <input @change="onUpload(CODLedger_List)" class="form-control" type="file" placeholder="Upload Deposit Slip" v-bind:name="setLedgid('depslip', CODLedger_List.svcledgerid)" v-bind:id="setLedgid('depslip', CODLedger_List.svcledgerid)"
+                        <input v-if="CODLedger_List.createdby != 'schedular@xpressbees.com' && CODLedger_List.deposittype != ''" @change="onUpload(CODLedger_List)" class="form-control" type="file" placeholder="Upload Deposit Slip" v-bind:name="setLedgid('depslip', CODLedger_List.svcledgerid)" v-bind:id="setLedgid('depslip', CODLedger_List.svcledgerid)"
                           v-bind:class="{'form-control': true}" style="width: 120px; border: 0; background-color: transparent; font-size: 12px;">
                         <span v-bind:id="setLedgid('depslip', CODLedger_List.svcledgerid)" class="text-danger"></span>
                       </span>
