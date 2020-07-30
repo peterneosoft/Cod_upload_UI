@@ -394,12 +394,6 @@ export default {
 
       this.upLoading = true;
 
-      if(this.form.financeclosingamt[data.svcledgerid]<=0){
-        document.getElementById("fcamt"+data.svcledgerid).innerHTML="Finance closing amount is required."; this.upLoading = false; return false;
-      }else{
-        document.getElementById("fcamt"+data.svcledgerid).innerHTML="";
-      }
-
       this.input = ({
         svcledgerid:data.svcledgerid,
         hubid:      this.HubId.HubID,
