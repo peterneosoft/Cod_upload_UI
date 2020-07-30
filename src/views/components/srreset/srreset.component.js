@@ -371,11 +371,11 @@ export default {
       this.upLoading = true;
 
       this.input = ({
-        srledgerid: data.ledgerdetailid,
-        srid:           data.srid,
-        codamount:      data.codamount,
-        creditamount:   data.creditamount,
-        debitamount:    data.debitamount
+        srledgerid:   data.ledgerdetailid,
+        srid:         data.srid,
+        codamount:    this.form.codamount[data.ledgerdetailid],
+        creditamount: this.form.creditamount[data.ledgerdetailid],
+        debitamount:  this.form.debitamount[data.ledgerdetailid]
       })
       axios({
         method: 'POST',
