@@ -83,10 +83,10 @@
                     <th class="text-center tableheader"><b>Deposit Date</b></th>
                     <th class="text-center tableheader"><b>Opening Amount ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>COD Receivable ( <i class="fa fa-rupee"></i> )</b></th>
-                    <th class="text-center tableheader"><b>Bank Deposited Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Deposited Amount ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Closing Amount ( <i class="fa fa-rupee"></i> )</b></th>
-                    <th class="text-center tableheader"><b>Finance Confirmed Amount ( <i class="fa fa-rupee"></i> )</b></th>
-                    <th class="text-center tableheader"><b>Finance Closing Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Finance Confirmed ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Finance Outstanding ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Deposit Slip</b></th>
                     <th class="text-center tableheader"><b>Status</b></th>
                     <th class="text-center tableheader"><b>Created by</b></th>
@@ -154,7 +154,7 @@
                     <td class="text-center">
                       <span v-bind:id='`${"ed"+CODLedger_List.svcledgerid}`'><i v-if="role=='admin'" @click.prevent="editLedger(CODLedger_List.svcledgerid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
                       <span v-bind:id='`${"up"+CODLedger_List.svcledgerid}`' style="display: none;"><i @click.prevent="showUpdateModal(CODLedger_List)" class="fa fa-floppy-o text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
-                      <i v-if="role=='admin' && (CODLedger_List.createdby != 'schedular@xpressbees.com')" @click.prevent="showResetModal(CODLedger_List)" class="fa fa-trash text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
+                      <i v-if="role=='admin' && (CODLedger_List.createdby != 'schedular@xpressbees.com' && CODLedger_List.deposittype != '')" @click.prevent="showResetModal(CODLedger_List)" class="fa fa-trash text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
                     </td>
                   </tr>
                 </tbody>
