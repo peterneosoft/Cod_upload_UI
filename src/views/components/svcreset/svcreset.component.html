@@ -85,6 +85,7 @@
                     <th class="text-center tableheader"><b>COD Receivable ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Deposited Amount ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Closing Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Finance Reason</b></th>
                     <th class="text-center tableheader"><b>Finance Confirmed ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Finance Outstanding ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Deposit Slip</b></th>
@@ -97,7 +98,7 @@
                   <tr v-if="resultCount==0">
                     <td colspan="13" align="center">No record found</td>
                   </tr>
-                  <tr v-for="(CODLedger_List,index) in CODLedgerReports" v-bind:class="`${(CODLedger_List.createdby == 'schedular@xpressbees.com') || (CODLedger_List.deposittype) == '' ? 'scheduler' : '' || CODLedger_List.reasonid == 65 ? 'other' : '' || ([84,124,187].includes(CODLedger_List.financereasonid)) ? 'mismatched' : ''}`">
+                  <tr v-for="(CODLedger_List,index) in CODLedgerReports" v-bind:class="`${(CODLedger_List.createdby == 'schedular@xpressbees.com') || (CODLedger_List.deposittype) == '' ? 'scheduler' : '' || CODLedger_List.reasonid == 65 ? 'other' : '' || ([84,124,187,218,125].includes(CODLedger_List.financereasonid)) ? 'mismatched' : ''}`">
                     <td class="text-center">{{pageno+index+1}}</td>
                     <td class="text-center">{{CODLedger_List.deliverydate}}</td>
                     <td class="text-center">{{CODLedger_List.bankdepositdate}}</td>
@@ -118,7 +119,22 @@
                       </span>
                     </td>
                     <td class="text-center">{{CODLedger_List.closingbalance}}</td>
-                    <td class="text-center">{{CODLedger_List.actualrecamt}}</td>
+                    <td class="text-center">
+                      <span v-bind:id='`${"frx"+CODLedger_List.svcledgerid}`'>{{CODLedger_List.financereason}}</span>
+
+                      <span v-bind:id='`${"fru"+CODLedger_List.svcledgerid}`' style="display: none;">
+                        <select v-if="CODLedger_List.financereasonid" v-model="form.finreason[CODLedger_List.svcledgerid]" v-bind:class="{'form-control': true}" style="width: 150px;height: 32px;font-size: 12px;">
+                          <option v-for="finreason_obj in FinanceReasonList" v-bind:value="finreason_obj.ReasonsID" >{{finreason_obj.Reason}}</option>
+                        </select>
+                      </span>
+                    </td>
+                    <td class="text-center">
+                      <span v-bind:id='`${"arx"+CODLedger_List.svcledgerid}`'>{{CODLedger_List.actualrecamt}}</span>
+
+                      <span v-bind:id='`${"aru"+CODLedger_List.svcledgerid}`' style="display: none;">
+                        <input v-if="CODLedger_List.financereasonid" v-model="form.actualrecamt[CODLedger_List.svcledgerid]" v-bind:class="{'form-control': true }" type="text" placeholder="Finance Confirmed Amount" onkeypress="return event.charCode <= 57" style="height: 30px;font-size: 13px;">
+                      </span>
+                    </td>
                     <td class="text-center">
                       <span v-if="role!='admin'">{{CODLedger_List.financeclosingamt}}</span>
                       <span v-if="role=='admin'" v-bind:id='`${"fcx"+CODLedger_List.svcledgerid}`'>{{CODLedger_List.financeclosingamt}}</span>

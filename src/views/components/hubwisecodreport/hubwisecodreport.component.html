@@ -252,7 +252,7 @@
                   <tr v-if="resultCount==0">
                     <td colspan="24" align="center">No record found</td>
                   </tr>
-                  <tr v-for="(CODLedger_List,index) in CODLedgerReports" v-bind:class="`${(CODLedger_List.createdby == 'schedular@xpressbees.com') || (CODLedger_List.deposittype) == '' ? 'scheduler' : '' || CODLedger_List.reasonid == 65 ? 'other' : '' || ([84,124,187].includes(CODLedger_List.financereasonid)) ? 'mismatched' : ''}`">
+                  <tr v-for="(CODLedger_List,index) in CODLedgerReports" v-bind:class="`${(CODLedger_List.createdby == 'schedular@xpressbees.com') || (CODLedger_List.deposittype) == '' ? 'scheduler' : '' || CODLedger_List.reasonid == 65 ? 'other' : '' || ([84,124,187,218,125].includes(CODLedger_List.financereasonid)) ? 'mismatched' : ''}`">
                     <td class="text-center">{{pageno+index+1}}</td>
                     <td class="text-center">{{CODLedger_List.zonename}}</td>
                     <td class="text-center">{{CODLedger_List.hubname}}</td>

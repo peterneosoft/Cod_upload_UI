@@ -43,10 +43,12 @@ export default {
       form: {
         depamount:[],
         depslip:[],
-        finamount: [],
         codamount: [],
-        financeclosingamt: []
-      }
+        financeclosingamt: [],
+        finreason: [],
+        actualrecamt: []
+      },
+      FinanceReasonList: []
     }
   },
 
@@ -66,9 +68,28 @@ export default {
     this.role             = window.localStorage.getItem('accessrole').toLowerCase();
 
     this.getZoneData();
+    this.GetReasonList();
   },
 
   methods: {
+    GetReasonList(){
+      this.input = ({
+        ReasonType:"Finance"
+      })
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'external/getCODReasons',
+          data: this.input,
+          headers: {
+             'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+          this.FinanceReasonList = result.data.Reasons.data;
+        }, error => {
+          console.error(error)
+        })
+    },
 
     getPaginationData(pageNum) {
         this.pageno = (pageNum - 1) * 10
@@ -76,8 +97,8 @@ export default {
     },
 
     GetSVCledgerData() {
-      $('span[id^="cau"]').hide(); $('span[id^="bdu"]').hide(); $('span[id^="fcu"]').hide(); $('span[id^="dps"]').hide(); $('span[id^="up"]').hide();  $('span[id^="FCup"]').hide();
-      $('span[id^="cax"]').show(); $('span[id^="bdx"]').show(); $('span[id^="fcx"]').show(); $('span[id^="ed"]').show(); $('span[id^="FCed"]').show(); $('span[id^="vri"]').hide(); $('span[id^="vrl"]').show();
+      $('span[id^="cau"]').hide(); $('span[id^="bdu"]').hide(); $('span[id^="fru"]').hide(); $('span[id^="fcu"]').hide(); $('span[id^="aru"]').hide(); $('span[id^="dps"]').hide(); $('span[id^="up"]').hide();  $('span[id^="FCup"]').hide();
+      $('span[id^="cax"]').show(); $('span[id^="bdx"]').show(); $('span[id^="frx"]').show(); $('span[id^="fcx"]').show(); $('span[id^="arx"]').show(); $('span[id^="ed"]').show(); $('span[id^="FCed"]').show(); $('span[id^="vri"]').hide(); $('span[id^="vrl"]').show();
       this.input = ({
           offset: this.pageno,
           limit: 10,
@@ -111,9 +132,10 @@ export default {
           ledger.forEach((svc,key)=>{
             this.form.depamount[svc.svcledgerid]         = svc.bankdeposit;
             this.form.codamount[svc.svcledgerid]         = svc.codamount;
-            this.form.finamount[svc.svcledgerid]         = svc.actualrecamt ? svc.actualrecamt : 0;
             this.form.depslip[svc.svcledgerid]           = svc.batchid;
             this.form.financeclosingamt[svc.svcledgerid] = svc.financeclosingamt;
+            this.form.actualrecamt[svc.svcledgerid]      = svc.actualrecamt ? svc.actualrecamt : 0;
+            this.form.finreason[svc.svcledgerid]         = svc.financereasonid ? svc.financereasonid : '';
           });
         }else{
           this.resultCount  = 0;
@@ -252,15 +274,17 @@ export default {
       this.upLoading = true;
 
       this.input = ({
-        svcledgerid:      data.svcledgerid,
-        hubid:            this.HubId.HubID,
-        openingbalance:   data.openingbalance,
-        codamount:        this.form.codamount[data.svcledgerid],
-        bankdeposit:      this.form.depamount[data.svcledgerid],
-        statusid:         data.statusid,
-        financereasonid:  data.financereasonid,
-        createdby:        data.createdby,
-        username:         this.localuserid
+        svcledgerid:          data.svcledgerid,
+        hubid:                this.HubId.HubID,
+        openingbalance:       data.openingbalance,
+        codamount:            this.form.codamount[data.svcledgerid],
+        bankdeposit:          this.form.depamount[data.svcledgerid],
+        statusid:             data.statusid,
+        financereasonid:      this.form.finreason[data.svcledgerid],
+        financeconfirmamount: this.form.actualrecamt[data.svcledgerid],
+        recoveryamt:          data.othercharges,
+        createdby:            data.createdby,
+        username:             this.localuserid
       })
       axios({
         method: 'POST',
@@ -361,8 +385,8 @@ export default {
     },
 
     editLedger(index){
-      $('#cax'+index).hide(); $('#bdx'+index).hide(); $('#ed'+index).hide(); $('#vrl'+index).hide(); $('#vri'+index).hide(); $('#vrrl'+index).hide(); $('#vrri'+index).hide();
-      $('#cau'+index).show(); $('#bdu'+index).show(); $('#dps'+index).show(); $('#up'+index).show();
+      $('#cax'+index).hide(); $('#bdx'+index).hide(); $('#frx'+index).hide(); $('#arx'+index).hide(); $('#ed'+index).hide(); $('#vrl'+index).hide(); $('#vri'+index).hide(); $('#vrrl'+index).hide(); $('#vrri'+index).hide();
+      $('#cau'+index).show(); $('#bdu'+index).show(); $('#fru'+index).show(); $('#aru'+index).show(); $('#dps'+index).show(); $('#up'+index).show();
     },
 
     showHideImages(index, elem){
@@ -395,9 +419,9 @@ export default {
       this.upLoading = true;
 
       this.input = ({
-        svcledgerid:data.svcledgerid,
-        hubid:      this.HubId.HubID,
-        amount:     this.form.financeclosingamt[data.svcledgerid]
+        svcledgerid:      data.svcledgerid,
+        hubid:            this.HubId.HubID,
+        amount:           this.form.financeclosingamt[data.svcledgerid]
       })
       axios({
         method: 'POST',

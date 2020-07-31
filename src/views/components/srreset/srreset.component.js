@@ -375,7 +375,8 @@ export default {
         srid:         data.srid,
         codamount:    this.form.codamount[data.ledgerdetailid],
         creditamount: this.form.creditamount[data.ledgerdetailid],
-        debitamount:  this.form.debitamount[data.ledgerdetailid]
+        debitamount:  this.form.debitamount[data.ledgerdetailid],
+        username:     this.localuserid
       })
       axios({
         method: 'POST',
