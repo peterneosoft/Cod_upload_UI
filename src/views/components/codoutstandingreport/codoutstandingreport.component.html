@@ -14,7 +14,7 @@
               </b-form-fieldset>
 
               <div class="form-group row">
-                <div class="col-md-4" v-if="selected=='outstanding'">
+                <div class="col-md-4" v-show="(['svcoutstanding','financeoutstanding'].includes(selected))">
                   <label>Zone <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="zoneLoading" />
@@ -25,7 +25,7 @@
                   <span v-show="errors.has('zone')" class="text-danger">Zone is required.</span>
                 </div>
 
-                <div class="col-md-4" v-if="selected=='summary'">
+                <div class="col-md-4" v-show="selected=='summary'">
                   <label>Zone <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="zoneLoading" />
@@ -59,7 +59,8 @@
 
               <div class="form-group row">
                 <div class="col-md-3">
-                  <label v-if="selected=='outstanding'">Bank Credit Date <font color="red">*</font></label>
+                  <label v-if="selected=='svcoutstanding'">Till Date <font color="red">*</font></label>
+                  <label v-if="selected=='financeoutstanding'">Bank Credit Date <font color="red">*</font></label>
                   <label v-if="selected=='summary'">Delivery Date <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
                     <b-form-input id="deliverydate" type="date" name="deliverydate" v-validate="{required: true}"
@@ -95,26 +96,24 @@
                     <th class="text-center tableheader"><b>Zone</b></th>
                     <th class="text-center tableheader"><b>Hub/SVC Name</b></th>
                     <!-- <th class="text-center tableheader"><b>RSC Name</b></th> -->
-                    <th class="text-center tableheader" v-if="selected=='outstanding'"><b>Bank Credit Date</b></th>
+                    <th class="text-center tableheader" v-if="selected=='svcoutstanding'"><b>Till Date</b></th>
+                    <th class="text-center tableheader" v-if="selected=='financeoutstanding'"><b>Bank Credit Date</b></th>
                     <th class="text-center tableheader" v-if="selected=='summary'"><b>Delivery Date</b></th>
-                    <th class="text-center tableheader" v-if="selected=='outstanding'"><b>SVC Outstanding Amount ( <i class="fa fa-rupee"></i> )</b></th>
-                    <th class="text-center tableheader" v-if="selected=='outstanding'"><b>Finance Outstanding Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader" v-if="selected=='svcoutstanding'"><b>SVC Outstanding Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader" v-if="selected=='financeoutstanding'"><b>Finance Outstanding Amount ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader" v-if="selected=='summary'"><b>COD Amount ( <i class="fa fa-rupee"></i> )</b></th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-if="resultCount==0">
-                    <td v-if="selected=='outstanding'" colspan="6" align="center">No record found</td>
-                    <td v-if="selected=='summary'" colspan="5" align="center">No record found</td>
-                  </tr>
+                  <tr v-if="resultCount==0"><td colspan="5" align="center">No record found</td></tr>
                   <tr v-for="(CODOutstanding,index) in CODOutstandingReport">
                     <td class="text-center">{{pageno+index+1}}</td>
                     <td class="text-center">{{CODOutstanding.zonename}}</td>
                     <td class="text-center">{{CODOutstanding.hubname}}</td>
                     <!-- <td class="text-center">{{CODOutstanding.rscowner}}</td> -->
                     <td class="text-center">{{CODOutstanding.deliverydate}}</td>
-                    <td class="text-center" v-if="selected=='outstanding'">{{CODOutstanding.svcoutstanding}}</td>
-                    <td class="text-center" v-if="selected=='outstanding'">{{CODOutstanding.financeoutstanding}}</td>
+                    <td class="text-center" v-if="selected=='svcoutstanding'">{{CODOutstanding.svcoutstanding}}</td>
+                    <td class="text-center" v-if="selected=='financeoutstanding'">{{CODOutstanding.financeoutstanding}}</td>
                     <td class="text-center" v-if="selected=='summary'">{{CODOutstanding.codamount}}</td>
                   </tr>
                 </tbody>

@@ -44,9 +44,10 @@ export default {
       SearchZoneIds:[],
       deliverydate:'',
       searchview:'',
-      selected: 'outstanding',
+      selected: 'financeoutstanding',
       options: [
-        { text: 'COD Outstanding', value: 'outstanding' },
+        { text: 'Finance Outstanding', value: 'financeoutstanding' },
+        { text: 'SVC Outstanding', value: 'svcoutstanding' },
         { text: 'COD Summary', value: 'summary' }
       ]
     }
@@ -155,7 +156,9 @@ export default {
 
       if(this.selected=='summary' && this.deliverydate){
         rep = apiUrl.api_url + 'exportCODSummaryReport';
-      }else if(this.selected=='outstanding' && this.deliverydate){
+      }else if(this.selected=='svcoutstanding' && this.deliverydate){
+        rep = apiUrl.api_url + 'exportSVCOutstandingReport';
+      }else if(this.selected=='financeoutstanding' && this.deliverydate){
         rep = apiUrl.api_url + 'exportCODOutstandingReport';
       }
 
@@ -293,7 +296,9 @@ export default {
 
       if(this.selected=='summary' && this.deliverydate){
         rep = apiUrl.api_url + 'getCODSummaryReport';
-      }else if(this.selected=='outstanding' && this.deliverydate){
+      }else if(this.selected=='svcoutstanding' && this.deliverydate){
+        rep = apiUrl.api_url + 'getSVCOutstandingReport';
+      }else if(this.selected=='financeoutstanding' && this.deliverydate){
         rep = apiUrl.api_url + 'getCODOutstandingReport';
       }
 
@@ -409,11 +414,11 @@ export default {
       this.$validator.validateAll().then(() => {
         if(this.selected){
           this.pageno = 0; document.getElementById("opt").innerHTML=""; this.exportf = false;
-          if((this.selected=='summary' || this.selected=='outstanding') && this.deliverydate){
+          if((this.selected=='summary' || this.selected=='svcoutstanding' || this.selected=='financeoutstanding') && this.deliverydate){
             this.getCODOutstandingReport();
           }
         }else{
-          document.getElementById("opt").innerHTML="Please choose atleast one search option ( COD Outstanding OR COD Summary )."; return false;
+          document.getElementById("opt").innerHTML="Please choose atleast one search option ( SVC Outstanding OR Finance Outstanding OR COD Summary )."; return false;
         }
       }).catch(() => {
         console.log('errors exist', this.errors)

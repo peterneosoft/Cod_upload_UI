@@ -85,10 +85,19 @@ export default {
   },
 
   methods: {
+    changeRadio(ele){
+      this.SRArr = this.SRList = []; this.SR_Name = '';
+
+      if(ele == 'agent') this.GetAgentData();
+      else this.GetDeliveryAgentData();
+    },
+
     addHubData() {
       if(this.HubId.HubID){
-        this.GetDeliveryAgentData();
-        this.GetAgentData();
+        this.SRArr = this.SRList = []; this.SR_Name = ''; this.agentList = []; this.Agent_Name = '';
+
+        if(this.selected=='agent') this.GetAgentData();
+        else this.GetDeliveryAgentData();
       }
     },
 
@@ -149,9 +158,10 @@ export default {
       })
     },
 
+    //to get Agent's SR List
     GetAgentSRData(){
       if(this.Agent_Name){
-        this.srLoading = true; this.SRArr = this.SRList = []; this.SR_Name = '';
+        this.srLoading = true;
          this.input = ({
              id: this.Agent_Name.id,
              hubid: this.HubId.HubID
@@ -179,30 +189,19 @@ export default {
        }
     },
 
-    changeRadio(ele){
-      this.SRArr = this.SRList = []; this.SR_Name = '';
-      if(ele == 'sr'){
-        this.GetDeliveryAgentData();
-      }
-    },
-
     getPaginationData(pageNum) {
         this.pageno = (pageNum - 1) * 10
         this.getMonthlySRLedgerDetails()
     },
 
     getMonthlySRLedgerDetails(){
-      $('span[id^="cau"]').hide(); $('span[id^="bdu"]').hide(); $('span[id^="dbu"]').hide(); $('span[id^="up"]').hide();
-      $('span[id^="cax"]').show(); $('span[id^="bdx"]').show(); $('span[id^="dbx"]').show(); $('span[id^="ed"]').show();
+      $('span[class^="y"]').hide(); $('span[class^="x"]').show();
 
       if(this.fromDate > this.toDate){
-         document.getElementById("fdate").innerHTML="From date should not be greater than To date.";
-         return false;
-      }else{
-        document.getElementById("fdate").innerHTML="";
+         document.getElementById("fdate").innerHTML="From date should not be greater than To date."; return false;
       }
+      document.getElementById("fdate").innerHTML=""; this.isLoading = true;
 
-      this.SRLedgerList = []; this.isLoading = true;
       this.input = ({
         srid: this.SR_Name.srid ? [this.SR_Name.srid]: this.SRArr,
         hubid:this.HubId.HubID,
@@ -231,15 +230,12 @@ export default {
                 this.pagecount = Math.ceil(totalRows / 10)
             }
 
-            let ledger = result.data.data.rows;
-            ledger.forEach((sr,key)=>{
+            this.SRLedgerList.forEach((sr,key)=>{
               this.form.codamount[sr.ledgerdetailid]    = sr.codamount;
               this.form.creditamount[sr.ledgerdetailid] = sr.creditamount;
               this.form.debitamount[sr.ledgerdetailid]  = sr.debitamount;
             });
-          }else{
-            this.resultCount = 0;
-          }
+          }else{ this.resultCount = 0; }
           this.isLoading = false;
         }, error => {
           this.isLoading = false; console.error(error); this.$alertify.error('Error Occured');
@@ -283,7 +279,7 @@ export default {
           }
         })
         .then(result => {
-          this.hubLoading = false; this.HubId = []; this.hubList = [];
+          this.hubLoading = false;
           if(result.data.hub.code == 200){
             this.hubList = result.data.hub.data;
           }
@@ -298,7 +294,7 @@ export default {
 
         if(this.selected){
           if(((this.selected=='agent' && this.Agent_Name) || (this.selected=='sr' && this.SR_Name)) && (this.HubId.HubID && this.fromDate && this.toDate)){
-            this.pageno = 0; document.getElementById("opt").innerHTML="";
+            this.pageno = this.resultCount = 0; this.SRLedgerList = []; document.getElementById("opt").innerHTML="";
             this.getMonthlySRLedgerDetails();
           }
         }else{
@@ -310,7 +306,8 @@ export default {
     },
 
     resetForm() {
-      this.zone=""; this.hubList=[]; this.HubId=[]; this.pageno = 0; this.SRLedgerList = []; this.resultCount = 0;
+      this.hubList = this.HubId = this.SRArr = this.SRList = this.SRLedgerList = [];
+      this.pageno = this.resultCount = 0; this.zone = this.SR_Name = this.fromDate = this.toDate = '';
       this.$validator.reset(); this.errors.clear();
     },
 
@@ -400,13 +397,8 @@ export default {
       });
     },
 
-    setLedgid(name, key){
-      return name+key;
-    },
-
     editLedger(index){
-      $('#cax'+index).hide(); $('#bdx'+index).hide(); $('#dbx'+index).hide(); $('#ed'+index).hide();
-      $('#cau'+index).show(); $('#bdu'+index).show(); $('#dbu'+index).show(); $('#up'+index).show();
+      $('.x'+index).hide(); $('.y'+index).show();
     },
   }
 }

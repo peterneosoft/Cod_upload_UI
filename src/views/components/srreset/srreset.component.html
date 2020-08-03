@@ -137,32 +137,32 @@
                     <td class="text-center">{{SL_List.SRName}}</td>
                     <td class="text-center">{{SL_List.deliverydate}}</td>
                     <td class="text-center">
-                      <span v-bind:id='`${"cax"+SL_List.ledgerdetailid}`'>{{SL_List.codamount}}</span>
+                      <span v-bind:class='`${"x"+SL_List.ledgerdetailid}`'>{{SL_List.codamount}}</span>
 
-                      <span v-bind:id='`${"cau"+SL_List.ledgerdetailid}`' style="display: none;">
-                        <input v-model="form.codamount[SL_List.ledgerdetailid]" v-bind:class="{'form-control': true }" type="text" placeholder="COD Receivable" onkeypress="return event.charCode <= 57" style="height: 30px;font-size: 13px;">
+                      <span v-bind:class='`${"y"+SL_List.ledgerdetailid}`' style="display: none;">
+                        <input v-model="form.codamount[SL_List.ledgerdetailid]" class="{'form-control': true }" type="text" placeholder="COD Receivable" onkeypress="return event.charCode <= 57" style="height: 30px;font-size: 13px;">
                       </span>
                     </td>
                     <td class="text-center">
-                      <span v-bind:id='`${"bdx"+SL_List.ledgerdetailid}`'>{{SL_List.creditamount}}</span>
+                      <span v-bind:class='`${"x"+SL_List.ledgerdetailid}`'>{{SL_List.creditamount}}</span>
 
-                      <span v-bind:id='`${"bdu"+SL_List.ledgerdetailid}`' style="display: none;">
-                        <input v-model="form.creditamount[SL_List.ledgerdetailid]" v-bind:class="{'form-control': true }" type="text" placeholder="Paid Amount" onkeypress="return event.charCode <= 57" style="height: 30px;font-size: 13px;">
+                      <span v-bind:class='`${"y"+SL_List.ledgerdetailid}`' style="display: none;">
+                        <input v-model="form.creditamount[SL_List.ledgerdetailid]" class="{'form-control': true }" type="text" placeholder="Paid Amount" onkeypress="return event.charCode <= 57" style="height: 30px;font-size: 13px;">
                       </span>
                     </td>
                     <td class="text-center">
-                      <span v-bind:id='`${"dbx"+SL_List.ledgerdetailid}`'>{{SL_List.debitamount}}</span>
+                      <span v-bind:class='`${"x"+SL_List.ledgerdetailid}`'>{{SL_List.debitamount}}</span>
 
-                      <span v-bind:id='`${"dbu"+SL_List.ledgerdetailid}`' style="display: none;">
-                        <input v-model="form.debitamount[SL_List.ledgerdetailid]" v-bind:class="{'form-control': true }" type="text" placeholder="Pending Amount" onkeypress="return event.charCode <= 57" style="height: 30px;font-size: 13px;">
+                      <span v-bind:class='`${"y"+SL_List.ledgerdetailid}`' style="display: none;">
+                        <input v-model="form.debitamount[SL_List.ledgerdetailid]" class="{'form-control': true }" type="text" placeholder="Pending Amount" onkeypress="return event.charCode <= 57" style="height: 30px;font-size: 13px;">
                       </span>
                     </td>
                     <td class="text-center">{{SL_List.createddate}}</td>
                     <td class="text-center">{{SL_List.createdby}}</td>
                     <td class="text-center">
-                      <span v-bind:id='`${"ed"+SL_List.ledgerdetailid}`'><i v-if="role=='admin'" @click.prevent="editLedger(SL_List.ledgerdetailid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
-                      <span v-bind:id='`${"up"+SL_List.ledgerdetailid}`' style="display: none;"><i @click.prevent="showUpdateModal(SL_List)" class="fa fa-floppy-o text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
-                      <i v-if="role=='admin' && (SL_List.createdby != 'schedular@xpressbees.com')" @click.prevent="showResetModal(SL_List)" class="fa fa-trash text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
+                      <span v-bind:class='`${"x"+SL_List.ledgerdetailid}`'><i v-if="role=='admin'" @click.prevent="editLedger(SL_List.ledgerdetailid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
+                      <span v-bind:class='`${"y"+SL_List.ledgerdetailid}`' style="display: none;"><i @click.prevent="showUpdateModal(SL_List)" class="fa fa-floppy-o text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
+                      <i v-if="role=='admin'" @click.prevent="showResetModal(SL_List)" class="fa fa-trash text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
                     </td>
                   </tr>
                 </tbody>
