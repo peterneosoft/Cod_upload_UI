@@ -167,7 +167,7 @@
                     <td class="text-center" v-if="CODLedger_List.statusid==6">Close</td>
                     <td class="text-center">{{CODLedger_List.createdby}}</td>
                     <td class="text-center">
-                      <span v-bind:id='`${"ed"+CODLedger_List.svcledgerid}`'><i v-if="role=='admin'" @click.prevent="editLedger(CODLedger_List.svcledgerid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
+                      <span v-bind:id='`${"ed"+CODLedger_List.svcledgerid}`'><i @click.prevent="editLedger(CODLedger_List.svcledgerid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
                       <span v-bind:id='`${"up"+CODLedger_List.svcledgerid}`' style="display: none;"><i @click.prevent="showUpdateModal(CODLedger_List)" class="fa fa-floppy-o text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
                       <i v-if="role=='admin' && (CODLedger_List.createdby != 'schedular@xpressbees.com' && CODLedger_List.deposittype != '')" @click.prevent="showResetModal(CODLedger_List)" class="fa fa-trash text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
                     </td>

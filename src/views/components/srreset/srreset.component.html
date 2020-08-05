@@ -160,7 +160,7 @@
                     <td class="text-center">{{SL_List.createddate}}</td>
                     <td class="text-center">{{SL_List.createdby}}</td>
                     <td class="text-center">
-                      <span v-bind:class='`${"x"+SL_List.ledgerdetailid}`'><i v-if="role=='admin'" @click.prevent="editLedger(SL_List.ledgerdetailid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
+                      <span v-bind:class='`${"x"+SL_List.ledgerdetailid}`'><i @click.prevent="editLedger(SL_List.ledgerdetailid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
                       <span v-bind:class='`${"y"+SL_List.ledgerdetailid}`' style="display: none;"><i @click.prevent="showUpdateModal(SL_List)" class="fa fa-floppy-o text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
                       <i v-if="role=='admin'" @click.prevent="showResetModal(SL_List)" class="fa fa-trash text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
                     </td>

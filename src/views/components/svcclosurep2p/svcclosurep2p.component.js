@@ -126,7 +126,11 @@ export default {
       cType:'',
       ConfmodalShow:false,
       hideCM:1,
-      role:''
+      role:'',
+      todDate:'',
+      resetdata:'',
+      resetDD:'',
+      ResetmodalShow:false
     }
   },
 
@@ -169,6 +173,8 @@ export default {
     await this.GetReasonList();
     await this.GetSVCledgerData();
     await this.GetShipmentUpdate();
+
+    this.todDate = new Date().toISOString().split("T")[0];
   },
 
   methods: {
@@ -209,6 +215,7 @@ export default {
       this.ExmodalShow = false
       this.commentModalShow = false
       this.ConfmodalShow = false
+      this.ResetmodalShow = false
     },
 
     GetShipmentUpdate() {
@@ -1031,6 +1038,55 @@ export default {
       this.comment = []; this.cType = ''; this.comment = ele;
       if(type=='c') this.cType = 'Finance Comment'; else this.cType = 'Transaction Id';
       this.$refs.myCommentModalRef.show();
+    },
+
+    showResetModal(data){
+      this.resetdata = []; this.resetdata = data; this.resetDD = ''; this.resetDD = data.deliverydate; this.resetType = 'reset SVC closure';
+      this.$refs.myResetModalRef.show();
+    },
+
+    hideResetModal(ele) {
+      this.$refs.myResetModalRef.hide();
+      if(ele == 0){
+        this.resetSVCledger(this.resetdata);
+      }
+    },
+
+    resetSVCledger(data){
+      this.isLoading = true;
+      this.input = ({
+        svcledgerid:      data.svcledgerid,
+        hubid:            this.localhubid,
+        openingbalance:   data.openingbalance,
+        codamount:        data.codamount,
+        bankdeposit:      data.bankdeposit,
+        statusid:         data.statusid,
+        financereasonid:  data.financereasonid,
+        createdby:        data.createdby,
+        username:         this.localuserid
+      });
+
+      axios({
+        method: 'POST',
+        'url': apiUrl.api_url + 'deleteSVCLedgerEntry',
+        'data': this.input,
+        headers: {
+          'Authorization': 'Bearer '+this.myStr
+        }
+      })
+      .then(async response => {
+        this.isLoading = false;
+        if (response.data.code == 200) {
+          this.$alertify.success(response.data.msg);
+          await this.GetSVCledgerData();
+          await this.GetShipmentUpdate();
+        } else {
+          this.$alertify.error(response.data.msg)
+        }
+      })
+      .catch((httpException) => {
+          console.error('exception is:::::::::', httpException); this.isLoading = false; this.$alertify.error('Error Occured');
+      });
     },
   }
 }

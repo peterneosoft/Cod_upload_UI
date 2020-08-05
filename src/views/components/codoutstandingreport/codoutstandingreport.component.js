@@ -44,10 +44,10 @@ export default {
       SearchZoneIds:[],
       deliverydate:'',
       searchview:'',
-      selected: 'financeoutstanding',
+      selected: 'svcoutstanding',
       options: [
-        { text: 'Finance Outstanding', value: 'financeoutstanding' },
         { text: 'SVC Outstanding', value: 'svcoutstanding' },
+        { text: 'Finance Outstanding', value: 'financeoutstanding' },
         { text: 'COD Summary', value: 'summary' }
       ]
     }
