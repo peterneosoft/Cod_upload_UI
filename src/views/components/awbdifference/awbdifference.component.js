@@ -250,7 +250,8 @@ export default {
       }
 
       this.input = ({
-        hubArr:this.hubids.map(Number)
+        hubArr:this.hubids.map(Number),
+        ismanual:true
       })
 
       axios({
