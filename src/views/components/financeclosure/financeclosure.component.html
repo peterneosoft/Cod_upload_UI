@@ -269,7 +269,8 @@
                   <span v-if="data.othercharges==0">{{data.othercharges}}</span>
                 </td> -->
                 <td class="text-center">{{data.balanceoutstanding}}</td>
-                <td class="text-center">{{StatusVal}}</td>
+                <td class="text-center" v-if="data.statusid==1">Transaction Open</td>
+                <td class="text-center" v-if="data.statusid==6">Transaction Closed</td>
                 <td class="text-center" v-show="data.statusid != 6">
                   <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="form.subLoading[data.svcledgerid]" />
                   <form v-on:submit.prevent="onUpdate(data.svcledgerid, data)">

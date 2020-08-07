@@ -22,7 +22,6 @@ export default {
       SearchHubIds:[],
       HubID:'',
       status:0,
-      StatusVal:'',
       isLoading: false,
       resultCount: 0,
       pagecount: 0,
@@ -380,14 +379,7 @@ export default {
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
-          this.HubID = this.HubId.HubID;
-          this.StatusVal = event.target[4].selectedOptions[0].attributes.title.nodeValue;
-          if(this.StatusVal == "Close"){
-              this.StatusVal = "Transaction Closed"
-          }else{
-              this.StatusVal = "Transaction Open"
-          }
-          this.pageno = this.pagecount = 0;
+          this.HubID = this.HubId.HubID; this.pageno = this.pagecount = 0;
           this.GetFinanceledgerData(event);
         }else{
           this.$alertify.error('Error Occured');
