@@ -26,14 +26,12 @@ export default {
       zone:[],
       HubId:[],
       resultCount:'',
-      hubname:"",
       pageno:0,
       pagecount:0,
       isLoading:false,
       zoneLoading:false,
       hubLoading:false,
       ResetmodalShow:false,
-      upLoading:false,
       resetdata:[],
       resetDD:[],
       resetType:'',
@@ -234,7 +232,7 @@ export default {
     },
 
     resetSVCledger(data){
-      this.upLoading = true;
+      this.isLoading = true;
       this.input = ({
         svcledgerid:      data.svcledgerid,
         hubid:            this.HubId.HubID,
@@ -256,7 +254,7 @@ export default {
         }
       })
       .then(response => {
-        this.upLoading = false;
+        this.isLoading = false;
         if (response.data.code == 200) {
           this.$alertify.success(response.data.msg);
           this.GetSVCledgerData()
@@ -265,13 +263,13 @@ export default {
         }
       })
       .catch((httpException) => {
-          console.error('exception is:::::::::', httpException); this.upLoading = false; this.$alertify.error('Error Occured');
+          console.error('exception is:::::::::', httpException); this.isLoading = false; this.$alertify.error('Error Occured');
       });
     },
 
     updateLedger(data){
 
-      this.upLoading = true;
+      this.isLoading = true;
 
       this.input = ({
         svcledgerid:          data.svcledgerid,
@@ -295,7 +293,7 @@ export default {
         }
       })
       .then(response => {
-        this.upLoading = false;
+        this.isLoading = false;
         if (response.data.code == 200) {
           this.$alertify.success(response.data.msg);
           this.GetSVCledgerData()
@@ -304,7 +302,7 @@ export default {
         }
       })
       .catch((httpException) => {
-          console.error('exception is:::::::::', httpException); this.upLoading = false; this.$alertify.error('Error Occured');
+          console.error('exception is:::::::::', httpException); this.isLoading = false; this.$alertify.error('Error Occured');
       });
     },
 
@@ -314,10 +312,10 @@ export default {
 
     //function is used for upload files on AWS s3bucket
     onUpload(data){
-      this.upLoading = true;
+      this.isLoading = true;
 
       if(event.target.files.length<=0){
-        this.upLoading = false; return false;
+        this.isLoading = false; return false;
       }
 
       let selectedFile = event.target.files[0];
@@ -325,14 +323,14 @@ export default {
       var name = selectedFile.name;
       if(selectedFile.size>5242880){
         this.$alertify.error(event.srcElement.placeholder + " Failed! Upload Max File Size Should Not Be Greater Than 5 MB");
-        this.upLoading = false; return false;
+        this.isLoading = false; return false;
       }
 
       if ( /\.(jpe?g|png|gif|bmp|xls|xlsx|csv|doc|docx|rtf|wks|wps|wpd|excel|xlr|pps|pdf|ods|odt)$/i.test(selectedFile.name) ){
         name = selectedFile.name;
       }else{
         this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg, .jpeg, .gif, .bmp, .xls, .xlsx, .pdf, .ods, .csv, .doc, .odt, .docx, .rtf, .wks, .wps, .wpd, .excel, .xlr, .pps");
-        this.upLoading = false; return false;
+        this.isLoading = false; return false;
       }
 
       const fd = new FormData();
@@ -373,14 +371,14 @@ export default {
         }
       })
       .then(result => {
-        this.upLoading = false;
+        this.isLoading = false;
         if(Reason){
           this.reasonFileList = result.data.data;
         }else{
           this.uploadFileList = result.data.data;
         }
       }, error => {
-        this.upLoading = false; console.error(error)
+        this.isLoading = false; console.error(error)
       })
     },
 
@@ -416,7 +414,7 @@ export default {
 
     updateFCLedger(data){
 
-      this.upLoading = true;
+      this.isLoading = true;
 
       this.input = ({
         svcledgerid:      data.svcledgerid,
@@ -432,7 +430,7 @@ export default {
         }
       })
       .then(response => {
-        this.upLoading = false;
+        this.isLoading = false;
         if (response.data.code == 200) {
           this.$alertify.success(response.data.msg);
           this.GetSVCledgerData()
@@ -441,7 +439,7 @@ export default {
         }
       })
       .catch((httpException) => {
-          console.error('exception is:::::::::', httpException); this.upLoading = false; this.$alertify.error('Error Occured');
+          console.error('exception is:::::::::', httpException); this.isLoading = false; this.$alertify.error('Error Occured');
       });
     },
   }

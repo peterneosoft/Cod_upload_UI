@@ -21,7 +21,7 @@ export default {
       HubId:[],
       SearchHubIds:[],
       HubID:'',
-      status:1,
+      status:0,
       StatusVal:'',
       isLoading: false,
       resultCount: 0,

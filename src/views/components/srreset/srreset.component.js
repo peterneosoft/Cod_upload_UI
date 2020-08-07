@@ -21,18 +21,16 @@ export default {
   data() {
     return {
       zoneList:[],
-      hubList:[],
       zone:[],
+      hubList:[],
       HubId:[],
       resultCount:'',
-      hubname:"",
       pageno:0,
       pagecount:0,
       isLoading:false,
       zoneLoading:false,
       hubLoading:false,
       ResetmodalShow:false,
-      upLoading:false,
       resetdata:[],
       resetDD:[],
       resetType:'',
@@ -263,9 +261,7 @@ export default {
 
     //to get All Zone Wise Hub List
     getHubData() {
-      if(this.zone.hubzoneid==""){
-        return false;
-      }
+      this.hubList = this.HubId = [];
       this.input = ({
           zoneid: this.zone.hubzoneid
       })
@@ -335,7 +331,7 @@ export default {
     },
 
     resetSVCledger(data){
-      this.upLoading = true;
+      this.isLoading = true;
       this.input = ({
         srledgerid: data.ledgerdetailid,
         srid:       data.srid
@@ -350,7 +346,7 @@ export default {
         }
       })
       .then(response => {
-        this.upLoading = false;
+        this.isLoading = false;
         if (response.data.code == 200) {
           this.$alertify.success(response.data.msg);
           this.getMonthlySRLedgerDetails()
@@ -359,13 +355,13 @@ export default {
         }
       })
       .catch((httpException) => {
-          console.error('exception is:::::::::', httpException); this.upLoading = false; this.$alertify.error('Error Occured');
+          console.error('exception is:::::::::', httpException); this.isLoading = false; this.$alertify.error('Error Occured');
       });
     },
 
     updateLedger(data){
 
-      this.upLoading = true;
+      this.isLoading = true;
 
       this.input = ({
         srledgerid:   data.ledgerdetailid,
@@ -384,7 +380,7 @@ export default {
         }
       })
       .then(response => {
-        this.upLoading = false;
+        this.isLoading = false;
         if (response.data.code == 200) {
           this.$alertify.success(response.data.msg);
           this.getMonthlySRLedgerDetails()
@@ -393,7 +389,7 @@ export default {
         }
       })
       .catch((httpException) => {
-          console.error('exception is:::::::::', httpException); this.upLoading = false; this.$alertify.error('Error Occured');
+          console.error('exception is:::::::::', httpException); this.isLoading = false; this.$alertify.error('Error Occured');
       });
     },
 

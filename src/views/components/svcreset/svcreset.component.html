@@ -23,7 +23,7 @@
                   <label>Hub / SVC <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="hubLoading" />
-                    <Multiselect :options="hubList" placeholder="Select Hub / Svc" name="HubId" id="HubId" v-model="HubId" v-validate="{required: true}" v-bind:class="{'error': errors.has('HubId') }" label="HubName" track-by="HubID" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
+                    <Multiselect :options="hubList" placeholder="Select Hub / Svc" name="HubId" id="HubId" v-model="HubId" v-validate="{required: true}" v-bind:class="{'error': errors.has('HubId') }" label="HubName" track-by="HubID" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
                      <template slot="noResult"><p>No Record Found.</p></template>
                     </Multiselect>
                   </b-input-group>
@@ -74,7 +74,6 @@
                 &nbsp; )
               </h4>
               <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
-              <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="upLoading" />
               <table class="table-bordered table-hover tbl datatables scrolltb" style="width:100%;">
                 <thead>
                   <tr class="text-primary">
@@ -167,7 +166,8 @@
                     <td class="text-center" v-if="CODLedger_List.statusid==6">Close</td>
                     <td class="text-center">{{CODLedger_List.createdby}}</td>
                     <td class="text-center">
-                      <span v-bind:id='`${"ed"+CODLedger_List.svcledgerid}`'><i @click.prevent="editLedger(CODLedger_List.svcledgerid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
+                      <span v-bind:id='`${"ed"+CODLedger_List.svcledgerid}`'><i v-if="role!='admin' && (CODLedger_List.createdby != 'schedular@xpressbees.com' && CODLedger_List.deposittype != '')" @click.prevent="editLedger(CODLedger_List.svcledgerid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
+                      <span v-bind:id='`${"ed"+CODLedger_List.svcledgerid}`'><i v-if="role=='admin'" @click.prevent="editLedger(CODLedger_List.svcledgerid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
                       <span v-bind:id='`${"up"+CODLedger_List.svcledgerid}`' style="display: none;"><i @click.prevent="showUpdateModal(CODLedger_List)" class="fa fa-floppy-o text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
                       <i v-if="role=='admin' && (CODLedger_List.createdby != 'schedular@xpressbees.com' && CODLedger_List.deposittype != '')" @click.prevent="showResetModal(CODLedger_List)" class="fa fa-trash text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
                     </td>
