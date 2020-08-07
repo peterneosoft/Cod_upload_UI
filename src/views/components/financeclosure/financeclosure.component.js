@@ -73,7 +73,10 @@ export default {
       RSCList:[],
       RSCName:[],
       SearchRSCIds:[],
-      disableRSC:false
+      disableRSC:false,
+      excelLoading: false,
+      exportf:false,
+      reportlink:''
     }
   },
 
@@ -328,7 +331,7 @@ export default {
             statusid: this.status,
             deposittype: this.DepositType
         })
-        this.isLoading = true;
+        this.isLoading = true; this.exportf=false;
         axios({
             method: 'POST',
             'url': apiUrl.api_url + 'financeledgermaster',
@@ -365,6 +368,7 @@ export default {
             } else {
                 this.pagecount = Math.ceil(totalRows / 10)
             }
+            this.exportfinanceledgermaster(hubIdArr);
           }else{
             this.listFinanceledgerData=[];
             this.resultCount  = 0;
@@ -659,6 +663,46 @@ export default {
       this.comment = []; this.cType = ''; this.comment = ele;
       if(type=='c') this.cType = 'Finance Comment'; else this.cType = 'Transaction Id';
       this.$refs.myCommentModalRef.show();
+    },
+
+    exportreport(){
+      this.excelLoading = true;
+      if(this.reportlink){
+        window.open(this.reportlink);
+        this.excelLoading = false;
+      }else{
+        this.excelLoading = false;
+      }
+    },
+
+    exportfinanceledgermaster(hubIdArr){
+
+      this.reportlink = '';
+
+      this.input = ({
+        hubid: hubIdArr,
+        statusid: this.status,
+        deposittype: this.DepositType
+      })
+
+      axios({
+          method: 'POST',
+          'url': apiUrl.api_url + 'exportfinanceledgermaster',
+          'data': this.input,
+          headers: {
+              'Authorization': 'Bearer '+this.myStr
+          }
+      })
+      .then(result => {
+        this.exportf=true;
+        if(result.data.code == 200){
+          this.reportlink = result.data.data;
+        }else{
+          this.reportlink = '';
+        }
+      }, error => {
+        this.exportf=false; this.reportlink = ''; console.error(error); this.$alertify.error('Error Occured');
+      })
     },
   }
 }
