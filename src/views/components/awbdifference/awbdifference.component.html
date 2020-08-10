@@ -4,10 +4,10 @@
     <div class="col-md-12 mb-2">
       <div class="card">
         <div v-if="ShowHideCron==0" @click = "ShowHideCron = '1'" class="card-header filter_main" style="cursor: pointer;">
-          <i class="fa fa-plus plus"></i> SVC Cron Job Run/ Search &nbsp;&nbsp;<span style="font-size:13px;color:green;margin-left: 50%;"><b>( Today Date >> {{currDate}} )</b></span>
+          <i class="fa fa-plus plus"></i> SVC Cron Job Run/ Search &nbsp;&nbsp;<span style="font-size:13px;margin-left: 28%;"><b>( Today Date : APP >> {{appDate}}&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;API >> {{apiDate}} )</b></span>
         </div>
         <div v-if="ShowHideCron==1" @click = "ShowHideCron = '0'" class="card-header filter_main" style="cursor: pointer;">
-          <i class="fa fa-minus minus"></i> SVC Cron Job &nbsp;&nbsp;<span style="font-size:13px;color:green;margin-left: 58%"><b>( Today Date >> {{currDate}} )</b></span>
+          <i class="fa fa-minus minus"></i> SVC Cron Job &nbsp;&nbsp;<span style="font-size:13px;margin-left: 36%"><b>( Today Date : APP >> {{appDate}}&nbsp;&nbsp;&nbsp;&nbsp;||&nbsp;&nbsp;&nbsp;&nbsp;API >> {{apiDate}} )</b></span>
         </div>
         <b-collapse v-bind:class="`${ShowHideCron == '1' ? 'show' : 'hide'}`" id="collapse1">
           <div class="card-body">

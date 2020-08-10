@@ -56,7 +56,8 @@ export default {
       hubarrlength:0,
       hubidarr:'',
       awbhubids:'',
-      currDate:''
+      appDate:'',
+      apiDate:''
     }
   },
   computed: {
@@ -67,7 +68,7 @@ export default {
     var date = new Date();
     deliverydate.max = date.toISOString().split("T")[0];
 
-    this.currDate = date.toLocaleString();
+    this.appDate = date.toLocaleString();
 
     var hubdetailEncrypt  = window.localStorage.getItem('accesshubdata')
     var bytes             = CryptoJS.AES.decrypt(hubdetailEncrypt.toString(), 'Key');
@@ -224,7 +225,8 @@ export default {
         }
       })
       .then(result => {
-        this.cronrundate = result.data.crondate;
+        this.cronrundate  = result.data.crondate;
+        this.apiDate      = result.data.currdate;
         this.cronDiffList = ''; this.cronDiffCount = 0;
 
         if(result.data.code == 200){
