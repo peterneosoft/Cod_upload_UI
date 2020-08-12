@@ -360,7 +360,7 @@ export default {
       this.hubLoading = true;
       axios({
           method: 'POST',
-          url: apiUrl.api_url + 'external/getzonehub',
+          url: apiUrl.api_url + 'external/getzonesvc',
           'data': this.input,
           headers: {
             'Authorization': 'Bearer '+this.myStr
