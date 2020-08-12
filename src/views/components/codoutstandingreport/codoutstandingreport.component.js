@@ -120,7 +120,7 @@ export default {
     },
 
     addHubData() {
-      let zData = this.zoneIdArr = this.hubList = this.RSCList = []; this.HubId = this.RSCName = []; this.disableHub = false;
+      let zData = this.zoneIdArr = [];  this.hubList = []; this.HubId = []; this.RSCList = []; this.RSCName = []; this.disableHub = false;
       if($.isArray(this.zone) === false){
         this.zone = new Array(this.zone);
       }
@@ -131,7 +131,7 @@ export default {
 
       this.zoneIdArr = zData;
 
-      if(zData.length===1){
+      if(zData.length===1 && zData[0].hubzoneid > 0){
         this.getHubData(zData[0].hubzoneid);
         this.getRSCData(zData[0].hubzoneid);
       }else{
