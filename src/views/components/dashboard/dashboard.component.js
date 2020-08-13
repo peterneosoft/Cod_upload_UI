@@ -174,7 +174,7 @@ export default {
     this.GetSumOfZoneHubAmtData();
 
     var date = new Date();
-    ToDate.max = FromDate.max = date.toISOString().split("T")[0];
+    ToDate.max = FromDate.max = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
 
     var permissiondataEncrypt = window.localStorage.getItem('accesspermissiondata')
     var bytes                 = CryptoJS.AES.decrypt(permissiondataEncrypt.toString(), 'Key');

@@ -27,7 +27,7 @@ export default {
 
   mounted() {
     var date = new Date();
-    toDate.max = fromDate.max = date.toISOString().split("T")[0];
+    toDate.max = fromDate.max = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
     this.getZoneData();
   },
 

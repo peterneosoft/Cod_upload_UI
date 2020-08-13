@@ -58,13 +58,14 @@ export default {
 
   mounted() {
     var date = new Date();
-    toDate.max = fromDate.max = date.toISOString().split("T")[0];
+    toDate.max = fromDate.max = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
+
     var hubdetailEncrypt  = window.localStorage.getItem('accesshubdata')
     var bytes             = CryptoJS.AES.decrypt(hubdetailEncrypt.toString(), 'Key');
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
     var hubdetail         = JSON.parse(plaintext);
     this.localhubid       = hubdetail[0].HubID;
-    this.urltoken = window.localStorage.getItem('accessuserToken');
+    this.urltoken         = window.localStorage.getItem('accessuserToken');
     this.GetDeliveryAgentData();
     this.GetAgentData();
     this.srStatus();

@@ -40,7 +40,7 @@
             <div class="form-group row">
               <div class="col-md-4">
                 <label>From ( Created ) Date <font color="red">*</font></label>
-                <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
+                <b-input-group left="<i class='fa fa-calendar'></i>">
                   <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}"
                   v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
                 </b-input-group>
@@ -50,7 +50,7 @@
 
               <div class="col-md-4">
                 <label>To ( Created ) Date <font color="red">*</font></label>
-                <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
+                <b-input-group left="<i class='fa fa-calendar'></i>">
                   <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}"
                   v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
                 </b-input-group>

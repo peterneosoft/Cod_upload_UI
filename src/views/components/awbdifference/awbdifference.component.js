@@ -66,7 +66,7 @@ export default {
 
   mounted() {
     var date = new Date();
-    deliverydate.max = date.toISOString().split("T")[0];
+    deliverydate.max = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
 
     this.appDate = date.toLocaleString();
 

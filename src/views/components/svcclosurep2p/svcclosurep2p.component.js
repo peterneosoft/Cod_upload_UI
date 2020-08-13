@@ -162,10 +162,10 @@ export default {
     this.myStr = userToken.replace(/"/g, '');
 
     var date = new Date();
-    DepositDate.max = DeliveryDate.max = date.toISOString().split("T")[0];
+    DepositDate.max = DeliveryDate.max = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
 
     date.setDate(date.getDate() - 1);
-    this.DeliveryDate = date.toISOString().split("T")[0];
+    this.DeliveryDate = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
 
     this.BatchID = this.localhubid+''+Math.floor(Math.random() * (Math.pow(10,5)));
     await this.GetDenominationData();
@@ -174,7 +174,7 @@ export default {
     await this.GetSVCledgerData();
     await this.GetShipmentUpdate();
 
-    this.todDate = new Date().toISOString().split("T")[0];
+    this.todDate = new Date().toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
   },
 
   methods: {

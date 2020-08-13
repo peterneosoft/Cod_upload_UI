@@ -41,7 +41,7 @@ export default {
 
   mounted() {
     var date = new Date();
-    trDate.max = date.toISOString().split("T")[0];
+    trDate.max = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
 
     var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');

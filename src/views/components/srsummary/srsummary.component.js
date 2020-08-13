@@ -64,7 +64,7 @@ export default {
 
   mounted() {
     var date = new Date();
-    deliverydate.max = date.toISOString().split("T")[0];
+    deliverydate.max = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
 
     var hubdetailEncrypt  = window.localStorage.getItem('accesshubdata')
     var bytes             = CryptoJS.AES.decrypt(hubdetailEncrypt.toString(), 'Key');
