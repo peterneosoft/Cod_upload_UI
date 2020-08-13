@@ -337,8 +337,7 @@ export default {
     //to get All Zone List
     getZoneData() {
       this.input = {}; this.zoneLoading = true; this.exportf = this.disableHub = false;
-      this.zoneList = this.zone = this.HubId = this.hubList = this.RSCName = this.RSCList = [];
-      this.CODOutstandingReport = []; this.resultCount = 0;
+      this.HubId = this.hubList = this.RSCName = this.RSCList = this.CODOutstandingReport = []; this.resultCount = 0;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/getallzones',
@@ -351,6 +350,7 @@ export default {
           this.zoneLoading = false;
           if(this.selected=='summary') this.zoneList = result.data.zone.data;
           else this.zoneList = [{hubzoneid:'0', hubzonename:'All Zone', hubzonecode:'All Zone'}].concat(result.data.zone.data);
+          this.addHubData();
         }, error => {
           this.zoneLoading = false; console.error(error)
         })

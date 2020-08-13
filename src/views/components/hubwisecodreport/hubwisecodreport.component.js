@@ -241,13 +241,6 @@ export default {
     }, **/
 
     getHubWiseCODLedgerReports(){
-      if(this.fromDate > this.toDate){
-         document.getElementById("fdate").innerHTML="From date should not be greater than To date.";
-         return false;
-      }else{
-        document.getElementById("fdate").innerHTML="";
-      }
-
       this.isLoading = true;
 
       let zData = []; let hubArr = []; let RSCArr = [];
@@ -342,7 +335,8 @@ export default {
         })
         .then(result => {
           this.zoneLoading = false;
-          this.zoneList = [{hubzoneid:'0', hubzonename:'All Zone', hubzonecode:'All Zone'}].concat(result.data.zone.data);
+          //this.zoneList = [{hubzoneid:'0', hubzonename:'All Zone', hubzonecode:'All Zone'}].concat(result.data.zone.data);
+          this.zoneList = result.data.zone.data;
         }, error => {
           this.zoneLoading = false;
           console.error(error)
@@ -406,8 +400,19 @@ export default {
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
-          this.pageno = 0; this.exportf = false;
-          this.getHubWiseCODLedgerReports()
+          let diffTime = Math.abs(new Date(this.toDate) - new Date(this.fromDate));
+          let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+          if(this.fromDate > this.toDate){
+             document.getElementById("fdate").innerHTML="From date should not be greater than To date.";
+             return false;
+          }else if(diffDays > 30){
+            document.getElementById("fdate").innerHTML="Difference between From date & To date should not be greater than 30 days.";
+            return false;
+          }else{
+            document.getElementById("fdate").innerHTML=""; this.pageno = 0; this.exportf = false;
+            this.getHubWiseCODLedgerReports()
+          }
         }
       }).catch(() => {
         console.log('errors exist', this.errors)

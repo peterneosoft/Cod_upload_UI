@@ -55,12 +55,14 @@
                     </Multiselect>
                   </b-input-group>
                 </div>
-                
+              </div>
+
+              <div class="form-group row">
                 <div class="col-md-4">
                   <label v-if="selected=='svcoutstanding'">Till Date <font color="red">*</font></label>
                   <label v-if="selected=='financeoutstanding'">Bank Credit Date <font color="red">*</font></label>
                   <label v-if="selected=='summary'">Delivery Date <font color="red">*</font></label>
-                  <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
+                  <b-input-group left="<i class='fa fa-calendar'></i>">
                     <b-form-input id="deliverydate" type="date" name="deliverydate" v-validate="{required: true}"
                     v-model="deliverydate" v-bind:class="{'form-control': true, 'error': errors.has('deliverydate') }"></b-form-input>
                   </b-input-group>
