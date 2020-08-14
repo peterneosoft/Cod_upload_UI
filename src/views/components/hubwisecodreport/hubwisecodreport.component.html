@@ -210,6 +210,7 @@
                     <span class="dot3"></span> Amount Mismatched
                   </font>
                 &nbsp; )
+                <span v-if="exportf==false && resultCount>0" style="margin-left: 30%;"><font style="font-size: 13px;">Report Processing ...</font></span>
                 <span v-show="exportf" style="margin-left: 35%; cursor: pointer;" @click="exportreport()">
                   <button class="btn btn-sm btn-success" type="button">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="excelLoading" />

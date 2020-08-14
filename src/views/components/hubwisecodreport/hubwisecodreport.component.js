@@ -51,7 +51,8 @@ export default {
       SearchZoneIds:[],
       commentModalShow:false,
       comment:'',
-      cType:''
+      cType:'',
+      role:''
     }
   },
 
@@ -64,7 +65,9 @@ export default {
     toDate.max = fromDate.max = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
 
     var userToken = window.localStorage.getItem('accessuserToken')
-    this.myStr = userToken.replace(/"/g, '');
+    this.myStr    = userToken.replace(/"/g, '');
+
+    this.role     = window.localStorage.getItem('accessrole').toLowerCase().replace(/\s/g,'');
 
     this.getZoneData();
   },
@@ -147,7 +150,7 @@ export default {
     },
 
     exportHubWiswData(zData, hubIdArr){
-      this.reportlink = '';
+      this.reportlink = ''; let rep = '';
 
       this.input = ({
           hubid: hubIdArr,
@@ -156,9 +159,13 @@ export default {
           fromdate: this.fromDate,
           todate: this.toDate
       })
+
+      if(this.role=='financemanager') rep = apiUrl.api_url + 'exportAllZoneCODReports';
+      else rep = apiUrl.api_url + 'exportHubWiseCODReports';
+
       axios({
           method: 'POST',
-          'url': apiUrl.api_url + 'exportHubWiseCODReports',
+          'url': rep,
           'data': this.input,
           headers: {
               'Authorization': 'Bearer '+this.myStr
@@ -323,8 +330,7 @@ export default {
 
     //to get All Zone List
     getZoneData() {
-      this.input = {}
-      this.zoneLoading = true;
+      this.input = {}; this.zoneLoading = true;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/getallzones',
@@ -335,11 +341,12 @@ export default {
         })
         .then(result => {
           this.zoneLoading = false;
-          //this.zoneList = [{hubzoneid:'0', hubzonename:'All Zone', hubzonecode:'All Zone'}].concat(result.data.zone.data);
-          this.zoneList = result.data.zone.data;
+
+          if(this.role=='financemanager') this.zoneList = [{hubzoneid:'0', hubzonename:'All Zone', hubzonecode:'All Zone'}].concat(result.data.zone.data);
+          else this.zoneList = result.data.zone.data;
+
         }, error => {
-          this.zoneLoading = false;
-          console.error(error)
+          this.zoneLoading = false; console.error(error)
         })
     },
 

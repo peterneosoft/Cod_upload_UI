@@ -63,7 +63,7 @@ export default {
     var userdetail        = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
     this.localuserid      = userdetail.username;
 
-    this.role             = window.localStorage.getItem('accessrole').toLowerCase();
+    this.role             = window.localStorage.getItem('accessrole').toLowerCase().replace(/\s/g,'');
 
     this.getZoneData();
     this.GetReasonList();
