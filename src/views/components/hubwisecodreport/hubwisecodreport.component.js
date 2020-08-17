@@ -190,8 +190,7 @@ export default {
     async exportreport(){
       this.exportf         = false; this.reportlink = ''; this.wait = '';
       let limit            = 500;
-      let n                = Math.ceil(this.resultCount/limit);
-      n                    = n+1;
+      let n                = (parseInt(this.resultCount/limit))+1;
       this.wait            = ((((n+2)*5000) % 60000) / 1000).toFixed(0);
 
       for (let i = 1; i <= n; i++) {
@@ -218,7 +217,7 @@ export default {
                   this.downloadf = true;
                   this.reportlink = result.data.data;
                 }else{
-                   this.downloadf = false; this.reportlink = '';
+                   this.exportf = true; this.downloadf = false; this.reportlink = '';
                 }
               }, error => {
                  this.downloadf = false; this.reportlink = ''; console.error(error)
