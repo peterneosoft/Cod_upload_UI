@@ -52,7 +52,12 @@ export default {
       commentModalShow:false,
       comment:'',
       cType:'',
-      role:''
+      role:'',
+      filename:'',
+      zData:[],
+      hubIdArr:[],
+      downloadf:false,
+      wait:''
     }
   },
 
@@ -149,15 +154,19 @@ export default {
         this.getHubWiseCODLedgerReports()
     },
 
-    exportHubWiswData(zData, hubIdArr){
-      this.reportlink = ''; let rep = '';
+    async exportHubWiswData(zData, hubIdArr, offset, count, limit, filename){
+      let rep = '';
 
       this.input = ({
           hubid: hubIdArr,
           zoneid: zData,
           status: this.status,
           fromdate: this.fromDate,
-          todate: this.toDate
+          todate: this.toDate,
+          filename: filename? filename: '',
+          limit: limit? limit: 0,
+          offset: offset? offset: 0,
+          count: count? count: 0
       })
 
       if(this.role=='financemanager') rep = apiUrl.api_url + 'exportAllZoneCODReports';
@@ -172,26 +181,57 @@ export default {
           }
       })
       .then(result => {
-        if(result.data.code == 200){
-          //this.getDownloadCsvObject(result.data.data);
-          this.exportf=true;
-          this.reportlink = result.data.data;
-        }else{
-           this.exportf = false; this.reportlink = '';
-        }
+        if(result.data.code == 200){ return true; }else{ return false; }
       }, error => {
-         this.exportf = false; this.reportlink = '';
-        console.error(error)
+        console.error(error); return false;
       })
     },
 
-    exportreport(){
-      this.excelLoading = true;
+    async exportreport(){
+      this.exportf         = false; this.reportlink = ''; this.wait = '';
+      let limit            = 500;
+      let n                = Math.ceil(this.resultCount/limit);
+      n                    = n+1;
+      this.wait            = ((((n+2)*5000) % 60000) / 1000).toFixed(0);
+
+      for (let i = 1; i <= n; i++) {
+        await new Promise(r => setTimeout(r, 5000)).then(async () => {
+
+          await this.exportHubWiswData(this.zData, this.hubIdArr, (i - 1) * limit, this.resultCount, limit, this.filename);
+          if(i == n){
+
+            await new Promise(r => setTimeout(r, (n+2)*5000)).then(async () => {
+              this.input = ({
+                  filename: this.filename,
+              })
+              axios({
+                  method: 'POST',
+                  'url':  apiUrl.api_url + 'uploadreportonS3',
+                  'data': this.input,
+                  headers: {
+                      'Authorization': 'Bearer '+this.myStr
+                  }
+              })
+              .then(result => {
+                console.log('result==', result);
+                if(result.data.code == 200){
+                  this.downloadf = true;
+                  this.reportlink = result.data.data;
+                }else{
+                   this.downloadf = false; this.reportlink = '';
+                }
+              }, error => {
+                 this.downloadf = false; this.reportlink = ''; console.error(error)
+              })
+            });
+          }
+        });
+      }
+    },
+
+    downloadreport(){
       if(this.reportlink){
         window.open(this.reportlink);
-        this.excelLoading = false;
-      }else{
-        this.excelLoading = false;
       }
     },
 
@@ -304,28 +344,26 @@ export default {
             'Authorization': 'Bearer '
           }
         })
-        .then(result => {
+        .then(async result => {
+          this.isLoading = this.downloadf = false; this.exportf = true;
+
           if(result.data.code == 200){
             this.CODLedgerReports = result.data.data;
-            this.isLoading = false;
-            let totalRows = result.data.count
-            this.resultCount = result.data.count
-            if (totalRows < 10) {
-                 this.pagecount = 1
-             } else {
-                 this.pagecount = Math.ceil(totalRows / 10)
-             }
-             this.exportHubWiswData(zData, hubIdArr);
+            let totalRows         = result.data.count;
+            this.resultCount      = result.data.count;
+            this.filename         = result.data.filename? result.data.filename: '';
+            this.zData            = zData;
+            this.hubIdArr         = hubIdArr;
+
+            if (totalRows < 10) { this.pagecount = 1 } else { this.pagecount = Math.ceil(totalRows / 10); }
            }else{
-             this.CODLedgerReports = [];
-             this.isLoading = false;
-             this.resultCount = 0;
+             this.CODLedgerReports = []; this.resultCount = 0; this.isLoading = this.exportf = false; this.filename = ''; this.zData = this.hubIdArr = [];
            }
-          },
-           error => {
-             this.CODLedgerReports = []; this.resultCount = 0; this.isLoading = false;
-             console.error(error); this.$alertify.error('Error Occured');
-        })
+         },
+         error => {
+           this.CODLedgerReports = []; this.resultCount = 0; this.isLoading = this.exportf= false; this.filename = ''; this.zData = this.hubIdArr = [];
+           console.error(error); this.$alertify.error('Error Occured');
+         })
     },
 
     //to get All Zone List
@@ -429,6 +467,7 @@ export default {
     resetForm() {
       this.fromDate = this.toDate = ''; this.zone=""; this.hubList=[]; this.HubId=[]; this.RSCList = []; this.RSCName = [];
       this.pageno = 0; this.status=""; this.CODLedgerReports = []; this.exportf = false; this.disableHub = false; this.resultCount = 0;
+      this.filename = ''; this.zData = this.hubIdArr = []; this.wait = '';
       this.$validator.reset();
       this.errors.clear();
     },

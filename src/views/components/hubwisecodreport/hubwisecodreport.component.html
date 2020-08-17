@@ -210,11 +210,17 @@
                     <span class="dot3"></span> Amount Mismatched
                   </font>
                 &nbsp; )
-                <span v-if="exportf==false && resultCount>0" style="margin-left: 30%;"><font style="font-size: 13px;">Report Processing ...</font></span>
-                <span v-show="exportf" style="margin-left: 35%; cursor: pointer;" @click="exportreport()">
+                <span v-if="exportf==false && downloadf==false && resultCount>0" style="margin-left: 20%;"><font style="font-size: 12px;color: red;font-weight: bold;">Report processing, wait time {{wait}} seconds..</font></span>
+                <span v-show="exportf" style="margin-left: 30%; cursor: pointer;" @click="exportreport()">
                   <button class="btn btn-sm btn-success" type="button">
-                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="excelLoading" />
-                    <i class="fa fa-download"></i> Export
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700"/>
+                    <i class="fa fa-upload"></i> Generate Report
+                  </button>
+                </span>
+                <span v-show="downloadf" style="margin-left: 30%; cursor: pointer;" @click="downloadreport()">
+                  <button class="btn btn-sm btn-success" type="button">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700"/>
+                    <i class="fa fa-download"></i> Download Report
                   </button>
                 </span>
               </h4>
