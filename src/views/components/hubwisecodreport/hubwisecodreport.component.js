@@ -339,7 +339,7 @@ export default {
           }
         })
         .then(async result => {
-          if(this.filename){ this.downloadf = true; this.exportf = false; }else{ this.downloadf = false; this.exportf = true; }
+          if(this.filename && this.reportlink){ this.downloadf = true; this.exportf = false; }else{ this.downloadf = false; this.exportf = true; }
           this.isLoading = false;
 
           if(result.data.code == 200){
