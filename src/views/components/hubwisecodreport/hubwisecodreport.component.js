@@ -185,7 +185,7 @@ export default {
       this.exportf         = false; this.reportlink = ''; this.wait = '';
       let limit            = 500;
       let n                = (parseInt(this.resultCount/limit))+1;
-      this.wait            = ((((n+2)*5000) % 60000) / 1000).toFixed(0);
+      this.wait            = ((((n+1)*5000) % 60000) / 1000).toFixed(0);
 
       for (let i = 1; i <= n; i++) {
         await new Promise(r => setTimeout(r, 5000)).then(async () => {
@@ -193,7 +193,7 @@ export default {
           await this.exportHubWiswData(this.zData, this.hubIdArr, (i - 1) * limit, this.resultCount, limit, this.filename);
           if(i == n){
 
-            await new Promise(r => setTimeout(r, (n+2)*5000)).then(async () => {
+            await new Promise(r => setTimeout(r, (n+1)*5000)).then(async () => {
               this.input = ({
                   filename: this.filename,
               })
@@ -339,7 +339,8 @@ export default {
           }
         })
         .then(async result => {
-          this.isLoading = this.downloadf = false; this.exportf = true;
+          if(this.filename){ this.downloadf = true; this.exportf = false; }else{ this.downloadf = false; this.exportf = true; }
+          this.isLoading = false;
 
           if(result.data.code == 200){
             this.CODLedgerReports = result.data.data;
