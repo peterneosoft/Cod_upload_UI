@@ -183,7 +183,7 @@ export default {
 
     async exportreport(){
       this.exportf         = false; this.reportlink = ''; this.wait = '';
-      let limit            = 500;
+      let limit            = 2000;
       let n                = (parseInt(this.resultCount/limit))+1;
       this.wait            = ((((n+1)*5000) % 60000) / 1000).toFixed(0);
 
