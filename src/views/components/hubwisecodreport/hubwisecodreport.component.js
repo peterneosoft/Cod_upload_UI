@@ -183,17 +183,19 @@ export default {
 
     async exportreport(){
       this.exportf         = false; this.reportlink = ''; this.wait = '';
-      let limit            = 2000;
+      let limit            = 1000;
       let n                = (parseInt(this.resultCount/limit))+1;
-      this.wait            = ((((n+1)*5000) % 60000) / 1000).toFixed(0);
+      this.wait            = (((n*4000) % 60000) / 1000).toFixed(0);
 
-      for (let i = 1; i <= n; i++) {
-        await new Promise(r => setTimeout(r, 5000)).then(async () => {
+      await this.exportHubWiswData(this.zData, this.hubIdArr, 0, this.resultCount, limit, this.filename);
+
+      for (let i = 2; i <= n; i++) {
+        await new Promise(r => setTimeout(r, 4000)).then(async () => {
 
           await this.exportHubWiswData(this.zData, this.hubIdArr, (i - 1) * limit, this.resultCount, limit, this.filename);
           if(i == n){
 
-            await new Promise(r => setTimeout(r, (n+1)*5000)).then(async () => {
+            await new Promise(r => setTimeout(r, n*4000)).then(async () => {
               this.input = ({
                   filename: this.filename,
               })
