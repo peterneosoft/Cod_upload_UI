@@ -155,27 +155,21 @@ export default {
     },
 
     async exportHubWiswData(zData, hubIdArr, offset, count, limit, filename){
-      let rep = '';
-
-      this.input = ({
-          hubid: hubIdArr,
-          zoneid: zData,
-          status: this.status,
-          fromdate: this.fromDate,
-          todate: this.toDate,
-          filename: filename? filename: '',
-          limit: limit? limit: 0,
-          offset: offset? offset: 0,
-          count: count? count: 0
-      })
-
-      if(this.role=='financemanager') rep = apiUrl.api_url + 'exportAllZoneCODReports';
-      else rep = apiUrl.api_url + 'exportHubWiseCODReports';
 
       axios({
           method: 'POST',
-          'url': rep,
-          'data': this.input,
+          'url': apiUrl.api_url + 'exportAllZoneCODReports',
+          'data': {
+              hubid: hubIdArr,
+              zoneid: zData,
+              status: this.status,
+              fromdate: this.fromDate,
+              todate: this.toDate,
+              filename: filename? filename: '',
+              limit: limit? limit: 0,
+              offset: offset? offset: 0,
+              count: count? count: 0
+          },
           headers: {
               'Authorization': 'Bearer '+this.myStr
           }
@@ -333,7 +327,8 @@ export default {
           todate: this.toDate,
           status: this.status,
           offset:this.pageno,
-          limit:10
+          limit:10,
+          filename: this.filename? this.filename: ''
       })
       axios({
           method: 'POST',
@@ -455,6 +450,7 @@ export default {
             return false;
           }else{
             document.getElementById("fdate").innerHTML=""; this.pageno = 0; this.exportf = false;
+            this.filename = '';
             this.getHubWiseCODLedgerReports()
           }
         }
