@@ -150,7 +150,10 @@ export default {
       codArr:[],
       userRole:'',
       ConfmodalShow:false,
-      hideCM:1
+      hideCM:1,
+      TodaysRazorpayCount:0,
+      TodaysRazorpay:0,
+      deliveredRazorpayArr:[]
     }
   },
 
@@ -419,8 +422,8 @@ export default {
       this.castheftAWBNo = this.prevpenbalAWBNo = this.srtpsrAmt = this.carissAWBNo = this.codimprAWBNo = this.selfrecAWBNo = this.srabscAWBNo = this.cassnatAWBNo = this.paychgAWBNo = this.codnttimAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.nddissAWBNo = this.walissAWBNo = this.paypissAWBNo = '';
       this.castheftReason = this.prevpenbalReason = this.srissReason = this.lowdisReason = this.carissReason = this.codimprReason = this.selfrecReason = this.srabscReason = this.cassnatReason = this.paychgReason = this.codnttimReason = this.theftstolReason = this.wrongdelReason = this.nddissReason = this.walissReason = this.paypissReason = '';
 
-      this.PendingCOD = this.TodaysCOD = this.TotalAmount = this.TodaysShipmentCount = this.TodaysCash = this.TodaysPayphi = this.TodaysWallet = this.TodaysCard = this.TodaysCashCount = this.TodaysPayphiCount = this.TodaysWalletCount = this.TodaysCardCount = 0;
-      this.deliveredCODArr = this.deliveredCashArr = this.deliveredPayphiArr = this.deliveredWalletArr = this.deliveredCardArr = [];
+      this.PendingCOD = this.TodaysCOD = this.TotalAmount = this.TodaysShipmentCount = this.TodaysCash = this.TodaysPayphi = this.TodaysWallet = this.TodaysCard = this.TodaysCashCount = this.TodaysPayphiCount = this.TodaysWalletCount = this.TodaysCardCount = this.TodaysRazorpay = this.TodaysRazorpayCount = 0;
+      this.deliveredCODArr = this.deliveredCashArr = this.deliveredPayphiArr = this.deliveredWalletArr = this.deliveredCardArr = this.deliveredRazorpayArr = [];
       document.getElementById("d_a").style.display = "none";
       this.$validator.reset(); this.errors.clear(); document.getElementById('srform').reset();
     },
@@ -448,28 +451,31 @@ export default {
              this.deliveredCODArr     = result.data.TodaysShippingId
 
              if(result.data.CODDetailsArr.length>0){
-               this.deliveredCashArr  = result.data.CODDetailsArr[0].cashArr
+               this.deliveredCashArr    = result.data.CODDetailsArr[0].cashArr
                this.deliveredPayphiArr  = result.data.CODDetailsArr[0].payphiArr
                this.deliveredWalletArr  = result.data.CODDetailsArr[0].walletArr
                this.deliveredCardArr    = result.data.CODDetailsArr[0].cardArr
+               this.deliveredRazorpayArr= result.data.CODDetailsArr[0].razorpayArr
 
                this.TodaysCash          = result.data.CODDetailsArr[0].cashAmt
                this.TodaysPayphi        = result.data.CODDetailsArr[0].payphiAmt
                this.TodaysWallet        = result.data.CODDetailsArr[0].walletAmt
                this.TodaysCard          = result.data.CODDetailsArr[0].cardAmt
+               this.TodaysRazorpay      = result.data.CODDetailsArr[0].razorpayAmt
 
-               this.TodaysCashCount = result.data.CODDetailsArr[0].cash
-               this.TodaysPayphiCount = result.data.CODDetailsArr[0].payphi
-               this.TodaysWalletCount = result.data.CODDetailsArr[0].wallet
-               this.TodaysCardCount = result.data.CODDetailsArr[0].card
+               this.TodaysCashCount     = result.data.CODDetailsArr[0].cash
+               this.TodaysPayphiCount   = result.data.CODDetailsArr[0].payphi
+               this.TodaysWalletCount   = result.data.CODDetailsArr[0].wallet
+               this.TodaysCardCount     = result.data.CODDetailsArr[0].card
+               this.TodaysRazorpayCount = result.data.CODDetailsArr[0].razorpay
              }else{
-               this.TodaysCash = this.TodaysPayphi = this.TodaysWallet = this.TodaysCard = this.TodaysCashCount = this.TodaysPayphiCount = this.TodaysWalletCount = this.TodaysCardCount = 0;
-               this.deliveredCashArr = this.deliveredPayphiArr = this.deliveredWalletArr = this.deliveredCardArr = [];
+               this.TodaysCash = this.TodaysPayphi = this.TodaysWallet = this.TodaysCard = this.TodaysCashCount = this.TodaysPayphiCount = this.TodaysWalletCount = this.TodaysCardCount =  this.TodaysRazorpayCount =  this.TodaysRazorpay = 0;
+               this.deliveredCashArr = this.deliveredPayphiArr = this.deliveredWalletArr = this.deliveredCardArr = this.deliveredRazorpayArr = [];
              }
            }else{
               this.isLoading = false;
-              this.PendingCOD = this.TodaysCOD = this.TotalAmount = this.TodaysShipmentCount = this.TodaysCash = this.TodaysPayphi = this.TodaysWallet = this.TodaysCard = this.TodaysCashCount = this.TodaysPayphiCount = this.TodaysWalletCount = this.TodaysCardCount = 0;
-              this.deliveredCODArr = this.deliveredCashArr = this.deliveredPayphiArr = this.deliveredWalletArr = this.deliveredCardArr = [];
+              this.PendingCOD = this.TodaysCOD = this.TotalAmount = this.TodaysShipmentCount = this.TodaysCash = this.TodaysPayphi = this.TodaysWallet = this.TodaysCard = this.TodaysCashCount = this.TodaysPayphiCount = this.TodaysWalletCount = this.TodaysCardCount = this.TodaysRazorpayCount =  this.TodaysRazorpay = 0;
+              this.deliveredCODArr = this.deliveredCashArr = this.deliveredPayphiArr = this.deliveredWalletArr = this.deliveredCardArr = this.deliveredRazorpayArr = [];
            }
          }, error => {
            console.error(error)

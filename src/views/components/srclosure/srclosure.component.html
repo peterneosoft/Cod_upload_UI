@@ -382,6 +382,12 @@
                   <td class="text-center" v-if="TodaysWalletCount<=0">{{TodaysWalletCount}}</td>
                   <td class="text-center" style="width: 30%">{{TodaysWallet}}</td>
                 </tr>
+                <tr>
+                  <td class="text-center" style="width: 30%">Razorpay</td>
+                  <td v-if="TodaysRazorpayCount > 0" class="text-center" @click="showShippingidModal('Razorpay AWB Numbers', deliveredRazorpayArr)" style="width: 30%; cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{TodaysRazorpayCount}}</td>
+                  <td class="text-center" v-if="TodaysRazorpayCount<=0">{{TodaysRazorpayCount}}</td>
+                  <td class="text-center" style="width: 30%">{{TodaysRazorpay}}</td>
+                </tr>
               </tbody>
             </table>
           </div>

@@ -72,13 +72,15 @@
               <th class="text-center tableheader"><b>Delivery Date</b></th>
               <th class="text-center tableheader"><b>COD Shipments</b></th>
               <th class="text-center tableheader"><b>Cash</b></th>
-              <th class="text-center tableheader"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>Amount(<i class="fa fa-rupee"></i>)</b></th>
               <th class="text-center tableheader"><b>Payphi</b></th>
-              <th class="text-center tableheader"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>Amount(<i class="fa fa-rupee"></i>)</b></th>
               <th class="text-center tableheader"><b>Card</b></th>
-              <th class="text-center tableheader"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>Amount(<i class="fa fa-rupee"></i>)</b></th>
               <th class="text-center tableheader"><b>Wallet</b></th>
-              <th class="text-center tableheader"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>Amount(<i class="fa fa-rupee"></i>)</b></th>
+              <th class="text-center tableheader"><b>Razorpay</b></th>
+              <th class="text-center tableheader"><b>Amount(<i class="fa fa-rupee"></i>)</b></th>
             </tr>
           </thead>
           <tbody>
@@ -98,6 +100,8 @@
               <td class="text-center">{{val.cardAmt}}</td>
               <td class="text-center" @click="showShippingidModal('Wallet AWB Numbers', val.walletArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{val.wallet}}</u></td>
               <td class="text-center">{{val.walletAmt}}</td>
+              <td class="text-center" @click="showShippingidModal('Razorpay AWB Numbers', val.razorpayArr)" style="cursor:pointer; color: rgb(25,25,112);"><u>{{val.razorpay}}</u></td>
+              <td class="text-center">{{val.razorpayAmt}}</td>
             </tr>
 
             <tr v-if="resultCount>0">
@@ -109,6 +113,8 @@
               <td class="text-center"><strong>{{totalCardAmt}}</strong></td>
               <td class="text-center">&nbsp;</td>
               <td class="text-center"><strong>{{totalWalletAmt}}</strong></td>
+              <td class="text-center">&nbsp;</td>
+              <td class="text-center"><strong>{{totalRazorpayAmt}}</strong></td>
             </tr>
           </tbody>
 
