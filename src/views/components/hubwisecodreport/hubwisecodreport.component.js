@@ -53,11 +53,8 @@ export default {
       comment:'',
       cType:'',
       role:'',
-      filename:'',
-      zData:[],
-      hubIdArr:[],
-      downloadf:false,
-      wait:''
+      SearchZIds:[],
+      SearchHIds:[]
     }
   },
 
@@ -91,8 +88,9 @@ export default {
         }
       }
 
-      if(this.zone.hubzoneid == 0){ return false; }
-      else{ this.SearchZoneIds = []; return true; }
+      // if(this.zone.hubzoneid == 0){ return false; }
+      // else{ this.SearchZoneIds = []; return true; }
+      return false;
     },
 
     multipleHub(){
@@ -154,79 +152,42 @@ export default {
         this.getHubWiseCODLedgerReports()
     },
 
-    async exportHubWiswData(zData, hubIdArr, offset, count, limit, filename){
-
-      axios({
-          method: 'POST',
-          'url': apiUrl.api_url + 'exportAllZoneCODReports',
-          'data': {
-              hubid: hubIdArr,
-              zoneid: zData,
-              status: this.status,
-              fromdate: this.fromDate,
-              todate: this.toDate,
-              filename: filename? filename: '',
-              limit: limit? limit: 0,
-              offset: offset? offset: 0,
-              count: count? count: 0
-          },
-          headers: {
-              'Authorization': 'Bearer '+this.myStr
-          }
-      })
-      .then(result => {
-        if(result.data.code == 200){ return true; }else{ return false; }
-      }, error => {
-        console.error(error); return false;
-      })
-    },
-
-    async exportreport(){
-      this.exportf         = false; this.reportlink = ''; this.wait = '';
-      let limit            = 1000;
-      let n                = (parseInt(this.resultCount/limit))+1;
-      this.wait            = (((n*4000) % 60000) / 1000).toFixed(0);
-
-      await this.exportHubWiswData(this.zData, this.hubIdArr, 0, this.resultCount, limit, this.filename);
-
-      for (let i = 2; i <= n; i++) {
-        await new Promise(r => setTimeout(r, 4000)).then(async () => {
-
-          await this.exportHubWiswData(this.zData, this.hubIdArr, (i - 1) * limit, this.resultCount, limit, this.filename);
-          if(i == n){
-
-            await new Promise(r => setTimeout(r, n*4000)).then(async () => {
-              this.input = ({
-                  filename: this.filename,
-              })
-              axios({
-                  method: 'POST',
-                  'url':  apiUrl.api_url + 'uploadreportonS3',
-                  'data': this.input,
-                  headers: {
-                      'Authorization': 'Bearer '+this.myStr
-                  }
-              })
-              .then(result => {
-                console.log('result==', result);
-                if(result.data.code == 200){
-                  this.downloadf = true;
-                  this.reportlink = result.data.data;
-                }else{
-                   this.exportf = true; this.downloadf = false; this.reportlink = '';
-                }
-              }, error => {
-                 this.downloadf = false; this.reportlink = ''; console.error(error)
-              })
-            });
-          }
-        });
-      }
-    },
-
-    downloadreport(){
+    exportHubWiswData(){
       if(this.reportlink){
         window.open(this.reportlink);
+      }else{
+        this.exportf = false;
+        this.input = ({
+            hubid: this.SearchHIds,
+            zoneid: this.SearchZIds,
+            status: this.status,
+            fromdate: this.fromDate,
+            todate: this.toDate
+        })
+
+        // if(this.role=='financemanager') rep = apiUrl.api_url + 'exportAllZoneCODReports';
+        // else rep = apiUrl.api_url + 'exportHubWiseCODReports';
+        let rep = apiUrl.api_url + 'exportHubWiseCODReports';
+
+        axios({
+            method: 'POST',
+            'url': rep,
+            'data': this.input,
+            headers: {
+                'Authorization': 'Bearer '+this.myStr
+            }
+        })
+        .then(result => {
+          if(result.data.code == 200){
+            this.exportf = true;
+            this.reportlink = result.data.data;
+            window.open(this.reportlink);
+          }else{
+             this.exportf = false; this.reportlink = '';
+          }
+        }, error => {
+           this.exportf = false; this.reportlink = ''; console.error(error)
+        })
       }
     },
 
@@ -322,15 +283,16 @@ export default {
 
       let hubIdArr = [...new Set([].concat(...hubArr.concat(RSCArr)))];
 
+      this.SearchZIds = zData; this.SearchHIds = hubIdArr;
+
       this.input = ({
-          hubid: hubIdArr,
-          zoneid: zData,
+          hubid: this.SearchHIds,
+          zoneid: this.SearchZIds,
           fromdate: this.fromDate,
           todate: this.toDate,
           status: this.status,
           offset:this.pageno,
-          limit:10,
-          filename: this.filename? this.filename: ''
+          limit:10
       })
       axios({
           method: 'POST',
@@ -340,27 +302,27 @@ export default {
             'Authorization': 'Bearer '
           }
         })
-        .then(async result => {
-          if(this.filename && this.reportlink){ this.downloadf = true; this.exportf = false; }else{ this.downloadf = false; this.exportf = true; }
-          this.isLoading = false;
-
+        .then(result => {
           if(result.data.code == 200){
             this.CODLedgerReports = result.data.data;
-            let totalRows         = result.data.count;
-            this.resultCount      = result.data.count;
-            this.filename         = result.data.filename? result.data.filename: '';
-            this.zData            = zData;
-            this.hubIdArr         = hubIdArr;
-
-            if (totalRows < 10) { this.pagecount = 1 } else { this.pagecount = Math.ceil(totalRows / 10); }
+            this.isLoading = false; this.exportf = true;
+            let totalRows = result.data.count
+            this.resultCount = result.data.count
+            if (totalRows < 10) {
+                 this.pagecount = 1
+             } else {
+                 this.pagecount = Math.ceil(totalRows / 10)
+             }
            }else{
-             this.CODLedgerReports = []; this.resultCount = 0; this.isLoading = this.exportf = false; this.filename = ''; this.zData = this.hubIdArr = [];
+             this.CODLedgerReports = [];
+             this.isLoading = false; this.exportf = false;
+             this.resultCount = 0;
            }
-         },
-         error => {
-           this.CODLedgerReports = []; this.resultCount = 0; this.isLoading = this.exportf= false; this.filename = ''; this.zData = this.hubIdArr = [];
-           console.error(error); this.$alertify.error('Error Occured');
-         })
+          },
+           error => {
+             this.CODLedgerReports = []; this.resultCount = 0; this.isLoading = false; this.exportf = false;
+             console.error(error); this.$alertify.error('Error Occured');
+        })
     },
 
     //to get All Zone List
@@ -452,8 +414,7 @@ export default {
             document.getElementById("fdate").innerHTML="Difference between From date & To date should not be greater than 30 days.";
             return false;
           }else{
-            document.getElementById("fdate").innerHTML=""; this.pageno = 0; this.exportf = false;
-            this.filename = '';
+            document.getElementById("fdate").innerHTML=""; this.pageno = 0; this.exportf = false; this.reportlink = ''; this.resultCount = 0;
             this.getHubWiseCODLedgerReports()
           }
         }
@@ -463,9 +424,8 @@ export default {
     },
 
     resetForm() {
-      this.fromDate = this.toDate = ''; this.zone=""; this.hubList=[]; this.HubId=[]; this.RSCList = []; this.RSCName = [];
+      this.fromDate = this.toDate = ''; this.zone=""; this.hubList = this.HubId = this.RSCList = this.RSCName = this.SearchZIds = this.SearchHIds = [];
       this.pageno = 0; this.status=""; this.CODLedgerReports = []; this.exportf = false; this.disableHub = false; this.resultCount = 0;
-      this.filename = ''; this.zData = this.hubIdArr = []; this.wait = '';
       this.$validator.reset();
       this.errors.clear();
     },
