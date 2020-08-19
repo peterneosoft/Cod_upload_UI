@@ -339,7 +339,7 @@ export default {
         .then(result => {
           this.zoneLoading = false;
 
-          if(this.role=='financemanager') this.zoneList = [{hubzoneid:'0', hubzonename:'All Zone', hubzonecode:'All Zone'}].concat(result.data.zone.data);
+          if(this.role=='financemanager' || this.role=='admin') this.zoneList = [{hubzoneid:'0', hubzonename:'All Zone', hubzonecode:'All Zone'}].concat(result.data.zone.data);
           else this.zoneList = result.data.zone.data;
 
         }, error => {

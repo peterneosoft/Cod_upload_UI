@@ -162,7 +162,8 @@
                 &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Cash Count:&nbsp;&nbsp;{{allSUList.SUcashCnt}},
                 &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Card Count:&nbsp;&nbsp;{{allSUList.SUcardCnt}},
                 &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Payphi Count:&nbsp;&nbsp;{{allSUList.SUpayphiCnt}},
-                &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Wallet Count:&nbsp;&nbsp;{{allSUList.SUwalletCnt}}
+                &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Wallet Count:&nbsp;&nbsp;{{allSUList.SUwalletCnt}},
+                &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Razorpay Count:&nbsp;&nbsp;{{allSUList.SUrazorpayCnt}}
               </td>
             </tr>
             <tr v-if="allDBList">
@@ -171,7 +172,8 @@
                 &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Cash Count:&nbsp;&nbsp;{{allDBList.DBCODcashCnt}},
                 &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Card Count:&nbsp;&nbsp;{{allDBList.DBCODcardCnt}},
                 &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Payphi Count:&nbsp;&nbsp;{{allDBList.DBCODpayphiCnt}},
-                &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Wallet Count:&nbsp;&nbsp;{{allDBList.DBCODwalletCnt}}
+                &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Wallet Count:&nbsp;&nbsp;{{allDBList.DBCODwalletCnt}},
+                &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Razorpay Count:&nbsp;&nbsp;{{allDBList.DBCODrazorpayCnt}}
               </td>
             </tr>
           </tbody>
@@ -224,6 +226,7 @@
                   &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;Card Count:&nbsp;&nbsp;{{SUList.CODcardCnt}},&nbsp;&nbsp;Card Amount:&nbsp;&nbsp;{{SUList.CODcardAmt}},
                   &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;Payphi Count:&nbsp;&nbsp;{{SUList.CODpayphiCnt}},&nbsp;&nbsp;Payphi Amount:&nbsp;&nbsp;{{SUList.CODpayphiAmt}},
                   &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;Wallet Count:&nbsp;&nbsp;{{SUList.CODwalletCnt}},&nbsp;&nbsp;Wallet Amount:&nbsp;&nbsp;{{SUList.CODwalletAmt}},
+                  &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;Razorpay Count:&nbsp;&nbsp;{{SUList.CODrazorpayCnt}},&nbsp;&nbsp;Razorpay Amount:&nbsp;&nbsp;{{SUList.CODrazorpayAmt}},
                   &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;Prepaid Count:&nbsp;&nbsp;{{SUList.CODprepaidCnt}}
                 </td>
               </tr>
@@ -234,6 +237,7 @@
                   &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;Card Count:&nbsp;&nbsp;{{DBList.DBCODcardCnt}},&nbsp;&nbsp;Card Amount:&nbsp;&nbsp;{{DBList.DBCODcardAmt}},
                   &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;Payphi Count:&nbsp;&nbsp;{{DBList.DBCODpayphiCnt}},&nbsp;&nbsp;Payphi Amount:&nbsp;&nbsp;{{DBList.DBCODpayphiAmt}},
                   &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;Wallet Count:&nbsp;&nbsp;{{DBList.DBCODwalletCnt}},&nbsp;&nbsp;Wallet Amount:&nbsp;&nbsp;{{DBList.DBCODwalletAmt}},
+                  &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;Razorpay Count:&nbsp;&nbsp;{{DBList.DBCODrazorpayCnt}},&nbsp;&nbsp;Razorpay Amount:&nbsp;&nbsp;{{DBList.DBCODrazorpayAmt}},
                   &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;Prepaid Count:&nbsp;&nbsp;{{DBList.DBCODprepaidCnt}}
                 </td>
               </tr>
@@ -273,6 +277,10 @@
                 <td class="text-center"><strong>Wallet</strong></td>
                 <td class="text-center">{{SUList.walletArr}}</td>
               </tr>
+              <tr v-if="SUList.CODrazorpayCnt>0">
+                <td class="text-center"><strong>Razorpay</strong></td>
+                <td class="text-center">{{SUList.razorpayArr}}</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -308,6 +316,10 @@
                <tr v-if="DBList.DBCODwalletCnt>0">
                  <td class="text-center"><strong>Wallet</strong></td>
                  <td class="text-center">{{DBList.DBwalletArr}}</td>
+               </tr>
+               <tr v-if="DBList.DBCODrazorpayCnt>0">
+                 <td class="text-center"><strong>Razorpay</strong></td>
+                 <td class="text-center">{{DBList.DBrazorpayArr}}</td>
                </tr>
              </tbody>
            </table>
