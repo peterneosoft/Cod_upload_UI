@@ -88,9 +88,8 @@ export default {
         }
       }
 
-      // if(this.zone.hubzoneid == 0){ return false; }
-      // else{ this.SearchZoneIds = []; return true; }
-      return false;
+      if(this.zone.hubzoneid == 0){ return false; }
+      else{ this.SearchZoneIds = []; return false; }
     },
 
     multipleHub(){
