@@ -278,7 +278,7 @@ export default {
         codamount:            this.form.codamount[data.svcledgerid],
         bankdeposit:          this.form.depamount[data.svcledgerid],
         statusid:             data.statusid,
-        financereasonid:      this.form.finreason[data.svcledgerid],
+        financereasonid:      this.form.finreason[data.svcledgerid]?this.form.finreason[data.svcledgerid]:null,
         financeconfirmamount: this.form.actualrecamt[data.svcledgerid],
         recoveryamt:          data.othercharges,
         createdby:            data.createdby,
