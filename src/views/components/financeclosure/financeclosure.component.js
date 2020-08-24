@@ -74,9 +74,9 @@ export default {
       RSCName:[],
       SearchRSCIds:[],
       disableRSC:false,
-      excelLoading: false,
       exportf:false,
-      reportlink:''
+      reportlink:'',
+      SearchHIds:[]
     }
   },
 
@@ -318,6 +318,7 @@ export default {
         }
 
         let hubIdArr = [...new Set([].concat(...hubArr.concat(RSCArr)))];
+        this.SearchHIds = hubIdArr;
 
         if(hubArr.length<=0 && RSCArr.length<=0){
           document.getElementById("hubrsc").innerHTML="One selection is required either Hub and RSC."; return false;
@@ -327,11 +328,11 @@ export default {
         this.input = ({
             offset: this.pageno,
             limit: 10,
-            hubid: hubIdArr,
+            hubid: this.SearchHIds,
             statusid: this.status,
             deposittype: this.DepositType
         })
-        this.isLoading = true; this.exportf=false;
+        this.isLoading = true;
         axios({
             method: 'POST',
             'url': apiUrl.api_url + 'financeledgermaster',
@@ -348,18 +349,18 @@ export default {
             $(".text-danger").html("");
 
             let finance = result.data.data;
-            finance.forEach((fin,key)=>{
-              this.form.finreason[fin.svcledgerid] = fin.financereasonid;
-              this.form.radio[fin.svcledgerid] = 'awb';
-              this.form.subLoading[fin.svcledgerid] = false;
+            finance.forEach((fin,key) => {
+              this.form.finreason[fin.svcledgerid]    = fin.financereasonid;
+              this.form.radio[fin.svcledgerid]        = 'awb';
+              this.form.subLoading[fin.svcledgerid]   = false;
 
               if(!fin.financereasonid){
-                this.form.finreason[fin.svcledgerid] = '';
-                this.form.hide[fin.svcledgerid] = 0;
+                this.form.finreason[fin.svcledgerid]  = '';
+                this.form.hide[fin.svcledgerid]       = 0;
               }
             });
+            this.exportf      = true;
 
-            this.isLoading = false;
             let totalRows     = result.data.count;
             this.resultCount  = result.data.count;
             this.resultfdate  = result.data.fdate;
@@ -368,22 +369,19 @@ export default {
             } else {
                 this.pagecount = Math.ceil(totalRows / 10)
             }
-            this.exportfinanceledgermaster(hubIdArr);
           }else{
-            this.listFinanceledgerData=[];
-            this.resultCount  = 0;
-            this.isLoading = false;
+            this.listFinanceledgerData = []; this.resultCount = 0; this.exportf = false;
           }
+          this.isLoading = false;
         }, error => {
-            console.error(error)
-            this.$alertify.error('Error Occured');
+          this.exportf = false; console.error(error); this.$alertify.error('Error Occured');
         })
     },
 
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
-          this.HubID = this.HubId.HubID; this.pageno = this.pagecount = 0;
+          this.HubID = this.HubId.HubID; this.pageno = this.pagecount = 0; this.exportf = false;
           this.GetFinanceledgerData(event);
         }else{
           this.$alertify.error('Error Occured');
@@ -593,9 +591,9 @@ export default {
     },
 
     resetForm() {
-      this.zone = this.DepositType = ''; this.HubId = this.hubList = this.RSCList = []; this.RSCName = []; this.pageno = this.resultCount = 0; this.listFinanceledgerData = []; this.status = 1;
-      this.$validator.reset();
-      this.errors.clear();
+      this.zone = this.DepositType = ''; this.HubId = this.hubList = this.RSCList = []; this.RSCName = []; this.pageno = this.resultCount = 0;
+      this.listFinanceledgerData = this.SearchHIds = []; this.status = 1; this.exportf = false;
+      this.$validator.reset(); this.errors.clear();
     },
 
     showHideImages(index, elem){
@@ -665,44 +663,37 @@ export default {
       this.$refs.myCommentModalRef.show();
     },
 
-    exportreport(){
-      this.excelLoading = true;
+    exportfinanceledgermaster(){
+
       if(this.reportlink){
         window.open(this.reportlink);
-        this.excelLoading = false;
       }else{
-        this.excelLoading = false;
-      }
-    },
+        this.exportf = false;
 
-    exportfinanceledgermaster(hubIdArr){
+        this.input = ({
+          hubid: this.SearchHIds,
+          statusid: this.status,
+          deposittype: this.DepositType
+        })
 
-      this.reportlink = '';
-
-      this.input = ({
-        hubid: hubIdArr,
-        statusid: this.status,
-        deposittype: this.DepositType
-      })
-
-      axios({
-          method: 'POST',
-          'url': apiUrl.api_url + 'exportfinanceledgermaster',
-          'data': this.input,
-          headers: {
-              'Authorization': 'Bearer '+this.myStr
+        axios({
+            method: 'POST',
+            'url': apiUrl.api_url + 'exportfinanceledgermaster',
+            'data': this.input,
+            headers: {
+                'Authorization': 'Bearer '+this.myStr
+            }
+        })
+        .then(result => {
+          if(result.data.code == 200){
+            this.exportf = true; this.reportlink = result.data.data; window.open(this.reportlink);
+          }else{
+            this.exportf = false; this.reportlink = '';
           }
-      })
-      .then(result => {
-        this.exportf=true;
-        if(result.data.code == 200){
-          this.reportlink = result.data.data;
-        }else{
-          this.reportlink = '';
-        }
-      }, error => {
-        this.exportf=false; this.reportlink = ''; console.error(error); this.$alertify.error('Error Occured');
-      })
+        }, error => {
+          this.exportf = false; this.reportlink = ''; console.error(error); this.$alertify.error('Error Occured');
+        })
+      }
     },
   }
 }

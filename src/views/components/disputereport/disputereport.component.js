@@ -120,7 +120,7 @@ export default {
       if(this.reportlink){
         window.open(this.reportlink);
       }else{
-
+        this.exportf = false;
         this.input = ({
           hubid: this.SearchHIds,
           zoneid: this.SearchZIds,

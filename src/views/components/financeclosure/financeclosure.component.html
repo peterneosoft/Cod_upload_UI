@@ -219,11 +219,9 @@
           <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result&nbsp;&nbsp;
             <span v-if="resultCount>0" style="font-size:13px;"><b>({{resultfdate}})</b></span>
 
-            <span v-show="exportf" style="margin-left: 65%; cursor: pointer;" @click="exportreport()">
-              <button class="btn btn-sm btn-success" type="button">
-                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="excelLoading" />
-                <i class="fa fa-download"></i> Export
-              </button>
+            <span v-if="exportf==false && resultCount>0" style="margin-left: 70%;"><font style="font-size: 12px;color: red;font-weight: bold;">Report available in few seconds..</font></span>
+            <span v-show="exportf" style="margin-left: 65%; cursor: pointer;" @click="exportfinanceledgermaster()">
+              <button class="btn btn-sm btn-success" type="button"><i class="fa fa-download"></i> Export</button>
             </span>
           </h4>
           <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />

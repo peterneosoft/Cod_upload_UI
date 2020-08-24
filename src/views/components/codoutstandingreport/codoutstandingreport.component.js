@@ -150,7 +150,7 @@ export default {
       if(this.reportlink){
         window.open(this.reportlink);
       }else{
-        let rep = '';
+        let rep = ''; this.exportf = false;
 
         this.input = ({
           hubid: this.SearchHIds,
@@ -276,7 +276,7 @@ export default {
 
     //to get All Zone List
     getZoneData() {
-      this.input = {}; this.zoneLoading = true; this.exportf = this.disableHub = false;
+      this.input = {}; this.zoneLoading = true; this.disableHub = false;
       this.HubId = this.hubList = this.RSCName = this.RSCList = this.CODOutstandingReport = []; this.resultCount = 0;
       axios({
           method: 'POST',
