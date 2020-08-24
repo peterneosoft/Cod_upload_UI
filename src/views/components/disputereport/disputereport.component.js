@@ -30,7 +30,6 @@ export default {
       pageno:0,
       pagecount:0,
       isLoading:false,
-      excelLoading: false,
       exportf:false,
       disableHub:false,
       zoneLoading:false,
@@ -38,7 +37,9 @@ export default {
       SearchHubIds:[],
       reportlink:'',
       tilldate:'',
-      SearchZoneIds:[]
+      SearchZoneIds:[],
+      SearchZIds:[],
+      SearchHIds:[]
     }
   },
 
@@ -115,42 +116,33 @@ export default {
         this.getDisputeReport()
     },
 
-    exportDisputeData(zData, hubArr){
-
-      this.reportlink = '';
-
-      this.input = ({
-          hubid: hubArr,
-          zoneid: zData,
-          tilldate:this.tilldate
-      })
-      axios({
-          method: 'POST',
-          'url': apiUrl.api_url + 'exportDisputeReport',
-          'data': this.input,
-          headers: {
-              'Authorization': 'Bearer '+this.myStr
-          }
-      })
-      .then(result => {
-        if(result.data.code == 200){
-          this.reportlink = result.data.data; this.exportf=true;
-        }else{
-          this.reportlink = ''; this.exportf=false;
-        }
-      }, error => {
-        this.exportf=false; this.reportlink = '';
-        console.error(error); this.$alertify.error('Error Occured');
-      })
-    },
-
-    exportreport(){
-      this.excelLoading = true;
+    exportDisputeData(){
       if(this.reportlink){
         window.open(this.reportlink);
-        this.excelLoading = false;
       }else{
-        this.excelLoading = false;
+
+        this.input = ({
+          hubid: this.SearchHIds,
+          zoneid: this.SearchZIds,
+          tilldate:this.tilldate
+        })
+        axios({
+            method: 'POST',
+            'url': apiUrl.api_url + 'exportDisputeReport',
+            'data': this.input,
+            headers: {
+                'Authorization': 'Bearer '+this.myStr
+            }
+        })
+        .then(result => {
+          if(result.data.code == 200){
+            this.exportf = true; this.reportlink = result.data.data; window.open(this.reportlink);
+          }else{
+            this.exportf = false; this.reportlink = '';
+          }
+        }, error => {
+          this.exportf = false; this.reportlink = ''; console.error(error); this.$alertify.error('Error Occured');
+        })
       }
     },
 
@@ -180,12 +172,14 @@ export default {
         });
       }
 
+      this.SearchZIds = zData; this.SearchHIds = hubArr;
+
       this.input = ({
-          hubid: hubArr,
-          zoneid: zData,
-          tilldate:this.tilldate,
-          offset:this.pageno,
-          limit:10
+        hubid: this.SearchHIds,
+        zoneid: this.SearchZIds,
+        tilldate:this.tilldate,
+        offset:this.pageno,
+        limit:10
       })
 
       axios({
@@ -200,23 +194,22 @@ export default {
 
           if(result.data.code == 200){
 
-            this.DisputeReport = result.data.data;
-            let totalRows = result.data.count
-            this.resultCount = result.data.count
-
+            this.DisputeReport  = result.data.data;
+            let totalRows       = result.data.count
+            this.resultCount    = result.data.count
+            this.exportf        = true;
             if (totalRows < 10) {
                  this.pagecount = 1
              } else {
                  this.pagecount = Math.ceil(totalRows / 10)
              }
-             this.exportDisputeData(zData, hubArr);
            }else{
-             this.DisputeReport = []; this.resultCount = 0;
+              this.exportf      = false; this.DisputeReport = []; this.resultCount = 0;
            }
-           this.isLoading = false;
+           this.isLoading       = false;
           },
            error => {
-             this.isLoading = false; console.error(error); this.$alertify.error('Error Occured');
+             this.DisputeReport = []; this.isLoading = false; this.exportf = false; console.error(error); this.$alertify.error('Error Occured');
         })
     },
 
@@ -271,7 +264,7 @@ export default {
       this.$validator.validateAll().then((result) => {
         if(result){
           this.pageno = 0; this.exportf = false;
-          this.getDisputeReport()
+          this.reportlink = ''; this.getDisputeReport()
         }
       }).catch(() => {
         console.log('errors exist', this.errors)
@@ -279,8 +272,8 @@ export default {
     },
 
     resetForm() {
-      this.tilldate = this.zone = ''; this.hubList = this.HubId = this.DisputeReport = [];
-      this.exportf = this.disableHub = false; this.pageno = this.resultCount = 0;
+      this.tilldate = this.zone = ''; this.hubList = this.HubId = this.DisputeReport = this.SearchZIds = this.SearchHIds = [];
+      this.exportf = this.disableHub = false; this.pageno = this.resultCount = 0; this.reportlink = '';
       this.$validator.reset(); this.errors.clear();
     },
   }

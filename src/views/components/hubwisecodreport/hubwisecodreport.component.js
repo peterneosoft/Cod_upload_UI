@@ -32,7 +32,6 @@ export default {
       pageno:0,
       pagecount:0,
       isLoading:false,
-      excelLoading: false,
       exportf:false,
       disableHub:false,
       zoneLoading:false,
@@ -157,11 +156,11 @@ export default {
       }else{
         this.exportf = false;
         this.input = ({
-            hubid: this.SearchHIds,
-            zoneid: this.SearchZIds,
-            status: this.status,
-            fromdate: this.fromDate,
-            todate: this.toDate
+          hubid: this.SearchHIds,
+          zoneid: this.SearchZIds,
+          status: this.status,
+          fromdate: this.fromDate,
+          todate: this.toDate
         })
 
         // if(this.role=='financemanager') rep = apiUrl.api_url + 'exportAllZoneCODReports';
@@ -178,14 +177,12 @@ export default {
         })
         .then(result => {
           if(result.data.code == 200){
-            this.exportf = true;
-            this.reportlink = result.data.data;
-            window.open(this.reportlink);
+            this.exportf = true; this.reportlink = result.data.data; window.open(this.reportlink);
           }else{
-             this.exportf = false; this.reportlink = '';
+            this.exportf = false; this.reportlink = '';
           }
         }, error => {
-           this.exportf = false; this.reportlink = ''; console.error(error)
+           this.exportf = false; this.reportlink = ''; console.error(error); this.$alertify.error('Error Occured');
         })
       }
     },
@@ -238,7 +235,6 @@ export default {
         });
         result += lineDelimiter;
       });
-      this.excelLoading = false;
       return result;
     }, **/
 
@@ -280,8 +276,7 @@ export default {
         });
       }
 
-      let hubIdArr = [...new Set([].concat(...hubArr.concat(RSCArr)))];
-
+      let hubIdArr    = [...new Set([].concat(...hubArr.concat(RSCArr)))];
       this.SearchZIds = zData; this.SearchHIds = hubIdArr;
 
       this.input = ({
@@ -303,20 +298,21 @@ export default {
         })
         .then(result => {
           if(result.data.code == 200){
-            this.CODLedgerReports = result.data.data;
-            this.isLoading = false; this.exportf = true;
-            let totalRows = result.data.count
-            this.resultCount = result.data.count
+            this.CODLedgerReports   = result.data.data;
+            this.exportf            = true;
+            let totalRows           = result.data.count
+            this.resultCount        = result.data.count
             if (totalRows < 10) {
-                 this.pagecount = 1
+                 this.pagecount     = 1
              } else {
-                 this.pagecount = Math.ceil(totalRows / 10)
+                 this.pagecount     = Math.ceil(totalRows / 10)
              }
            }else{
-             this.CODLedgerReports = [];
-             this.isLoading = false; this.exportf = false;
-             this.resultCount = 0;
+             this.CODLedgerReports  = [];
+             this.exportf           = false;
+             this.resultCount       = 0;
            }
+           this.isLoading           = false;
           },
            error => {
              this.CODLedgerReports = []; this.resultCount = 0; this.isLoading = false; this.exportf = false;
@@ -424,7 +420,7 @@ export default {
 
     resetForm() {
       this.fromDate = this.toDate = ''; this.zone=""; this.hubList = this.HubId = this.RSCList = this.RSCName = this.SearchZIds = this.SearchHIds = [];
-      this.pageno = 0; this.status=""; this.CODLedgerReports = []; this.exportf = false; this.disableHub = false; this.resultCount = 0;
+      this.pageno = 0; this.status=""; this.CODLedgerReports = []; this.exportf = false; this.disableHub = false; this.resultCount = 0; this.reportlink = '';
       this.$validator.reset();
       this.errors.clear();
     },
