@@ -381,7 +381,7 @@ export default {
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
-          this.HubID = this.HubId.HubID; this.pageno = this.pagecount = 0; this.exportf = false;
+          this.HubID = this.HubId.HubID; this.pageno = this.pagecount = 0; this.exportf = false; this.reportlink = '';
           this.GetFinanceledgerData(event);
         }else{
           this.$alertify.error('Error Occured');
