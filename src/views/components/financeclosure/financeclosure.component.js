@@ -76,7 +76,9 @@ export default {
       disableRSC:false,
       exportf:false,
       reportlink:'',
-      SearchHIds:[]
+      SearchHIds:[],
+      toDate:"",
+      fromDate:""
     }
   },
 
@@ -91,6 +93,8 @@ export default {
   },
 
   mounted() {
+    var date = new Date();
+    toDate.max = fromDate.max = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
 
     var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
     var bytes             = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
@@ -330,7 +334,9 @@ export default {
             limit: 10,
             hubid: this.SearchHIds,
             statusid: this.status,
-            deposittype: this.DepositType
+            deposittype: this.DepositType,
+            fromdate: this.fromDate,
+            todate: this.toDate
         })
         this.isLoading = true;
         axios({
@@ -381,8 +387,17 @@ export default {
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
-          this.HubID = this.HubId.HubID; this.pageno = this.pagecount = 0; this.exportf = false; this.reportlink = '';
-          this.GetFinanceledgerData(event);
+          let diffTime = Math.abs(new Date(this.toDate) - new Date(this.fromDate));
+          let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+          if(this.fromDate > this.toDate){
+            document.getElementById("fdate").innerHTML="From date should not be greater than To date."; return false;
+          }else if(diffDays > 30){
+            document.getElementById("fdate").innerHTML="Difference between From date & To date should not be greater than 30 days."; return false;
+          }else{
+            this.HubID = this.HubId.HubID; this.pageno = this.pagecount = 0; this.exportf = false; this.reportlink = ''; document.getElementById("fdate").innerHTML="";
+            this.GetFinanceledgerData(event);
+          }
         }else{
           this.$alertify.error('Error Occured');
         }
@@ -592,7 +607,7 @@ export default {
 
     resetForm() {
       this.zone = this.DepositType = ''; this.HubId = this.hubList = this.RSCList = []; this.RSCName = []; this.pageno = this.resultCount = 0;
-      this.listFinanceledgerData = this.SearchHIds = []; this.status = 1; this.exportf = false;
+      this.listFinanceledgerData = this.SearchHIds = []; this.status = 1; this.exportf = false; this.fromDate = this.toDate = '';
       this.$validator.reset(); this.errors.clear();
     },
 
@@ -673,7 +688,9 @@ export default {
         this.input = ({
           hubid: this.SearchHIds,
           statusid: this.status,
-          deposittype: this.DepositType
+          deposittype: this.DepositType,
+          fromdate: this.fromDate,
+          todate: this.toDate
         })
 
         axios({

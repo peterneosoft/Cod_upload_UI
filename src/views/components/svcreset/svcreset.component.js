@@ -41,6 +41,7 @@ export default {
       form: {
         depamount:[],
         depslip:[],
+        deldepslip:[],
         codamount: [],
         financeclosingamt: [],
         finreason: [],
@@ -95,7 +96,7 @@ export default {
     },
 
     GetSVCledgerData() {
-      $('span[id^="cau"]').hide(); $('span[id^="bdu"]').hide(); $('span[id^="fru"]').hide(); $('span[id^="fcu"]').hide(); $('span[id^="aru"]').hide(); $('span[id^="dps"]').hide(); $('span[id^="up"]').hide();  $('span[id^="FCup"]').hide();
+      $('span[id^="cau"]').hide(); $('span[id^="bdu"]').hide(); $('span[id^="fru"]').hide(); $('span[id^="fcu"]').hide(); $('span[id^="aru"]').hide(); $('span[id^="dps"]').hide(); $('span[id^="ddps"]').hide(); $('span[id^="up"]').hide();  $('span[id^="FCup"]').hide();
       $('span[id^="cax"]').show(); $('span[id^="bdx"]').show(); $('span[id^="frx"]').show(); $('span[id^="fcx"]').show(); $('span[id^="arx"]').show(); $('span[id^="ed"]').show(); $('span[id^="FCed"]').show(); $('span[id^="vri"]').hide(); $('span[id^="vrl"]').show();
       this.input = ({
           offset: this.pageno,
@@ -131,6 +132,7 @@ export default {
             this.form.depamount[svc.svcledgerid]         = svc.bankdeposit;
             this.form.codamount[svc.svcledgerid]         = svc.codamount;
             this.form.depslip[svc.svcledgerid]           = svc.batchid;
+            this.form.deldepslip[svc.svcledgerid]        = svc.batchid;
             this.form.financeclosingamt[svc.svcledgerid] = svc.financeclosingamt;
             this.form.actualrecamt[svc.svcledgerid]      = svc.actualrecamt ? svc.actualrecamt : 0;
             this.form.finreason[svc.svcledgerid]         = svc.financereasonid ? svc.financereasonid : '';
@@ -384,7 +386,7 @@ export default {
 
     editLedger(index){
       $('#cax'+index).hide(); $('#bdx'+index).hide(); $('#frx'+index).hide(); $('#arx'+index).hide(); $('#ed'+index).hide(); $('#vrl'+index).hide(); $('#vri'+index).hide(); $('#vrrl'+index).hide(); $('#vrri'+index).hide();
-      $('#cau'+index).show(); $('#bdu'+index).show(); $('#fru'+index).show(); $('#aru'+index).show(); $('#dps'+index).show(); $('#up'+index).show();
+      $('#cau'+index).show(); $('#bdu'+index).show(); $('#fru'+index).show(); $('#aru'+index).show(); $('#dps'+index).show(); $('#ddps'+index).show(); $('#up'+index).show();
     },
 
     showHideImages(index, elem){
@@ -440,6 +442,37 @@ export default {
       })
       .catch((httpException) => {
           console.error('exception is:::::::::', httpException); this.isLoading = false; this.$alertify.error('Error Occured');
+      });
+    },
+
+    //function is used for Delete Deposit Slip from AWS s3bucket
+    onDelete(data){
+      this.isLoading = true;
+
+      this.input = ({
+        svcledgerid: data.svcledgerid,
+        BatchID:     'SVC-'+data.batchid,
+        username:    this.localuserid
+      })
+      axios({
+        method: 'POST',
+        'url': apiUrl.api_url + 'deleteS3file',
+        'data': this.input,
+        headers: {
+          'Authorization': 'Bearer '+this.myStr
+        }
+      })
+      .then(response => {
+        this.isLoading = false;
+        if(res.data.errorCode==0){
+          this.$alertify.success('Reset Deposit Slip Successful.');
+          this.getS3bucketFiles(data);
+        }else{
+          this.$alertify.error('Reset Deposit Slip failed, try again.');
+        }
+      })
+      .catch((httpException) => {
+        console.error('exception is:::::::::', httpException); this.isLoading = false; this.$alertify.error('Error Occured');
       });
     },
   }
