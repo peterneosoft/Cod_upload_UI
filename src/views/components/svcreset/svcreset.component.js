@@ -464,7 +464,7 @@ export default {
       })
       .then(response => {
         this.isLoading = false;
-        if(res.data.errorCode==0){
+        if(response.data.errorCode==0){
           this.$alertify.success('Reset Deposit Slip Successful.');
           this.getS3bucketFiles(data);
         }else{
