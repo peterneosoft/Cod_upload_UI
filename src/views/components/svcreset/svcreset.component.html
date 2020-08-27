@@ -161,7 +161,7 @@
                       </span>
 
                       <span v-bind:id='`${"ddps"+CODLedger_List.svcledgerid}`' style="display: none;">
-                        <button v-if="role=='admin' && (CODLedger_List.createdby != 'schedular@xpressbees.com' && CODLedger_List.deposittype != '')" class="btn btn-sm btn-danger" @click="onDelete(CODLedger_List)" type="button" title="Delete Uploaded Deposit Slip" style="background-color: transparent; font-size: 12px; color: revert;"><i class="fa fa-trash"></i> Reset DPS</button>
+                        <button v-if="CODLedger_List.createdby != 'schedular@xpressbees.com' && CODLedger_List.deposittype != ''" class="btn btn-sm btn-danger" @click="onDelete(CODLedger_List)" type="button" title="Delete All Uploaded Deposit Slip" style="background-color: transparent; font-size: 12px; color: revert;"><i class="fa fa-trash"></i> Reset DPS</button>
                       </span>
                     </td>
                     <td class="text-center" v-if="CODLedger_List.statusid==1">Open</td>
