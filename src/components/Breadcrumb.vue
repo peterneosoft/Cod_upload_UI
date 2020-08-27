@@ -90,6 +90,7 @@ export default {
 
           if(result.data.code==200){
             this.hubAccess = result.data.data;
+            window.localStorage.setItem('accesszone', result.data.ZoneArr);
           }else{
             this.hubAccess = [];
           }

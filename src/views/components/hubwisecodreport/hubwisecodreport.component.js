@@ -322,7 +322,7 @@ export default {
 
     //to get All Zone List
     getZoneData() {
-      this.input = {}; this.zoneLoading = true;
+      this.input = {}; this.zoneLoading = true; this.zoneList = [];
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/getallzones',
@@ -334,9 +334,16 @@ export default {
         .then(result => {
           this.zoneLoading = false;
 
-          if(this.role=='financemanager' || this.role=='admin') this.zoneList = [{hubzoneid:'0', hubzonename:'All Zone', hubzonecode:'All Zone'}].concat(result.data.zone.data);
-          else this.zoneList = result.data.zone.data;
-
+          if(this.role=='financemanager' || this.role=='admin'){
+            this.zoneList = [{hubzoneid:'0', hubzonename:'All Zone', hubzonecode:'All Zone'}].concat(result.data.zone.data);
+          }else{
+            if(window.localStorage.getItem('accesszone')){
+              result.data.zone.data.map(item => {
+                let obj = window.localStorage.getItem('accesszone').split(",").find(el => el == item.hubzoneid);
+                if(obj) this.zoneList.push(item);
+              });
+            }else{ this.zoneList = result.data.zone.data; }
+          }
         }, error => {
           this.zoneLoading = false; console.error(error)
         })

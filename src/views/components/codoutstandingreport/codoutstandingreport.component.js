@@ -276,7 +276,7 @@ export default {
 
     //to get All Zone List
     getZoneData() {
-      this.input = {}; this.zoneLoading = true; this.disableHub = false;
+      this.input = {}; this.zoneLoading = true; this.disableHub = false; this.zoneList = [];
       this.HubId = this.hubList = this.RSCName = this.RSCList = this.CODOutstandingReport = []; this.resultCount = 0;
       axios({
           method: 'POST',
@@ -288,8 +288,17 @@ export default {
         })
         .then(result => {
           this.zoneLoading = false;
-          if(this.selected=='summary') this.zoneList = result.data.zone.data;
-          else this.zoneList = [{hubzoneid:'0', hubzonename:'All Zone', hubzonecode:'All Zone'}].concat(result.data.zone.data);
+
+          if(this.role=='financemanager' || this.role=='admin'){
+            this.zoneList = [{hubzoneid:'0', hubzonename:'All Zone', hubzonecode:'All Zone'}].concat(result.data.zone.data);
+          }else{
+            if(window.localStorage.getItem('accesszone')){
+              result.data.zone.data.map(item => {
+                let obj = window.localStorage.getItem('accesszone').split(",").find(el => el == item.hubzoneid);
+                if(obj) this.zoneList.push(item);
+              });
+            }else{ this.zoneList = result.data.zone.data; }
+          }
           this.addHubData();
         }, error => {
           this.zoneLoading = false; console.error(error)

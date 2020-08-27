@@ -93,6 +93,7 @@ export default {
         window.localStorage.setItem('accessuserToken', '');
         window.localStorage.setItem('accessrole', '');
         window.localStorage.setItem('logoutTime', '');
+        window.localStorage.setItem('accesszone', '');
 
         if(response.data.token && response.data.token!=''){
 

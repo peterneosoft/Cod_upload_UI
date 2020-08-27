@@ -203,6 +203,7 @@ export default {
         localStorage.removeItem('isLoggedIn')
         localStorage.removeItem('logoutTime')
         localStorage.removeItem('accessrole')
+        localStorage.removeItem('accesszone')
         this.$router.push('/login')
       })
       .catch((httpException) => {
