@@ -78,7 +78,8 @@ export default {
       reportlink:'',
       SearchHIds:[],
       toDate:"",
-      fromDate:""
+      fromDate:"",
+      role:''
     }
   },
 
@@ -101,6 +102,8 @@ export default {
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
     var userdetail        = JSON.parse(plaintext);
     this.localuserid      = userdetail.username;
+
+    this.role             = window.localStorage.getItem('accessrole').toLowerCase().replace(/\s/g,'');
 
     this.getZoneData();
     this.GetReasonList();
@@ -147,8 +150,7 @@ export default {
 
     //to get All Zone List
     getZoneData() {
-      this.allZoneLoading = true;
-      this.input = {}; this.zoneList = [];
+      this.input = {}; this.zoneList = []; this.allZoneLoading = true;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/getallzones',
@@ -159,10 +161,19 @@ export default {
         })
         .then(result => {
           this.allZoneLoading = false;
-          if(result.data.zone.data.length > 0) this.zoneList = [{hubzoneid:'0', hubzonename:'All Zone', hubzonecode:'All Zone'}].concat(result.data.zone.data);
+
+          if(this.role=='financemanager' || this.role=='admin'){
+            this.zoneList = [{hubzoneid:'0', hubzonename:'All Zone', hubzonecode:'All Zone'}].concat(result.data.zone.data);
+          }else{
+            if(window.localStorage.getItem('accesszone')){
+              result.data.zone.data.map(item => {
+                let obj = window.localStorage.getItem('accesszone').split(",").find(el => el == item.hubzoneid);
+                if(obj) this.zoneList.push(item);
+              });
+            }else{ this.zoneList = result.data.zone.data; }
+          }
         }, error => {
-          this.allZoneLoading = false; this.HubId = this.hubList = [];
-          console.error(error)
+          this.allZoneLoading = false; this.HubId = this.hubList = []; console.error(error);
         })
     },
 

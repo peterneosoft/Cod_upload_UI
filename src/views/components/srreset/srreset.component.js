@@ -21,7 +21,7 @@ export default {
   data() {
     return {
       zoneList:[],
-      zone:[],
+      zone:'',
       hubList:[],
       HubId:[],
       resultCount:'',
@@ -120,7 +120,7 @@ export default {
            if(result.data.code == 200){
              this.SRList = result.data.data;
            }else{
-              this.$alertify.error("SR not found")
+              this.$alertify.error("SR not found for selected hub.")
            }
          }, error => {
            this.srLoading = false;
@@ -242,7 +242,7 @@ export default {
 
     //to get All Zone List
     getZoneData() {
-      this.input = {}; this.zoneLoading = true;
+      this.input = {}; this.zoneLoading = true; this.zoneList = [];
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/getallzones',
@@ -253,7 +253,17 @@ export default {
         })
         .then(result => {
           this.zoneLoading = false;
-          this.zoneList = result.data.zone.data;
+
+          if(this.role=='financemanager' || this.role=='admin'){
+            this.zoneList = result.data.zone.data;
+          }else{
+            if(window.localStorage.getItem('accesszone')){
+              result.data.zone.data.map(item => {
+                let obj = window.localStorage.getItem('accesszone').split(",").find(el => el == item.hubzoneid);
+                if(obj) this.zoneList.push(item);
+              });
+            }else{ this.zoneList = result.data.zone.data; }
+          }
         }, error => {
           this.zoneLoading = false; console.error(error)
         })
@@ -261,9 +271,11 @@ export default {
 
     //to get All Zone Wise Hub List
     getHubData() {
-      this.hubList = this.HubId = [];
+      if(this.zone==""){ return false; }
+
+      this.hubList = this.HubId = []; this.SRArr = this.SRList = []; this.SR_Name = ''; this.agentList = []; this.Agent_Name = '';
       this.input = ({
-          zoneid: this.zone.hubzoneid
+          zoneid: this.zone
       })
       this.hubLoading = true;
       axios({

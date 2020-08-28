@@ -49,7 +49,8 @@ export default {
       totalPayphiAmt:0,
       totalCardAmt:0,
       totalWalletAmt:0,
-      totalRazorpayAmt:0
+      totalRazorpayAmt:0,
+      role:''
     }
   },
   computed: {
@@ -65,7 +66,11 @@ export default {
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
     var hubdetail         = JSON.parse(plaintext);
     this.localhubid       = hubdetail[0].HubID;
+
     this.urltoken         = window.localStorage.getItem('accessuserToken');
+
+    this.role             = window.localStorage.getItem('accessrole').toLowerCase().replace(/\s/g,'');
+
     this.getZoneData();
   },
 
@@ -82,8 +87,7 @@ export default {
 
     //to get All Zone List
     getZoneData() {
-      this.allZoneLoading = true;
-      this.input = {}; this.zoneList = [];
+      this.input = {}; this.zoneList = []; this.allZoneLoading = true;
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/getallzones',
@@ -94,7 +98,17 @@ export default {
         })
         .then(result => {
           this.allZoneLoading = false;
-          if(result.data.zone.data.length > 0) this.zoneList = result.data.zone.data;
+
+          if(this.role=='financemanager' || this.role=='admin'){
+            this.zoneList = result.data.zone.data;
+          }else{
+            if(window.localStorage.getItem('accesszone')){
+              result.data.zone.data.map(item => {
+                let obj = window.localStorage.getItem('accesszone').split(",").find(el => el == item.hubzoneid);
+                if(obj) this.zoneList.push(item);
+              });
+            }else{ this.zoneList = result.data.zone.data; }
+          }
         }, error => {
           this.allZoneLoading = false; this.HubId = this.hubList = [];
           console.error(error)
