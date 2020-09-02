@@ -98,7 +98,13 @@
                   <tr v-for="(CODLedger_List,index) in CODLedgerReports" v-bind:class="`${(CODLedger_List.createdby == 'schedular@xpressbees.com') || (CODLedger_List.deposittype) == '' ? 'scheduler' : '' || CODLedger_List.reasonid == 65 ? 'other' : '' || ([84,124,187,218,125].includes(CODLedger_List.financereasonid)) ? 'mismatched' : ''}`">
                     <td class="text-center">{{pageno+index+1}}</td>
                     <td class="text-center">{{CODLedger_List.deliverydate}}</td>
-                    <td class="text-center">{{CODLedger_List.bankdepositdate}}</td>
+                    <td class="text-center">
+                      <span v-bind:id='`${"bddx"+CODLedger_List.svcledgerid}`'>{{CODLedger_List.bankdepositdate}}</span>
+
+                      <span v-bind:id='`${"bddu"+CODLedger_List.svcledgerid}`' style="display: none;">
+                        <input v-model="form.depdate[CODLedger_List.svcledgerid]" class="form-control" placeholder="Bank Deposit Date" type="date">
+                      </span>
+                    </td>
                     <td class="text-center">{{CODLedger_List.openingbalance}}</td>
                     <td class="text-center">
                       <span v-if="role!='admin'">{{CODLedger_List.codamount}}</span>

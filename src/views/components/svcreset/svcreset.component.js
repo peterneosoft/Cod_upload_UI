@@ -40,6 +40,7 @@ export default {
       myStr:'',
       form: {
         depamount:[],
+        depdate:[],
         depslip:[],
         deldepslip:[],
         codamount: [],
@@ -96,8 +97,8 @@ export default {
     },
 
     GetSVCledgerData() {
-      $('span[id^="cau"]').hide(); $('span[id^="bdu"]').hide(); $('span[id^="fru"]').hide(); $('span[id^="fcu"]').hide(); $('span[id^="aru"]').hide(); $('span[id^="dps"]').hide(); $('span[id^="ddps"]').hide(); $('span[id^="up"]').hide();  $('span[id^="FCup"]').hide();
-      $('span[id^="cax"]').show(); $('span[id^="bdx"]').show(); $('span[id^="frx"]').show(); $('span[id^="fcx"]').show(); $('span[id^="arx"]').show(); $('span[id^="ed"]').show(); $('span[id^="FCed"]').show(); $('span[id^="vri"]').hide(); $('span[id^="vrl"]').show();
+      $('span[id^="cau"]').hide(); $('span[id^="bdu"]').hide(); $('span[id^="bddu"]').hide(); $('span[id^="fru"]').hide(); $('span[id^="fcu"]').hide(); $('span[id^="aru"]').hide(); $('span[id^="dps"]').hide(); $('span[id^="ddps"]').hide(); $('span[id^="up"]').hide();  $('span[id^="FCup"]').hide();
+      $('span[id^="cax"]').show(); $('span[id^="bdx"]').show(); $('span[id^="bddx"]').show(); $('span[id^="frx"]').show(); $('span[id^="fcx"]').show(); $('span[id^="arx"]').show(); $('span[id^="ed"]').show(); $('span[id^="FCed"]').show(); $('span[id^="vri"]').hide(); $('span[id^="vrl"]').show();
       this.input = ({
           offset: this.pageno,
           limit: 10,
@@ -130,6 +131,7 @@ export default {
           let ledger = result.data.data;
           ledger.forEach((svc,key)=>{
             this.form.depamount[svc.svcledgerid]         = svc.bankdeposit;
+            this.form.depdate[svc.svcledgerid]           = svc.bankdepositdateymd;
             this.form.codamount[svc.svcledgerid]         = svc.codamount;
             this.form.depslip[svc.svcledgerid]           = svc.batchid;
             this.form.deldepslip[svc.svcledgerid]        = svc.batchid;
@@ -280,6 +282,9 @@ export default {
     },
 
     updateLedger(data){
+      if(this.role!='admin' && this.form.depdate[data.svcledgerid]==''){
+        this.$alertify.error('Bank Deposit date is required.'); return false;
+      }
 
       this.isLoading = true;
 
@@ -289,6 +294,7 @@ export default {
         openingbalance:       data.openingbalance,
         codamount:            this.form.codamount[data.svcledgerid],
         bankdeposit:          this.form.depamount[data.svcledgerid],
+        bankdepositdate:      this.form.depdate[data.svcledgerid],
         statusid:             data.statusid,
         financereasonid:      this.form.finreason[data.svcledgerid]?this.form.finreason[data.svcledgerid]:null,
         financeconfirmamount: this.form.actualrecamt[data.svcledgerid],
@@ -395,8 +401,8 @@ export default {
     },
 
     editLedger(index){
-      $('#cax'+index).hide(); $('#bdx'+index).hide(); $('#frx'+index).hide(); $('#arx'+index).hide(); $('#ed'+index).hide(); $('#vrl'+index).hide(); $('#vri'+index).hide(); $('#vrrl'+index).hide(); $('#vrri'+index).hide();
-      $('#cau'+index).show(); $('#bdu'+index).show(); $('#fru'+index).show(); $('#aru'+index).show(); $('#dps'+index).show(); $('#ddps'+index).show(); $('#up'+index).show();
+      $('#cax'+index).hide(); $('#bdx'+index).hide(); $('#bddx'+index).hide(); $('#frx'+index).hide(); $('#arx'+index).hide(); $('#ed'+index).hide(); $('#vrl'+index).hide(); $('#vri'+index).hide(); $('#vrrl'+index).hide(); $('#vrri'+index).hide();
+      $('#cau'+index).show(); $('#bdu'+index).show(); $('#bddu'+index).show(); $('#fru'+index).show(); $('#aru'+index).show(); $('#dps'+index).show(); $('#ddps'+index).show(); $('#up'+index).show();
     },
 
     showHideImages(index, elem){
