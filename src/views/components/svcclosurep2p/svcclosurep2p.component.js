@@ -59,6 +59,7 @@ export default {
       walissAWBNo: '',
       paypissAWBNo: '',
       srtpsrAmt: '',
+      srtptsvcAmt: '',
       carissReason: '',
       cassnatReason: '',
       paychgReason: '',
@@ -68,6 +69,7 @@ export default {
       wrongdelReason: '',
       srabscReason: '',
       srtpsrReason: '',
+      srtptsvcReason: '',
       nddissReason: '',
       walissReason: '',
       paypissReason: '',
@@ -110,6 +112,7 @@ export default {
       wrongdel:false,
       srabsc:false,
       srtpsr:false,
+      srtptsvc:false,
       nddiss: false,
       waliss: false,
       paypiss: false,
@@ -482,6 +485,8 @@ export default {
 
       if(this.srtpsrAmt) awbArr.push({ ReasonID:this.srtpsrReason, AWBNo:[], ReasonAmt:(this.srtpsrAmt)?this.srtpsrAmt:'0' });
 
+      if(this.srtptsvcAmt) awbArr.push({ ReasonID:this.srtptsvcReason, AWBNo:[], ReasonAmt:(this.srtptsvcAmt)?this.srtptsvcAmt:'0' });
+
       if(this.lowdis) awbArr.push({ ReasonID:this.lowdisReason, AWBNo:[] });
 
       if(this.amoimp) awbArr.push({ ReasonID:this.amoimpReason, AWBNo:[], ReasonAmt:(this.ReasonAmount)?this.ReasonAmount:'0' });
@@ -848,7 +853,7 @@ export default {
               this.unmatchedAmt = 0;
               this.showExModal(parseInt(parseInt(Math.round(parseFloat(this.Deposit_Amount))) - parseInt(Math.round(parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount)))));
             }else{
-              if(this.amoimp || this.cariss || this.paychg || this.cassnat || this.casstol || this.theftstol || this.vendrec || this.wrongdel || this.srabsc || this.srtpsr || this.lowdis || this.nddissReason || this.walissReason || this.paypissReason){
+              if(this.amoimp || this.cariss || this.paychg || this.cassnat || this.casstol || this.theftstol || this.vendrec || this.wrongdel || this.srabsc || this.srtpsr || this.srtptsvc || this.lowdis || this.nddissReason || this.walissReason || this.paypissReason){
                 this.cardawbno(event);
               }else{
                 this.saveSvcClosure();
@@ -868,9 +873,9 @@ export default {
       this.uploadFileList = []; this.reasonFileList = []; this.BankList = []; this.exception = []; this.exceptionList = []; this.exceptionArr = [];
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.ReasonSlip = this.Reason = '';
       this.DisputeArr = [];
-      this.amoimp = this.vendrec = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = this.srabsc = this.srtpsr = this.lowdis = this.nddiss = this.waliss = this.paypiss = false;
-      this.ReasonAmount = this.vendrecAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.srabscAWBNo = this.srtpsrAmt = this.nddissAWBNo = this.walissAWBNo = this.paypissAWBNo = '';
-      this.amoimpReason = this.vendrecReason = this.cassnatReason = this.carissReason = this.paychgReason = this.casstolReason = this.theftstolReason = this.wrongdelReason = this.srabscReason = this.srtpsrReason = this.lowdisReason = this.nddissReason = this.walissReason = this.paypissReason = '';
+      this.amoimp = this.vendrec = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = this.srabsc = this.srtpsr = this.srtptsvc = this.lowdis = this.nddiss = this.waliss = this.paypiss = false;
+      this.ReasonAmount = this.vendrecAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.srabscAWBNo = this.srtpsrAmt = this.srtptsvcAmt = this.nddissAWBNo = this.walissAWBNo = this.paypissAWBNo = '';
+      this.amoimpReason = this.vendrecReason = this.cassnatReason = this.carissReason = this.paychgReason = this.casstolReason = this.theftstolReason = this.wrongdelReason = this.srabscReason = this.srtpsrReason = this.srtptsvcReason = this.lowdisReason = this.nddissReason = this.walissReason = this.paypissReason = '';
       $('#denomlist input[type="text"]').val(0); $('#denomlist input[type="number"]').val('');
       document.getElementById("d_a").style.display = "none";
       this.GetSVCExceptionData();
@@ -897,8 +902,8 @@ export default {
 
     changeDepType(){ //change deposit Amount
      this.unmatchedAmt = this.CardAmount = 0; this.Reason = ''; this.ReasonAmount = ''; this.DisputeArr = []; this.reasonFileList = [];
-     this.amoimp = this.vendrec = this.lowdis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = this.srabsc = this.srtpsr = this.nddiss = this.waliss = this.paypiss = false;
-     this.ReasonAmount = this.vendrecAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.srabscAWBNo = this.srtpsrAmt = this.nddissAWBNo = this.walissAWBNo = this.paypissAWBNo = '';
+     this.amoimp = this.vendrec = this.lowdis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = this.srabsc = this.srtpsr = this.srtptsvc = this.nddiss = this.waliss = this.paypiss = false;
+     this.ReasonAmount = this.vendrecAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.srabscAWBNo = this.srtpsrAmt = this.srtptsvcAmt = this.nddissAWBNo = this.walissAWBNo = this.paypissAWBNo = '';
 
       $('input[name="reason"]').each(function() {
   			this.checked = false;
@@ -945,6 +950,8 @@ export default {
           this.srabsc = true; this.srabscReason = Reason;
         }else if((process.env.NODE_ENV == 'development' && Reason == 325) || (process.env.NODE_ENV == 'production' && Reason == 130)){
           this.srtpsr = true; this.srtpsrReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 363) || (process.env.NODE_ENV == 'production' && Reason == 136)){
+          this.srtptsvc = true; this.srtptsvcReason = Reason;
         }else if((process.env.NODE_ENV == 'development' && Reason == 152) || (process.env.NODE_ENV == 'production' && Reason == 121)){
           this.nddiss = true; this.nddissReason = Reason;
         }else if((process.env.NODE_ENV == 'development' && Reason == 327) || (process.env.NODE_ENV == 'production' && Reason == 134)){
@@ -975,6 +982,8 @@ export default {
           this.srabsc = false; this.srabscAWBNo = ''; this.srabscReason = '';
         }else if((process.env.NODE_ENV == 'development' && Reason == 325) || (process.env.NODE_ENV == 'production' && Reason == 130)){
           this.srtpsr = false; this.srtpsrAmt = ''; this.srtpsrReason = '';
+        }else if((process.env.NODE_ENV == 'development' && Reason == 363) || (process.env.NODE_ENV == 'production' && Reason == 136)){
+          this.srtptsvc = false; this.srtptsvcAmt = ''; this.srtptsvcReason = '';
         }else if((process.env.NODE_ENV == 'development' && Reason == 152) || (process.env.NODE_ENV == 'production' && Reason == 121)){
           this.nddiss = false; this.nddissAWBNo = ''; this.nddissReason = '';
         }else if((process.env.NODE_ENV == 'development' && Reason == 327) || (process.env.NODE_ENV == 'production' && Reason == 134)){

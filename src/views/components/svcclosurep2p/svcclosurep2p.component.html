@@ -397,6 +397,20 @@
                 <span id="awb_n" v-show="errors.has('paypissAWBNo')" class="text-danger">Payphi AWB No. is required.</span>
               </div>
 
+              <div class="form-group" v-if="unmatchedAmt > 0 && srtptsvc">
+                <div class="input-group">
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">Amount <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="srtptsvcAmt" type="text" name="srtptsvcAmt" title="Enter short payment (theft at SVC) amount" placeholder="Short Payment (Theft at SVC) Amount" v-validate="`${srtptsvc ? 'required' : ''}`"
+                  v-model="srtptsvcAmt" v-bind:class="{'form-control': true, 'error': errors.has('srtptsvcAmt') }" style="margin-right: -5px;" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8">
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-rupee"></i></span>
+                  </div>
+                </div>
+                <span v-show="errors.has('srtptsvcAmt')" class="text-danger">Short payment (theft at SVC) amount is required.</span>
+              </div>
+
               <div class="card-footer">
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="subLoading" />
                 <button v-bind:disabled="disableButton" class="btn btn-sm btn-primary" type="submit"><i class="fa fa-dot-circle-o"></i> Save</button>
