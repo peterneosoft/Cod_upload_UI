@@ -23,7 +23,7 @@ export default {
       zoneList:[],
       hubList:[],
       CODLedgerReports:[],
-      zone:[],
+      zone:'',
       HubId:[],
       resultCount:'',
       pageno:0,
@@ -48,7 +48,9 @@ export default {
         finreason: [],
         actualrecamt: []
       },
-      FinanceReasonList: []
+      FinanceReasonList: [],
+      toDate:"",
+      fromDate:""
     }
   },
 
@@ -99,11 +101,11 @@ export default {
     GetSVCledgerData() {
       $('span[id^="cau"]').hide(); $('span[id^="bdu"]').hide(); $('span[id^="bddu"]').hide(); $('span[id^="fru"]').hide(); $('span[id^="fcu"]').hide(); $('span[id^="aru"]').hide(); $('span[id^="dps"]').hide(); $('span[id^="ddps"]').hide(); $('span[id^="up"]').hide();  $('span[id^="FCup"]').hide();
       $('span[id^="cax"]').show(); $('span[id^="bdx"]').show(); $('span[id^="bddx"]').show(); $('span[id^="frx"]').show(); $('span[id^="fcx"]').show(); $('span[id^="arx"]').show(); $('span[id^="ed"]').show(); $('span[id^="FCed"]').show(); $('span[id^="vri"]').hide(); $('span[id^="vrl"]').show();
-      this.input = ({
-          offset: this.pageno,
-          limit: 10,
-          hubid: this.HubId.HubID
-      })
+      if(this.fromDate && this.toDate){
+        this.input = ({ offset: this.pageno, limit: 10, hubid: this.HubId.HubID, fromdate: this.fromDate, todate: this.toDate });
+      }else{
+        this.input = ({ offset: this.pageno, limit: 10, hubid: this.HubId.HubID});
+      }
       this.isLoading = true;
       axios({
           method: 'POST',
@@ -114,9 +116,9 @@ export default {
           }
       })
       .then(result => {
-        if(result.data.code == 200){
-          this.isLoading = false;
+        this.isLoading = false;
 
+        if(result.data.code == 200){
           this.CODLedgerReports = result.data.data;
           this.resultCount  = result.data.count;
           this.resultdate  = result.data.date;
@@ -141,10 +143,9 @@ export default {
           });
         }else{
           this.resultCount  = 0;
-          this.isLoading = false;
         }
       }, error => {
-          console.error(error)
+        this.isLoading = false; console.error(error);
       })
     },
 
@@ -179,11 +180,11 @@ export default {
 
     //to get All Zone Wise Hub List
     getHubData() {
-      if(this.zone.hubzoneid==""){
+      if(this.zone==""){
         return false;
       }
       this.input = ({
-          zoneid: this.zone.hubzoneid
+          zoneid: this.zone
       })
       this.hubLoading = true;
       axios({
@@ -207,8 +208,17 @@ export default {
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
-          this.pageno = 0;
-          this.GetSVCledgerData()
+          let diffTime = Math.abs(new Date(this.toDate) - new Date(this.fromDate));
+          let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+          if(this.fromDate > this.toDate){
+            document.getElementById("fdate").innerHTML="From date should not be greater than To date."; return false;
+          }else if(diffDays > 30){
+            document.getElementById("fdate").innerHTML="Difference between From date & To date should not be greater than 30 days."; return false;
+          }else{
+            this.pageno = 0;
+            this.GetSVCledgerData()
+          }
         }
       }).catch(() => {
         console.log('errors exist', this.errors)
@@ -216,7 +226,7 @@ export default {
     },
 
     resetForm() {
-      this.zone=""; this.hubList=[]; this.HubId=[]; this.pageno = 0; this.CODLedgerReports = []; this.resultCount = 0;
+      this.zone=""; this.hubList=[]; this.HubId=[]; this.pageno = 0; this.CODLedgerReports = []; this.resultCount = 0; this.fromDate = this.toDate = '';
       this.$validator.reset(); this.errors.clear();
     },
 
