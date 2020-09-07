@@ -170,6 +170,9 @@ export default {
     date.setDate(date.getDate() - 1);
     this.DeliveryDate = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
 
+    date.setDate(date.getDate() - 5);
+    DepositDate.min = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
+
     this.BatchID = this.localhubid+''+Math.floor(Math.random() * (Math.pow(10,5)));
     await this.GetDenominationData();
     await this.GetSVCExceptionData();
