@@ -24,6 +24,7 @@ export default {
       urltoken:'',
       reportlink:'',
       srSummaryList:[],
+      DelToInscanList:[],
       localhubid:0,
       isLoading:false,
       srLoading:false,
@@ -93,7 +94,7 @@ export default {
 
       this.$validator.validateAll().then(() => {
        if(this.SR_Name===null) this.SR_Name = '';
-       console.log('this.selected==', this.selected);
+
        if(this.selected){
          if(((this.selected=='agent' && this.Agent_Name) || (this.selected=='sr')) && (this.deliverydate)){
            this.pageno = 0; document.getElementById("opt").innerHTML="";
@@ -108,7 +109,7 @@ export default {
     },
 
     resetForm() {
-      this.deliverydate = this.deldate = this.reportlink = this.SR_Name = this.Agent_Name = ''; this.srSummaryList = this.SRList = []; this.resultCount = this.pageno = this.pagecount = 0;
+      this.deliverydate = this.deldate = this.reportlink = this.SR_Name = this.Agent_Name = ''; this.srSummaryList = this.DelToInscanList = this.SRList = []; this.resultCount = this.pageno = this.pagecount = 0;
       this.totalCashAmt = this.totalPayphiAmt = this.totalCardAmt = this.totalWalletAmt = this.totalRazorpayAmt = 0;
       this.exportf = false; this.$validator.reset(); this.errors.clear();
       this.GetDeliveryAgentData();
@@ -145,10 +146,12 @@ export default {
           this.totalWalletAmt   = result.data.totalWalletAmt;
           this.totalRazorpayAmt = result.data.totalRazorpayAmt;
 
+          this.DelToInscanList  = result.data.DelToInscanArr;
+
           this.pagecount        = 1;
           this.exportf          = true;
         }else{
-          this.srSummaryList = []; this.resultCount = this.pagecount = 0; this.exportf = false;
+          this.srSummaryList = this.DelToInscanList = []; this.resultCount = this.pagecount = 0; this.exportf = false;
           this.totalCashAmt = this.totalPayphiAmt = this.totalCardAmt = this.totalWalletAmt = this.totalRazorpayAmt = 0;
         }
       }, error => {
