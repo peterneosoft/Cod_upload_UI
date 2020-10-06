@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import axios from 'axios';
+import apiUrl from '../constants';
 
 // Containers
 import Full from '@/containers/Full'
@@ -42,6 +44,8 @@ import LongTailClient from '@/views/components/longtailclient'
 import EPaymentReco from '@/views/components/epaymentreco'
 import SVCReset from '@/views/components/svcreset'
 import SRReset from '@/views/components/srreset'
+import maintenance from '@/views/components/maintenance'
+
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -720,13 +724,16 @@ const router = new Router({
         }
       ]
     },
-
     {
       path: '/login/:id?',
       name: 'login',
       component: Login
     },
-
+    {
+			path: '/maintenance',
+			name: 'maintenance',
+			component: maintenance
+		},
     {
       path: '/pages',
       redirect: '/pages/p404',
@@ -759,7 +766,6 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
 
-
   var isLoggedIn = window.localStorage.getItem('isLoggedIn');
   var accessuserToken = window.localStorage.getItem('accessuserToken');
   if (isLoggedIn == null) {
@@ -775,8 +781,41 @@ router.beforeEach((to, from, next) => {
     }else{
       isLoggedIn = true;
     }
-
   }
+
+  if (isLoggedIn == true) {
+    axios({
+      method: 'POST',
+      'url': apiUrl.api_url + 'appvalidatetoken',
+      'data': {},
+      headers: {
+        'Authorization': 'Bearer '+accessuserToken.replace(/"/g, '')
+      }
+    })
+   .then((response) => {
+		 /*--maintenance page call start--*/
+		 if(response && response.data.ReturnCode=='104'){
+			 next({
+			 	path: "/maintenance"
+			 });
+		 }
+		 /*--maintenance page call end--*/
+    },(error)=>{
+      if(error.response.status===401){
+        localStorage.removeItem('accesshubdata')
+        localStorage.removeItem('accesspermissiondata')
+        localStorage.removeItem('accessuserdata')
+        localStorage.removeItem('accessuserToken')
+        localStorage.removeItem('isLoggedIn')
+        localStorage.removeItem('logoutTime')
+        localStorage.removeItem('accessrole')
+        next({
+          path: "/login",
+        });
+      }
+    });
+  }
+
   //next();
   if (to.matched.some(record => record.meta.requiresAuth) && !isLoggedIn) {
     next({

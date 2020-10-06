@@ -1,0 +1,72 @@
+@font-face {
+  font-family: "HELR65W";
+  src: url('/fonts/HELR65W.woff') format('woff');
+}
+
+@font-face {
+ font-family: "Roboto";
+ src: url("/fonts/Roboto-Regular.woff");
+}
+
+body {
+  background-color: #feca3a;
+}
+
+.icon_border {
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0;
+  font-size: 0.875rem;
+  font-weight: normal;
+  line-height: 1.25;
+  color: #3e515b;
+  text-align: center;
+  background-color: #f0f3f5;
+  border: 1px solid #c2cfd6;
+}
+
+.login_title {
+    font-family: HELR65W, sans-serif;
+    font-size: 34px;
+    display: block;
+    text-shadow: 2px 2px 4px #000000;
+    margin-bottom: 20px;
+    max-width: 353px;
+    margin: 0 auto;
+    font-weight:600;
+}
+
+.app2{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  // background-image: url("static/img/Heavy-Duty-Warehouse-Trucks-in-Miami.jpg");
+}
+
+.xb_text {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-family: Roboto;
+    color:#e5e5e5;
+    font-size:1.3em;
+    line-height:1.2;
+}
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #f3f1f1;
+    background-clip: border-box;
+    border: 1px solid #c2cfd6;
+}
+
+.text-center{
+  text-align: center;
+}
+
+.text-font {
+  text-align: center;
+  font-size: 30px;
+  color: rebeccapurple;
+}

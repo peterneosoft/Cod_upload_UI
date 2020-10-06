@@ -124,30 +124,6 @@ export default {
     }
   },
   mounted() {
-    axios({
-      method: 'POST',
-        'url': apiUrl.api_url + 'appvalidatetoken',
-        'data': {},
-        headers: {
-          'Authorization': 'Bearer '+window.localStorage.getItem('accessuserToken')
-        }
-     })
-   .then((response) => {
-       //console.log('response==', response)
-
-    },(error)=>{
-      console.log('error==', error);
-      if(error.response.status===401){
-        localStorage.removeItem('accesshubdata')
-        localStorage.removeItem('accesspermissiondata')
-        localStorage.removeItem('accessuserdata')
-        localStorage.removeItem('accessuserToken')
-        localStorage.removeItem('isLoggedIn')
-        localStorage.removeItem('logoutTime')
-        localStorage.removeItem('accessrole')
-        this.$router.push('/login')
-      }
-    });
     var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
     var bytes  = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
     var plaintext = bytes.toString(CryptoJS.enc.Utf8);
