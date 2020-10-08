@@ -766,8 +766,9 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
 
-  var isLoggedIn = window.localStorage.getItem('isLoggedIn');
-  var accessuserToken = window.localStorage.getItem('accessuserToken');
+  var isLoggedIn        = window.localStorage.getItem('isLoggedIn');
+  var accessuserToken   = window.localStorage.getItem('accessuserToken') ? window.localStorage.getItem('accessuserToken').replace(/"/g, '') : null;
+
   if (isLoggedIn == null) {
     isLoggedIn = false;
   } else {
@@ -784,12 +785,26 @@ router.beforeEach((to, from, next) => {
   }
 
   if (isLoggedIn == true) {
+
+    var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
+    var bytes             = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
+    var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
+    var userdetail        = JSON.parse(plaintext);
+
+    axios.post(process.env.NODE_ENV == 'production' ? 'http://track.xbees.in/api/UserTracker' : 'http://stageautoallocation-app.xbees.in/api/UserTracker', {
+      projectname:"COD Management",
+      type:"web",
+      userid:userdetail.userid,
+      username:userdetail.username,
+      routeurl: to.path
+    });
+
     axios({
       method: 'POST',
       'url': apiUrl.api_url + 'appvalidatetoken',
       'data': {},
       headers: {
-        'Authorization': 'Bearer '+accessuserToken.replace(/"/g, '')
+        'Authorization': 'Bearer '+accessuserToken
       }
     })
    .then((response) => {
