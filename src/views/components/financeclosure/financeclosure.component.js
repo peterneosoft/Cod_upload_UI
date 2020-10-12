@@ -29,44 +29,30 @@ export default {
       count: 0,
       AWBAmount: 0,
       AWBArr: '',
-      RecAmt: '',
       hubList: [],
       zoneList: [],
       listFinanceledgerData: [],
       FinanceReasonList: [],
-      vid: '',
-      vfin: '',
-      data: '',
-      form: {
-          finreason: [],
-          financeconfirmdate: [],
-          confirmamount: [],
-          AWBNo: [],
-          hide: [],
-          button:[],
-          radio:[],
-          RecAmt:[],
-          subLoading:[],
-          comment:[]
-      },
-      zoneAmtList: [],
-      totalzoneamt: '0.00',
-      resultdate: '',
+      financereason: '',
+      financeconfirmdate: '',
+      financeconfirmamount: '',
+      AWBNo: [],
+      radio:'awb',
+      RecAmt: '',
+      financecomment:'',
+      hubid: 0,
+      deliverydate: '',
+      formatdeldate: '',
+      bankid: 0,
       resultfdate: '',
-      zoneLoading: false,
       allZoneLoading: false,
       hubLoading: false,
-      awbnotype:'',
-      awbnumber:'',
       modalShow:false,
       cardModalShow:false,
-      findata:[],
-      elem:'',
       DisputeArr:[],
       ReasonModalShow:false,
       RecExcModalShow:false,
       commentModalShow:false,
-      comment:'',
       cType:'',
       DepositType: '',
       RSCLoading:false,
@@ -79,7 +65,10 @@ export default {
       SearchHIds:[],
       toDate:"",
       fromDate:"",
-      role:''
+      role:'',
+      subLoading: false,
+      FCModal: false,
+      comment:''
     }
   },
 
@@ -90,12 +79,11 @@ export default {
   created() {
     var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');
-    //this.GetSumOfZoneHubAmtData();
   },
 
   mounted() {
     var date = new Date();
-    toDate.max = fromDate.max = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
+    financeconfirmdate.max = toDate.max = fromDate.max = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
 
     var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
     var bytes             = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
@@ -174,28 +162,6 @@ export default {
           }
         }, error => {
           this.allZoneLoading = false; this.HubId = this.hubList = []; console.error(error);
-        })
-    },
-
-    //to get Hub List According to Zone
-    GetSumOfZoneHubAmtData() {
-      this.input = {}
-      this.zoneLoading = true;
-      axios({
-          method: 'POST',
-          url: apiUrl.api_url + 'getsumofzonehubamt',
-          'data': this.input,
-          headers: {
-            'Authorization': 'Bearer '+this.myStr
-          }
-        })
-        .then(result => {
-          this.zoneLoading = false;
-          this.zoneAmtList = result.data.data;
-          this.resultdate  = result.data.date;
-        }, error => {
-          this.zoneLoading = false;
-          console.error(error)
         })
     },
 
@@ -303,96 +269,85 @@ export default {
     },
 
     GetFinanceledgerData() {
-        $('span[id^="vri"]').hide();
-        $('span[id^="vrl"]').show();
+      $('span[id^="vri"]').hide();
+      $('span[id^="vrl"]').show();
 
-        let hubArr = []; let RSCArr = [];
+      let hubArr = []; let RSCArr = []; this.FCModal = false;
 
-        if(this.SearchHubIds.length>0){
-          hubArr = this.SearchHubIds;
+      if(this.SearchHubIds.length>0){
+        hubArr = this.SearchHubIds;
+      }else{
+        if($.isArray(this.HubId) === false){
+          this.HubId = new Array(this.HubId);
+        }
+
+        this.HubId.forEach(function (val) {
+          hubArr.push(val.HubID);
+        });
+      }
+
+      if(this.SearchRSCIds.length>0){
+        RSCArr = this.SearchRSCIds;
+      }else{
+        if($.isArray(this.RSCName) === false){
+          this.RSCName = new Array(this.RSCName);
+        }
+
+        this.RSCName.forEach(function (val) {
+          RSCArr.push(val.HubID);
+        });
+      }
+
+      let hubIdArr = [...new Set([].concat(...hubArr.concat(RSCArr)))];
+      this.SearchHIds = hubIdArr;
+
+      if(hubArr.length<=0 && RSCArr.length<=0){
+        document.getElementById("hubrsc").innerHTML="One selection is required either Hub and RSC."; return false;
+      }
+      document.getElementById("hubrsc").innerHTML="";
+
+      this.input = ({
+          offset: this.pageno,
+          limit: 10,
+          hubid: this.SearchHIds,
+          statusid: this.status,
+          deposittype: this.DepositType,
+          fromdate: this.fromDate,
+          todate: this.toDate
+      })
+      this.isLoading = true;
+      axios({
+          method: 'POST',
+          'url': apiUrl.api_url + 'financeledgermaster',
+          'data': this.input,
+          headers: {
+              'Authorization': 'Bearer '+this.myStr
+          }
+      })
+      .then(result => {
+
+        if(result.data.code == 200){
+          this.listFinanceledgerData = result.data.data;
+
+          $(".text-danger").html("");
+
+          this.exportf      = true;
+
+          let totalRows     = result.data.count;
+          this.resultCount  = result.data.count;
+          this.resultfdate  = result.data.fdate;
+          if (totalRows < 10) {
+              this.pagecount = 1
+          } else {
+              this.pagecount = Math.ceil(totalRows / 10)
+          }
         }else{
-          if($.isArray(this.HubId) === false){
-            this.HubId = new Array(this.HubId);
-          }
-
-          this.HubId.forEach(function (val) {
-            hubArr.push(val.HubID);
-          });
+          this.listFinanceledgerData = []; this.resultCount = 0; this.exportf = false;
         }
-
-        if(this.SearchRSCIds.length>0){
-          RSCArr = this.SearchRSCIds;
-        }else{
-          if($.isArray(this.RSCName) === false){
-            this.RSCName = new Array(this.RSCName);
-          }
-
-          this.RSCName.forEach(function (val) {
-            RSCArr.push(val.HubID);
-          });
-        }
-
-        let hubIdArr = [...new Set([].concat(...hubArr.concat(RSCArr)))];
-        this.SearchHIds = hubIdArr;
-
-        if(hubArr.length<=0 && RSCArr.length<=0){
-          document.getElementById("hubrsc").innerHTML="One selection is required either Hub and RSC."; return false;
-        }
-        document.getElementById("hubrsc").innerHTML="";
-
-        this.input = ({
-            offset: this.pageno,
-            limit: 10,
-            hubid: this.SearchHIds,
-            statusid: this.status,
-            deposittype: this.DepositType,
-            fromdate: this.fromDate,
-            todate: this.toDate
-        })
-        this.isLoading = true;
-        axios({
-            method: 'POST',
-            'url': apiUrl.api_url + 'financeledgermaster',
-            'data': this.input,
-            headers: {
-                'Authorization': 'Bearer '+this.myStr
-            }
-        })
-        .then(result => {
-
-          if(result.data.code == 200){
-            this.listFinanceledgerData = result.data.data;
-
-            $(".text-danger").html("");
-
-            let finance = result.data.data;
-            finance.forEach((fin,key) => {
-              this.form.finreason[fin.svcledgerid]    = fin.financereasonid;
-              this.form.radio[fin.svcledgerid]        = 'awb';
-              this.form.subLoading[fin.svcledgerid]   = false;
-
-              if(!fin.financereasonid){
-                this.form.finreason[fin.svcledgerid]  = '';
-                this.form.hide[fin.svcledgerid]       = 0;
-              }
-            });
-            this.exportf      = true;
-
-            let totalRows     = result.data.count;
-            this.resultCount  = result.data.count;
-            this.resultfdate  = result.data.fdate;
-            if (totalRows < 10) {
-                this.pagecount = 1
-            } else {
-                this.pagecount = Math.ceil(totalRows / 10)
-            }
-          }else{
-            this.listFinanceledgerData = []; this.resultCount = 0; this.exportf = false;
-          }
-          this.isLoading = false;
-        }, error => {
-          this.exportf = false; console.error(error); this.$alertify.error('Error Occured');
-        })
+        this.isLoading = false;
+      }, error => {
+        this.exportf = false; console.error(error); this.$alertify.error('Error Occured');
+      })
     },
 
     onSubmit: function(event) {
@@ -404,9 +359,6 @@ export default {
           if(this.fromDate > this.toDate){
             document.getElementById("fdate").innerHTML="From date should not be greater than To date."; return false;
           }
-          // else if(diffDays > 30){
-          //   document.getElementById("fdate").innerHTML="Difference between From date & To date should not be greater than 30 days."; return false;
-          // }
           else{
             this.HubID = this.HubId.HubID; this.pageno = this.pagecount = 0; this.exportf = false; this.reportlink = ''; document.getElementById("fdate").innerHTML="";
             this.GetFinanceledgerData(event);
@@ -419,33 +371,38 @@ export default {
       });
     },
 
-    showCardModal(AWBAmount, elem, findata){
-      this.$refs.myCardModalRef.show(AWBAmount)
+    showCardModal(){
+      this.FCModal = false; this.$refs.myClosureModalRef.hide();
+      this.$refs.myCardModalRef.show()
     },
-    hideCardModal(ele, findata) {
+
+    hideCardModal(ele) {
       if(ele == 0){
-        this.$refs.myCardModalRef.hide()
-        this.updateSVCFinanceledger(this.elem, this.findata);
+        this.cardModalShow = false; this.$refs.myCardModalRef.hide()
+        this.updateSVCFinanceledger();
       }else{
-        this.$refs.myCardModalRef.hide()
+        this.cardModalShow = false; this.$refs.myCardModalRef.hide(); this.FCModal = true; this.$refs.myClosureModalRef.show();
       }
     },
+
     closeStatusRoleModal() {
-      this.modalShow = false
-      this.cardModalShow = false
-      this.ReasonModalShow = false
-      this.RecExcModalShow = false
-      this.commentModalShow = false
+      this.modalShow        = false;
+      this.cardModalShow    = false;
+      this.ReasonModalShow  = false;
+      this.RecExcModalShow  = false;
+      this.commentModalShow = false;
+      $("#FCform").trigger("reset");
+      this.FCModal = false;
     },
 
-    cardawbno(AWBNo, elem, findata, AWBAmount){
+    cardawbno(){
       let awbArr = []; this.AWBAmount = 0; this.DisputeArr = [];
 
-      if(AWBNo){
-        this.form.AWBNo[this.elem] = this.checkAWB(AWBNo);
-        awbArr.push({ ReasonID:this.form.finreason[this.elem], AWBNo:this.checkAWB(AWBNo) });
+      if(this.AWBNo){
+        this.AWBNo = this.checkAWB(this.AWBNo);
+        awbArr.push({ ReasonID:this.financereason, AWBNo:this.checkAWB(this.AWBNo) });
       }else{
-        awbArr.push({ ReasonID:this.form.finreason[this.elem], AWBNo:[], ReasonAmt:(AWBAmount)?AWBAmount:'0' });
+        awbArr.push({ ReasonID:this.finanacereason, AWBNo:[], ReasonAmt:(this.RecAmt)?this.RecAmt:'0' });
       }
 
       axios({
@@ -457,20 +414,21 @@ export default {
           }
       })
       .then((awbres) => {
+        this.subLoading = false;
         if (awbres.data.code == 200) {
           if(awbres.data.invalidAwb.length>0){
             this.$alertify.error("Some of AWB numbers are invalid, please check: "+awbres.data.invalidAwb.join(', ')); return false;
           }else{
             this.AWBAmount = awbres.data.total;
             this.DisputeArr = awbres.data.result;
-            this.showCardModal(this.AWBAmount, elem, findata);
+            this.showCardModal();
           }
         } else{
           this.$alertify.error("AWB numbers are invalid, please check."); return false;
         }
       })
       .catch((httpException) => {
-         this.$alertify.error('Error occured'); return false;
+         this.subLoading = false; this.$alertify.error('Error occured'); return false;
       });
     },
 
@@ -488,133 +446,72 @@ export default {
       }
     },
 
-    updateSVCFinanceledger(elem, findata) {
+    updateSVCFinanceledger() {
 
-      let insertflag= 0; let ledgerid = elem; let financeconfirmdate = ''; let confirmamount = 0;
-
-      let finreasonid = document.getElementById('finreason'+ledgerid).value;
-
-      if(finreasonid==null || finreasonid==undefined || finreasonid==""){
-         document.getElementById("finR"+ledgerid).innerHTML="Reason is required.";
-         return false;
-      }else{
-        document.getElementById("finR"+ledgerid).innerHTML="";
-
-        financeconfirmdate = document.getElementById('financeconfirmdate'+ledgerid).value;
-        if(financeconfirmdate==null || financeconfirmdate==undefined || financeconfirmdate==""){
-          document.getElementById("finD"+ledgerid).innerHTML="Date is required.";
-          return false;
-        }else{
-          document.getElementById("finD"+ledgerid).innerHTML="";
-        }
-
-        if(finreasonid == 84 || finreasonid == 124 || finreasonid == 187 || finreasonid == 125 || finreasonid == 218){
-          confirmamount = document.getElementById('confirmamount'+ledgerid).value;
-
-          if(confirmamount==null || confirmamount==undefined || confirmamount==""){
-            document.getElementById("finA"+ledgerid).innerHTML="Received amount is required.";
-            return false;
-          }else{
-            document.getElementById("finA"+ledgerid).innerHTML="";
+      this.input = ({
+          svcledgerid: this.svcledgerid,
+          financereasonid: this.financereason,
+          financeconfirmdate: this.financeconfirmdate,
+          confirmamount: this.financeconfirmamount,
+          AWBNo: (this.AWBNo)? this.AWBNo : new Array(),
+          recoveryamount: (this.RecAmt)?this.RecAmt:0,
+          hubid: this.hubid,
+          username: this.localuserid,
+          deliverydate: this.deliverydate,
+          formatdeldate: this.formatdeldate,
+          bankid: this.bankid,
+          comment: this.financecomment
+      })
+      axios({
+          method: 'POST',
+          'url': apiUrl.api_url + 'updateSVCLedgerDetails',
+          'data': this.input,
+          headers: {
+              'Authorization': 'Bearer '+this.myStr
           }
+      })
+      .then((response) => {
+        if (response.data.code == 200) {
+          this.FCModal = false; this.$refs.myClosureModalRef.hide(); this.$alertify.success(response.data.message);
+          this.GetFinanceledgerData();
+
+        } else {
+          this.$alertify.error(response.data.message)
         }
-
-        insertflag=1;
-      }
-
-      this.form.button[ledgerid] = true; this.form.subLoading[ledgerid] = true;
-
-      if(insertflag){
-        this.input = ({
-            svcledgerid: ledgerid,
-            financereasonid: parseInt(finreasonid),
-            financeconfirmdate: financeconfirmdate,
-            confirmamount: confirmamount,
-            AWBNo: (this.form.AWBNo[this.elem])? this.form.AWBNo[this.elem] : new Array(),
-            recoveryamount: (this.AWBAmount)?this.AWBAmount:0,
-            hubid: findata.hubid,
-            username: this.localuserid,
-            deliverydate: findata.deliverydate,
-            formatdeldate: findata.formatdeldate,
-            bankid: findata.bankid,
-            comment: this.form.comment[this.elem]
-        })
-        axios({
-            method: 'POST',
-            'url': apiUrl.api_url + 'updateSVCLedgerDetails',
-            'data': this.input,
-            headers: {
-                'Authorization': 'Bearer '+this.myStr
-            }
-        })
-        .then((response) => {
-          if (response.data.code == 200) {
-            this.$alertify.success(response.data.message);
-            this.form.finreason = [];
-            this.form.financeconfirmdate = [];
-            this.form.confirmamount = [];
-            this.form.RecAmt = [];
-            this.form.comment = [];
-            this.form.hide[ledgerid] = ledgerid;
-            this.GetFinanceledgerData();
-
-          } else {
-            this.$alertify.error(response.data.message)
-          }
-          this.form.button[ledgerid] = false; this.form.subLoading[ledgerid] = false;
-        })
-        .catch((httpException) => {
-          this.form.button[ledgerid] = false; this.form.subLoading[ledgerid] = false;
-          console.error('exception is:::::::::', httpException)
-          this.$alertify.error('Error Occured');
-        });
-      }
+        this.subLoading = false;
+      })
+      .catch((httpException) => {
+        this.subLoading = false; console.error('exception is:::::::::', httpException); this.$alertify.error('Error Occured');
+      });
     },
 
-    onUpdate: function(elem, findata) {
-      if(elem){
-         this.elem = ''; this.AWBAmount = ''; this.findata = []; this.elem = elem; this.findata = findata;
+    onUpdate: function() {
+      document.getElementById("fr").innerHTML=""; document.getElementById("fcd").innerHTML=""; document.getElementById("fca").innerHTML="";
 
-        let finreasonid = this.form.finreason[this.elem]; this.form.subLoading[this.elem] = false;
+      if(this.financereason && this.financeconfirmdate && this.financeconfirmamount){
 
-        if((finreasonid == 125 || finreasonid == 218) && (this.form.radio[this.elem]==null || this.form.radio[this.elem]=="")){
+        if(this.financereason == 125 || this.financereason == 218){
+          if(!this.radio){
+            document.getElementById("cr").innerHTML="Radio selection is required."; return false;
+          }else if(!this.RecAmt && this.radio=="amount"){
+            document.getElementById("ramt").innerHTML="Recovery Amount is required."; return false;
+          }else if(!this.AWBNo.length && this.radio=="awb"){
+            document.getElementById("rawb").innerHTML="AWB Number is required."; return false;
+          }else{
+            document.getElementById("cr").innerHTML=""; document.getElementById("ramt").innerHTML=""; document.getElementById("rawb").innerHTML="";
+            if(this.radio=="amount"){ this.AWBNo = []; }else{ this.RecAmt = 0; }
 
-          document.getElementById("finRadio"+this.elem).innerHTML="Radio selection is required.";
-          return false;
-        }else if((finreasonid == 125 || finreasonid == 218) && (!this.form.RecAmt[this.elem] || this.form.RecAmt[this.elem]==null || this.form.RecAmt[this.elem]==undefined || this.form.RecAmt[this.elem]=="") && this.form.radio[this.elem]=="amount"){
-
-          document.getElementById("finDR"+this.elem).innerHTML=""; document.getElementById("finRadio"+this.elem).innerHTML="";
-          document.getElementById("finRec"+this.elem).innerHTML="Recovery Amount is required.";
-          this.form.AWBNo[this.elem] = ''; this.form.RecAmt[this.elem] = '';
-          return false;
-        }else if((finreasonid == 125 || finreasonid == 218) && (!this.form.AWBNo[this.elem] || this.form.AWBNo[this.elem]==null || this.form.AWBNo[this.elem]==undefined || this.form.AWBNo[this.elem]=="") && this.form.radio[this.elem]=="awb"){
-
-          document.getElementById("finRec"+this.elem).innerHTML=""; document.getElementById("finRadio"+this.elem).innerHTML="";
-          document.getElementById("finDR"+this.elem).innerHTML="AWB Number is required.";
-          this.form.RecAmt[this.elem] = ''; this.form.AWBNo[this.elem] = '';
-          return false;
-        }else if((this.form.AWBNo[this.elem] || this.form.RecAmt[this.elem]) && (finreasonid == 125 || finreasonid == 218)){
-
-          if(this.form.AWBNo[this.elem] && this.form.radio[this.elem]=="awb"){
-
-            document.getElementById("finDR"+this.elem).innerHTML="";  this.form.RecAmt[this.elem] = '';
-          }else if(this.form.RecAmt[this.elem] && this.form.radio[this.elem]=="amount"){
-
-            document.getElementById("finRec"+this.elem).innerHTML=""; this.form.AWBNo[this.elem] = ''; this.AWBAmount = this.form.RecAmt[this.elem];
+            this.FCModal = true; this.$refs.myClosureModalRef.show(); this.subLoading = true;
+            this.cardawbno();
           }
-
-          this.cardawbno(this.form.AWBNo[this.elem], this.elem, findata, this.form.RecAmt[this.elem]);
-          document.getElementById("finRadio"+this.elem).innerHTML="";
         }else{
-          if(finreasonid!=84 && finreasonid!=124 && finreasonid!=187 && finreasonid!=125 && finreasonid!=218) this.form.comment[this.elem] = '';
-
-          this.form.AWBNo[this.elem] = ''; this.AWBAmount = ''; this.form.RecAmt[this.elem] = '';
-          document.getElementById("finDR"+this.elem).innerHTML=""; document.getElementById("finRec"+this.elem).innerHTML=""; document.getElementById("finRadio"+this.elem).innerHTML="";
-          this.updateSVCFinanceledger(this.elem, findata);
+          this.FCModal = true; this.$refs.myClosureModalRef.show(); this.subLoading = true;
+          this.updateSVCFinanceledger();
         }
       }else{
-        console.log('errors exist', elem); this.form.subLoading[elem] = false;
-        return false;
+        if(!this.financereason){ document.getElementById("fr").innerHTML="Finance reason is required."; return false; }
+        if(!this.financeconfirmdate){ document.getElementById("fcd").innerHTML="Amount received date is required."; return false; }
+        if(!this.financeconfirmamount){ document.getElementById("fca").innerHTML="Received amount is required."; return false; }
       }
     },
 
@@ -732,6 +629,18 @@ export default {
           this.exportf = false; this.reportlink = ''; console.error(error); this.$alertify.error('Error Occured');
         })
       }
+    },
+
+    getSVCRowData(data) {
+      this.$validator.reset(); this.errors.clear();
+      this.svcledgerid = this.hubid = this.deliverydate = this.formatdeldate = this.bankid = this.financereason = '';
+      this.financeconfirmdate = this.financeconfirmamount = this.RecAmt = this.financecomment = '';
+      this.AWBNo = []; this.FCModal = true;
+      this.svcledgerid    = data.svcledgerid;
+      this.hubid          = data.hubid,
+      this.deliverydate   = data.deliverydate,
+      this.formatdeldate  = data.formatdeldate,
+      this.bankid         = data.bankid
     },
   }
 }

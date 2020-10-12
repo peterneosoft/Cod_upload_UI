@@ -151,6 +151,15 @@ export default {
     },
 
     exportHubWiswData(){
+      let diffTime = Math.abs(new Date(this.toDate) - new Date(this.fromDate));
+      let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      if(diffDays > 30){
+        this.$alertify.error('For export report, date range should not be greater than 30 days');
+        document.getElementById("fdate").innerHTML="For export report, date range should not be greater than 30 days."; return false;
+      }else{
+        document.getElementById("fdate").innerHTML="";
+      }
+
       if(this.reportlink){
         window.open(this.reportlink);
       }else{
@@ -412,9 +421,6 @@ export default {
           if(this.fromDate > this.toDate){
              document.getElementById("fdate").innerHTML="From date should not be greater than To date.";
              return false;
-          }else if(diffDays > 30){
-            document.getElementById("fdate").innerHTML="Difference between From date & To date should not be greater than 30 days.";
-            return false;
           }else{
             document.getElementById("fdate").innerHTML=""; this.pageno = 0; this.exportf = false; this.reportlink = ''; this.resultCount = 0;
             this.getHubWiseCODLedgerReports()

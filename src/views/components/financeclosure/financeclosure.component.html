@@ -90,27 +90,6 @@
         </div>
       </div>
 
-      <!-- <div class="col-sm-8">
-        <div class="card" style="height: 95%;">
-          <div class="card-header filter_main">
-            <i class=" fa fa-align-justify"></i> Zone&nbsp;&nbsp;<span style="font-size:13px;"><b>({{resultdate}})</b></span>
-          </div>
-          <div class="card-body" style="height: 388px;">
-            <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="zoneLoading" />
-            <form action="" method="post" class="form-horizontal">
-              <div class="form-group row">
-                <div class="col-md-4" v-for="zone_obj in zoneAmtList">
-                  <div class="card border-primary">
-                    <div class="card-header">{{zone_obj.hubzonename}}</div>
-                    <div class="card-body"><i class="fa fa-rupee"></i> {{zone_obj.zoneamount}}</div>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div> -->
-
       <b-modal ref="myReasonModalRef" v-model="ReasonModalShow" id=#confirmationmodal2 title="Confirmation">
         <div role="document">
           <div class="modal-content" style="width: 150%;">
@@ -230,6 +209,108 @@
           </div>
         </div>
       </b-modal>
+
+      <b-modal v-model="FCModal" @ok="FCModal = false" ref="myClosureModalRef">
+        <div role="document">
+          <div class="modal-content" style="width: 185%;margin-left: -25%;">
+            <div class="modal-bodyfrm">
+              <form id="FCform" v-on:submit.prevent="onUpdate()">
+                <div class="form-group">
+                  <b-card>
+                    <div slot="header">
+                      <span class="mdltitle">Finance Closure</span>
+                      <button type="button" aria-label="Close" @click="closeStatusRoleModal" class="close">×</button>
+                    </div>
+                    <fieldset>
+                      <div class="form-group row">
+                        <div class="col-lg-4">
+                          <b-form-fieldset>
+                            <label>Reason <font color="red">&nbsp;*</font></label>
+                            <b-input-group left="<i class='fa fa-group'></i>">
+                              <select v-model="financereason" v-bind:value="financereason" name="financereason" v-bind:class="{'form-control': true}">
+                                <option value="">--Select--</option>
+                                <option v-for="finreason_obj in FinanceReasonList" v-bind:value="finreason_obj.ReasonsID" >{{finreason_obj.Reason}}</option>
+                              </select>
+                            </b-input-group>
+                            <span id="fr" class="text-danger"></span>
+                          </b-form-fieldset>
+                        </div>
+                        <div class="col-md-4">
+                          <b-form-fieldset>
+                            <label>Amount Received Date <font color="red">&nbsp;*</font></label>
+                            <b-input-group left="<i class='fa fa-book'></i>">
+                              <input type="date" placeholder="Enter Amount Received Date" name="financeconfirmdate" id="financeconfirmdate" v-model="financeconfirmdate" v-bind:class="{'form-control': true}">
+                            </b-input-group>
+                            <span id="fcd" class="text-danger"></span>
+                          </b-form-fieldset>
+                        </div>
+                        <div class="col-lg-4">
+                          <b-form-fieldset>
+                            <label>Received Amount <font color="red">&nbsp;*</font></label>
+                            <b-input-group left="<i class='fa fa-book'></i>">
+                              <input type="text" placeholder="Enter Received Amount" name="financeconfirmamount" id="financeconfirmamount" v-model="financeconfirmamount" v-bind:class="{'form-control': true}">
+                            </b-input-group>
+                            <span id="fca" class="text-danger"></span>
+                          </b-form-fieldset>
+                        </div>
+                      </div>
+
+                      <div class="form-group row">
+                        <div class="col-lg-4" v-show="([125,218].includes(financereason))">
+                          <b-form-fieldset>
+                            <label>Self Debit/ Client Recovery <font color="red">&nbsp;*</font></label>
+                            <b-input-group style="font-size:13px;">
+                              <input type="radio" name="radio" v-model="radio" value="awb">&nbsp;&nbsp;AWB No. &nbsp;&nbsp;&nbsp;&nbsp;
+                              <input type="radio" name="radio" v-model="radio" value="amount">&nbsp;&nbsp;Amount
+                            </b-input-group>
+                            <span id="cr" class="text-danger"></span>
+                          </b-form-fieldset>
+                        </div>
+
+                        <div class="col-lg-4" v-show="([125,218].includes(financereason) && radio=='amount')">
+                          <b-form-fieldset>
+                            <label>Recovery Amount <font color="red">&nbsp;*</font></label>
+                            <b-input-group left="<i class='fa fa-group'></i>">
+                              <input v-model="RecAmt" name="RecAmt" id="RecAmt" v-bind:class="{'form-control': true}" type="text" placeholder="Enter Recovery Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8||event.keyCode == 46">
+                            </b-input-group>
+                            <span id="ramt" class="text-danger"></span>
+                          </b-form-fieldset>
+                        </div>
+
+                        <div class="col-lg-4" v-show="([125,218].includes(financereason) && radio=='awb')">
+                          <b-form-fieldset>
+                            <label>AWB Number <font color="red">&nbsp;*</font></label>
+                            <b-input-group left="<i class='fa fa-group'></i>">
+                              <input v-model="AWBNo" name="AWBNo" id="AWBNo" v-bind:class="{'form-control': true, 'error': errors.has(AWBNo) }" type="text" placeholder="Enter AWB Number">
+                            </b-input-group>
+                            <span class="text" style="font-size: 11px; color: rgb(0, 0, 0);">Note: Please enter comma (,) seperated AWB number.</span>
+                            <br v-show="!AWBNo">
+                            <span id="rawb" class="text-danger"></span>
+                          </b-form-fieldset>
+                        </div>
+
+                        <div class="col-lg-4" v-show="([84,124,187,125,218].includes(financereason))">
+                          <b-form-fieldset>
+                            <label>Comment</label>
+                            <b-input-group>
+                              <textarea rows="2" v-model="financecomment" name="financecomment" id="financecomment" v-bind:class="{'form-control': true}" ref="textarea" placeholder="Enter Comment..."></textarea>
+                            </b-input-group>
+                          </b-form-fieldset>
+                        </div>
+                      </div>
+                      <div class="rolefooter form-actions">
+                        <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="subLoading" />
+                        <b-button class="btn btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> Submit</b-button>
+                        <b-button type="button" class="btn btn-danger" @click="closeStatusRoleModal">Cancel</b-button>
+                      </div>
+                    </fieldset>
+                  </b-card>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </b-modal>
     </div>
 
     <div class="row">
@@ -266,11 +347,12 @@
                 <th class="text-center tableheader"><b>Bank Name</b></th>
                 <th class="text-center tableheader"><b>View Receipt</b></th>
                 <th class="text-center tableheader"><b>Transaction Id</b></th>
+                <th class="text-center tableheader"><b>Action</b></th>
               </tr>
             </thead>
             <tbody>
               <tr v-if="resultCount==0">
-                <td colspan="18" align="center">No record found</td>
+                <td colspan="19" align="center">No record found</td>
               </tr>
               <tr v-for="(data,index) in listFinanceledgerData" v-bind:class="`${([84,124,187].includes(data.financereasonid)) ? 'mismatched' : ''}`">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
@@ -297,46 +379,7 @@
                 <td class="text-center">{{data.balanceoutstanding}}</td>
                 <td class="text-center" v-if="data.statusid==1">Transaction Open</td>
                 <td class="text-center" v-if="data.statusid==6">Transaction Closed</td>
-                <td class="text-center" v-show="data.statusid != 6">
-                  <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="form.subLoading[data.svcledgerid]" />
-                  <form v-on:submit.prevent="onUpdate(data.svcledgerid, data)">
-                    <select style="width: 220px;" v-model="form.finreason[data.svcledgerid]"  v-bind:name="setid('finreason', data.svcledgerid)" v-bind:id="setid('finreason', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('finreason'+data.svcledgerid) }" :disabled="data.statusid == 6 ? true : false">
-                      <option value="">--Select--</option>
-                      <option v-for="finreason_obj in FinanceReasonList" v-bind:value="finreason_obj.ReasonsID" >{{finreason_obj.Reason}}</option>
-                    </select>
-                    <span v-bind:id="setid('finR', data.svcledgerid)" class="text-danger"></span>
-
-                    <br v-show="form.finreason[data.svcledgerid] > 0 && data.statusid != 6">
-                    <input v-show="form.finreason[data.svcledgerid] > 0 && data.statusid != 6" v-model="form.financeconfirmdate[data.svcledgerid]" v-bind:name="setid('financeconfirmdate', data.svcledgerid)" v-bind:id="setid('financeconfirmdate', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('financeconfirmdate'+data.svcledgerid) }" type="date">
-                    <span v-bind:id="setid('finD', data.svcledgerid)" class="text-danger"></span>
-
-                    <br v-show="([84,124,187,125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6">
-                    <input v-show="([84,124,187,125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6" v-model="form.confirmamount[data.svcledgerid]" v-bind:name="setid('confirmamount', data.svcledgerid)" v-bind:id="setid('confirmamount', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('confirmamount'+data.svcledgerid) }" type="text" placeholder="Enter Received Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8">
-                    <span v-bind:id="setid('finA', data.svcledgerid)" class="text-danger"></span>
-
-                    <br v-show="([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6">
-                    <span v-show="([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6" style="margin-right:120px;">
-                      <input type="radio" name="radio" v-model="form.radio[data.svcledgerid]" value="awb"> Enter AWB No. &nbsp;&nbsp;&nbsp;&nbsp;
-                      <input type="radio" name="radio" v-model="form.radio[data.svcledgerid]" value="amount"> Enter Amount
-                      <span v-show="!form.radio[data.svcledgerid]" v-bind:id="setid('finRadio', data.svcledgerid)" class="text-danger" style="margin-right: -110px;"></span>
-                    </span>
-
-                    <br v-show="([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6">
-                    <input v-show="(([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6) && form.radio[data.svcledgerid]=='amount'" v-model="form.RecAmt[data.svcledgerid]" v-bind:name="setid('RecAmt', data.svcledgerid)" v-bind:id="setid('RecAmt', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('RecAmt'+data.svcledgerid) }" type="text" placeholder="Enter Recovery Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8||event.keyCode == 46">
-                    <span v-show="!form.RecAmt[data.svcledgerid] && form.radio[data.svcledgerid]=='amount'" v-bind:id="setid('finRec', data.svcledgerid)" class="text-danger"></span>
-
-                    <input v-show="(([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6) && form.radio[data.svcledgerid]=='awb'" v-model="form.AWBNo[data.svcledgerid]" v-bind:name="setid('AWBNo', data.svcledgerid)" v-bind:id="setid('AWBNo', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true, 'error': errors.has('AWBNo'+data.svcledgerid) }" type="text" placeholder="Enter AWB Number">
-                    <span v-show="(([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6) && form.radio[data.svcledgerid]=='awb'" class="text" style="font-size: 11px; color: rgb(0, 0, 0);">Note: Please enter comma (,) seperated AWB number.</span>
-                    <br v-show="(([125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6) && form.radio[data.svcledgerid]=='awb'">
-                    <span v-show="!form.AWBNo[data.svcledgerid] && form.radio[data.svcledgerid]=='awb'" v-bind:id="setid('finDR', data.svcledgerid)" class="text-danger"></span>
-
-                    <br v-show="([84,124,187,125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6">
-                    <textarea rows="2" v-show="([84,124,187,125,218].includes(form.finreason[data.svcledgerid])) && data.statusid != 6" v-model="form.comment[data.svcledgerid]" v-bind:name="setid('comment', data.svcledgerid)" v-bind:id="setid('comment', data.svcledgerid)" class="form-control" v-bind:class="{'form-control': true}" ref="textarea" placeholder="Enter Comment..."></textarea>
-
-                    <span v-show="(data.statusid != 6)"><button class="btn btn-sm btn-primary" @click = "form.subLoading[data.svcledgerid] = 'true'" type="submit" :disabled = "(data.statusid == 6) || (form.button[data.svcledgerid])" ><i class="fa fa-dot-circle-o"></i> Submit</button></span>
-                  </form>
-                </td>
-                <td class="text-center" v-show="data.statusid == 6">
+                <td class="text-center">
                   <span @click="showComment(data.comment, 'c')" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.comment">{{data.financereason}}</span>
                   <span v-show="(['',null].includes(data.comment))">{{data.financereason}}</span>
                 </td>
@@ -357,6 +400,7 @@
                   <span @click="showComment(data.transactionid, 't')" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.transactionid && data.transactionid!=0">view</span>
                   <span v-show="(['',null,0].includes(data.transactionid))"></span>
                 </td>
+                <td class="text-center"><i @click.prevent="getSVCRowData(data)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" v-if="data.statusid==1" style="cursor: pointer;"></i></td>
               </tr>
             </tbody>
           </table><br>
@@ -364,28 +408,6 @@
           </paginate>
         </div>
       </div>
-
-      <!-- <b-modal ref="myCardModalRef" v-model="cardModalShow" id=#confirmationmodal title="Confirmation">
-        <div role="document">
-          <div class="modal-content">
-            <div class="modal-headerfrm">
-              <h5 class="modal-title">Confirmation</h5>
-              <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
-                <span aria-hidden="true">×</span>
-              </button>
-            </div>
-            <div class="modal-bodyfrm">
-              <h5 style="font-size:1rem; color:red;">Please make sure, Self Debit/Client Recovery AWB No. or Amount is {{AWBAmount}} Rs.</h5>
-            </div>
-            <div class="modal-footerfrm">
-            <center>
-              <button type="button" @click = "hideCardModal('0')" class="btn btn-success" style="background-color: #20a8d8;">Ok</button>
-              <button type="button" @click = "hideCardModal('1')" class="btn btn-danger" style="background-color: #f86c6b;">Cancel</button>
-            </center>
-            </div>
-          </div>
-        </div>
-      </b-modal> -->
 
       <b-modal ref="myCardModalRef" v-model="cardModalShow" id=#confirmationmodal1 title="Confirmation">
         <div role="document">
