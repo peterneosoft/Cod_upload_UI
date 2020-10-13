@@ -226,7 +226,7 @@
                         <div class="col-lg-4">
                           <b-form-fieldset>
                             <label>Reason <font color="red">&nbsp;*</font></label>
-                            <b-input-group left="<i class='fa fa-group'></i>">
+                            <b-input-group left="<i class='fa fa-list'></i>">
                               <select v-model="financereason" v-bind:value="financereason" name="financereason" v-bind:class="{'form-control': true}">
                                 <option value="">--Select--</option>
                                 <option v-for="finreason_obj in FinanceReasonList" v-bind:value="finreason_obj.ReasonsID" >{{finreason_obj.Reason}}</option>
@@ -238,7 +238,7 @@
                         <div class="col-md-4">
                           <b-form-fieldset>
                             <label>Amount Received Date <font color="red">&nbsp;*</font></label>
-                            <b-input-group left="<i class='fa fa-book'></i>">
+                            <b-input-group left="<i class='fa fa-calendar'></i>">
                               <input type="date" placeholder="Enter Amount Received Date" name="financeconfirmdate" id="financeconfirmdate" v-model="financeconfirmdate" v-bind:class="{'form-control': true}">
                             </b-input-group>
                             <span id="fcd" class="text-danger"></span>
@@ -247,7 +247,7 @@
                         <div class="col-lg-4">
                           <b-form-fieldset>
                             <label>Received Amount <font color="red">&nbsp;*</font></label>
-                            <b-input-group left="<i class='fa fa-book'></i>">
+                            <b-input-group left="<i class='fa fa-rupee'></i>">
                               <input type="text" placeholder="Enter Received Amount" name="financeconfirmamount" id="financeconfirmamount" v-model="financeconfirmamount" v-bind:class="{'form-control': true}">
                             </b-input-group>
                             <span id="fca" class="text-danger"></span>
@@ -270,7 +270,7 @@
                         <div class="col-lg-4" v-show="([125,218].includes(financereason) && radio=='amount')">
                           <b-form-fieldset>
                             <label>Recovery Amount <font color="red">&nbsp;*</font></label>
-                            <b-input-group left="<i class='fa fa-group'></i>">
+                            <b-input-group left="<i class='fa fa-rupee'></i>">
                               <input v-model="RecAmt" name="RecAmt" id="RecAmt" v-bind:class="{'form-control': true}" type="text" placeholder="Enter Recovery Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8||event.keyCode == 46">
                             </b-input-group>
                             <span id="ramt" class="text-danger"></span>
@@ -280,7 +280,7 @@
                         <div class="col-lg-4" v-show="([125,218].includes(financereason) && radio=='awb')">
                           <b-form-fieldset>
                             <label>AWB Number <font color="red">&nbsp;*</font></label>
-                            <b-input-group left="<i class='fa fa-group'></i>">
+                            <b-input-group left="<i class='fa fa-clipboard'></i>">
                               <input v-model="AWBNo" name="AWBNo" id="AWBNo" v-bind:class="{'form-control': true, 'error': errors.has(AWBNo) }" type="text" placeholder="Enter AWB Number">
                             </b-input-group>
                             <span class="text" style="font-size: 11px; color: rgb(0, 0, 0);">Note: Please enter comma (,) seperated AWB number.</span>
@@ -329,6 +329,7 @@
             <thead>
               <tr class="text-primary">
                 <th class="text-center tableheader"><b>#</b></th>
+                <th class="text-center tableheader"><b>Action</b></th>
                 <th class="text-center tableheader"><b>Hub</b></th>
                 <th class="text-center tableheader"><b>RSC Name</b></th>
                 <th class="text-center tableheader"><b>Delivery Date</b></th>
@@ -347,7 +348,6 @@
                 <th class="text-center tableheader"><b>Bank Name</b></th>
                 <th class="text-center tableheader"><b>View Receipt</b></th>
                 <th class="text-center tableheader"><b>Transaction Id</b></th>
-                <th class="text-center tableheader"><b>Action</b></th>
               </tr>
             </thead>
             <tbody>
@@ -356,6 +356,7 @@
               </tr>
               <tr v-for="(data,index) in listFinanceledgerData" v-bind:class="`${([84,124,187].includes(data.financereasonid)) ? 'mismatched' : ''}`">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
+                <td class="text-center"><i @click.prevent="getSVCRowData(data)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" v-if="data.statusid==1" style="cursor: pointer;"></i></td>
                 <td class="text-center">{{data.hubname}}</td>
                 <td class="text-center">{{data.rscowner}}</td>
                 <td class="text-center">{{data.deliverydate}}</td>
@@ -400,7 +401,6 @@
                   <span @click="showComment(data.transactionid, 't')" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.transactionid && data.transactionid!=0">view</span>
                   <span v-show="(['',null,0].includes(data.transactionid))"></span>
                 </td>
-                <td class="text-center"><i @click.prevent="getSVCRowData(data)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" v-if="data.statusid==1" style="cursor: pointer;"></i></td>
               </tr>
             </tbody>
           </table><br>
