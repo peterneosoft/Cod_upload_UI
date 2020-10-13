@@ -133,10 +133,6 @@ export default {
       else{ this.SearchRSCIds = []; return true; }
     },
 
-    setid(name, key){
-      return name+key;
-    },
-
     //to get All Zone List
     getZoneData() {
       this.input = {}; this.zoneList = []; this.allZoneLoading = true;
@@ -387,12 +383,11 @@ export default {
     },
 
     hideConfModal(ele) {
-      this.subLoading = true;
       if(ele == 2){
         this.FCModal = false; this.$refs.myClosureModalRef.hide();
         this.$refs.myConfModalRef.show();
       }else if(ele == 0){
-        this.$refs.myConfModalRef.hide(); this.FCModal = true; this.$refs.myClosureModalRef.show();
+        this.$refs.myConfModalRef.hide(); this.FCModal = true; this.$refs.myClosureModalRef.show(); this.subLoading = true;
         this.updateSVCFinanceledger();
       }else{
         this.$refs.myConfModalRef.hide(); this.subLoading = false;
