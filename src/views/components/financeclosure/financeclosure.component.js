@@ -68,7 +68,8 @@ export default {
       role:'',
       subLoading: false,
       FCModal: false,
-      comment:''
+      comment:'',
+      ConfmodalShow:false
     }
   },
 
@@ -379,9 +380,23 @@ export default {
     hideCardModal(ele) {
       if(ele == 0){
         this.cardModalShow = false; this.$refs.myCardModalRef.hide()
-        this.updateSVCFinanceledger();
+        this.$refs.myConfModalRef.show();
       }else{
         this.cardModalShow = false; this.$refs.myCardModalRef.hide(); this.FCModal = true; this.$refs.myClosureModalRef.show();
+      }
+    },
+
+    hideConfModal(ele) {
+      this.subLoading = true;
+      if(ele == 2){
+        this.FCModal = false; this.$refs.myClosureModalRef.hide();
+        this.$refs.myConfModalRef.show();
+      }else if(ele == 0){
+        this.$refs.myConfModalRef.hide(); this.FCModal = true; this.$refs.myClosureModalRef.show();
+        this.updateSVCFinanceledger();
+      }else{
+        this.$refs.myConfModalRef.hide(); this.subLoading = false;
+        this.FCModal = true; this.$refs.myClosureModalRef.show();
       }
     },
 
@@ -391,6 +406,7 @@ export default {
       this.ReasonModalShow  = false;
       this.RecExcModalShow  = false;
       this.commentModalShow = false;
+      this.ConfmodalShow    = false;
       $("#FCform").trigger("reset");
       this.FCModal = false;
     },
@@ -499,14 +515,14 @@ export default {
             document.getElementById("rawb").innerHTML="AWB Number is required."; return false;
           }else{
             document.getElementById("cr").innerHTML=""; document.getElementById("ramt").innerHTML=""; document.getElementById("rawb").innerHTML="";
-            if(this.radio=="amount"){ this.AWBNo = []; }else{ this.RecAmt = 0; }
+            if(this.radio=="amount"){ this.AWBNo = []; }else{ this.RecAmt = ''; }
 
             this.FCModal = true; this.$refs.myClosureModalRef.show(); this.subLoading = true;
             this.cardawbno();
           }
         }else{
-          this.FCModal = true; this.$refs.myClosureModalRef.show(); this.subLoading = true;
-          this.updateSVCFinanceledger();
+          this.FCModal = true; this.$refs.myClosureModalRef.show();
+          this.hideConfModal(2);
         }
       }else{
         if(!this.financereason){ document.getElementById("fr").innerHTML="Finance reason is required."; return false; }
