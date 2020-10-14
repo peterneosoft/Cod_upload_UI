@@ -244,7 +244,7 @@
                             <span id="fcd" class="text-danger"></span>
                           </b-form-fieldset>
                         </div>
-                        <div class="col-lg-4">
+                        <div class="col-lg-4" v-show="([84,124,187,125,218].includes(financereason))">
                           <b-form-fieldset>
                             <label>Received Amount <font color="red">&nbsp;*</font></label>
                             <b-input-group left="<i class='fa fa-rupee'></i>">
@@ -253,9 +253,15 @@
                             <span id="fca" class="text-danger"></span>
                           </b-form-fieldset>
                         </div>
-                      </div>
+                        <div class="col-lg-4" v-show="([84,124,187,125,218].includes(financereason))">
+                          <b-form-fieldset>
+                            <label>Comment</label>
+                            <b-input-group>
+                              <textarea rows="2" v-model="financecomment" name="financecomment" id="financecomment" v-bind:class="{'form-control': true}" ref="textarea" placeholder="Enter Comment..."></textarea>
+                            </b-input-group>
+                          </b-form-fieldset>
+                        </div>
 
-                      <div class="form-group row">
                         <div class="col-lg-4" v-show="([125,218].includes(financereason))">
                           <b-form-fieldset>
                             <label>Self Debit/ Client Recovery <font color="red">&nbsp;*</font></label>
@@ -266,7 +272,6 @@
                             <span id="cr" class="text-danger"></span>
                           </b-form-fieldset>
                         </div>
-
                         <div class="col-lg-4" v-show="([125,218].includes(financereason) && radio=='amount')">
                           <b-form-fieldset>
                             <label>Recovery Amount <font color="red">&nbsp;*</font></label>
@@ -276,7 +281,6 @@
                             <span id="ramt" class="text-danger"></span>
                           </b-form-fieldset>
                         </div>
-
                         <div class="col-lg-4" v-show="([125,218].includes(financereason) && radio=='awb')">
                           <b-form-fieldset>
                             <label>AWB Number <font color="red">&nbsp;*</font></label>
@@ -286,15 +290,6 @@
                             <span class="text" style="font-size: 11px; color: rgb(0, 0, 0);">Note: Please enter comma (,) seperated AWB number.</span>
                             <br v-show="!AWBNo">
                             <span id="rawb" class="text-danger"></span>
-                          </b-form-fieldset>
-                        </div>
-
-                        <div class="col-lg-4" v-show="([84,124,187,125,218].includes(financereason))">
-                          <b-form-fieldset>
-                            <label>Comment</label>
-                            <b-input-group>
-                              <textarea rows="2" v-model="financecomment" name="financecomment" id="financecomment" v-bind:class="{'form-control': true}" ref="textarea" placeholder="Enter Comment..."></textarea>
-                            </b-input-group>
                           </b-form-fieldset>
                         </div>
                       </div>

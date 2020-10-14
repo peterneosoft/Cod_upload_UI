@@ -463,7 +463,7 @@ export default {
           svcledgerid: this.svcledgerid,
           financereasonid: this.financereason,
           financeconfirmdate: this.financeconfirmdate,
-          confirmamount: this.financeconfirmamount,
+          confirmamount: (this.financeconfirmamount)?this.financeconfirmamount:0,
           AWBNo: (this.AWBNo)? this.AWBNo : new Array(),
           recoveryamount: (this.RecAmt)?this.RecAmt:0,
           hubid: this.hubid,
@@ -499,9 +499,8 @@ export default {
     onUpdate: function() {
       document.getElementById("fr").innerHTML=""; document.getElementById("fcd").innerHTML=""; document.getElementById("fca").innerHTML="";
 
-      if(this.financereason && this.financeconfirmdate && this.financeconfirmamount){
-
-        if(this.financereason == 125 || this.financereason == 218){
+      if(this.financereason && this.financeconfirmdate){
+        if((this.financereason == 125 || this.financereason == 218) && this.financeconfirmamount){
           if(!this.radio){
             document.getElementById("cr").innerHTML="Radio selection is required."; return false;
           }else if(!this.RecAmt && this.radio=="amount"){
@@ -515,6 +514,8 @@ export default {
             this.FCModal = true; this.$refs.myClosureModalRef.show(); this.subLoading = true;
             this.cardawbno();
           }
+        }else if((this.financereason == 84 || this.financereason == 124 || this.financereason == 187 || this.financereason == 125 || this.financereason == 218) && !this.financeconfirmamount){
+          document.getElementById("fca").innerHTML="Received amount is required."; return false;
         }else{
           this.FCModal = true; this.$refs.myClosureModalRef.show();
           this.hideConfModal(2);
@@ -522,7 +523,6 @@ export default {
       }else{
         if(!this.financereason){ document.getElementById("fr").innerHTML="Finance reason is required."; return false; }
         if(!this.financeconfirmdate){ document.getElementById("fcd").innerHTML="Amount received date is required."; return false; }
-        if(!this.financeconfirmamount){ document.getElementById("fca").innerHTML="Received amount is required."; return false; }
       }
     },
 
