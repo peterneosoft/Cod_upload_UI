@@ -20,7 +20,7 @@
       <li v-if="this.hubAccess.length<2" style="right: 2%; position: absolute;"><b>Logged In Hub:</b>&nbsp;{{hub}}</li>
 
       <li v-if="this.hubAccess.length>1" style="right: 8%; width: 28%; position: absolute;"><b>Change Hub:</b>&nbsp;
-        <Multiselect :options="hubAccess" @input="setHUBAccess()" name="hubdropdown" id="hubdropdown" v-model="hubdropdown" placeholder="Select Hub" label="HubName" track-by="HubID" :optionHeight="100" :hide-selected="true" style="margin: 2px -95px 9px 15px; width: 90%; z-index:1000;margin-right: -92px;">
+        <Multiselect :options="hubAccess" @input="setHUBAccess()" name="hubdropdown" id="hubdropdown" v-model="hubdropdown" placeholder="Select Hub" label="HubName" track-by="HubID" :optionHeight="100" :hide-selected="true" style="margin: 2px -95px 9px 15px; width: 90%; margin-right: -92px;">
            <template slot="noResult"><p>No Record Found.</p></template>
         </Multiselect>
       </li>

@@ -409,11 +409,11 @@ export default {
     cardawbno(){
       let awbArr = []; this.AWBAmount = 0; this.DisputeArr = [];
 
-      if(this.AWBNo){
+      if(this.AWBNo.length){
         this.AWBNo = this.checkAWB(this.AWBNo);
-        awbArr.push({ ReasonID:this.financereason, AWBNo:this.checkAWB(this.AWBNo) });
+        awbArr.push({ ReasonID:this.financereason, AWBNo:this.AWBNo });
       }else{
-        awbArr.push({ ReasonID:this.finanacereason, AWBNo:[], ReasonAmt:(this.RecAmt)?this.RecAmt:'0' });
+        awbArr.push({ ReasonID:this.financereason, AWBNo:[], ReasonAmt:this.RecAmt });
       }
 
       axios({
@@ -465,7 +465,7 @@ export default {
           financeconfirmdate: this.financeconfirmdate,
           confirmamount: (this.financeconfirmamount)?this.financeconfirmamount:0,
           AWBNo: (this.AWBNo)? this.AWBNo : new Array(),
-          recoveryamount: (this.RecAmt)?this.RecAmt:0,
+          recoveryamount: (this.AWBAmount)?this.AWBAmount:0,
           hubid: this.hubid,
           username: this.localuserid,
           deliverydate: this.deliverydate,
@@ -497,7 +497,7 @@ export default {
     },
 
     onUpdate: function() {
-      document.getElementById("fr").innerHTML=""; document.getElementById("fcd").innerHTML=""; document.getElementById("fca").innerHTML="";
+      document.getElementById("fr").innerHTML=""; document.getElementById("fcd").innerHTML=""; document.getElementById("fca").innerHTML=""; this.AWBAmount = '';
 
       if(this.financereason && this.financeconfirmdate){
         if((this.financereason == 125 || this.financereason == 218) && this.financeconfirmamount){
@@ -646,7 +646,7 @@ export default {
       this.$validator.reset(); this.errors.clear();
       this.svcledgerid = this.hubid = this.deliverydate = this.formatdeldate = this.bankid = this.financereason = '';
       this.financeconfirmdate = this.financeconfirmamount = this.RecAmt = this.financecomment = '';
-      this.AWBNo = []; this.FCModal = true;
+      this.AWBNo = []; this.FCModal = true; this.subLoading = false;
       this.svcledgerid    = data.svcledgerid;
       this.hubid          = data.hubid,
       this.deliverydate   = data.deliverydate,
