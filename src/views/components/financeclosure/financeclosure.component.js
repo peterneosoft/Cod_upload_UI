@@ -484,15 +484,16 @@ export default {
       .then((response) => {
         if (response.data.code == 200) {
           this.FCModal = false; this.$refs.myClosureModalRef.hide(); this.$alertify.success(response.data.message);
+          this.exportf = false; this.reportlink = '';
           this.GetFinanceledgerData();
 
         } else {
-          this.$alertify.error(response.data.message)
+          this.exportf = true; this.$alertify.error(response.data.message)
         }
         this.subLoading = false;
       })
       .catch((httpException) => {
-        this.subLoading = false; console.error('exception is:::::::::', httpException); this.$alertify.error('Error Occured');
+        this.subLoading = false; this.exportf = true; console.error('exception is:::::::::', httpException); this.$alertify.error('Error Occured');
       });
     },
 
