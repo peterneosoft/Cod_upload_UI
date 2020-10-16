@@ -32,25 +32,31 @@ export default {
       zoneLoading:false,
       hubLoading:false,
       ResetmodalShow:false,
-      resetdata:[],
-      resetDD:[],
+      resetDD:'',
       resetType:'',
       role:'',
       localuserid:'',
       myStr:'',
-      form: {
-        depamount:[],
-        depdate:[],
-        depslip:[],
-        deldepslip:[],
-        codamount: [],
-        financeclosingamt: [],
-        finreason: [],
-        actualrecamt: []
-      },
+      depamount:'',
+      depdate:'',
+      depslip:'',
+      codamount:'',
+      financeclosingamt:'',
+      finreason:'',
+      actualrecamt:'',
       FinanceReasonList: [],
       toDate:"",
-      fromDate:""
+      fromDate:"",
+      FCModal:false,
+      createdby:'',
+      deposittype:'',
+      svcledgerid:'',
+      recoveryamt:'',
+      statusid:'',
+      openingbalance:'',
+      batchid:'',
+      subLoading:false,
+      upTyp:0,
     }
   },
 
@@ -99,8 +105,8 @@ export default {
     },
 
     GetSVCledgerData() {
-      $('span[id^="cau"]').hide(); $('span[id^="bdu"]').hide(); $('span[id^="bddu"]').hide(); $('span[id^="fru"]').hide(); $('span[id^="fcu"]').hide(); $('span[id^="aru"]').hide(); $('span[id^="dps"]').hide(); $('span[id^="ddps"]').hide(); $('span[id^="up"]').hide();  $('span[id^="FCup"]').hide();
-      $('span[id^="cax"]').show(); $('span[id^="bdx"]').show(); $('span[id^="bddx"]').show(); $('span[id^="frx"]').show(); $('span[id^="fcx"]').show(); $('span[id^="arx"]').show(); $('span[id^="ed"]').show(); $('span[id^="FCed"]').show(); $('span[id^="vri"]').hide(); $('span[id^="vrl"]').show();
+      $('span[id^="vri"]').hide(); $('span[id^="vrl"]').show(); this.FCModal = false;
+
       if(this.fromDate && this.toDate){
         this.input = ({ offset: this.pageno, limit: 10, hubid: this.HubId.HubID, fromdate: this.fromDate, todate: this.toDate });
       }else{
@@ -116,7 +122,7 @@ export default {
           }
       })
       .then(result => {
-        this.isLoading = false;
+        this.isLoading = false; this.upTyp = 0;
 
         if(result.data.code == 200){
           this.CODLedgerReports = result.data.data;
@@ -129,18 +135,6 @@ export default {
           } else {
               this.pagecount = Math.ceil(totalRows / 10)
           }
-
-          let ledger = result.data.data;
-          ledger.forEach((svc,key)=>{
-            this.form.depamount[svc.svcledgerid]         = svc.bankdeposit;
-            this.form.depdate[svc.svcledgerid]           = svc.bankdepositdateymd;
-            this.form.codamount[svc.svcledgerid]         = svc.codamount;
-            this.form.depslip[svc.svcledgerid]           = svc.batchid;
-            this.form.deldepslip[svc.svcledgerid]        = svc.batchid;
-            this.form.financeclosingamt[svc.svcledgerid] = svc.financeclosingamt;
-            this.form.actualrecamt[svc.svcledgerid]      = svc.actualrecamt ? svc.actualrecamt : 0;
-            this.form.finreason[svc.svcledgerid]         = svc.financereasonid ? svc.financereasonid : '';
-          });
         }else{
           this.resultCount  = 0;
         }
@@ -230,42 +224,37 @@ export default {
       this.$validator.reset(); this.errors.clear();
     },
 
-    showResetModal(data){
-      this.resetdata = []; this.resetdata = data; this.resetDD = ''; this.resetDD = data.deliverydate; this.resetType = 'reset SVC closure';
-      this.$refs.myResetModalRef.show();
-    },
-
     hideResetModal(ele, typ) {
       this.$refs.myResetModalRef.hide();
-      if(ele == 0 && typ == 'reset SVC closure'){
-        this.resetSVCledger(this.resetdata);
-      }else if(ele == 0 && typ == 'update SVC closure'){
-        this.updateLedger(this.resetdata);
-      }else if(ele == 0 && typ == 'update SVC closure finance closing amount'){
-        this.updateFCLedger(this.resetdata);
+
+      if(ele == 0){
+        if(typ == 'reset SVC closure') this.resetSVCledger();
+        else if(typ == 'update SVC closure') this.updateLedger();
+        else if(typ == 'update SVC closure finance closing amount') this.updateFCLedger();
+        else if(typ == 'reset SVC closure deposit slip') this.onDeleteDPS();
+
+      }else{
+        if(typ == 'reset SVC closure'){ this.ResetmodalShow = false; }
+        else{ this.FCModal = true; this.$refs.myClosureModalRef.show(); }
       }
     },
 
-    showUpdateModal(data){
-      this.resetdata = []; this.resetdata = data; this.resetDD = ''; this.resetDD = data.deliverydate; this.resetType = 'update SVC closure';
-      this.$refs.myResetModalRef.show();
-    },
-
     closeStatusRoleModal() {
-      this.ResetmodalShow = false
+      this.ResetmodalShow = false;
+      this.FCModal = false;
     },
 
-    resetSVCledger(data){
-      this.isLoading = true;
+    resetSVCledger(){
+
       this.input = ({
-        svcledgerid:      data.svcledgerid,
+        svcledgerid:      this.svcledgerid,
         hubid:            this.HubId.HubID,
-        openingbalance:   data.openingbalance,
-        codamount:        data.codamount,
-        bankdeposit:      data.bankdeposit,
-        statusid:         data.statusid,
-        financereasonid:  data.financereasonid,
-        createdby:        data.createdby,
+        openingbalance:   this.openingbalance,
+        codamount:        this.codamount,
+        bankdeposit:      this.depamount,
+        statusid:         this.statusid,
+        financereasonid:  this.financereasonid,
+        createdby:        this.createdby,
         username:         this.localuserid
       });
 
@@ -278,7 +267,6 @@ export default {
         }
       })
       .then(response => {
-        this.isLoading = false;
         if (response.data.code == 200) {
           this.$alertify.success(response.data.msg);
           this.GetSVCledgerData()
@@ -287,29 +275,26 @@ export default {
         }
       })
       .catch((httpException) => {
-          console.error('exception is:::::::::', httpException); this.isLoading = false; this.$alertify.error('Error Occured');
+          console.error('exception is:::::::::', httpException); this.$alertify.error('Error Occured');
       });
     },
 
-    updateLedger(data){
-      if(this.role!='admin' && this.form.depdate[data.svcledgerid]==''){
-        this.$alertify.error('Bank Deposit date is required.'); return false;
-      }
+    updateLedger(){
 
-      this.isLoading = true;
+      this.subLoading = true; this.FCModal = true; this.$refs.myClosureModalRef.show();
 
       this.input = ({
-        svcledgerid:          data.svcledgerid,
+        svcledgerid:          this.svcledgerid,
         hubid:                this.HubId.HubID,
-        openingbalance:       data.openingbalance,
-        codamount:            this.form.codamount[data.svcledgerid],
-        bankdeposit:          this.form.depamount[data.svcledgerid],
-        bankdepositdate:      this.form.depdate[data.svcledgerid],
-        statusid:             data.statusid,
-        financereasonid:      this.form.finreason[data.svcledgerid]?this.form.finreason[data.svcledgerid]:null,
-        financeconfirmamount: this.form.actualrecamt[data.svcledgerid],
-        recoveryamt:          data.othercharges,
-        createdby:            data.createdby,
+        openingbalance:       this.openingbalance,
+        codamount:            this.codamount,
+        bankdeposit:          this.depamount,
+        bankdepositdate:      this.depdate,
+        statusid:             this.statusid,
+        financereasonid:      this.finreason?this.finreason:null,
+        financeconfirmamount: this.actualrecamt,
+        recoveryamt:          this.recoveryamt,
+        createdby:            this.createdby,
         username:             this.localuserid
       })
       axios({
@@ -321,29 +306,25 @@ export default {
         }
       })
       .then(response => {
-        this.isLoading = false;
+        this.subLoading = false;
         if (response.data.code == 200) {
-          this.$alertify.success(response.data.msg);
+          this.FCModal = false; this.$refs.myClosureModalRef.hide(); this.$alertify.success(response.data.msg);
           this.GetSVCledgerData()
         } else {
           this.$alertify.error(response.data.msg);
         }
       })
       .catch((httpException) => {
-          console.error('exception is:::::::::', httpException); this.isLoading = false; this.$alertify.error('Error Occured');
+          console.error('exception is:::::::::', httpException); this.subLoading = false; this.$alertify.error('Error Occured');
       });
     },
 
-    setLedgid(name, key){
-      return name+key;
-    },
-
     //function is used for upload files on AWS s3bucket
-    onUpload(data){
-      this.isLoading = true;
+    onUpload(){
+      this.subLoading = true;
 
       if(event.target.files.length<=0){
-        this.isLoading = false; return false;
+        this.subLoading = false; return false;
       }
 
       let selectedFile = event.target.files[0];
@@ -351,19 +332,19 @@ export default {
       var name = selectedFile.name;
       if(selectedFile.size>5242880){
         this.$alertify.error(event.srcElement.placeholder + " Failed! Upload Max File Size Should Not Be Greater Than 5 MB");
-        this.isLoading = false; return false;
+        this.subLoading = false; return false;
       }
 
       if ( /\.(jpe?g|png|gif|bmp|xls|xlsx|csv|doc|docx|rtf|wks|wps|wpd|excel|xlr|pps|pdf|ods|odt)$/i.test(selectedFile.name) ){
         name = selectedFile.name;
       }else{
         this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg, .jpeg, .gif, .bmp, .xls, .xlsx, .pdf, .ods, .csv, .doc, .odt, .docx, .rtf, .wks, .wps, .wpd, .excel, .xlr, .pps");
-        this.isLoading = false; return false;
+        this.subLoading = false; return false;
       }
 
       const fd = new FormData();
       fd.append('file', selectedFile, name);
-      fd.append('s3bucketKey', 'SVC-'+data.batchid);
+      fd.append('s3bucketKey', 'SVC-'+this.batchid);
 
       axios.post(apiUrl.api_url + 'uploadsvcfile', fd,
       {
@@ -372,48 +353,40 @@ export default {
         }
       })
       .then(res => {
+        this.subLoading = false;
         if(res.data.errorCode==0){
           this.$alertify.success('Upload successful.');
-          this.getS3bucketFiles(data);
+          this.FCModal = false; this.$refs.myClosureModalRef.hide(); this.GetSVCledgerData();
         }else{
           this.$alertify.error('Upload failed, try again.');
         }
       }, error => {
-        console.error(error)
+        console.error(error); this.subLoading = false;
       });
     },
 
-    getS3bucketFiles(data){
-
-      this.input = ({
-        BatchID : data.batchid,
-        Reason : '',
-      });
-
-      axios({
-        method: 'POST',
-        'url': apiUrl.api_url + 'getfilelist',
-        'data': this.input,
-        headers: {
-          'Authorization': 'Bearer ' + this.myStr
-        }
-      })
-      .then(result => {
-        this.isLoading = false;
-        if(Reason){
-          this.reasonFileList = result.data.data;
-        }else{
-          this.uploadFileList = result.data.data;
-        }
-      }, error => {
-        this.isLoading = false; console.error(error)
-      })
-    },
-
-    editLedger(index){
-      $('#cax'+index).hide(); $('#bdx'+index).hide(); $('#bddx'+index).hide(); $('#frx'+index).hide(); $('#arx'+index).hide(); $('#ed'+index).hide(); $('#vrl'+index).hide(); $('#vri'+index).hide(); $('#vrrl'+index).hide(); $('#vrri'+index).hide();
-      $('#cau'+index).show(); $('#bdu'+index).show(); $('#bddu'+index).show(); $('#fru'+index).show(); $('#aru'+index).show(); $('#dps'+index).show(); $('#ddps'+index).show(); $('#up'+index).show();
-    },
+    // getS3bucketFiles(){
+    //
+    //   this.input = ({
+    //     BatchID : this.batchid,
+    //     Reason : '',
+    //   });
+    //
+    //   axios({
+    //     method: 'POST',
+    //     'url': apiUrl.api_url + 'getfilelist',
+    //     'data': this.input,
+    //     headers: {
+    //       'Authorization': 'Bearer ' + this.myStr
+    //     }
+    //   })
+    //   .then(result => {
+    //     this.isLoading = false;
+    //     this.uploadFileList = result.data.data;
+    //   }, error => {
+    //     this.isLoading = false; console.error(error)
+    //   })
+    // },
 
     showHideImages(index, elem){
       if(elem=='vrrl'){
@@ -431,23 +404,14 @@ export default {
       }
     },
 
-    editFC(index){
-      $('#fcx'+index).hide(); $('#FCed'+index).hide(); $('#fcu'+index).show(); $('#FCup'+index).show();
-    },
+    updateFCLedger(){
 
-    showFCUpdateModal(data){
-      this.resetdata = []; this.resetdata = data; this.resetDD = ''; this.resetDD = data.deliverydate; this.resetType = 'update SVC closure finance closing amount';
-      this.$refs.myResetModalRef.show();
-    },
-
-    updateFCLedger(data){
-
-      this.isLoading = true;
+      this.isLoading = true; this.FCModal = true; this.$refs.myClosureModalRef.show();
 
       this.input = ({
-        svcledgerid:      data.svcledgerid,
+        svcledgerid:      this.svcledgerid,
         hubid:            this.HubId.HubID,
-        amount:           this.form.financeclosingamt[data.svcledgerid]
+        amount:           this.financeclosingamt
       })
       axios({
         method: 'POST',
@@ -460,7 +424,7 @@ export default {
       .then(response => {
         this.isLoading = false;
         if (response.data.code == 200) {
-          this.$alertify.success(response.data.msg);
+          this.FCModal = false; this.$refs.myClosureModalRef.hide(); this.$alertify.success(response.data.msg);
           this.GetSVCledgerData()
         } else {
           this.$alertify.error(response.data.msg);
@@ -472,12 +436,12 @@ export default {
     },
 
     //function is used for Delete Deposit Slip from AWS s3bucket
-    onDelete(data){
-      this.isLoading = true;
+    onDeleteDPS(){
+      this.subLoading = true; this.FCModal = true; this.$refs.myClosureModalRef.show();
 
       this.input = ({
-        svcledgerid: data.svcledgerid,
-        BatchID:     'SVC-'+data.batchid,
+        svcledgerid: this.svcledgerid,
+        BatchID:     'SVC-'+this.batchid,
         username:    this.localuserid
       })
       axios({
@@ -489,17 +453,82 @@ export default {
         }
       })
       .then(response => {
-        this.isLoading = false;
+        this.subLoading = false;
         if(response.data.errorCode==0){
           this.$alertify.success('Reset Deposit Slip Successful.');
-          this.getS3bucketFiles(data);
+          //this.getS3bucketFiles(this.batchid);
+          this.FCModal = false; this.$refs.myClosureModalRef.hide(); this.GetSVCledgerData();
         }else{
           this.$alertify.error('Reset Deposit Slip failed, try again.');
         }
       })
       .catch((httpException) => {
-        console.error('exception is:::::::::', httpException); this.isLoading = false; this.$alertify.error('Error Occured');
+        console.error('exception is:::::::::', httpException); this.subLoading = false; this.$alertify.error('Error Occured');
       });
+    },
+
+    onUpdate: function() {
+      if(this.role!='admin' && this.depdate==''){
+        this.$alertify.error('Bank Deposit date is required.'); return false;
+      }
+      this.FCModal = false; this.$refs.myClosureModalRef.hide(); this.$refs.myResetModalRef.show();
+    },
+
+    getSVCRowData(data) {
+      this.$validator.reset(); this.errors.clear(); $("#depslip").val('');
+      this.FCModal = true; this.subLoading = false; this.upTyp = 1;
+      this.svcledgerid = this.createdby = this.deposittype = this.depamount = this.depdate = this.codamount = this.resetDD = this.resetType = '';
+      this.financeclosingamt = this.finreason = this.actualrecamt = this.recoveryamt = this.statusid = this.openingbalance = this.batchid = this.depslip = '';
+
+      this.svcledgerid        = data.svcledgerid;
+      this.createdby          = data.createdby;
+      this.deposittype        = data.deposittypeid;
+      this.depamount          = data.bankdeposit;
+      this.depdate            = data.bankdepositdateymd;
+      this.codamount          = data.codamount;
+      this.financeclosingamt  = data.financeclosingamt;
+      this.finreason          = data.financereasonid;
+      this.actualrecamt       = data.actualrecamt;
+      this.recoveryamt        = data.othercharges;
+      this.statusid           = data.statusid;
+      this.openingbalance     = data.openingbalance;
+      this.resetDD            = data.deliverydate;
+      this.batchid            = data.batchid;
+
+      this.resetType = 'update SVC closure';
+    },
+
+    editFC(data) {
+      this.$validator.reset(); this.errors.clear(); this.FCModal = true; this.subLoading = false; this.upTyp = 2;
+      this.svcledgerid = this.createdby = this.deposittype = this.depamount = this.depdate = this.codamount = this.resetDD = this.resetType = '';
+      this.financeclosingamt = this.finreason = this.actualrecamt = this.recoveryamt = this.statusid = this.openingbalance = this.batchid = '';
+
+      this.svcledgerid        = data.svcledgerid;
+      this.financeclosingamt  = data.financeclosingamt;
+      this.resetDD            = data.deliverydate;
+
+      this.resetType = 'update SVC closure finance closing amount';
+    },
+
+    deleteClosure(data){
+      this.resetDD = this.resetType = '';
+
+      this.svcledgerid        = data.svcledgerid;
+      this.createdby          = data.createdby;
+      this.depamount          = data.bankdeposit;
+      this.codamount          = data.codamount;
+      this.finreason          = data.financereasonid;
+      this.statusid           = data.statusid;
+      this.openingbalance     = data.openingbalance;
+      this.resetDD            = data.deliverydate;
+
+      this.resetType = 'reset SVC closure';
+      this.$refs.myResetModalRef.show();
+    },
+
+    deleteDPS() {
+      this.$validator.reset(); this.errors.clear(); this.FCModal = false; this.$refs.myClosureModalRef.hide(); this.subLoading = false;
+      this.$refs.myResetModalRef.show(); this.resetType = 'reset SVC closure deposit slip';
     },
   }
 }

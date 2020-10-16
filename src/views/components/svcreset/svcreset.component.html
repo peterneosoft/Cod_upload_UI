@@ -66,7 +66,7 @@
                 <div class="modal-footerfrm">
                 <center>
                   <button type="button" @click="hideResetModal('0', resetType)" class="btn btn-success" style="background-color: #20a8d8;">Yes</button>
-                  <button type="button" @click = "hideResetModal('1')" class="btn btn-danger" style="background-color: #f86c6b;">No</button>
+                  <button type="button" @click = "hideResetModal('1', resetType)" class="btn btn-danger" style="background-color: #f86c6b;">No</button>
                 </center>
                 </div>
               </div>
@@ -92,6 +92,7 @@
                 <thead>
                   <tr class="text-primary">
                     <th class="text-center tableheader"><b>#</b></th>
+                    <th class="text-center tableheader" style="width: 80px;"><b>Action</b></th>
                     <th class="text-center tableheader"><b>Delivery Date</b></th>
                     <th class="text-center tableheader"><b>Deposit Date</b></th>
                     <th class="text-center tableheader"><b>Opening Amount ( <i class="fa fa-rupee"></i> )</b></th>
@@ -104,7 +105,6 @@
                     <th class="text-center tableheader"><b>Deposit Slip</b></th>
                     <th class="text-center tableheader"><b>Status</b></th>
                     <th class="text-center tableheader"><b>Created by</b></th>
-                    <th class="text-center tableheader" style="width: 80px;"><b>Action</b></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -113,57 +113,21 @@
                   </tr>
                   <tr v-for="(CODLedger_List,index) in CODLedgerReports" v-bind:class="`${(CODLedger_List.createdby == 'schedular@xpressbees.com') || (CODLedger_List.deposittype) == '' ? 'scheduler' : '' || CODLedger_List.reasonid == 65 ? 'other' : '' || ([84,124,187,218,125].includes(CODLedger_List.financereasonid)) ? 'mismatched' : ''}`">
                     <td class="text-center">{{pageno+index+1}}</td>
+                    <td class="text-center">
+                      <i @click.prevent="getSVCRowData(CODLedger_List)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
+                      <i v-if="role=='admin' && (CODLedger_List.createdby != 'schedular@xpressbees.com' && CODLedger_List.deposittype != '')" @click.prevent="deleteClosure(CODLedger_List)" class="fa fa-trash text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
+                    </td>
                     <td class="text-center">{{CODLedger_List.deliverydate}}</td>
-                    <td class="text-center">
-                      <span v-bind:id='`${"bddx"+CODLedger_List.svcledgerid}`'>{{CODLedger_List.bankdepositdate}}</span>
-
-                      <span v-bind:id='`${"bddu"+CODLedger_List.svcledgerid}`' style="display: none;">
-                        <input v-model="form.depdate[CODLedger_List.svcledgerid]" class="form-control" placeholder="Bank Deposit Date" type="date">
-                      </span>
-                    </td>
+                    <td class="text-center">{{CODLedger_List.bankdepositdate}}</td>
                     <td class="text-center">{{CODLedger_List.openingbalance}}</td>
-                    <td class="text-center">
-                      <span v-if="role!='admin'">{{CODLedger_List.codamount}}</span>
-                      <span v-if="role=='admin'" v-bind:id='`${"cax"+CODLedger_List.svcledgerid}`'>{{CODLedger_List.codamount}}</span>
-
-                      <span v-if="role=='admin'" v-bind:id='`${"cau"+CODLedger_List.svcledgerid}`' style="display: none;">
-                        <input v-model="form.codamount[CODLedger_List.svcledgerid]" v-bind:class="{'form-control': true }" type="text" placeholder="COD Amount" onkeypress="return event.charCode <= 57" style="height: 30px;font-size: 13px;">
-                      </span>
-                    </td>
-                    <td class="text-center">
-                      <span v-bind:id='`${"bdx"+CODLedger_List.svcledgerid}`'>{{CODLedger_List.bankdeposit}}</span>
-
-                      <span v-bind:id='`${"bdu"+CODLedger_List.svcledgerid}`' style="display: none;">
-                        <input v-model="form.depamount[CODLedger_List.svcledgerid]" v-bind:class="{'form-control': true }" type="text" placeholder="Bank Deposit Amount" onkeypress="return event.charCode <= 57" style="height: 30px;font-size: 13px;">
-                      </span>
-                    </td>
+                    <td class="text-center">{{CODLedger_List.codamount}}</td>
+                    <td class="text-center">{{CODLedger_List.bankdeposit}}</td>
                     <td class="text-center">{{CODLedger_List.closingbalance}}</td>
+                    <td class="text-center">{{CODLedger_List.financereason}}</td>
+                    <td class="text-center">{{CODLedger_List.actualrecamt}}</td>
                     <td class="text-center">
-                      <span v-bind:id='`${"frx"+CODLedger_List.svcledgerid}`'>{{CODLedger_List.financereason}}</span>
-
-                      <span v-bind:id='`${"fru"+CODLedger_List.svcledgerid}`' style="display: none;">
-                        <select v-if="CODLedger_List.financereasonid" v-model="form.finreason[CODLedger_List.svcledgerid]" v-bind:class="{'form-control': true}" style="width: 150px;height: 32px;font-size: 12px;">
-                          <option v-for="finreason_obj in FinanceReasonList" v-bind:value="finreason_obj.ReasonsID" >{{finreason_obj.Reason}}</option>
-                        </select>
-                      </span>
-                    </td>
-                    <td class="text-center">
-                      <span v-bind:id='`${"arx"+CODLedger_List.svcledgerid}`'>{{CODLedger_List.actualrecamt}}</span>
-
-                      <span v-bind:id='`${"aru"+CODLedger_List.svcledgerid}`' style="display: none;">
-                        <input v-if="CODLedger_List.financereasonid" v-model="form.actualrecamt[CODLedger_List.svcledgerid]" v-bind:class="{'form-control': true }" type="text" placeholder="Finance Confirmed Amount" onkeypress="return event.charCode <= 57" style="height: 30px;font-size: 13px;">
-                      </span>
-                    </td>
-                    <td class="text-center">
-                      <span v-if="role!='admin'">{{CODLedger_List.financeclosingamt}}</span>
-                      <span v-if="role=='admin'" v-bind:id='`${"fcx"+CODLedger_List.svcledgerid}`'>{{CODLedger_List.financeclosingamt}}</span>
-
-                      <span v-if="role=='admin'" v-bind:id='`${"fcu"+CODLedger_List.svcledgerid}`' style="display: none;">
-                        <input v-model="form.financeclosingamt[CODLedger_List.svcledgerid]" v-bind:class="{'form-control': true }" type="text" placeholder="Finance Closing Amount" onkeypress="return event.charCode <= 57" style="height: 30px;font-size: 13px;">
-                      </span>
-
-                      <span v-bind:id='`${"FCed"+CODLedger_List.svcledgerid}`'><i v-if="role=='admin'" @click.prevent="editFC(CODLedger_List.svcledgerid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer; float: right;"></i></span>
-                      <span v-bind:id='`${"FCup"+CODLedger_List.svcledgerid}`' style="display: none;"><i v-if="role=='admin'" @click.prevent="showFCUpdateModal(CODLedger_List)" class="fa fa-floppy-o text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
+                      <span>{{CODLedger_List.financeclosingamt}}</span>
+                      <span><i v-if="role=='admin'" @click.prevent="editFC(CODLedger_List)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer; float: right;"></i></span>
                     </td>
                     <td class="text-center">
                       <span v-bind:id='`${"vrl"+CODLedger_List.svcledgerid}`' v-if="CODLedger_List.files.length>0 && CODLedger_List.createdby!='schedular@xpressbees.com' && CODLedger_List.othercharges == '0.00'" @click="showHideImages(CODLedger_List.svcledgerid, 'vrl')" style="color: blue; cursor: pointer; text-decoration: underline;">Deposit</span>
@@ -175,26 +139,10 @@
                       <span v-bind:id='`${"vrri"+CODLedger_List.svcledgerid}`' style="display: none;">
                         <a v-bind:title='`${file.name}`' v-for="file in CODLedger_List.reasonfiles" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a>
                       </span>
-
-                      <span v-bind:id='`${"dps"+CODLedger_List.svcledgerid}`' style="display: none;">
-                        <input v-if="CODLedger_List.createdby != 'schedular@xpressbees.com' && CODLedger_List.deposittype != ''" @change="onUpload(CODLedger_List)" class="form-control" type="file" placeholder="Upload Deposit Slip" v-bind:name="setLedgid('depslip', CODLedger_List.svcledgerid)" v-bind:id="setLedgid('depslip', CODLedger_List.svcledgerid)"
-                          v-bind:class="{'form-control': true}" style="width: 120px; border: 0; background-color: transparent; font-size: 12px;">
-                        <span v-bind:id="setLedgid('depslip', CODLedger_List.svcledgerid)" class="text-danger"></span>
-                      </span>
-
-                      <span v-bind:id='`${"ddps"+CODLedger_List.svcledgerid}`' style="display: none;">
-                        <button v-if="CODLedger_List.createdby != 'schedular@xpressbees.com' && CODLedger_List.deposittype != ''" class="btn btn-sm btn-danger" @click="onDelete(CODLedger_List)" type="button" title="Delete All Uploaded Deposit Slip" style="background-color: transparent; font-size: 12px; color: revert;"><i class="fa fa-trash"></i> Reset DPS</button>
-                      </span>
                     </td>
                     <td class="text-center" v-if="CODLedger_List.statusid==1">Open</td>
                     <td class="text-center" v-if="CODLedger_List.statusid==6">Close</td>
                     <td class="text-center">{{CODLedger_List.createdby}}</td>
-                    <td class="text-center">
-                      <span v-bind:id='`${"ed"+CODLedger_List.svcledgerid}`'><i v-if="role!='admin' && (CODLedger_List.createdby != 'schedular@xpressbees.com' && CODLedger_List.deposittype != '')" @click.prevent="editLedger(CODLedger_List.svcledgerid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
-                      <span v-bind:id='`${"ed"+CODLedger_List.svcledgerid}`'><i v-if="role=='admin'" @click.prevent="editLedger(CODLedger_List.svcledgerid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
-                      <span v-bind:id='`${"up"+CODLedger_List.svcledgerid}`' style="display: none;"><i @click.prevent="showUpdateModal(CODLedger_List)" class="fa fa-floppy-o text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
-                      <i v-if="role=='admin' && (CODLedger_List.createdby != 'schedular@xpressbees.com' && CODLedger_List.deposittype != '')" @click.prevent="showResetModal(CODLedger_List)" class="fa fa-trash text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
-                    </td>
                   </tr>
                 </tbody>
               </table><br>
@@ -202,6 +150,96 @@
               </paginate>
             </div>
          </div>
+
+         <b-modal v-model="FCModal" @ok="FCModal = false" ref="myClosureModalRef">
+           <div role="document">
+             <div class="modal-content" style="width: 185%;margin-left: -25%;">
+               <div class="modal-bodyfrm">
+                 <form id="FCform" v-on:submit.prevent="onUpdate()">
+                   <div class="form-group">
+                     <b-card>
+                       <div slot="header">
+                         <span class="mdltitle">Update SVC Closure</span>
+                         <button type="button" aria-label="Close" @click="closeStatusRoleModal" class="close">×</button>
+                       </div>
+                       <fieldset>
+                         <div class="form-group row">
+                           <div class="col-lg-4" v-if="role=='admin'">
+                             <b-form-fieldset>
+                               <label>COD Receivable Amount</label>
+                               <b-input-group left="<i class='fa fa-rupee'></i>">
+                                 <input :disabled="upTyp == 2" type="text" placeholder="COD Receivable Amount" name="codamount" id="codamount" v-model="codamount" v-bind:class="{'form-control': true}" onkeypress="return event.charCode <= 57">
+                               </b-input-group>
+                             </b-form-fieldset>
+                           </div>
+                           <div class="col-md-4">
+                             <b-form-fieldset>
+                               <label>Bank Deposit Date</label>
+                               <b-input-group left="<i class='fa fa-calendar'></i>">
+                                 <input :disabled="upTyp == 2" type="date" placeholder="Bank Deposit Date" name="depdate" id="depdate" v-model="depdate" v-bind:class="{'form-control': true}">
+                               </b-input-group>
+                             </b-form-fieldset>
+                           </div>
+                           <div class="col-lg-4">
+                             <b-form-fieldset>
+                               <label>Bank Deposit Amount</label>
+                               <b-input-group left="<i class='fa fa-rupee'></i>">
+                                 <input :disabled="upTyp == 2" type="text" placeholder="Bank Deposit Amount" name="depamount" id="depamount" v-model="depamount" v-bind:class="{'form-control': true}" onkeypress="return event.charCode <= 57">
+                               </b-input-group>
+                             </b-form-fieldset>
+                           </div>
+                           <div class="col-lg-4">
+                             <b-form-fieldset>
+                               <label>Finance Reason</label>
+                               <b-input-group left="<i class='fa fa-list'></i>">
+                                 <select :disabled="upTyp == 2 || statusid == 1" v-model="finreason" v-bind:value="finreason" name="finreason" v-bind:class="{'form-control': true}">
+                                   <option value="">--Select--</option>
+                                   <option v-for="finreason_obj in FinanceReasonList" v-bind:value="finreason_obj.ReasonsID" >{{finreason_obj.Reason}}</option>
+                                 </select>
+                               </b-input-group>
+                             </b-form-fieldset>
+                           </div>
+                           <div class="col-lg-4">
+                             <b-form-fieldset>
+                               <label>Finance Confirmed Amount</label>
+                               <b-input-group left="<i class='fa fa-rupee'></i>">
+                                 <input :disabled="upTyp == 2 || statusid == 1" v-model="actualrecamt" name="actualrecamt" id="actualrecamt" v-bind:class="{'form-control': true}" type="text" placeholder="Finance Confirmed Amount" onkeypress="return event.charCode <= 57">
+                               </b-input-group>
+                             </b-form-fieldset>
+                           </div>
+                           <div class="col-lg-4" v-if="role=='admin'">
+                             <b-form-fieldset>
+                               <label>Finance Outstanding Amount</label>
+                               <b-input-group left="<i class='fa fa-rupee'></i>">
+                                 <input :disabled="upTyp == 1" v-model="financeclosingamt" name="financeclosingamt" id="financeclosingamt" v-bind:class="{'form-control': true}" type="text" placeholder="Finance Outstanding Amount" onkeypress="return event.charCode <= 57">
+                               </b-input-group>
+                             </b-form-fieldset>
+                           </div>
+                           <div class="col-lg-4" v-if="createdby != 'schedular@xpressbees.com' && deposittype != ''">
+                             <b-form-fieldset>
+                               <label>Upload Deposit Slip</label>
+                               <b-input-group>
+                                 <input :disabled="upTyp == 2" @change="onUpload()" type="file" placeholder="Upload Deposit Slip" name="depslip" id="depslip" v-bind:class="{'form-control': true}">
+                               </b-input-group>
+                               <span class="text" style="font-size: 11px; color: rgb(0, 0, 0);">Note: For upload deposit slip, no need to click submit.</span>
+                             </b-form-fieldset>
+                           </div>
+                         </div>
+                         <div class="rolefooter form-actions">
+                           <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="subLoading" />
+                           <b-button class="btn btn-primary" type="button" @click="deleteDPS()" title="Delete All Uploaded Deposit Slip" v-if="createdby != 'schedular@xpressbees.com' && deposittype != ''"><i class="fa fa-trash"></i> Reset DPS</b-button>
+                           <span v-if="createdby != 'schedular@xpressbees.com' && deposittype != ''">&nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;</span>
+                           <b-button class="btn btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> Submit</b-button>
+                           <b-button type="button" class="btn btn-danger" @click="closeStatusRoleModal">Cancel</b-button>
+                         </div>
+                       </fieldset>
+                     </b-card>
+                   </div>
+                 </form>
+               </div>
+             </div>
+           </div>
+         </b-modal>
        </div>
     </div>
   </div>
