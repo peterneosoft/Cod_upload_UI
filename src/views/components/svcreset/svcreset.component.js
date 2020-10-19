@@ -122,7 +122,7 @@ export default {
           }
       })
       .then(result => {
-        this.isLoading = false; this.upTyp = 0;
+        this.isLoading = false; this.upTyp = 0; this.CODLedgerReports = []; this.resultCount  = 0;
 
         if(result.data.code == 200){
           this.CODLedgerReports = result.data.data;
@@ -135,8 +135,6 @@ export default {
           } else {
               this.pagecount = Math.ceil(totalRows / 10)
           }
-        }else{
-          this.resultCount  = 0;
         }
       }, error => {
         this.isLoading = false; console.error(error);

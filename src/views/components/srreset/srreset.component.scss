@@ -211,5 +211,12 @@ table.scroll thead th:last-child {
 .scrolltb {
   display: block;
   overflow-x: auto;
-  white-space: nowrap;
+  //white-space: nowrap;
+}
+
+.mdltitle{
+	font-size: 18px;
+}
+.rolefooter{
+  text-align: right !important;
 }

@@ -37,11 +37,11 @@ export default {
       role:'',
       localuserid:'',
       myStr:'',
-      form: {
-        codamount: [],
-        creditamount:[],
-        debitamount: []
-      },
+      codamount:'',
+      creditamount:'',
+      debitamount:'',
+      subLoading:false,
+      FCModal:false,
       SR_Name:'',
       toDate:'',
       fromDate:'',
@@ -193,7 +193,6 @@ export default {
     },
 
     getMonthlySRLedgerDetails(){
-      $('span[class^="y"]').hide(); $('span[class^="x"]').show();
 
       if(this.fromDate > this.toDate){
          document.getElementById("fdate").innerHTML="From date should not be greater than To date."; return false;
@@ -217,6 +216,8 @@ export default {
           }
         })
         .then(result => {
+          this.SRLedgerList = []; this.resultCount  = 0;
+
           if(result.data.code == 200){
             this.SRLedgerList = result.data.data.rows;
             let totalRows     = result.data.data.count
@@ -227,13 +228,7 @@ export default {
             } else {
                 this.pagecount = Math.ceil(totalRows / 10)
             }
-
-            this.SRLedgerList.forEach((sr,key)=>{
-              this.form.codamount[sr.ledgerdetailid]    = sr.codamount;
-              this.form.creditamount[sr.ledgerdetailid] = sr.creditamount;
-              this.form.debitamount[sr.ledgerdetailid]  = sr.debitamount;
-            });
-          }else{ this.resultCount = 0; }
+          }
           this.isLoading = false;
         }, error => {
           this.isLoading = false; console.error(error); this.$alertify.error('Error Occured');
@@ -326,20 +321,18 @@ export default {
 
     hideResetModal(ele, typ) {
       this.$refs.myResetModalRef.hide();
-      if(ele == 0 && typ == 'reset'){
-        this.resetSVCledger(this.resetdata);
-      }else if(ele == 0 && typ == 'update'){
-        this.updateLedger(this.resetdata);
+      if(ele == 0){
+        if(typ == 'reset') this.resetSVCledger(this.resetdata);
+        else if(typ == 'update') this.updateLedger();
+
+      }else{
+        if(typ == 'update'){ this.FCModal = true; this.$refs.myClosureModalRef.show(); }
       }
     },
 
-    showUpdateModal(data){
-      this.resetdata = []; this.resetdata = data; this.resetDD = ''; this.resetDD = data.deliverydate; this.resetType = 'update';
-      this.$refs.myResetModalRef.show();
-    },
-
     closeStatusRoleModal() {
-      this.ResetmodalShow = false
+      this.ResetmodalShow = false;
+      this.FCModal = false;
     },
 
     resetSVCledger(data){
@@ -371,16 +364,16 @@ export default {
       });
     },
 
-    updateLedger(data){
+    updateLedger(){
 
-      this.isLoading = true;
+      this.subLoading = true; this.FCModal = true; this.$refs.myClosureModalRef.show();
 
       this.input = ({
-        srledgerid:   data.ledgerdetailid,
-        srid:         data.srid,
-        codamount:    this.form.codamount[data.ledgerdetailid],
-        creditamount: this.form.creditamount[data.ledgerdetailid],
-        debitamount:  this.form.debitamount[data.ledgerdetailid],
+        srledgerid:   this.ledgerdetailid,
+        srid:         this.srid,
+        codamount:    this.codamount,
+        creditamount: this.creditamount,
+        debitamount:  this.debitamount,
         username:     this.localuserid
       })
       axios({
@@ -392,21 +385,35 @@ export default {
         }
       })
       .then(response => {
-        this.isLoading = false;
+        this.subLoading = false;
+
         if (response.data.code == 200) {
-          this.$alertify.success(response.data.msg);
+          this.FCModal = false; this.$refs.myClosureModalRef.hide(); this.$alertify.success(response.data.msg);
           this.getMonthlySRLedgerDetails()
         } else {
           this.$alertify.error(response.data.msg);
         }
       })
       .catch((httpException) => {
-          console.error('exception is:::::::::', httpException); this.isLoading = false; this.$alertify.error('Error Occured');
+          console.error('exception is:::::::::', httpException); this.subLoading = false; this.$alertify.error('Error Occured');
       });
     },
 
-    editLedger(index){
-      $('.x'+index).hide(); $('.y'+index).show();
+    getSRRowData(data){
+      this.$validator.reset(); this.errors.clear();
+      this.FCModal = true; this.subLoading = false; this.resetType = 'update';
+      this.ledgerdetailid = this.srid = this.codamount = this.creditamount = this.debitamount = this.resetDD = '';
+
+      this.ledgerdetailid = data.ledgerdetailid;
+      this.srid           = data.srid;
+      this.codamount      = data.codamount;
+      this.creditamount   = data.creditamount;
+      this.debitamount    = data.debitamount;
+      this.resetDD        = data.deliverydate;
+    },
+
+    onUpdate: function() {
+      this.FCModal = false; this.$refs.myClosureModalRef.hide(); this.$refs.myResetModalRef.show();
     },
   }
 }

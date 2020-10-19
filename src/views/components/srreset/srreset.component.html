@@ -15,7 +15,7 @@
                 <div class="col-md-4">
                   <label>Zone <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>" style="height: 44px;">
-                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="allZoneLoading" />
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="zoneLoading" />
                     <select name="zone" id="zone" class="form-control" v-model="zone" v-on:change="getHubData" style="height: 44px;" v-validate="{required: true}" v-bind:class="{'error': errors.has('zone') }">
                       <option value="">--Select--</option>
                       <option v-for="zone_obj in zoneList" v-bind:value="zone_obj.hubzoneid" >{{zone_obj.hubzonename}}</option>
@@ -99,7 +99,7 @@
                 <div class="modal-footerfrm">
                 <center>
                   <button type="button" @click="hideResetModal('0', resetType)" class="btn btn-success" style="background-color: #20a8d8;">Yes</button>
-                  <button type="button" @click = "hideResetModal('1')" class="btn btn-danger" style="background-color: #f86c6b;">No</button>
+                  <button type="button" @click = "hideResetModal('1', resetType)" class="btn btn-danger" style="background-color: #f86c6b;">No</button>
                 </center>
                 </div>
               </div>
@@ -116,6 +116,7 @@
                 <thead>
                   <tr class="text-primary">
                     <th class="text-center tableheader"><b>#</b></th>
+                    <th class="text-center tableheader" style="width: 80px;"><b>Action</b></th>
                     <th class="text-center tableheader"><b>SR Name</b></th>
                     <th class="text-center tableheader"><b>Delivery Date</b></th>
                     <th class="text-center tableheader"><b>COD Receivable ( <i class="fa fa-rupee"></i> )</b></th>
@@ -123,7 +124,6 @@
                     <th class="text-center tableheader"><b>Pending Amount ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Created Date</b></th>
                     <th class="text-center tableheader"><b>Created By</b></th>
-                    <th class="text-center tableheader" style="width: 80px;"><b>Action</b></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -132,43 +132,76 @@
                   </tr>
                   <tr v-for="(SL_List,index) in SRLedgerList ">
                     <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
-                    <td class="text-center">{{SL_List.SRName}}</td>
-                    <td class="text-center">{{SL_List.deliverydate}}</td>
                     <td class="text-center">
-                      <span v-bind:class='`${"x"+SL_List.ledgerdetailid}`'>{{SL_List.codamount}}</span>
-
-                      <span v-bind:class='`${"y"+SL_List.ledgerdetailid}`' style="display: none;">
-                        <input v-model="form.codamount[SL_List.ledgerdetailid]" class="{'form-control': true }" type="text" placeholder="COD Receivable" onkeypress="return event.charCode <= 57" style="height: 30px;font-size: 13px;">
-                      </span>
-                    </td>
-                    <td class="text-center">
-                      <span v-bind:class='`${"x"+SL_List.ledgerdetailid}`'>{{SL_List.creditamount}}</span>
-
-                      <span v-bind:class='`${"y"+SL_List.ledgerdetailid}`' style="display: none;">
-                        <input v-model="form.creditamount[SL_List.ledgerdetailid]" class="{'form-control': true }" type="text" placeholder="Paid Amount" onkeypress="return event.charCode <= 57" style="height: 30px;font-size: 13px;">
-                      </span>
-                    </td>
-                    <td class="text-center">
-                      <span v-bind:class='`${"x"+SL_List.ledgerdetailid}`'>{{SL_List.debitamount}}</span>
-
-                      <span v-bind:class='`${"y"+SL_List.ledgerdetailid}`' style="display: none;">
-                        <input v-model="form.debitamount[SL_List.ledgerdetailid]" class="{'form-control': true }" type="text" placeholder="Pending Amount" onkeypress="return event.charCode <= 57" style="height: 30px;font-size: 13px;">
-                      </span>
-                    </td>
-                    <td class="text-center">{{SL_List.createddate}}</td>
-                    <td class="text-center">{{SL_List.createdby}}</td>
-                    <td class="text-center">
-                      <span v-bind:class='`${"x"+SL_List.ledgerdetailid}`'><i @click.prevent="editLedger(SL_List.ledgerdetailid)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
-                      <span v-bind:class='`${"y"+SL_List.ledgerdetailid}`' style="display: none;"><i @click.prevent="showUpdateModal(SL_List)" class="fa fa-floppy-o text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></span>
+                      <i @click.prevent="getSRRowData(SL_List)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
                       <i v-if="role=='admin'" @click.prevent="showResetModal(SL_List)" class="fa fa-trash text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
                     </td>
+                    <td class="text-center">{{SL_List.SRName}}</td>
+                    <td class="text-center">{{SL_List.deliverydate}}</td>
+                    <td class="text-center">{{SL_List.codamount}}</td>
+                    <td class="text-center">{{SL_List.creditamount}}</td>
+                    <td class="text-center">{{SL_List.debitamount}}</td>
+                    <td class="text-center">{{SL_List.createddate}}</td>
+                    <td class="text-center">{{SL_List.createdby}}</td>
                   </tr>
                 </tbody>
               </table><br>
               <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
               </paginate>
             </div>
-           </div>
+          </div>
+
+           <b-modal v-model="FCModal" @ok="FCModal = false" ref="myClosureModalRef">
+             <div role="document">
+               <div class="modal-content" style="width: 185%;margin-left: -25%;">
+                 <div class="modal-bodyfrm">
+                   <form id="FCform" v-on:submit.prevent="onUpdate()">
+                     <div class="form-group">
+                       <b-card>
+                         <div slot="header">
+                           <span class="mdltitle">Update SR Closure</span>
+                           <button type="button" aria-label="Close" @click="closeStatusRoleModal" class="close">×</button>
+                         </div>
+                         <fieldset>
+                           <div class="form-group row">
+                             <div class="col-lg-4">
+                               <b-form-fieldset>
+                                 <label>COD Receivable Amount</label>
+                                 <b-input-group left="<i class='fa fa-rupee'></i>">
+                                   <input type="text" placeholder="COD Receivable Amount" name="codamount" id="codamount" v-model="codamount" v-bind:class="{'form-control': true}" onkeypress="return event.charCode <= 57">
+                                 </b-input-group>
+                               </b-form-fieldset>
+                             </div>
+                             <div class="col-lg-4">
+                               <b-form-fieldset>
+                                 <label>Paid Amount</label>
+                                 <b-input-group left="<i class='fa fa-rupee'></i>">
+                                   <input type="text" placeholder="Paid Amount" name="creditamount" id="creditamount" v-model="creditamount" v-bind:class="{'form-control': true}" onkeypress="return event.charCode <= 57">
+                                 </b-input-group>
+                               </b-form-fieldset>
+                             </div>
+                             <div class="col-lg-4">
+                               <b-form-fieldset>
+                                 <label>Pending Amount</label>
+                                 <b-input-group left="<i class='fa fa-rupee'></i>">
+                                   <input type="text" placeholder="Pending Amount" name="debitamount" id="debitamount" v-model="debitamount" v-bind:class="{'form-control': true}" onkeypress="return event.charCode <= 57">
+                                 </b-input-group>
+                               </b-form-fieldset>
+                             </div>
+                           </div>
+                           <div class="rolefooter form-actions">
+                             <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="subLoading" />
+                             <b-button class="btn btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> Submit</b-button>
+                             <b-button type="button" class="btn btn-danger" @click="closeStatusRoleModal">Cancel</b-button>
+                           </div>
+                         </fieldset>
+                       </b-card>
+                     </div>
+                   </form>
+                 </div>
+               </div>
+             </div>
+           </b-modal>
        </div>
     </div>
   </div>
