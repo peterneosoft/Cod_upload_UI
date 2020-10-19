@@ -92,6 +92,7 @@ export default {
       wrongdelAWBNo: '',
       nddissAWBNo: '',
       walissAWBNo: '',
+      razissAWBNo: '',
       paypissAWBNo: '',
       castheftReason:'',
       prevpenbalReason:'',
@@ -108,6 +109,7 @@ export default {
       wrongdelReason: '',
       nddissReason: '',
       walissReason: '',
+      razissReason: '',
       paypissReason: '',
       castheft:false,
       prevpenbal:false,
@@ -124,6 +126,7 @@ export default {
       wrongdel:false,
       nddiss: false,
       waliss: false,
+      raziss: false,
       paypiss: false,
       CardAmount: 0,
       DisputeArr: [],
@@ -325,9 +328,9 @@ export default {
          }else{
            this.Regionshow = false; statusAmount = "Equal Amount";
            this.DisputeArr = []; this.CardAmount = 0;
-           this.castheft = this.prevpenbal = this.sriss = this.lowdis = this.cariss = this.codimpr = this.selfrec = this.srabsc = this.cassnat = this.paychg = this.codnttim = this.theftstol = this.wrongdel = this.nddiss = this.waliss = this.paypiss = false;
-           this.castheftAWBNo = this.prevpenbalAWBNo = this.srtpsrAmt = this.carissAWBNo = this.codimprAWBNo = this.selfrecAWBNo = this.srabscAWBNo = this.cassnatAWBNo = this.paychgAWBNo = this.codnttimAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.nddissAWBNo = this.walissAWBNo = this.paypissAWBNo = '';
-           this.castheftReason = this.prevpenbalReason = this.srissReason = this.lowdisReason = this.carissReason = this.codimprReason = this.selfrecReason = this.srabscReason = this.cassnatReason = this.paychgReason = this.codnttimReason = this.theftstolReason = this.wrongdelReason = this.nddissReason = this.walissReason = this.paypissReason = '';
+           this.castheft = this.prevpenbal = this.sriss = this.lowdis = this.cariss = this.codimpr = this.selfrec = this.srabsc = this.cassnat = this.paychg = this.codnttim = this.theftstol = this.wrongdel = this.nddiss = this.waliss = this.raziss = this.paypiss = false;
+           this.castheftAWBNo = this.prevpenbalAWBNo = this.srtpsrAmt = this.carissAWBNo = this.codimprAWBNo = this.selfrecAWBNo = this.srabscAWBNo = this.cassnatAWBNo = this.paychgAWBNo = this.codnttimAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.nddissAWBNo = this.walissAWBNo = this.razissAWBNo = this.paypissAWBNo = '';
+           this.castheftReason = this.prevpenbalReason = this.srissReason = this.lowdisReason = this.carissReason = this.codimprReason = this.selfrecReason = this.srabscReason = this.cassnatReason = this.paychgReason = this.codnttimReason = this.theftstolReason = this.wrongdelReason = this.nddissReason = this.walissReason = this.razissReason = this.paypissReason = '';
          }
        }
 
@@ -345,7 +348,7 @@ export default {
          if(statusAmount == "Less Amount") this.Regionshow = true;
          this.showConfModal(); return false;
        }
-       console.log('Balanc==',Balanc);
+
        if((this.lowdis || insertflag == 1) && Balanc>=-1000){
          this.disableButton = true; this.SRLedgerDetails = true; this.subLoading = true;
          this.input = ({
@@ -418,9 +421,9 @@ export default {
 
       this.DisputeArr = this.DenomDetail = []; this.CardAmount = 0;
 
-      this.castheft = this.prevpenbal = this.sriss = this.lowdis = this.cariss = this.codimpr = this.selfrec = this.srabsc = this.cassnat = this.paychg = this.codnttim = this.theftstol = this.wrongdel = this.nddiss = this.waliss = this.paypiss = false;
-      this.castheftAWBNo = this.prevpenbalAWBNo = this.srtpsrAmt = this.carissAWBNo = this.codimprAWBNo = this.selfrecAWBNo = this.srabscAWBNo = this.cassnatAWBNo = this.paychgAWBNo = this.codnttimAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.nddissAWBNo = this.walissAWBNo = this.paypissAWBNo = '';
-      this.castheftReason = this.prevpenbalReason = this.srissReason = this.lowdisReason = this.carissReason = this.codimprReason = this.selfrecReason = this.srabscReason = this.cassnatReason = this.paychgReason = this.codnttimReason = this.theftstolReason = this.wrongdelReason = this.nddissReason = this.walissReason = this.paypissReason = '';
+      this.castheft = this.prevpenbal = this.sriss = this.lowdis = this.cariss = this.codimpr = this.selfrec = this.srabsc = this.cassnat = this.paychg = this.codnttim = this.theftstol = this.wrongdel = this.nddiss = this.waliss = this.raziss = this.paypiss = false;
+      this.castheftAWBNo = this.prevpenbalAWBNo = this.srtpsrAmt = this.carissAWBNo = this.codimprAWBNo = this.selfrecAWBNo = this.srabscAWBNo = this.cassnatAWBNo = this.paychgAWBNo = this.codnttimAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.nddissAWBNo = this.walissAWBNo = this.razissAWBNo = this.paypissAWBNo = '';
+      this.castheftReason = this.prevpenbalReason = this.srissReason = this.lowdisReason = this.carissReason = this.codimprReason = this.selfrecReason = this.srabscReason = this.cassnatReason = this.paychgReason = this.codnttimReason = this.theftstolReason = this.wrongdelReason = this.nddissReason = this.walissReason = this.razissReason = this.paypissReason = '';
 
       this.PendingCOD = this.TodaysCOD = this.TotalAmount = this.TodaysShipmentCount = this.TodaysCash = this.TodaysPayphi = this.TodaysWallet = this.TodaysCard = this.TodaysCashCount = this.TodaysPayphiCount = this.TodaysWalletCount = this.TodaysCardCount = this.TodaysRazorpay = this.TodaysRazorpayCount = 0;
       this.deliveredCODArr = this.deliveredCashArr = this.deliveredPayphiArr = this.deliveredWalletArr = this.deliveredCardArr = this.deliveredRazorpayArr = [];
@@ -505,10 +508,10 @@ export default {
              'Authorization': 'Bearer '+this.urltoken
            }
          })
-         .then(result => {
+         .then(async result => {
 
-           this.getRightSRLedgerDetails()
-           this.GetSRLedgerDetails()
+           await this.getRightSRLedgerDetails();
+           await this.GetSRLedgerDetails();
 
             if(result.data.code == 200){
               this.Loading      = false;
@@ -525,7 +528,7 @@ export default {
               this.payphiArr    = result.data.data.payphiArr
 
               this.cod          = result.data.data.cod
-              this.codArr    = result.data.data.codArr
+              this.codArr       = result.data.data.codArr
 
               this.ndr          = result.data.data.ndr
               this.ndrArr       = result.data.data.ndrArr
@@ -544,7 +547,7 @@ export default {
             }
 
          }, error => {
-           console.error(error)
+           this.Loading = false; console.error(error); this.$alertify.error('Error Occured');
          })
     },
 
@@ -677,7 +680,7 @@ export default {
               }
             }else if(parseInt(this.Deposit_Amount) < parseInt(this.TotalAmount)){
               this.Regionshow = true;
-              if(this.castheft || this.prevpenbal || this.sriss || this.lowdis || this.cariss || this.codimpr || this.selfrec || this.srabsc || this.cassnat || this.paychg || this.codnttim || this.theftstol || this.wrongdel || this.nddissReason || this.walissReason || this.paypissReason){
+              if(this.castheft || this.prevpenbal || this.sriss || this.lowdis || this.cariss || this.codimpr || this.selfrec || this.srabsc || this.cassnat || this.paychg || this.codnttim || this.theftstol || this.wrongdel || this.nddissReason || this.walissReason || this.razissReason || this.paypissReason){
                 this.cardawbno(event);
               }else{
                 this.saveSRClosure(event);
@@ -686,9 +689,9 @@ export default {
               this.Regionshow = false; let error = document.getElementById("d_a"); error.style.display = "None";
 
               this.DisputeArr = []; this.CardAmount = 0;
-              this.castheft = this.prevpenbal = this.sriss = this.lowdis = this.cariss = this.codimpr = this.selfrec = this.srabsc = this.cassnat = this.paychg = this.codnttim = this.theftstol = this.wrongdel = this.nddiss = this.waliss = this.paypiss = false;
-              this.castheftAWBNo = this.prevpenbalAWBNo = this.srtpsrAmt = this.carissAWBNo = this.codimprAWBNo = this.selfrecAWBNo = this.srabscAWBNo = this.cassnatAWBNo = this.paychgAWBNo = this.codnttimAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.nddissAWBNo = this.walissAWBNo = this.paypissAWBNo = '';
-              this.castheftReason = this.prevpenbalReason = this.srissReason = this.lowdisReason = this.carissReason = this.codimprReason = this.selfrecReason = this.srabscReason = this.cassnatReason = this.paychgReason = this.codnttimReason = this.theftstolReason = this.wrongdelReason = this.nddissReason = this.walissReason = this.paypissReason = '';
+              this.castheft = this.prevpenbal = this.sriss = this.lowdis = this.cariss = this.codimpr = this.selfrec = this.srabsc = this.cassnat = this.paychg = this.codnttim = this.theftstol = this.wrongdel = this.nddiss = this.waliss = this.raziss = this.paypiss = false;
+              this.castheftAWBNo = this.prevpenbalAWBNo = this.srtpsrAmt = this.carissAWBNo = this.codimprAWBNo = this.selfrecAWBNo = this.srabscAWBNo = this.cassnatAWBNo = this.paychgAWBNo = this.codnttimAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.nddissAWBNo = this.walissAWBNo = this.razissAWBNo = this.paypissAWBNo = '';
+              this.castheftReason = this.prevpenbalReason = this.srissReason = this.lowdisReason = this.carissReason = this.codimprReason = this.selfrecReason = this.srabscReason = this.cassnatReason = this.paychgReason = this.codnttimReason = this.theftstolReason = this.wrongdelReason = this.nddissReason = this.walissReason = this.razissReason = this.paypissReason = '';
               this.saveSRClosure(event);
             }
           }
@@ -806,6 +809,8 @@ export default {
           this.waliss = true; this.walissReason = Reason;
         }else if((process.env.NODE_ENV == 'development' && Reason == 330) || (process.env.NODE_ENV == 'production' && Reason == 133)){
           this.paypiss = true; this.paypissReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 364) || (process.env.NODE_ENV == 'production' && Reason == 364)){
+          this.raziss = true; this.razissReason = Reason;
         }
 
       }else{
@@ -841,6 +846,8 @@ export default {
           this.waliss = false; this.walissAWBNo = ''; this.walissReason = '';
         }else if((process.env.NODE_ENV == 'development' && Reason == 330) || (process.env.NODE_ENV == 'production' && Reason == 133)){
           this.paypiss = false; this.paypissAWBNo = ''; this.paypissReason = '';
+        }else if((process.env.NODE_ENV == 'development' && Reason == 364) || (process.env.NODE_ENV == 'production' && Reason == 364)){
+          this.raziss = false; this.razissAWBNo = ''; this.razissReason = '';
         }
       }
     },
@@ -895,6 +902,8 @@ export default {
       if(this.walissAWBNo) awbArr.push({ ReasonID:this.walissReason, AWBNo:this.checkAWB(this.walissAWBNo) });
 
       if(this.paypissAWBNo) awbArr.push({ ReasonID:this.paypissReason, AWBNo:this.checkAWB(this.paypissAWBNo) });
+
+      if(this.razissAWBNo) awbArr.push({ ReasonID:this.razissReason, AWBNo:this.checkAWB(this.razissAWBNo) });
 
       axios({
         method: 'POST',

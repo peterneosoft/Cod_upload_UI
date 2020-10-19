@@ -265,6 +265,17 @@
                 <span id="awb_n" v-show="errors.has('paypissAWBNo')" class="text-danger">Payphi AWB No. is required.</span>
               </div>
 
+              <div class="form-group" v-if="Regionshow && raziss">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">AWB No. <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <input class="form-control" id="razissAWBNo" type="text" name="razissAWBNo" title="Enter Razorpay AWB number" placeholder="Razorpay AWB No." v-validate="`${raziss ? 'required' : ''}`"
+                  v-model="razissAWBNo" v-bind:class="{'form-control': true, 'error': errors.has('razissAWBNo') }">
+                </div>
+                <span id="awb_n" v-show="errors.has('razissAWBNo')" class="text-danger">Razorpay AWB No. is required.</span>
+              </div>
+
               <div class="card-footer">
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="subLoading" />
                 <button v-bind:disabled="disableButton" class="btn btn-sm btn-primary" type="submit">
