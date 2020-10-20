@@ -966,7 +966,7 @@ export default {
           this.waliss = true; this.walissReason = Reason;
         }else if((process.env.NODE_ENV == 'development' && Reason == 328) || (process.env.NODE_ENV == 'production' && Reason == 135)){
           this.paypiss = true; this.paypissReason = Reason;
-        }else if((process.env.NODE_ENV == 'development' && Reason == 365) || (process.env.NODE_ENV == 'production' && Reason == 365)){
+        }else if((process.env.NODE_ENV == 'development' && Reason == 365) || (process.env.NODE_ENV == 'production' && Reason == 167)){
           this.raziss = true; this.razissReason = Reason;
         }
       }else{
@@ -1000,7 +1000,7 @@ export default {
           this.waliss = false; this.walissAWBNo = ''; this.walissReason = '';
         }else if((process.env.NODE_ENV == 'development' && Reason == 328) || (process.env.NODE_ENV == 'production' && Reason == 135)){
           this.paypiss = false; this.paypissAWBNo = ''; this.paypissReason = '';
-        }else if((process.env.NODE_ENV == 'development' && Reason == 365) || (process.env.NODE_ENV == 'production' && Reason == 365)){
+        }else if((process.env.NODE_ENV == 'development' && Reason == 365) || (process.env.NODE_ENV == 'production' && Reason == 167)){
           this.raziss = false; this.razissAWBNo = ''; this.razissReason = '';
         }
       }

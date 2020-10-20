@@ -490,8 +490,7 @@ export default {
        this.RightSRLedger = true;
        this.SRLedgerDetails = true;
        if(!this.SR_Name){
-         return false;
-         this.resetData(event);
+         this.resetData(event); return false;
        }
        this.input = ({
           srid: this.SR_Name,
@@ -809,7 +808,7 @@ export default {
           this.waliss = true; this.walissReason = Reason;
         }else if((process.env.NODE_ENV == 'development' && Reason == 330) || (process.env.NODE_ENV == 'production' && Reason == 133)){
           this.paypiss = true; this.paypissReason = Reason;
-        }else if((process.env.NODE_ENV == 'development' && Reason == 364) || (process.env.NODE_ENV == 'production' && Reason == 364)){
+        }else if((process.env.NODE_ENV == 'development' && Reason == 364) || (process.env.NODE_ENV == 'production' && Reason == 166)){
           this.raziss = true; this.razissReason = Reason;
         }
 
@@ -846,7 +845,7 @@ export default {
           this.waliss = false; this.walissAWBNo = ''; this.walissReason = '';
         }else if((process.env.NODE_ENV == 'development' && Reason == 330) || (process.env.NODE_ENV == 'production' && Reason == 133)){
           this.paypiss = false; this.paypissAWBNo = ''; this.paypissReason = '';
-        }else if((process.env.NODE_ENV == 'development' && Reason == 364) || (process.env.NODE_ENV == 'production' && Reason == 364)){
+        }else if((process.env.NODE_ENV == 'development' && Reason == 364) || (process.env.NODE_ENV == 'production' && Reason == 166)){
           this.raziss = false; this.razissAWBNo = ''; this.razissReason = '';
         }
       }
