@@ -135,13 +135,12 @@
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Deposit Slip <font color="red">&nbsp;*</font></span>
                   </div>
-                  <input @change="onUpload" class="form-control" type="file" placeholder="Upload Deposit Slip"  v-validate="`${uploadFileList.length<=0 ? 'required' : ''}`" name="DepositSlip" id="DepositSlip"
-                  v-bind:class="{'form-control': true, 'error': errors.has('DepositSlip')}" style="margin: -5px 1px 0px 1px; height: 40px; border: 0;">
+                  <input @change="onUpload" :disabled="uploadFileList.length>0" class="form-control" type="file" placeholder="Upload Deposit Slip"  v-validate="`${uploadFileList.length<=0 ? 'required' : ''}`" name="DepositSlip" id="DepositSlip"
+                  v-bind:class="{'form-control': true, 'error': errors.has('DepositSlip')}" style="margin: 0px 1px 0px; height: 40px; border: 0;">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-file"></i></span>
                   </div>
                 </div>
-                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Upload multiple deposit slip one by one.<br></span>
                 <span v-show="errors.has('DepositSlip')" id="dps" class="text-danger">Deposit slip is required.</span>
                 <a v-bind:title='`${file.name}`' v-for="file in uploadFileList" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:25px; color:#4b8cbb; margin: 10px 15px 1px 10px;"></i></a>
               </div>
@@ -205,13 +204,12 @@
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Reason Slip <font color="red">&nbsp;*</font></span>
                   </div>
-                  <input @change="onUpload" class="form-control" type="file" placeholder="Upload Reason Slip" v-validate="`${(amoimp && reasonFileList.length<=0) ? 'required' : ''}`" name="ReasonSlip" id="ReasonSlip"
-                  v-bind:class="{'form-control': true, 'error': errors.has('ReasonSlip')}" style="margin: -5px 1px 0px 1px; height: 40px; border: 0;">
+                  <input @change="onUpload" :disabled="reasonFileList.length>0" class="form-control" type="file" placeholder="Upload Reason Slip" v-validate="`${(amoimp && reasonFileList.length<=0) ? 'required' : ''}`" name="ReasonSlip" id="ReasonSlip"
+                  v-bind:class="{'form-control': true, 'error': errors.has('ReasonSlip')}" style="margin: 0px 1px 0px; height: 40px; border: 0;">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-file"></i></span>
                   </div>
                 </div>
-                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Upload multiple reason slip one by one.<br></span>
                 <span v-show="errors.has('ReasonSlip')" id="rss" class="text-danger">Reason slip used for tax payment/ imprest is required.</span>
                 <a v-bind:title='`${file.name}`' v-for="file in reasonFileList" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:25px; color:#4b8cbb; margin: 10px 15px 1px 10px;"></i></a>
               </div>

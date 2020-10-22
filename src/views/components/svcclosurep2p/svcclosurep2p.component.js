@@ -549,15 +549,6 @@ export default {
     },
 
     saveSvcClosure() {
-      if(this.amoimp && this.reasonFileList.length<=0){
-        let error = document.getElementById("rss"); error.innerHTML = "Reason slip used for tax payment/ imprest is required Or please check file extension.";
-        error.style.display  = "block"; return false;
-      }
-
-      if(this.uploadFileList && this.uploadFileList.length<=0){
-        let error = document.getElementById("dps"); error.innerHTML = "Deposit slip is required Or please check file extension.";
-        error.style.display  = "block"; return false;
-      }
 
       let DepositAmount = parseInt(this.Deposit_Amount);
       let DepositReasonExcepAmount = ''; this.unmatchedAmt = 0;
@@ -605,7 +596,7 @@ export default {
                 this.$alertify.error("Total outstanding COD amount and deposit amount including sum of dispute amount is should be same, please check.");
                 return false;
               }else{
-                this.reasonFileList=[];
+                if(!this.amoimp){ this.reasonFileList=[]; }
                 this.hideModal();
               }
             }
@@ -846,6 +837,16 @@ export default {
       this.$validator.validateAll().then((result) => {
          document.getElementById("d_a").style.display = "none"; this.DisputeArr = []; this.CardAmount = 0;
 
+         if(this.amoimp && this.reasonFileList.length<=0){
+           let error = document.getElementById("rss"); error.innerHTML = "Reason slip used for tax payment/ imprest is required Or please check file extension.";
+           error.style.display  = "block"; return false;
+         }
+
+         if(this.uploadFileList.length<=0){
+           let error = document.getElementById("dps"); error.innerHTML = "Deposit slip is required Or please check file extension.";
+           error.style.display  = "block"; return false;
+         }
+
          if(result){
 
            if((this.tot_amt != 0 && this.tot_amt != parseInt(this.Deposit_Amount))||!this.tot_amt){
@@ -868,6 +869,8 @@ export default {
               }
             }
           }
+        }else{
+          console.log('validation errors exist')
         }
       }).catch(() => {
         console.log('errors exist', this.errors)
