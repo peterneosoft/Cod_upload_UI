@@ -47,7 +47,7 @@
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="RSCOwnerLoading" />
                     <select name="rscowner" id="rscowner" class="form-control" v-model="rscowner">
                       <option value="">--Select--</option>
-                      <option v-for="rscowner_obj in RSCOwnerList" v-bind:value="rscowner_obj">{{rscowner_obj.OutSourcingName}} - {{rscowner_obj.EffectiveFromDate}} To {{rscowner_obj.EffectiveToDate}} - {{rscowner_obj.OutSourcingMasterID}}</option>
+                      <option v-for="rscowner_obj in RSCOwnerList" v-bind:value="rscowner_obj">{{rscowner_obj.OutSourcingMasterID}} - {{rscowner_obj.OutSourcingName}} - {{rscowner_obj.EffectiveFromDate}} To {{rscowner_obj.EffectiveToDate}}</option>
                     </select>
                   </b-input-group>
                 </div>
