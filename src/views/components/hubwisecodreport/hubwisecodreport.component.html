@@ -23,7 +23,7 @@
                   <label>Hub / SVC</label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="hubLoading" />
-                    <Multiselect :options="hubList" placeholder="Select Hub / Svc" v-bind:multiple="multipleHub()" v-bind:disabled="disableHub" name="HubId" id="HubId" v-model="HubId"  label="HubName" track-by="HubID" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
+                    <Multiselect :options="hubList" placeholder="Select Hub / Svc" @input="addRSCOwner" v-bind:multiple="multipleHub()" v-bind:disabled="disableHub" name="HubId" id="HubId" v-model="HubId"  label="HubName" track-by="HubID" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
                      <template slot="noResult"><p>No Record Found.</p></template>
                     </Multiselect>
                   </b-input-group>
@@ -33,7 +33,7 @@
                   <label>RSC / SVC</label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="RSCLoading" />
-                    <Multiselect :options="RSCList" placeholder="Select RSC / SVC" @input="addRSCOwner" v-bind:disabled="disableHub" name="RSCName" id="RSCName" v-model="RSCName" label="HubName" track-by="HubName" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
+                    <Multiselect :options="RSCList" placeholder="Select RSC / SVC" @input="addRSCOwner" v-bind:multiple="multipleRSC()" v-bind:disabled="disableHub" name="RSCName" id="RSCName" v-model="RSCName" label="HubName" track-by="HubName" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
                      <template slot="noResult"><p>No Record Found.</p></template>
                     </Multiselect>
                   </b-input-group>
@@ -52,20 +52,20 @@
                   </b-input-group>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-3" v-if="rscowner.length<=0">
                   <label>From ( Delivery ) Date <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-calendar'></i>">
-                    <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}"
+                    <b-form-input id="fromDate" type="date" name="fromDate" v-validate="`${rscowner.length<=0 ? 'required' : ''}`"
                     v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
                   </b-input-group>
                   <span v-show="errors.has('fromDate')" class="text-danger">From date is required. </span>
                   <span id="fdate" class="text-danger"></span>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-md-3" v-if="rscowner.length<=0">
                   <label>To ( Delivery ) Date <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-calendar'></i>">
-                    <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}"
+                    <b-form-input id="toDate" type="date" name="toDate" v-validate="`${rscowner.length<=0 ? 'required' : ''}`"
                     v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
                   </b-input-group>
                   <span v-show="errors.has('toDate')" class="text-danger">To date is required. </span>

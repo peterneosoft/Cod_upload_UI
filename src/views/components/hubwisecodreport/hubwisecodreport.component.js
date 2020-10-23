@@ -79,7 +79,7 @@ export default {
 
   methods: {
     multiple(){
-      let key = this.zone.length-1;
+      let key = this.zone ? this.zone.length-1 : 0;
       if(this.zone.length>0 && this.zone[key].hubzoneid == 0){
         this.SearchZoneIds = [];
         this.zone = this.zone[key];
@@ -96,7 +96,7 @@ export default {
     },
 
     multipleHub(){
-      let key = this.HubId.length-1;
+      let key = this.HubId ? this.HubId.length-1 : 0;
       if(this.HubId.length>0 && this.HubId[key].HubID == 0){
         this.SearchHubIds = [];
         this.HubId = this.HubId[key];
@@ -113,7 +113,7 @@ export default {
     },
 
     multipleRSC(){
-      let key = this.RSCName.length-1;
+      let key = this.RSCName ? this.RSCName.length-1 : 0;
       if(this.RSCName.length>0 && this.RSCName[key].HubID == 0){
         this.SearchRSCIds = [];
         this.RSCName = this.RSCName[key];
@@ -172,6 +172,7 @@ export default {
         this.input = ({
           hubid: this.SearchHIds,
           zoneid: this.SearchZIds,
+          rscowner: this.rscowner ? new Array(this.rscowner) : new Array(),
           status: this.status,
           fromdate: this.fromDate,
           todate: this.toDate
@@ -360,7 +361,7 @@ export default {
             }else{ this.zoneList = result.data.zone.data; }
           }
         }, error => {
-          this.zoneLoading = false; console.error(error)
+          this.zoneLoading = false; console.error(error); this.$alertify.error('Zone Error');
         })
     },
 
@@ -387,7 +388,7 @@ export default {
             this.hubList = [{HubID:'0', HubName:'All Hub', HubCode:'All Hub'}].concat(result.data.hub.data);
           }
         }, error => {
-          this.hubLoading = false; console.error(error)
+          this.hubLoading = false; console.error(error); this.$alertify.error('Hub/ SVC Error');
         })
     },
 
@@ -414,26 +415,31 @@ export default {
             this.RSCList = [{HubID:'0', HubName:'All RSC', HubCode:'All RSC'}].concat(result.data.rsc.data);
           }
         }, error => {
-          this.RSCLoading = false; console.error(error)
+          this.RSCLoading = false; console.error(error); this.$alertify.error('RSC Error');
         })
     },
 
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
-          let diffTime = Math.abs(new Date(this.toDate) - new Date(this.fromDate));
-          let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          if(this.rscowner){ this.fromDate = this.toDate = ''; }
 
-          if(this.fromDate > this.toDate){
-             document.getElementById("fdate").innerHTML="From date should not be greater than To date.";
-             return false;
+          if((this.fromDate && this.toDate) && (this.fromDate > this.toDate)){
+            let diffTime = Math.abs(new Date(this.toDate) - new Date(this.fromDate));
+            let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            document.getElementById("fdate").innerHTML="From date should not be greater than To date.";
+            return false;
           }else{
-            document.getElementById("fdate").innerHTML=""; this.pageno = 0; this.exportf = false; this.reportlink = ''; this.resultCount = 0;
-            this.getHubWiseCODLedgerReports()
+            console.log('aaaaa');
+            //document.getElementById("fdate").innerHTML="";
+            this.pageno = 0; this.exportf = false; this.reportlink = ''; this.resultCount = 0;
+            this.getHubWiseCODLedgerReports();
           }
+        }else{
+          this.$alertify.error('Error Occured');
         }
       }).catch(() => {
-        console.log('errors exist', this.errors)
+        console.log('errors exist', this.errors); this.$alertify.error('Error Occured');
       });
     },
 
@@ -496,12 +502,12 @@ export default {
     },
 
     addRSCOwner() {
-      this.disableRSCOwner = false;
+      this.disableRSCOwner = false; this.rscowner = '';
 
       if(this.RSCName && this.RSCName!=null){
-        this.rscowner = '';
-        if(this.RSCName.HubID != 0){
-          this.disableRSCOwner = true; this.getRSCOwnerData(this.RSCName.HubID);
+        if(this.HubId.length<=0 && this.RSCName.HubID != 0){
+          if($.isArray(this.RSCName) === false) this.RSCName = new Array(this.RSCName);
+          if(this.RSCName.length===1){ this.disableRSCOwner = true; this.getRSCOwnerData(this.RSCName[0].HubID); }
         }
       }
     },
