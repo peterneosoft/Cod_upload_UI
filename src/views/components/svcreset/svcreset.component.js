@@ -57,6 +57,7 @@ export default {
       batchid:'',
       subLoading:false,
       upTyp:0,
+      radio:'dps'
     }
   },
 
@@ -344,6 +345,8 @@ export default {
       fd.append('file', selectedFile, name);
       fd.append('s3bucketKey', 'SVC-'+this.batchid);
 
+      if(this.radio=="reason") fd.append('reason', 'Reason');
+
       axios.post(apiUrl.api_url + 'uploadsvcfile', fd,
       {
         headers: {
@@ -469,12 +472,16 @@ export default {
       if(this.role!='admin' && this.depdate==''){
         this.$alertify.error('Bank Deposit date is required.'); return false;
       }
+
+      if(!this.radio){
+        document.getElementById("cr").innerHTML="Radio selection is required."; return false;
+      }
       this.FCModal = false; this.$refs.myClosureModalRef.hide(); this.$refs.myResetModalRef.show();
     },
 
     getSVCRowData(data) {
       this.$validator.reset(); this.errors.clear(); $("#depslip").val('');
-      this.FCModal = true; this.subLoading = false; this.upTyp = 1;
+      this.FCModal = true; this.subLoading = false; this.upTyp = 1; this.radio = 'dps';
       this.svcledgerid = this.createdby = this.deposittype = this.depamount = this.depdate = this.codamount = this.resetDD = this.resetType = '';
       this.financeclosingamt = this.finreason = this.actualrecamt = this.recoveryamt = this.statusid = this.openingbalance = this.batchid = this.depslip = '';
 
@@ -497,7 +504,7 @@ export default {
     },
 
     editFC(data) {
-      this.$validator.reset(); this.errors.clear(); this.FCModal = true; this.subLoading = false; this.upTyp = 2;
+      this.$validator.reset(); this.errors.clear(); this.FCModal = true; this.subLoading = false; this.upTyp = 2;  this.radio = 'dps';
       this.svcledgerid = this.createdby = this.deposittype = this.depamount = this.depdate = this.codamount = this.resetDD = this.resetType = '';
       this.financeclosingamt = this.finreason = this.actualrecamt = this.recoveryamt = this.statusid = this.openingbalance = this.batchid = '';
 

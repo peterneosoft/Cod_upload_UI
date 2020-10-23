@@ -217,20 +217,31 @@
                            </div>
                            <div class="col-lg-4" v-if="createdby != 'schedular@xpressbees.com' && deposittype != ''">
                              <b-form-fieldset>
-                               <label>Upload Deposit Slip</label>
-                               <b-input-group>
-                                 <input :disabled="upTyp == 2" @change="onUpload()" type="file" placeholder="Upload Deposit Slip" name="depslip" id="depslip" v-bind:class="{'form-control': true}">
+                               <label>Slip Type</label>
+                               <b-input-group style="font-size:13px;">
+                                 <input :disabled="upTyp == 2" type="radio" name="radio" v-model="radio" value="dps">&nbsp;&nbsp;Deposit Slip &nbsp;&nbsp;&nbsp;&nbsp;
+                                 <input :disabled="upTyp == 2" type="radio" name="radio" v-model="radio" value="reason">&nbsp;&nbsp;Dispute Slip
                                </b-input-group>
-                               <span class="text" style="font-size: 11px; color: rgb(0, 0, 0);">Note: For upload deposit slip, no need to click submit.</span>
+                               <span id="cr" class="text-danger"></span>
+                             </b-form-fieldset>
+                           </div>
+                           <div class="col-lg-5" v-if="createdby != 'schedular@xpressbees.com' && deposittype != ''">
+                             <b-form-fieldset>
+                               <label>Upload Deposit/ Dispute Slip</label>
+                               <b-input-group>
+                                 <input :disabled="upTyp == 2" @change="onUpload()" type="file" placeholder="Upload Deposit/ Dispute Slip" name="depslip" id="depslip" v-bind:class="{'form-control': true}">
+                               </b-input-group>
+                               <span class="text" style="font-size: 11px; color: rgb(0, 0, 0);">Note: For upload deposit/ dispute slip, no need to click submit.</span>
                              </b-form-fieldset>
                            </div>
                          </div>
                          <div class="rolefooter form-actions">
                            <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="subLoading" />
-                           <b-button class="btn btn-primary" type="button" @click="deleteDPS()" title="Delete All Uploaded Deposit Slip" v-if="createdby != 'schedular@xpressbees.com' && deposittype != ''"><i class="fa fa-trash"></i> Reset DPS</b-button>
+                           <b-button class="btn btn-primary" type="button" @click="deleteDPS()" title="Delete All Uploaded Slip" v-if="createdby != 'schedular@xpressbees.com' && deposittype != ''"><i class="fa fa-trash"></i> Reset Slip</b-button>
                            <span v-if="createdby != 'schedular@xpressbees.com' && deposittype != ''">&nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;</span>
                            <b-button class="btn btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> Submit</b-button>
                            <b-button type="button" class="btn btn-danger" @click="closeStatusRoleModal">Cancel</b-button>
+                           <br><span class="text" style="font-size:11px;color:red;font-weight:bold;">Note: On click of reset slip, all uploded slip will be removed including deposit & dispute so, before reset please backup old slips.</span>
                          </div>
                        </fieldset>
                      </b-card>

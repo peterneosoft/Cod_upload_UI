@@ -34,11 +34,15 @@ export default {
       isLoading:false,
       exportf:false,
       disableHub:false,
+      disableRSCOwner:false,
       zoneLoading:false,
       hubLoading:false,
       RSCLoading:false,
+      RSCOwnerLoading:false,
       RSCList:[],
       RSCName:[],
+      RSCOwnerList:[],
+      rscowner:'',
       SearchHubIds:[],
       SearchRSCIds:[],
       reportlink:'',
@@ -126,7 +130,8 @@ export default {
     },
 
     addHubData() {
-      let zData = this.zoneIdArr = [];  this.hubList = []; this.HubId = []; this.RSCList = []; this.RSCName = []; this.disableHub = false;
+      let zData = this.zoneIdArr = [];  this.hubList = []; this.HubId = []; this.RSCList = []; this.RSCName = [];
+      this.RSCOwnerList = []; this.rscowner = ''; this.disableHub = false;
       if($.isArray(this.zone) === false){
         this.zone = new Array(this.zone);
       }
@@ -291,6 +296,7 @@ export default {
       this.input = ({
           hubid: this.SearchHIds,
           zoneid: this.SearchZIds,
+          rscowner: this.rscowner ? new Array(this.rscowner) : new Array(),
           fromdate: this.fromDate,
           todate: this.toDate,
           status: this.status,
@@ -432,7 +438,7 @@ export default {
     },
 
     resetForm() {
-      this.fromDate = this.toDate = ''; this.zone=""; this.hubList = this.HubId = this.RSCList = this.RSCName = this.SearchZIds = this.SearchHIds = [];
+      this.fromDate = this.toDate = ''; this.zone=""; this.hubList = this.HubId = this.RSCList = this.RSCName = this.SearchZIds = this.SearchHIds = []; this.rscowner = '';
       this.pageno = 0; this.status=""; this.CODLedgerReports = []; this.exportf = false; this.disableHub = false; this.resultCount = 0; this.reportlink = '';
       this.$validator.reset();
       this.errors.clear();
@@ -487,6 +493,42 @@ export default {
       this.comment = []; this.cType = ''; this.comment = ele;
       if(type=='c') this.cType = 'Finance Comment'; else this.cType = 'Transaction Id';
       this.$refs.myCommentModalRef.show();
+    },
+
+    addRSCOwner() {
+      this.disableRSCOwner = false;
+
+      if(this.RSCName && this.RSCName!=null){
+        this.rscowner = '';
+        if(this.RSCName.HubID != 0){
+          this.disableRSCOwner = true; this.getRSCOwnerData(this.RSCName.HubID);
+        }
+      }
+    },
+
+    //to get RSC Wise RSC Owner List
+    getRSCOwnerData(rscID) {
+      if(rscID==""){ return false; }
+      this.RSCOwnerLoading = true; this.RSCOwnerList = [];
+
+      this.input = ({ hubid: rscID });
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'getHubRSCOwnerDetails',
+          'data': this.input,
+          headers: {
+            'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+          this.RSCOwnerLoading = false;
+
+          if(result.data.code == 200){
+            this.RSCOwnerList = result.data.RSCOwnerArr;
+          }
+        }, error => {
+          this.RSCOwnerLoading = false; console.error(error);
+        })
     },
   }
 }
