@@ -26,7 +26,60 @@ td{
 }
 
 .text-danger {
-    color: #f86c6b !important;
-    font-weight: bold;
-    font-size: 0.8rem;
+  color: #f86c6b !important;
+  font-weight: bold;
+  font-size: 0.8rem;
+}
+
+.btn-ltc {
+  color: #fff;
+  background-color: #2f353a;
+  border-color: #2f353a;
+}
+
+.popUpText {
+  display: none;
+  position: absolute;
+  width: 105px;
+  background-color: #2f353a;
+  color: #fff;
+  text-align: initial;
+  border-radius: 3px;
+  padding: 10px 15px;
+  font-size: 13px;
+  right: 70px;
+  margin-top: -30px;
+}
+
+input[type="file"] {
+    display: none;
+}
+.custom-file-upload {
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    width: 120px;
+    border-radius: 8px;
+}
+
+table.scroll {
+    border: 0px solid #c2cfd6;
+}
+
+table.scroll tbody,
+table.scroll thead tr { display: block; }
+
+table.scroll tbody {
+    height: 291px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+table.scroll tbody td,
+table.scroll thead th {
+    //width: 133px;
+}
+
+table.scroll thead th:last-child {
+    width: 156px; /* 140px + 16px scrollbar width */
 }

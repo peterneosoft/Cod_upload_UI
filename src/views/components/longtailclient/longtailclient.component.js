@@ -17,29 +17,35 @@ export default {
 
   data() {
     return {
-      localusername: 0,
-      resultCount: 0,
-      pagecount: 0,
-      pageno: 0,
-      count: 0,
-      Search:0,
-      Client:"",
+      resultCount:0,
+      pagecount:0,
+      pageno:0,
+      Client:[],
+      SearchClientIds:[],
       clientLoading:false,
       ClientList:[],
-      isLoading: false,
+      isLoading:false,
       listPendingRemittanceData:[],
-      listPendingRemittanceDataToDate:[],
       fromDate:'',
       toDate:'',
-      modalShow:false,
       currentdate:'',
-      ofd:'',
-      form: {
-          toDate: [],
-          FromDate: [],
-          oldFromDate: [],
-          oldToDate: []
-      }
+      selected:'Initiated',
+      options:[
+        { text: 'Remittance Cycle', value: 'Initiated' },
+        { text: 'Payments On Hold', value: 'Hold' },
+        { text: 'Payments Approved', value: 'pa' }
+      ],
+      checkAll:false,
+      ClientArr:[],
+      singleArr:[],
+      ModalShow:false,
+      excelLoading:false,
+      exportf:false,
+      reportlink:'',
+      status:'',
+      shipmentList:[],
+      shipLoading:false,
+      modalShipmentShow:false
     }
   },
 
@@ -57,186 +63,80 @@ export default {
     var userToken         = window.localStorage.getItem('accessuserToken');
     this.myStr            = userToken.replace(/"/g, '');
 
-    //this.GetClientData();
-    this.getCODLTCRemittanceDetails ();
+    this.GetClientData();
+    this.getLTCRemittanceStatusWise ();
 
     var date = new Date();
     this.currentdate = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
   },
 
   methods: {
-    showModal(){
-      this.modalShow = true;
-    },
-    closeModal() {
-      this.modalShow = false
-    },
-    setid(name, key){
-      return name+key;
-    },
-
-    // onChangeDate(fromDate, toDate, ClientId){
-    //
-    //   if(!toDate || !fromDate){
-    //
-    //     this.$alertify.error('From date & To/ Delivery date should not be empty.');
-    //     return false;
-    //   }else if(fromDate > this.currentdate || toDate > this.currentdate){
-    //
-    //     this.$alertify.error('From date & To/ Delivery date should not be greater than current date.');
-    //     return false;
-    //   }else if(fromDate > toDate){
-    //
-    //     document.getElementById("fdate"+ClientId).innerHTML="From date should not be greater than To / Delivery date.";
-    //     return false;
-    //   }else if(toDate < fromDate){
-    //
-    //     document.getElementById("tdate"+ClientId).innerHTML="To / Delivery date should not be less than From date.";
-    //     return false;
-    //   }else if(toDate > this.form.oldToDate[ClientId]){
-    //
-    //     let tdate = new Date(this.form.oldToDate[ClientId]);
-    //     document.getElementById("tdate"+ClientId).innerHTML="To / Delivery date should not be greater than "+(tdate.getDate() <= 9 ? '0' + tdate.getDate() : tdate.getDate()) + "/" + ((tdate.getMonth() + 1) <= 9 ? '0' + (tdate.getMonth() + 1) : (tdate.getMonth() + 1)) + "/" + tdate.getFullYear();
-    //     return false;
-    //   }else if(fromDate < this.form.oldFromDate[ClientId]){
-    //
-    //     let fdate = new Date(this.form.oldFromDate[ClientId]);
-    //     document.getElementById("fdate"+ClientId).innerHTML="From date should not be less than "+(fdate.getDate() <= 9 ? '0' + fdate.getDate() : fdate.getDate()) + "/" + ((fdate.getMonth() + 1) <= 9 ? '0' + (fdate.getMonth() + 1) : (fdate.getMonth() + 1)) + "/" + fdate.getFullYear();
-    //     return false;
-    //   }else{
-    //
-    //     document.getElementById("fdate"+ClientId).innerHTML="";
-    //     document.getElementById("tdate"+ClientId).innerHTML="";
-    //
-    //     this.isLoading = true;
-    //     axios({
-    //       method: 'POST',
-    //       url: apiUrl.api_url + 'getCODLTCRemittanceDetails?CreatedBy='+this.localuserid+'&ClientId='+ClientId+'&oldFromDate='+this.form.oldFromDate[ClientId]+'&fromDate='+fromDate+'&toDate='+toDate+'&offset='+this.pageno+'&limit='+20,
-    //       headers: {
-    //         'Authorization': 'Bearer '+this.myStr
-    //       }
-    //     })
-    //     .then(result => {
-    //       if(result.data.code == 200){
-    //         this.isLoading = false;
-    //         this.listPendingRemittanceDataToDate  = result.data.data;
-    //
-    //         let alldata = this.listPendingRemittanceData;
-    //         let todatedata = this.listPendingRemittanceDataToDate;
-    //
-    //         alldata.map(item => {
-    //           let obj = todatedata.find(el => el.ClientId === item.ClientId);
-    //           if(obj){
-    //             item.ToDate           = obj.ToDate;
-    //             item.FromDate         = obj.FromDate;
-    //             item.DeliveryDate     = obj.DeliveryDate;
-    //             item.ShipmentCount    = obj.ShipmentCount;
-    //             item.CODAmount        = obj.CODAmount;
-    //             item.FreightAmount    = obj.FreightAmount;
-    //             item.PaidAmount       = obj.PaidAmount;
-    //             item.BalanceAmount    = obj.BalanceAmount;
-    //             item.HoldAmount       = obj.HoldAmount;
-    //             item.TotalOustanding  = obj.TotalOustanding;
-    //             item.ExceptionAmount  = obj.ExceptionAmount;
-    //             item.ExceptionCount   = obj.ExceptionCount;
-    //           }
-    //         });
-    //
-    //         this.listPendingRemittanceData = alldata;
-    //
-    //         alldata.forEach((val,key)=>{
-    //           this.form.toDate[val.ClientId] = val.ToDate;
-    //           this.form.FromDate[val.ClientId] = val.FromDate;
-    //         });
-    //       }else{
-    //         this.listPendingRemittanceDataToDate=[];
-    //         this.isLoading = false;
-    //       }
-    //     }, error => {
-    //       console.error(error)
-    //       this.isLoading = false;
-    //       this.$alertify.error('Error Occured');
-    //     })
-    //   }
-    // },
-
-    onRemittance(fromDate, toDate, data){
-
-      if((!fromDate || !this.form.oldFromDate[data.ClientId]) || (!toDate || !this.form.oldToDate[data.ClientId])){
-
-        this.$alertify.error('From date & To / Delivery date should not be empty.'); return false;
-      }else if(fromDate != this.form.oldFromDate[data.ClientId]){
-
-        let fdate = new Date(this.form.oldFromDate[data.ClientId]);
-        this.ofd = 'Remittance for client '+data.CompanyName+', From date should be: '+(fdate.getDate() <= 9 ? '0' + fdate.getDate() : fdate.getDate()) + "/" + ((fdate.getMonth() + 1) <= 9 ? '0' + (fdate.getMonth() + 1) : (fdate.getMonth() + 1)) + "/" + fdate.getFullYear();
-        this.showModal(); return false;
-      }else if(toDate > this.form.oldToDate[data.ClientId]){
-
-        let tdate = new Date(this.form.oldToDate[data.ClientId]);
-        this.ofd = 'Remittance for client '+data.CompanyName+', To / Delivery date should be: '+(tdate.getDate() <= 9 ? '0' + tdate.getDate() : tdate.getDate()) + "/" + ((tdate.getMonth() + 1) <= 9 ? '0' + (tdate.getMonth() + 1) : (tdate.getMonth() + 1)) + "/" + tdate.getFullYear();
-        this.showModal(); return false;
-      }else if(data.ShipmentCount==0){
-
-        let fdate = new Date(data.FromDate);
-        fdate = (fdate.getDate() <= 9 ? '0' + fdate.getDate() : fdate.getDate()) + "/" + ((fdate.getMonth() + 1) <= 9 ? '0' + (fdate.getMonth() + 1) : (fdate.getMonth() + 1)) + "/" + fdate.getFullYear();
-        let tdate = new Date(data.ToDate);
-        tdate = (tdate.getDate() <= 9 ? '0' + tdate.getDate() : tdate.getDate()) + "/" + ((tdate.getMonth() + 1) <= 9 ? '0' + (tdate.getMonth() + 1) : (tdate.getMonth() + 1)) + "/" + tdate.getFullYear();
-
-        this.ofd = 'Remittance COD amount for client '+data.CompanyName+' & date from '+fdate+' to '+tdate+' is 0.00';
-        this.showModal(); return false;
-      }else{
-
-        this.closeModal();
-
-        this.input = ({
-            FromDate: this.form.oldFromDate[data.ClientId],
-            ToDate: data.ToDate,
-            ShipmentCount: data.ShipmentCount,
-            ClientId: data.ClientId,
-            CODAmount: data.CODAmount,
-            PaidAmount: data.PaidAmount,
-            BalanceAmount: data.BalanceAmount,
-            HoldAmount: data.HoldAmount,
-            TotalOustanding: data.TotalOustanding,
-            ExceptionAmount: data.ExceptionAmount,
-            ExceptionCount: data.ExceptionCount,
-            TotalRevenue: data.TotalRevenue,
-            FreightAmount: data.FreightAmount,
-            CreatedBy: this.localuserid
-        })
-        axios({
-            method: 'POST',
-            'url': apiUrl.api_url + 'ltcremittanceManualClosure',
-            'data': this.input,
-            headers: {
-                'Authorization': 'Bearer '+this.myStr
-            }
-        }).then(result => {
-          if (result.data.code == 200) {
-            this.$alertify.success(result.data.msg);
-            this.getCODLTCRemittanceDetails ();
-            this.insertEmailRemittance();
-          } else {
-            this.isLoading = false;
-            this.$alertify.error(result.data.msg)
-          }
-        }, error => {
-          console.error(error)
-          this.isLoading = false;
-          this.$alertify.error('Error Occured');
-        })
+    changeRadio(ele){
+      if(ele!='Done'){
+        this.exportf = false; this.reportlink = ''; this.checkAll = false;
+        this.getLTCRemittanceStatusWise();
       }
     },
 
-    getCODLTCRemittanceDetails (){
-      this.isLoading = true;
+    multipleC(){
+      let key = this.Client.length-1;
+      if(this.Client.length>0 && this.Client[key].ClientId == 0){
+        this.SearchClientIds = [];
+        this.Client = this.Client[key];
+
+        for (let item of this.ClientList) {
+          if (item.ClientId != 0) {
+            this.SearchClientIds.push(item.ClientId);
+          }
+        }
+      }
+
+      if(this.Client.ClientId == 0){ return false; }
+      else{ this.SearchClientIds = []; return true; }
+    },
+
+    GetClientData() {
+      this.clientLoading = true; this.ClientList = [];
+      axios({
+        method: 'POST',
+        url: apiUrl.api_url + 'getLTCClientList',
+        data: ({ username: this.localuserid }),
+        headers: {
+          'Authorization': 'Bearer '+this.myStr
+        }
+      }).then(result => {
+        if(result.data.code == 200){
+          this.ClientList = [{ClientId:'0', CompanyName:'All Client'}].concat(result.data.data);
+        }
+        this.clientLoading = false;
+      }, error => {
+        this.clientLoading = false; console.error(error)
+      })
+    },
+
+    getLTCRemittanceStatusWise (){
+      this.isLoading = true; this.listPendingRemittanceData=[]; this.resultCount = 0; let clientIdArr = [];
+
+      if(this.SearchClientIds.length>0){
+        clientIdArr = this.SearchClientIds;
+      }else{
+        if($.isArray(this.Client) === false){
+          this.Client = new Array(this.Client);
+        }
+
+        this.Client.forEach(function (val) {
+          clientIdArr.push(val.ClientId);
+        });
+      }
+
       this.input = ({
-        ClientId: '',
-        Status: 'Initiated'
+        ClientId: clientIdArr,
+        Status: this.selected,
+        CreatedBy: this.localuserid
       })
       axios({
           method: 'POST',
-          url: apiUrl.api_url + 'getCODLTCRemittanceDetails',
+          url: apiUrl.api_url + 'getLTCRemittanceStatusWise',
           data: this.input,
           headers: {
             'Authorization': 'Bearer '+this.myStr
@@ -253,164 +153,214 @@ export default {
             } else {
                 this.pagecount = Math.ceil(totalRows / 20)
             }
-
-            result.data.data.forEach((val,key)=>{
-              this.form.toDate[val.ClientId] = val.ToDate;
-              this.form.FromDate[val.ClientId] = val.FromDate;
-
-              this.form.oldToDate[val.ClientId] = null; this.form.oldFromDate[val.ClientId] = null;
-
-              if(this.form.oldFromDate[val.ClientId]==null){
-                this.form.oldFromDate[val.ClientId] = val.FromDate;
-              }
-              if(this.form.oldToDate[val.ClientId]==null){
-                this.form.oldToDate[val.ClientId] = val.ToDate;
-              }
-
-              $('#FromDate'+val.ClientId).val(val.FromDate);
-              $('#toDate'+val.ClientId).val(val.ToDate);
-            });
-          }else{
-            this.listPendingRemittanceData=[];
-            this.resultCount  = 0;
+            this.exportf = true;
           }
           this.isLoading = false;
         }, error => {
-          console.error(error)
-          this.isLoading = false;
+          console.error(error); this.isLoading = false; this.exportf = false; this.$alertify.error('Error Occured');
         })
+    },
+
+    closeStatusRoleModal(){
+       this.ModalShow = false;
+       this.modalShipmentShow = false;
+       $('span[id^="popUpText"]').hide();
     },
 
     //to get pagination
     getPaginationData(pageNum) {
-        this.pageno = (pageNum - 1) * 20
-        this.getCODLTCRemittanceDetails ()
+      this.pageno = (pageNum - 1) * 20
+      this.getLTCRemittanceStatusWise();
     },
 
-    insertEmailRemittance(){
+    check() {
+      this.checkAll = !this.checkAll; this.ClientArr = []; this.singleArr = [];
+			if (this.checkAll) {
+				for (let i in this.listPendingRemittanceData) {
+          this.ClientArr.push(this.listPendingRemittanceData[i]);
+				}
+			}
+		},
+
+    updateCheck(){
+      if(this.listPendingRemittanceData.length == this.ClientArr.length){
+         this.checkAll = true;
+      }else{
+         this.checkAll = false;
+      }
+    },
+
+    PopUp(elem){
+      $('span[id^="popUpText"]').hide(); this.checkAll = false;
+      $("#popUpText"+elem).fadeIn();
+    },
+
+    action(type, data){
+      $('span[id^="popUpText"]').hide();
+      this.ClientArr = []; this.singleArr = []; this.status = ''; this.status = type;
+
+      this.singleArr.push(data);
+      this.$refs.myModalRef.show();
+    },
+
+    bulkAction(type){
+      this.status = '';
+      if(this.ClientArr.length>0){
+        this.status = type; this.$refs.myModalRef.show();
+      }else{
+        this.$alertify.error('Error Occured: Please Check Checkboxes Before Perform Any Bulk Action.');
+      }
+    },
+
+    hideModal(ele) {
+      this.$refs.myModalRef.hide();
+      if(ele == 0){ this.remittance(); }
+    },
+
+    remittance(){
+      this.isLoading = true;
+      let clientArr = [...new Set([].concat(...this.ClientArr.concat(this.singleArr)))];
+
       this.input = ({
-          CreatedBy: this.localuserid
+        remittanceArray: clientArr,
+        Status: this.status,
+        CreatedBy: this.localuserid
       })
       axios({
-          method: 'POST',
-          'url': apiUrl.api_url + 'insertemailremittance',
-          'data': this.input,
-          headers: {
-              'Authorization': 'Bearer '+this.myStr
-          }
-      })
-      .then(result => {
-        if(result.data.code == 200){
+        method: 'POST',
+        'url': apiUrl.api_url + 'ltcremittanceManualClosure',
+        'data': this.input,
+        headers: {
+            'Authorization': 'Bearer '+this.myStr
         }
+      }).then(result => {
+        if (result.data.code == 200) {
+          this.$alertify.success(result.data.msg); this.exportf = false; this.reportlink = '';
+          this.getLTCRemittanceStatusWise();
+        } else {
+          this.$alertify.error(result.data.msg)
+        }
+        this.isLoading = false; this.ClientArr = []; this.checkAll = false;
       }, error => {
-        console.error(error)
+        this.isLoading = false; this.checkAll = false; this.ClientArr = []; console.log('error',error); this.$alertify.error('Error Occured');
       })
     },
 
-    // GetClientData() {
-    //   this.clientLoading = true;
-    //   axios({
-    //     method: 'GET',
-    //     url: apiUrl.api_url + 'external/getclientlist',
-    //     data: {},
-    //     headers: {
-    //       'Authorization': 'Bearer '+this.myStr
-    //     }
-    //   }).then(result => {
-    //     this.clientLoading = false;
-    //     this.ClientList = result.data.clients.data;
-    //   }, error => {
-    //     this.clientLoading = false;
-    //     console.error(error)
-    //   })
-    // },
+    onSubmit: function(event) {
+      this.$validator.validateAll().then((result) => {
+        if(result){
+          this.pageno = 0; this.resultCount = 0; this.exportf = false; this.reportlink = ''; this.ClientArr = [];
+          this.getLTCRemittanceStatusWise();
+        }else{
+          this.$alertify.error('Error Occured');
+        }
+      }).catch(() => {
+        console.log('errors exist', this.errors); this.$alertify.error('Error Occured');
+      });
+    },
 
-    // onClientSearch(ClientId, CompanyName){
-    //
-    //   if(!ClientId){
-    //
-    //     this.$alertify.error('Client Name is mandatory.');
-    //     return false;
-    //   }else{
-    //
-    //     this.isLoading = true;
-    //     axios({
-    //       method: 'GET',
-    //       url: apiUrl.api_url + 'adhocCODRemiitance?ClientId='+ClientId+'&ClientName='+CompanyName,
-    //       headers: {
-    //         'Authorization': 'Bearer '+this.myStr
-    //       }
-    //     })
-    //     .then(result => {
-    //
-    //       if(result.data.code == 200){
-    //
-    //         this.adhocDate(result.data.data.FromDate, result.data.data.ToDate, ClientId);
-    //       }else{
-    //         this.resultCount = 0; this.pageno = 0;
-    //         this.listPendingRemittanceData=[];
-    //         this.isLoading = false;
-    //       }
-    //     }, error => {
-    //       console.error(error)
-    //       this.isLoading = false;
-    //       this.$alertify.error('Error Occured');
-    //     })
-    //   }
-    // },
+    resetForm() {
+      this.fromDate = this.toDate = ''; this.pageno = 0; this.Client = this.CODLedgerReports = []; this.resultCount = 0;
+      this.exportf = this.excelLoading = false; this.reportlink = ''; this.ClientArr = [];
+      this.$validator.reset(); this.errors.clear();
+    },
 
-    // adhocDate(fromDate, toDate, ClientId){
-    //
-    //   this.form.oldToDate[ClientId] = this.form.toDate[ClientId] = [];
-    //   this.form.oldFromDate[ClientId] = this.form.FromDate[ClientId] = [];
-    //
-    //   this.listPendingRemittanceData=[]; this.pagecount = 1;
-    //
-    //   if(!toDate || !fromDate){
-    //
-    //     this.$alertify.error('From date & To/ Delivery date should not be empty.');
-    //     this.isLoading = false;
-    //     return false;
-    //   }else{
-    //
-    //     axios({
-    //       method: 'GET',
-    //       url: apiUrl.api_url + 'getCODLTCRemittanceDetails ?CreatedBy='+this.localuserid+'&ClientId='+ClientId+'&oldFromDate='+fromDate+'&fromDate='+fromDate+'&toDate='+toDate+'&offset=0&limit='+20,
-    //       headers: {
-    //         'Authorization': 'Bearer '+this.myStr
-    //       }
-    //     })
-    //     .then(result => {
-    //       if(result.data.code == 200){
-    //         this.form.oldToDate[ClientId]   = this.form.toDate[ClientId] = result.data.data[0].ToDate;
-    //         this.form.oldFromDate[ClientId] = this.form.FromDate[ClientId] = result.data.data[0].FromDate;
-    //         this.listPendingRemittanceData  = result.data.data;
-    //         this.resultCount                = result.data.data.length;
-    //         this.isLoading = false;
-    //       }else{
-    //         this.isLoading = false;
-    //       }
-    //     }, error => {
-    //       console.error(error)
-    //       this.isLoading = false;
-    //       this.$alertify.error('Error Occured');
-    //     })
-    //   }
-    // },
+    exportData(){
+      if(this.reportlink){
+        window.open(this.reportlink);
+      }else{
+        this.input = ({ CreatedBy:this.localuserid });
+        this.excelLoading = true;
+        axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'exportBulkLTCRemittance',
+          data: this.input,
+          headers: {
+            'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+          if(result.data.code == 200){
+            this.exportf = true; this.reportlink = result.data.data; window.open(result.data.data);
+          }else{
+            this.exportf = false; this.reportlink = '';
+          }
+          this.excelLoading = false;
+        }, error => {
+          this.exportf = this.excelLoading = false; this.reportlink = ''; console.error(error); this.$alertify.error('Error Occured');
+        })
+      }
+    },
 
-    // onSearch() {
-    //   if(this.Client.ClientMasterID==null || this.Client.ClientMasterID=='undefined'){
-    //     document.getElementById("clienterr").innerHTML="Client is required.";
-    //     return false;
-    //   }
-    //   document.getElementById("clienterr").innerHTML="";
-    //   this.onClientSearch(this.Client.ClientMasterID, this.Client.CompanyName);
-    // },
-    //
-    // resetSearch() {
-    //   this.Client=[]; this.pageno = this.resultCount = 0; this.Search = 0;
-    //   this.getCODLTCRemittanceDetails ();
-    //   document.getElementById("clienterr").innerHTML="";
-    // }
+    onUpload(event){
+      let selectedFile = event.target.files[0];
+      if ( /\.(csv)$/i.test(selectedFile.name) ){
+        var name = event.target.name + "." +selectedFile.name.split(".").pop();
+
+        const fd = new FormData();
+        fd.append('file', selectedFile, name);
+        this.excelLoading = true;
+        axios.post(apiUrl.api_url + 'uploadLTCRemittanceFile', fd,
+        {
+          headers: {
+            'Authorization': 'Bearer ' + this.myStr
+          }
+        })
+        .then(res => {
+          if(res.data.errorCode == 0 && res.data.filename){
+             this.input = ({
+               filename: res.data.filename,
+               username: this.localuserid
+             })
+             axios({
+               method: 'POST',
+               url: apiUrl.api_url + 'bulkLTCRemittance',
+               data: this.input,
+               headers: {
+                 'Authorization': 'Bearer '+this.myStr
+               }
+             })
+             .then(result => {
+               console.log('result==', result);
+             }, error => {
+               console.error(error);this.$alertify.error('Upload Data Error.');
+             })
+           }else{
+             this.$alertify.error("CSV File Upload Error");
+           }
+           this.excelLoading = false;
+        }, error => {
+          console.error(error); this.excelLoading = false; this.$alertify.error('File Error Occured');
+        });
+      }else{
+        this.excelLoading = false;
+        this.$alertify.error(event.target.placeholder + " Failed! Please Upload Only Valid Format: .csv");
+      }
+    },
+
+    ltcRemitShipments(fromDate, toDate, clientId) {
+      this.shipLoading = true; this.shipmentList = []; this.$refs.ShipmentModalRef.show();
+
+      this.input = ({
+        fromDate: fromDate,
+        toDate: toDate,
+        ClientId: clientId
+      })
+      axios({
+        method: 'POST',
+        url: apiUrl.api_url + 'getltcremitshipments',
+        data: this.input,
+        headers: {
+          'Authorization': 'Bearer '+this.myStr
+        }
+      }).then(result => {
+        if(result.data.code == 200){
+          this.shipmentList = result.data.Shipments;
+        }
+        this.shipLoading = false;
+      }, error => {
+        this.shipLoading = false; console.error(error)
+      })
+    },
   }
 }

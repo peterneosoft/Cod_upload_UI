@@ -1,100 +1,191 @@
 <section class="user">
-  <!-- <div class="col-md-12 mb-2">
+  <div class="col-md-12 mb-2">
     <div class="card">
-      <div v-if="Search==0" @click = "Search = '1'" class="card-header filter_main" style="cursor: pointer;">
-        <i class="fa fa-plus plus"></i>Long Tail Client Search
+      <div class="card-header filter_main">
+        <i class=" fa fa-filter filter"></i> Long Tail Remittance
       </div>
-      <div v-if="Search==1" @click = "Search = '0'" class="card-header filter_main" style="cursor: pointer;">
-        <i class="fa fa-minus minus"></i>Long Tail Client Search
-      </div>
-      <b-collapse v-bind:class="`${Search == '1' ? 'show' : 'hide'}`" id="collapse1">
-        <div class="card-body">
+      <div class="card-body">
+        <form v-on:submit.prevent="onSubmit">
+          <b-form-fieldset>
+            <b-form-radio @input="changeRadio(selected)" name="searchview" id="searchview" :plain="true" :options="options" v-model="selected"></b-form-radio>
+            <span id="opt" class="text-danger"></span>
+            <hr style="margin-top: 0rem; margin-bottom: 0rem;">
+          </b-form-fieldset>
           <div class="form-group row">
+            <div class="col-md-3" v-if="selected=='Initiated'">
+              <label>Remittance As On</label>
+              <b-input-group left="<i class='fa fa-calendar'></i>">
+                <b-form-input id="fromDate" type="date" name="fromDate" v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }" style="height:45px;"></b-form-input>
+              </b-input-group>
+            </div>
+
             <div class="col-md-5">
-              <label>Client Name <font color="red">*</font></label>
+              <label>Client Name/ Id</label>
               <b-input-group left="<i class='fa fa-list'></i>">
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="clientLoading" />
-                <Multiselect :options="ClientList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                <Multiselect v-bind:multiple="multipleC()" :options="ClientList" name="Client" id="Client" v-model="Client" placeholder="Search Client Name/ Id" label="CompanyName" track-by="ClientId" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
                   <template slot="noResult"><p>No Record Found.</p></template>
                 </Multiselect>
               </b-input-group>
               <span id="clienterr" class="text-danger"></span>
             </div>
-          </div>
-          <div class="card-footer">
-            <button class="btn btn-sm btn-primary" @click="onSearch" type="submit"><i class="fa fa-search"></i> Search</button>
-            <button class="btn btn-sm btn-danger" @click="resetSearch" type="reset"><i class="fa fa-ban"></i> Clear</button>
-          </div>
-        </div>
-      </b-collapse>
-    </div>
-  </div> -->
 
-  <div class="animated fadeIn">
-    <b-modal ref="myModalRef" v-model="modalShow" id=#confirmationmodal title="Confirmation">
+            <div class="col-md-4" v-if="selected!='Initiated'">
+              <label>Date</label>
+              <b-input-group left="<i class='fa fa-calendar'></i>">
+                <b-form-input id="fromDate" type="date" name="fromDate" v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }" style="height:45px; border-right-color: transparent;"></b-form-input>
+                <b-form-input id="toDate" type="date" name="toDate" v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }" style="height:45px; border-left-color: transparent;"></b-form-input>
+              </b-input-group>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="excelLoading" />
+            <span>
+              <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+              <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
+            </span>
+            <span v-if="selected!='Done'" style="margin: 0px 10px 0px 10px;"><b>|</b></span>
+            <span>
+              <button v-if="selected!='Done'" :disabled="!exportf" @click="exportData()" class="btn btn-sm btn-ltc" title="Download Remittance Report" type="button" style="width: 50px;"><i class="fa fa-download"></i></button>
+              <label v-if="selected=='Initiated'" title="Bulk Remittance" for="remittancefile" class="custom-file-upload btn-ltc">Bulk Upload <i class="fa fa-upload"></i></label><input @change="onUpload" type="file" name="remittancefile" id="remittancefile"/>
+              <button v-if="selected=='Initiated'" @click='bulkAction("Hold")' class="btn btn-sm btn-ltc" title="Hold Client Remittance" type="button" style="width: 70px;">Hold</button>
+              <button v-if="selected!='Done'" @click='bulkAction("Done")' class="btn btn-sm btn-ltc" title="Approve Client Remittance" type="button" style="width: 85px;">Approve</button>
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <b-modal ref="ShipmentModalRef" v-model="modalShipmentShow"  id=#confirmationmodal3 title="Confirmation">
       <div role="document">
         <div class="modal-content">
+          <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="shipLoading" />
           <div class="modal-headerfrm">
-            <h5 class="modal-title">Remittance Alert</h5>
-            <button type="button" class="close" @click="closeModal" aria-label="Close">
-              <span aria-hidden="true">×</span>
+            <h5 class="modal-title" style="font-size: 1rem;">Total COD Shipments ({{shipmentList.length}})</h5>
+            <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
+              <span aria-hidden="true" style="color: white;">×</span>
             </button>
           </div>
           <div class="modal-bodyfrm">
-            <h5 style="font-size:1rem; color:red; line-height: 1.5 !important;">{{ofd}}</h5>
-          </div>
-          <div class="modal-footerfrm">
-          <center><button type="button"  @click="modalShow = false" class="btn btn-success" style="background-color: #20a8d8;">OK</button></center>
+            <table v-if="shipmentList.length>10" class="table-bordered table-hover tbl datatables scroll" style="width:100%;">
+              <thead>
+                <tr class="text-primary">
+                  <th class="text-center tableheader" style="width: 25px"><b>#</b></th>
+                  <th class="text-center tableheader" style="width: 298px"><b>AWB Number</b></th>
+                  <th class="text-center tableheader" style="width: 128px"><b>COD Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-if="shipmentList.length<=0">
+                  <td colspan="3" align="center">No record found</td>
+                </tr>
+                <tr v-for="(val,index) in shipmentList">
+                  <td class="text-center">{{index+1}}</td>
+                  <td class="text-center" style="width: 70%">{{val.ShippingID}}</td>
+                  <td class="text-center" style="width: 30%">{{val.NetPayment}}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table v-if="shipmentList.length<11" class="table-bordered table-hover tbl datatables" style="width:100%;">
+              <thead>
+                <tr class="text-primary">
+                  <th class="text-center tableheader" style="width: 18px"><b>#</b></th>
+                  <th class="text-center tableheader" style="width: 312px"><b>AWB Number</b></th>
+                  <th class="text-center tableheader" style="width: 133px"><b>COD Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-if="shipmentList.length<=0">
+                  <td colspan="3" align="center">No record found</td>
+                </tr>
+                <tr v-for="(val,index) in shipmentList">
+                  <td class="text-center">{{index+1}}</td>
+                  <td class="text-center" style="width: 70%">{{val.ShippingID}}</td>
+                  <td class="text-center" style="width: 30%">{{val.NetPayment}}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </b-modal>
 
+    <b-modal ref="myModalRef" v-model="ModalShow" id=#confirmationmodal title="Confirmation">
+      <div role="document">
+        <div class="modal-content">
+          <div class="modal-headerfrm">
+            <h5 class="modal-title">Remittance Approval</h5>
+            <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close"><span aria-hidden="true">×</span></button>
+          </div>
+          <div class="modal-bodyfrm">
+            <h5 v-if="singleArr.length>0" style="font-size:1rem; color:red;">Remittance for Client {{ singleArr.length>0 ? singleArr[0].ClientId : '' }} is Rs {{ singleArr.length>0 ? singleArr[0].RemittanceAmount : '' }}.</h5><br>
+            <h5 v-if="ClientArr.length>0" style="font-size:1rem; color:red;">Remittance for checked clients.</h5><br>
+            <h5 style="font-size:1rem; color:red;">Do you want to <b>{{ status=='Done' ? 'Approve' : 'Hold' }}</b> it.</h5>
+          </div>
+          <div class="modal-footerfrm">
+          <center>
+            <button type="button" @click="hideModal('0')" class="btn btn-success" style="background-color: #20a8d8;">Yes</button>
+            <button type="button" @click = "hideModal('1')" class="btn btn-danger" style="background-color: #f86c6b;">No</button>
+          </center>
+          </div>
+        </div>
+      </div>
+    </b-modal>
+  </div>
+
+  <div class="animated fadeIn">
     <div class="col-12">
       <div class="card-headerfrm" style="margin-bottom: 15px;">
-        <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
         <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
         <table class="table-bordered table-hover tbl datatables scrolltb" style="width:100%;">
           <thead>
             <tr class="text-primary">
               <th class="text-center tableheader"><b>#</b></th>
-              <th class="text-center tableheader"><b>From Date</b></th>
-              <th class="text-center tableheader"><b>To / Delivery Date</b></th>
-              <th class="text-center tableheader"><b>Client</b></th>
-              <th class="text-center tableheader"><b>Shipment Count</b></th>
-              <th class="text-center tableheader"><b>COD Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
-              <th class="text-center tableheader"><b>Exception Count</b></th>
-              <th class="text-center tableheader"><b>Exception Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
-              <th class="text-center tableheader"><b>Paid Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
-              <th class="text-center tableheader"><b>Action</b></th>
+              <th class="text-center tableheader"><input type="checkbox" v-model="checkAll" @click="check"></th>
+              <th class="text-center tableheader"><b>Client ID</b></th>
+              <th class="text-center tableheader"><b>Client Name</b></th>
+              <th class="text-center tableheader"><b>Delivery Cycle</b></th>
+              <th class="text-center tableheader" v-if="selected=='Initiated'"><b>COD Amount</b></th>
+              <th class="text-center tableheader" v-if="selected!='Done'"><b>Wallet Balance</b></th>
+              <th class="text-center tableheader" v-if="selected=='Done'"><b>Approved On</b></th>
+              <th class="text-center tableheader" v-if="selected!='Hold'"><b>Total Remittance</b></th>
+              <th class="text-center tableheader" v-if="selected=='Hold'"><b>Hold Value</b></th>
+              <th class="text-center tableheader" v-if="selected=='Hold'"><b>Reason/Remark</b></th>
+              <th class="text-center tableheader" v-if="selected!='Done'"><b>Action</b></th>
+              <th class="text-center tableheader" v-if="selected=='Done'"><b>Remittance Id</b></th>
             </tr>
           </thead>
           <tbody>
             <tr v-if="resultCount==0">
-              <td colspan="10" align="center">No record found</td>
+              <td colspan="9" align="center">No record found</td>
             </tr>
             <tr v-if="resultCount>0" v-for="(data,index) in listPendingRemittanceData">
               <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
-              <td>
-                <b-form-input type="hidden" v-model="form.oldFromDate[data.ClientId]" v-bind:name="setid('oldFromDate', data.ClientId)" v-bind:id="setid('oldFromDate', data.ClientId)"></b-form-input>
-                <b-input-group left="<i class='fa fa-calendar'></i>" title="Change From Date">
-                  <b-form-input disabled @change="onChangeDate(form.FromDate[data.ClientId], form.toDate[data.ClientId], data.ClientId)" type="date" v-model="form.FromDate[data.ClientId]" v-bind:name="setid('FromDate', data.ClientId)" v-bind:id="setid('FromDate', data.ClientId)" class="form-control"></b-form-input>
-                </b-input-group>
-                <span v-bind:id="setid('fdate', data.ClientId)" class="text-danger"></span>
-              </td>
-              <td>
-                <b-input-group left="<i class='fa fa-calendar'></i>" title="Change To / Delivery Date">
-                  <b-form-input @change="onChangeDate(form.FromDate[data.ClientId], form.toDate[data.ClientId], data.ClientId)" type="date" v-model="form.toDate[data.ClientId]" v-bind:name="setid('toDate', data.ClientId)" v-bind:id="setid('toDate', data.ClientId)" class="form-control"></b-form-input>
-                </b-input-group>
-                <span v-bind:id="setid('tdate', data.ClientId)" class="text-danger"></span>
-              </td>
+              <td class="text-center"><input type="checkbox" @change='updateCheck()' v-bind:name='`${"ClientId"+data.ClientId}`' v-bind:id='`${"ClientId"+data.ClientId}`' :value="data" v-model="ClientArr"></td>
+              <td>{{data.ClientId}}</td>
               <td>{{data.CompanyName}}</td>
-              <td>{{data.ShipmentCount}}</td>
-              <td>{{data.CODAmount}}</td>
-              <td>{{data.ExceptionCount}}</td>
-              <td>{{data.ExceptionAmount}}</td>
-              <td>{{data.PaidAmount}}</td>
-              <td><button class="btn btn-sm btn-primary" @click="onRemittance(form.FromDate[data.ClientId], form.toDate[data.ClientId], data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button></td>
+              <td>{{data.Cycle}}</td>
+              <td v-if="selected=='Initiated'">Rs {{data.CODAmount}}</td>
+              <td v-if="selected!='Done'">Rs {{data.WalletBalance}}</td>
+              <td v-if="selected=='Done'">{{data.RemittanceDate}}</td>
+              <td v-if="selected!='Hold'">Rs {{data.RemittanceAmount}} <i v-if="selected=='Initiated'" class="fa fa-exclamation-circle" style="cursor: pointer;" aria-hidden="true" @click="ltcRemitShipments(data.FromDate, data.ToDate, data.ClientId)"></i></td>
+              <td v-if="selected=='Hold'">Rs {{data.CODAmount}}</td>
+              <td v-if="selected=='Hold'">Rs {{data.Remark}}</td>
+              <td v-if="selected=='Initiated'" class="text-center" style="font-size: x-large;">
+                <b @click="PopUp(data.ClientId)">...</b>
+                <b><span v-bind:id='`${"popUpText"+data.ClientId}`' class="popUpText">
+                  <span @click='action("Done", data)' style="cursor: pointer;">Approve</span>
+                  <span aria-hidden="true" @click="closeStatusRoleModal" style="margin-left: 10px;cursor: pointer;">×</span>
+                  <br>
+                  <span @click='action("Hold", data)' style="cursor: pointer;">Hold</span>
+                </span></b>
+              </td>
+              <td v-if="selected=='Hold'" class="text-center" style="font-size: x-large;">
+                <button @click='action("Done", data)' class="btn btn-sm btn-ltc" title="Approve Client Remittance" type="button" style="width: 80px;">Approve</button>
+              </td>
+              <td v-if="selected=='Done'">Rs {{data.RemittanceId}}</td>
             </tr>
           </tbody>
         </table><br>
