@@ -172,7 +172,7 @@
               <td v-if="selected=='Done'">{{data.RemittanceDate}}</td>
               <td v-if="selected!='Hold'">Rs {{data.RemittanceAmount}} <i v-if="selected=='Initiated'" class="fa fa-exclamation-circle" style="cursor: pointer;" aria-hidden="true" @click="ltcRemitShipments(data.FromDate, data.ToDate, data.ClientId)"></i></td>
               <td v-if="selected=='Hold'">Rs {{data.CODAmount}}</td>
-              <td v-if="selected=='Hold'">Rs {{data.Remark}}</td>
+              <td v-if="selected=='Hold'">{{data.Remark}}</td>
               <td v-if="selected=='Initiated'" class="text-center" style="font-size: x-large;">
                 <b @click="PopUp(data.ClientId)">...</b>
                 <b><span v-bind:id='`${"popUpText"+data.ClientId}`' class="popUpText">

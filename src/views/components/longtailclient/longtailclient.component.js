@@ -33,7 +33,7 @@ export default {
       options:[
         { text: 'Remittance Cycle', value: 'Initiated' },
         { text: 'Payments On Hold', value: 'Hold' },
-        { text: 'Payments Approved', value: 'pa' }
+        { text: 'Payments Approved', value: 'Done' }
       ],
       checkAll:false,
       ClientArr:[],
@@ -45,7 +45,8 @@ export default {
       status:'',
       shipmentList:[],
       shipLoading:false,
-      modalShipmentShow:false
+      modalShipmentShow:false,
+      SearchCIds:[]
     }
   },
 
@@ -72,10 +73,8 @@ export default {
 
   methods: {
     changeRadio(ele){
-      if(ele!='Done'){
-        this.exportf = false; this.reportlink = ''; this.checkAll = false;
-        this.getLTCRemittanceStatusWise();
-      }
+      this.exportf = false; this.reportlink = ''; this.checkAll = false;
+      this.getLTCRemittanceStatusWise();
     },
 
     multipleC(){
@@ -128,9 +127,10 @@ export default {
           clientIdArr.push(val.ClientId);
         });
       }
+      this.SearchCIds = clientIdArr;
 
       this.input = ({
-        ClientId: clientIdArr,
+        ClientId: this.SearchCIds,
         Status: this.selected,
         CreatedBy: this.localuserid
       })
@@ -261,7 +261,7 @@ export default {
 
     resetForm() {
       this.fromDate = this.toDate = ''; this.pageno = 0; this.Client = this.CODLedgerReports = []; this.resultCount = 0;
-      this.exportf = this.excelLoading = false; this.reportlink = ''; this.ClientArr = [];
+      this.exportf = this.excelLoading = false; this.reportlink = ''; this.ClientArr = this.shipmentList = []; this.SearchCIds = [];
       this.$validator.reset(); this.errors.clear();
     },
 
@@ -269,7 +269,13 @@ export default {
       if(this.reportlink){
         window.open(this.reportlink);
       }else{
-        this.input = ({ CreatedBy:this.localuserid });
+
+        this.input = ({
+          ClientId: this.SearchCIds,
+          Status: this.selected,
+          CreatedBy: this.localuserid
+        });
+
         this.excelLoading = true;
         axios({
           method: 'POST',
