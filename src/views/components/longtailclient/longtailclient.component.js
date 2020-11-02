@@ -40,9 +40,9 @@ export default {
       singleArr:[],
       ModalShow:false,
       excelLoading:false,
-      exportf:false,
       reportlink:'',
       status:'',
+      exceptionList:[],
       shipmentList:[],
       shipLoading:false,
       modalShipmentShow:false,
@@ -65,7 +65,8 @@ export default {
     this.myStr            = userToken.replace(/"/g, '');
 
     this.GetClientData();
-    this.getLTCRemittanceStatusWise ();
+    this.getLTCRemittanceStatusWise();
+    this.exportData();
 
     var date = new Date();
     this.currentdate = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
@@ -73,7 +74,7 @@ export default {
 
   methods: {
     changeRadio(ele){
-      this.exportf = false; this.reportlink = ''; this.checkAll = false;
+      this.checkAll = false;
       this.getLTCRemittanceStatusWise();
     },
 
@@ -153,11 +154,10 @@ export default {
             } else {
                 this.pagecount = Math.ceil(totalRows / 20)
             }
-            this.exportf = true;
           }
           this.isLoading = false;
         }, error => {
-          console.error(error); this.isLoading = false; this.exportf = false; this.$alertify.error('Error Occured');
+          console.error(error); this.isLoading = false; this.$alertify.error('Error Occured');
         })
     },
 
@@ -235,8 +235,9 @@ export default {
         }
       }).then(result => {
         if (result.data.code == 200) {
-          this.$alertify.success(result.data.msg); this.exportf = false; this.reportlink = '';
+          this.$alertify.success(result.data.msg); this.reportlink = '';
           this.getLTCRemittanceStatusWise();
+          this.exportData();
         } else {
           this.$alertify.error(result.data.msg)
         }
@@ -249,7 +250,7 @@ export default {
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
-          this.pageno = 0; this.resultCount = 0; this.exportf = false; this.reportlink = ''; this.ClientArr = [];
+          this.pageno = 0; this.resultCount = 0; this.reportlink = ''; this.ClientArr = [];
           this.getLTCRemittanceStatusWise();
         }else{
           this.$alertify.error('Error Occured');
@@ -261,7 +262,7 @@ export default {
 
     resetForm() {
       this.fromDate = this.toDate = ''; this.pageno = 0; this.Client = this.CODLedgerReports = []; this.resultCount = 0;
-      this.exportf = this.excelLoading = false; this.reportlink = ''; this.ClientArr = this.shipmentList = []; this.SearchCIds = [];
+      this.excelLoading = false; this.ClientArr = this.exceptionList = this.shipmentList = []; this.SearchCIds = [];
       this.$validator.reset(); this.errors.clear();
     },
 
@@ -271,12 +272,8 @@ export default {
       }else{
 
         this.input = ({
-          ClientId: this.SearchCIds,
-          Status: this.selected,
           CreatedBy: this.localuserid
-        });
-
-        this.excelLoading = true;
+        })
         axios({
           method: 'POST',
           url: apiUrl.api_url + 'exportBulkLTCRemittance',
@@ -287,13 +284,12 @@ export default {
         })
         .then(result => {
           if(result.data.code == 200){
-            this.exportf = true; this.reportlink = result.data.data; window.open(result.data.data);
+            this.reportlink = result.data.data;
           }else{
-            this.exportf = false; this.reportlink = '';
+            this.reportlink = ''; this.$alertify.error('File For Bulk Remittance Not Available.');
           }
-          this.excelLoading = false;
         }, error => {
-          this.exportf = this.excelLoading = false; this.reportlink = ''; console.error(error); this.$alertify.error('Error Occured');
+          this.reportlink = ''; console.error(error); this.$alertify.error('Bulk Remittance File Error Occured');
         })
       }
     },
@@ -345,7 +341,7 @@ export default {
     },
 
     ltcRemitShipments(fromDate, toDate, clientId) {
-      this.shipLoading = true; this.shipmentList = []; this.$refs.ShipmentModalRef.show();
+      this.shipLoading = true; this.exceptionList = this.shipmentList = []; this.$refs.ShipmentModalRef.show();
 
       this.input = ({
         fromDate: fromDate,
@@ -367,6 +363,10 @@ export default {
       }, error => {
         this.shipLoading = false; console.error(error)
       })
+    },
+
+    exShipments(arr) {
+      this.exceptionList = this.shipmentList = []; this.$refs.ShipmentModalRef.show(); this.exceptionList = arr;
     },
   }
 }

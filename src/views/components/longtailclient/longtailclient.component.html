@@ -47,7 +47,7 @@
             </span>
             <span v-if="selected!='Done'" style="margin: 0px 10px 0px 10px;"><b>|</b></span>
             <span>
-              <button v-if="selected!='Done'" :disabled="!exportf" @click="exportData()" class="btn btn-sm btn-ltc" title="Download Remittance Report" type="button" style="width: 50px;"><i class="fa fa-download"></i></button>
+              <button v-if="selected!='Done'" @click="exportData()" class="btn btn-sm btn-ltc" title="Download Remittance Report" type="button" style="width: 50px;"><i class="fa fa-download"></i></button>
               <label v-if="selected=='Initiated'" title="Bulk Remittance" for="remittancefile" class="custom-file-upload btn-ltc">Bulk Upload <i class="fa fa-upload"></i></label><input @change="onUpload" type="file" name="remittancefile" id="remittancefile"/>
               <button v-if="selected=='Initiated'" @click='bulkAction("Hold")' class="btn btn-sm btn-ltc" title="Hold Client Remittance" type="button" style="width: 70px;">Hold</button>
               <button v-if="selected!='Done'" @click='bulkAction("Done")' class="btn btn-sm btn-ltc" title="Approve Client Remittance" type="button" style="width: 85px;">Approve</button>
@@ -62,13 +62,14 @@
         <div class="modal-content">
           <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="shipLoading" />
           <div class="modal-headerfrm">
-            <h5 class="modal-title" style="font-size: 1rem;">Total COD Shipments ({{shipmentList.length}})</h5>
+            <h5 v-if="shipmentList.length>0" class="modal-title" style="font-size: 1rem;">Total COD Shipments ({{shipmentList.length}})</h5>
+            <h5 v-if="exceptionList.length>0" class="modal-title" style="font-size: 1rem;">Exception Shipments ({{exceptionList.length}})</h5>
             <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
               <span aria-hidden="true" style="color: white;">×</span>
             </button>
           </div>
           <div class="modal-bodyfrm">
-            <table v-if="shipmentList.length>10" class="table-bordered table-hover tbl datatables scroll" style="width:100%;">
+            <table v-if="shipmentList.length>0" class="table-bordered table-hover tbl datatables" v-bind:class="`${(shipmentList.length>10) ? ' scroll' : ''}`" style="width:100%;">
               <thead>
                 <tr class="text-primary">
                   <th class="text-center tableheader" style="width: 25px"><b>#</b></th>
@@ -88,22 +89,20 @@
               </tbody>
             </table>
 
-            <table v-if="shipmentList.length<11" class="table-bordered table-hover tbl datatables" style="width:100%;">
+            <table v-if="exceptionList.length>0" class="table-bordered table-hover tbl datatables" v-bind:class="`${(exceptionList.length>10) ? ' scroll' : ''}`" style="width:100%;">
               <thead>
                 <tr class="text-primary">
-                  <th class="text-center tableheader" style="width: 18px"><b>#</b></th>
-                  <th class="text-center tableheader" style="width: 312px"><b>AWB Number</b></th>
-                  <th class="text-center tableheader" style="width: 133px"><b>COD Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                  <th class="text-center tableheader" style="width: 25px"><b>#</b></th>
+                  <th class="text-center tableheader" style="width: 298px"><b>AWB Number</b></th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-if="shipmentList.length<=0">
-                  <td colspan="3" align="center">No record found</td>
+                <tr v-if="exceptionList.length<=0">
+                  <td colspan="2" align="center">No record found</td>
                 </tr>
-                <tr v-for="(val,index) in shipmentList">
+                <tr v-for="(val,index) in exceptionList">
                   <td class="text-center">{{index+1}}</td>
-                  <td class="text-center" style="width: 70%">{{val.ShippingID}}</td>
-                  <td class="text-center" style="width: 30%">{{val.NetPayment}}</td>
+                  <td class="text-center" style="width: 70%">{{val}}</td>
                 </tr>
               </tbody>
             </table>
@@ -148,6 +147,7 @@
               <th class="text-center tableheader"><b>Client Name</b></th>
               <th class="text-center tableheader"><b>Delivery Cycle</b></th>
               <th class="text-center tableheader" v-if="selected=='Initiated'"><b>COD Amount</b></th>
+              <th class="text-center tableheader"><b>Exception Amount</b></th>
               <th class="text-center tableheader" v-if="selected!='Done'"><b>Wallet Balance</b></th>
               <th class="text-center tableheader" v-if="selected=='Done'"><b>Approved On</b></th>
               <th class="text-center tableheader" v-if="selected!='Hold'"><b>Total Remittance</b></th>
@@ -159,20 +159,21 @@
           </thead>
           <tbody>
             <tr v-if="resultCount==0">
-              <td colspan="9" align="center">No record found</td>
+              <td colspan="10" align="center">No record found</td>
             </tr>
             <tr v-if="resultCount>0" v-for="(data,index) in listPendingRemittanceData">
               <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
               <td class="text-center"><input type="checkbox" @change='updateCheck()' v-bind:name='`${"ClientId"+data.ClientId}`' v-bind:id='`${"ClientId"+data.ClientId}`' :value="data" v-model="ClientArr"></td>
-              <td>{{data.ClientId}}</td>
-              <td>{{data.CompanyName}}</td>
-              <td>{{data.Cycle}}</td>
-              <td v-if="selected=='Initiated'">Rs {{data.CODAmount}}</td>
-              <td v-if="selected!='Done'">Rs {{data.WalletBalance}}</td>
-              <td v-if="selected=='Done'">{{data.RemittanceDate}}</td>
-              <td v-if="selected!='Hold'">Rs {{data.RemittanceAmount}} <i v-if="selected=='Initiated'" class="fa fa-exclamation-circle" style="cursor: pointer;" aria-hidden="true" @click="ltcRemitShipments(data.FromDate, data.ToDate, data.ClientId)"></i></td>
-              <td v-if="selected=='Hold'">Rs {{data.CODAmount}}</td>
-              <td v-if="selected=='Hold'">{{data.Remark}}</td>
+              <td class="text-center">{{data.ClientId}}</td>
+              <td class="text-center">{{data.CompanyName}}</td>
+              <td class="text-center">{{data.Cycle}}</td>
+              <td class="text-center" v-if="selected=='Initiated'">Rs {{data.CODAmount}}</td>
+              <td class="text-center">Rs {{data.ExceptionAmount}} <i v-if="data.ExceptionAWB.length>0" class="fa fa-exclamation-circle" style="cursor: pointer;" aria-hidden="true" @click="exShipments(data.ExceptionAWB)"></i></td>
+              <td class="text-center" v-if="selected!='Done'">Rs {{data.WalletBalance}}</td>
+              <td class="text-center" v-if="selected=='Done'">{{data.RemittanceDate}}</td>
+              <td class="text-center" v-if="selected!='Hold'">Rs {{data.RemittanceAmount}} <i class="fa fa-exclamation-circle" style="cursor: pointer;" aria-hidden="true" @click="ltcRemitShipments(data.FromDate, data.ToDate, data.ClientId)"></i></td>
+              <td class="text-center" v-if="selected=='Hold'">Rs {{data.CODAmount}}</td>
+              <td class="text-center" v-if="selected=='Hold'">{{data.Remark}}</td>
               <td v-if="selected=='Initiated'" class="text-center" style="font-size: x-large;">
                 <b @click="PopUp(data.ClientId)">...</b>
                 <b><span v-bind:id='`${"popUpText"+data.ClientId}`' class="popUpText">
@@ -185,7 +186,7 @@
               <td v-if="selected=='Hold'" class="text-center" style="font-size: x-large;">
                 <button @click='action("Done", data)' class="btn btn-sm btn-ltc" title="Approve Client Remittance" type="button" style="width: 80px;">Approve</button>
               </td>
-              <td v-if="selected=='Done'">Rs {{data.RemittanceId}}</td>
+              <td class="text-center" v-if="selected=='Done'">Rs {{data.RemittanceId}}</td>
             </tr>
           </tbody>
         </table><br>
