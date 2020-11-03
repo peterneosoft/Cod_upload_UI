@@ -367,7 +367,8 @@ export default {
       this.input = ({
         fromDate: fromDate,
         toDate: toDate,
-        ClientId: clientId
+        ClientId: clientId,
+        Status: this.selected
       })
       axios({
         method: 'POST',
