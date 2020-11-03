@@ -46,7 +46,11 @@ export default {
       shipmentList:[],
       shipLoading:false,
       modalShipmentShow:false,
-      SearchCIds:[]
+      FCModal:false,
+      SearchCIds:[],
+      holdremark:'',
+      comment:'',
+      commentModalShow:false
     }
   },
 
@@ -164,6 +168,8 @@ export default {
     closeStatusRoleModal(){
        this.ModalShow = false;
        this.modalShipmentShow = false;
+       this.FCModal = false;
+       this.commentModalShow = false;
        $('span[id^="popUpText"]').hide();
     },
 
@@ -197,16 +203,26 @@ export default {
 
     action(type, data){
       $('span[id^="popUpText"]').hide();
-      this.ClientArr = []; this.singleArr = []; this.status = ''; this.status = type;
+      this.ClientArr = []; this.singleArr = []; this.status = ''; this.status = type; this.holdremark = '';
 
       this.singleArr.push(data);
-      this.$refs.myModalRef.show();
+      if(type=='Hold'){
+        this.$refs.myClosureModalRef.show();
+      }else{
+        this.$refs.myModalRef.show();
+      }
     },
 
     bulkAction(type){
-      this.status = '';
+      this.status = ''; this.holdremark = '';
       if(this.ClientArr.length>0){
-        this.status = type; this.$refs.myModalRef.show();
+        this.status = type;
+
+        if(type=='Hold'){
+          this.$refs.myClosureModalRef.show();
+        }else{
+          this.$refs.myModalRef.show();
+        }
       }else{
         this.$alertify.error('Error Occured: Please Check Checkboxes Before Perform Any Bulk Action.');
       }
@@ -218,8 +234,12 @@ export default {
     },
 
     remittance(){
-      this.isLoading = true;
-      let clientArr = [...new Set([].concat(...this.ClientArr.concat(this.singleArr)))];
+      this.isLoading = true; let clientArr = '';
+      clientArr = [...new Set([].concat(...this.ClientArr.concat(this.singleArr)))];
+
+      if(this.status=='Hold'){
+        clientArr.map(item => { item.Remark = this.holdremark; });
+      }
 
       this.input = ({
         remittanceArray: clientArr,
@@ -241,9 +261,10 @@ export default {
         } else {
           this.$alertify.error(result.data.msg)
         }
-        this.isLoading = false; this.ClientArr = []; this.checkAll = false;
+        this.isLoading = false;  this.ClientArr = []; this.singleArr = []; this.checkAll = false;
       }, error => {
-        this.isLoading = false; this.checkAll = false; this.ClientArr = []; console.log('error',error); this.$alertify.error('Error Occured');
+        this.isLoading = false; this.checkAll = false;  this.ClientArr = []; this.singleArr = [];
+        console.log('error',error); this.$alertify.error('Error Occured');
       })
     },
 
@@ -262,7 +283,7 @@ export default {
 
     resetForm() {
       this.fromDate = this.toDate = ''; this.pageno = 0; this.Client = this.CODLedgerReports = []; this.resultCount = 0;
-      this.excelLoading = false; this.ClientArr = this.exceptionList = this.shipmentList = []; this.SearchCIds = [];
+      this.excelLoading = false; this.ClientArr = this.exceptionList = this.shipmentList = []; this.SearchCIds = []; this.holdremark = '';
       this.$validator.reset(); this.errors.clear();
     },
 
@@ -367,6 +388,23 @@ export default {
 
     exShipments(arr) {
       this.exceptionList = this.shipmentList = []; this.$refs.ShipmentModalRef.show(); this.exceptionList = arr;
+    },
+
+    onUpdate: function() {
+      this.$validator.validateAll().then((result) => {
+        if(result){
+          if(this.status!='Hold'){ this.holdremark = ''; }
+          this.FCModal = false; this.$refs.myClosureModalRef.hide(); this.$refs.myModalRef.show();
+        }else{
+          this.$alertify.error('Error Occured');
+        }
+      }).catch(() => {
+        console.log('errors exist', this.errors); this.$alertify.error('Error Occured');
+      });
+    },
+
+    showComment(ele){
+      this.comment = []; this.comment = ele; this.$refs.myCommentModalRef.show();
     },
   }
 }
