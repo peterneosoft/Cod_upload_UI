@@ -193,16 +193,18 @@
           <thead>
             <tr class="text-primary">
               <th class="text-center tableheader"><b>#</b></th>
-              <th class="text-center tableheader" v-if="selected!='Done'"><input type="checkbox" v-model="checkAll" @click="check"></th>
+              <th class="text-center tableheader" v-if="selected!='Done'">
+                <input type="checkbox" v-model="checkAll" @click="check">
+              </th>
               <th class="text-center tableheader"><b>Client ID</b></th>
               <th class="text-center tableheader"><b>Client Name</b></th>
               <th class="text-center tableheader"><b>Delivery Cycle</b></th>
-              <th class="text-center tableheader" v-if="selected=='Initiated'"><b>COD Amount</b></th>
-              <th class="text-center tableheader"><b>Exception Amount</b></th>
-              <th class="text-center tableheader" v-if="selected!='Done'"><b>Wallet Balance</b></th>
+              <th class="text-center tableheader" v-if="selected=='Initiated'"><b>COD Amount ( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>Exception Amount ( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader" v-if="selected!='Done'"><b>Wallet Balance ( <i class="fa fa-rupee"></i> )</b></th>
               <th class="text-center tableheader" v-if="selected=='Done'"><b>Approved On</b></th>
-              <th class="text-center tableheader" v-if="selected!='Hold'"><b>Total Remittance</b></th>
-              <th class="text-center tableheader" v-if="selected=='Hold'"><b>Hold Value</b></th>
+              <th class="text-center tableheader" v-if="selected!='Hold'"><b>Total Remittance ( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader" v-if="selected=='Hold'"><b>Hold Value ( <i class="fa fa-rupee"></i> )</b></th>
               <th class="text-center tableheader" v-if="selected=='Hold'"><b>Reason/Remark</b></th>
               <th class="text-center tableheader" v-if="selected!='Done'"><b>Action</b></th>
               <th class="text-center tableheader" v-if="selected=='Done'"><b>Remittance Id</b></th>
@@ -220,27 +222,26 @@
               <td class="text-center">{{data.ClientId}}</td>
               <td class="text-center">{{data.CompanyName}}</td>
               <td class="text-center">{{data.Cycle}}</td>
-              <td class="text-center" v-if="selected=='Initiated'">Rs {{data.CODAmount}} {{ data.CODAmount>=0 ? '' : '(-)' }}</td>
-              <td class="text-center">Rs {{data.ExceptionAmount}} {{ data.ExceptionAmount>=0 ? '' : '(-)' }} <i v-if="data.ExceptionAWB.length>0" class="fa fa-exclamation-circle" style="cursor: pointer;" aria-hidden="true" @click="exShipments(data.ExceptionAWB)"></i></td>
-              <td class="text-center" v-if="selected!='Done'">Rs {{data.WalletBalance}} {{ data.WalletBalance>=0 ? '' : '(-)' }}</td>
+              <td class="text-center" v-if="selected=='Initiated'">{{data.CODAmount}}</td>
+              <td class="text-center">{{data.ExceptionAmount}} <i v-if="data.ExceptionAWB.length>0" class="fa fa-exclamation-circle" style="cursor: pointer;" aria-hidden="true" @click="exShipments(data.ExceptionAWB)"></i></td>
+              <td class="text-center" v-if="selected!='Done'">{{data.WalletBalance}}</td>
               <td class="text-center" v-if="selected=='Done'">{{data.RemittanceDate}}</td>
-              <td class="text-center" v-if="selected!='Hold'">Rs {{data.RemittanceAmount}} {{ data.RemittanceAmount>=0 ? '' : '(-)' }} <i class="fa fa-exclamation-circle" style="cursor: pointer;" aria-hidden="true" @click="ltcRemitShipments(data.FromDate, data.ToDate, data.ClientId)"></i></td>
-              <td class="text-center" v-if="selected=='Hold'">Rs {{data.CODAmount}} {{ data.CODAmount>=0 ? '' : '(-)' }}</td>
+              <td class="text-center" v-if="selected!='Hold'">{{data.RemittanceAmount}} <i class="fa fa-exclamation-circle" style="cursor: pointer;" aria-hidden="true" @click="ltcRemitShipments(data.FromDate, data.ToDate, data.ClientId)"></i></td>
+              <td class="text-center" v-if="selected=='Hold'">{{data.CODAmount}}</td>
               <td class="text-center" v-if="selected=='Hold'">
                 <span @click="showComment(data.Remark)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.Remark">view</span>
               </td>
               <td v-if="selected=='Initiated'" class="text-center" style="font-size: x-large;">
                 <b @click="PopUp(data.RemittanceId)">...</b>
                 <b><span v-bind:id='`${"popUpText"+data.RemittanceId}`' class="popUpText">
-                  <span @click='action("Done", data)' style="cursor: pointer;" v-if="data.RemittanceAmount>=0">Approve</span>
-                  <span aria-hidden="true" @click="closeStatusRoleModal" style="margin-left: 10px;cursor: pointer;" v-if="data.RemittanceAmount>=0">×</span>
-                  <br v-if="data.RemittanceAmount>=0">
+                  <span @click='action("Done", data)' style="cursor: pointer;">Approve</span>
+                  <span aria-hidden="true" @click="closeStatusRoleModal" style="margin-left: 10px;cursor: pointer;">×</span>
+                  <br>
                   <span @click='action("Hold", data)' style="cursor: pointer;">Hold</span>
-                  <span aria-hidden="true" @click="closeStatusRoleModal" style="margin-left: 25px;cursor: pointer;" v-if="data.RemittanceAmount<0">×</span>
                 </span></b>
               </td>
               <td v-if="selected=='Hold'" class="text-center" style="font-size: x-large;">
-                <button @click='action("Done", data)' class="btn btn-sm btn-ltc" title="Approve Client Remittance" type="button" style="width: 80px;" v-if="data.RemittanceAmount>=0">Approve</button>
+                <button @click='action("Done", data)' class="btn btn-sm btn-ltc" title="Approve Client Remittance" type="button" style="width: 80px;">Approve</button>
               </td>
               <td class="text-center" v-if="selected=='Done'">Rs {{data.RemittanceId}}</td>
             </tr>

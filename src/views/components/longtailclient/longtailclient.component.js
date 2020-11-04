@@ -224,7 +224,7 @@ export default {
           this.$refs.myModalRef.show();
         }
       }else{
-        this.$alertify.error('Error Occured: Please Check Checkboxes Before Perform Any Bulk Action.');
+        this.$alertify.error('Error: Please Check Checkboxes Before Perform Any Bulk Action.');
       }
     },
 
@@ -264,7 +264,7 @@ export default {
         this.isLoading = false;  this.ClientArr = []; this.singleArr = []; this.checkAll = false;
       }, error => {
         this.isLoading = false; this.checkAll = false;  this.ClientArr = []; this.singleArr = [];
-        console.log('error',error); this.$alertify.error('Error Occured');
+        console.log('error',error); this.$alertify.error('Remittance Error');
       })
     },
 
@@ -307,10 +307,10 @@ export default {
           if(result.data.code == 200){
             this.reportlink = result.data.data;
           }else{
-            this.reportlink = ''; this.$alertify.error('File For Bulk Remittance Not Available.');
+            this.reportlink = ''; this.$alertify.error('File Not Available For Bulk Remittance.');
           }
         }, error => {
-          this.reportlink = ''; console.error(error); this.$alertify.error('Bulk Remittance File Error Occured');
+          this.reportlink = ''; console.error(error); this.$alertify.error('Bulk Remittance File Error');
         })
       }
     },
@@ -344,7 +344,9 @@ export default {
                }
              })
              .then(result => {
-               console.log('result==', result);
+               this.reportlink = '';
+               this.getLTCRemittanceStatusWise();
+               this.exportData();
              }, error => {
                console.error(error);this.$alertify.error('Upload Data Error.');
              })
@@ -353,7 +355,7 @@ export default {
            }
            this.excelLoading = false;
         }, error => {
-          console.error(error); this.excelLoading = false; this.$alertify.error('File Error Occured');
+          console.error(error); this.excelLoading = false; this.$alertify.error('File Upload Error');
         });
       }else{
         this.excelLoading = false;
@@ -383,7 +385,7 @@ export default {
         }
         this.shipLoading = false;
       }, error => {
-        this.shipLoading = false; console.error(error)
+        this.shipLoading = false; console.error(error); this.$alertify.error('Shipment Error');
       })
     },
 
@@ -397,7 +399,7 @@ export default {
           if(this.status!='Hold'){ this.holdremark = ''; }
           this.FCModal = false; this.$refs.myClosureModalRef.hide(); this.$refs.myModalRef.show();
         }else{
-          this.$alertify.error('Error Occured');
+          this.$alertify.error('Update Error');
         }
       }).catch(() => {
         console.log('errors exist', this.errors); this.$alertify.error('Error Occured');
