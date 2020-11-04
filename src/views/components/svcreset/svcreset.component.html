@@ -115,7 +115,7 @@
                     <td class="text-center">{{pageno+index+1}}</td>
                     <td class="text-center">
                       <i @click.prevent="getSVCRowData(CODLedger_List)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
-                      <i v-if="role=='admin' && (CODLedger_List.createdby != 'schedular@xpressbees.com' && CODLedger_List.deposittype != '')" @click.prevent="deleteClosure(CODLedger_List)" class="fa fa-trash text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
+                      <i v-if="(['admin','financeadmin','financemanager'].includes(role)) && (CODLedger_List.createdby != 'schedular@xpressbees.com' && CODLedger_List.deposittype != '')" @click.prevent="deleteClosure(CODLedger_List)" class="fa fa-trash text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
                     </td>
                     <td class="text-center">{{CODLedger_List.deliverydate}}</td>
                     <td class="text-center">{{CODLedger_List.bankdepositdate}}</td>
