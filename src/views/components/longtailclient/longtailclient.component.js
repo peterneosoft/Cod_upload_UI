@@ -26,9 +26,9 @@ export default {
       ClientList:[],
       isLoading:false,
       listPendingRemittanceData:[],
+      remDate:'',
       fromDate:'',
       toDate:'',
-      currentdate:'',
       selected:'Initiated',
       options:[
         { text: 'Remittance Cycle', value: 'Initiated' },
@@ -59,6 +59,9 @@ export default {
   },
 
   mounted() {
+    var date = new Date();
+    remDate.max = fromDate.max = toDate.max = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
+
     var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
     var bytes             = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
     var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
@@ -71,14 +74,12 @@ export default {
     this.GetClientData();
     this.getLTCRemittanceStatusWise();
     this.exportData();
-
-    var date = new Date();
-    this.currentdate = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
   },
 
   methods: {
     changeRadio(ele){
-      this.checkAll = false;
+      document.getElementById('ltcform').reset(); document.getElementById("fdate").innerHTML="";
+      this.checkAll = false; this.remDate = this.fromDate = this.toDate = ''; this.SearchClientIds=[]; this.Client=[];
       this.getLTCRemittanceStatusWise();
     },
 
@@ -137,7 +138,11 @@ export default {
       this.input = ({
         ClientId: this.SearchCIds,
         Status: this.selected,
-        CreatedBy: this.localuserid
+        CreatedBy: this.localuserid,
+        fromDate: this.fromDate?this.fromDate:this.remDate?this.remDate:'',
+        toDate: this.toDate,
+        offset:this.pageno,
+        limit:10
       })
       axios({
           method: 'POST',
@@ -153,10 +158,10 @@ export default {
 
             this.resultCount  = result.data.count;
             let totalRows     = result.data.count;
-            if (totalRows < 20) {
+            if (totalRows < 10) {
                 this.pagecount = 1
             } else {
-                this.pagecount = Math.ceil(totalRows / 20)
+                this.pagecount = Math.ceil(totalRows / 10)
             }
           }
           this.isLoading = false;
@@ -270,11 +275,13 @@ export default {
 
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
-        if(result){
-          this.pageno = 0; this.resultCount = 0; this.reportlink = ''; this.ClientArr = [];
-          this.getLTCRemittanceStatusWise();
+        if((this.fromDate && this.toDate) && (this.fromDate > this.toDate)){
+          document.getElementById("fdate").innerHTML="LHS date should not be greater than RHS date."; return false;
+        }else if((this.fromDate && !this.toDate) || (!this.fromDate && this.toDate)){
+          document.getElementById("fdate").innerHTML="Please select date range instead of single date."; return false;
         }else{
-          this.$alertify.error('Error Occured');
+          this.pageno = 0; this.resultCount = 0; this.reportlink = ''; this.ClientArr = []; document.getElementById("fdate").innerHTML="";
+          this.getLTCRemittanceStatusWise();
         }
       }).catch(() => {
         console.log('errors exist', this.errors); this.$alertify.error('Error Occured');
@@ -282,7 +289,7 @@ export default {
     },
 
     resetForm() {
-      this.fromDate = this.toDate = ''; this.pageno = 0; this.Client = this.CODLedgerReports = []; this.resultCount = 0;
+      this.remDate = ''; this.fromDate = this.toDate = ''; this.pageno = 0; this.Client = this.CODLedgerReports = []; this.resultCount = 0;
       this.excelLoading = false; this.ClientArr = this.exceptionList = this.shipmentList = []; this.SearchCIds = []; this.holdremark = '';
       this.$validator.reset(); this.errors.clear();
     },

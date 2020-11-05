@@ -5,17 +5,17 @@
         <i class=" fa fa-filter filter"></i> Long Tail Remittance
       </div>
       <div class="card-body">
-        <form v-on:submit.prevent="onSubmit">
+        <form v-on:submit.prevent="onSubmit" id="ltcform">
           <b-form-fieldset>
             <b-form-radio @input="changeRadio(selected)" name="searchview" id="searchview" :plain="true" :options="options" v-model="selected"></b-form-radio>
             <span id="opt" class="text-danger"></span>
             <hr style="margin-top: 0rem; margin-bottom: 0rem;">
           </b-form-fieldset>
           <div class="form-group row">
-            <div class="col-md-3" v-if="selected=='Initiated'">
+            <div class="col-md-3" v-show="selected=='Initiated'">
               <label>Remittance As On</label>
               <b-input-group left="<i class='fa fa-calendar'></i>">
-                <b-form-input id="fromDate" type="date" name="fromDate" v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }" style="height:45px;"></b-form-input>
+                <b-form-input id="remDate" type="date" name="remDate" v-model="remDate" v-bind:class="{'form-control': true, 'error': errors.has('remDate') }" style="height:45px;"></b-form-input>
               </b-input-group>
             </div>
 
@@ -30,12 +30,13 @@
               <span id="clienterr" class="text-danger"></span>
             </div>
 
-            <div class="col-md-4" v-if="selected!='Initiated'">
+            <div class="col-md-4" v-show="selected!='Initiated'">
               <label>Date</label>
               <b-input-group left="<i class='fa fa-calendar'></i>">
                 <b-form-input id="fromDate" type="date" name="fromDate" v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }" style="height:45px; border-right-color: transparent;"></b-form-input>
                 <b-form-input id="toDate" type="date" name="toDate" v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }" style="height:45px; border-left-color: transparent;"></b-form-input>
               </b-input-group>
+              <span id="fdate" class="text-danger"></span>
             </div>
           </div>
 
@@ -199,7 +200,7 @@
               <th class="text-center tableheader"><b>Client ID</b></th>
               <th class="text-center tableheader"><b>Client Name</b></th>
               <th class="text-center tableheader"><b>Delivery Cycle</b></th>
-              <th class="text-center tableheader" v-if="selected=='Initiated'"><b>COD Amount ( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>COD Amount ( <i class="fa fa-rupee"></i> )</b></th>
               <th class="text-center tableheader"><b>Exception Amount ( <i class="fa fa-rupee"></i> )</b></th>
               <th class="text-center tableheader" v-if="selected!='Done'"><b>Wallet Balance ( <i class="fa fa-rupee"></i> )</b></th>
               <th class="text-center tableheader" v-if="selected=='Done'"><b>Approved On</b></th>
@@ -212,7 +213,7 @@
           </thead>
           <tbody>
             <tr v-if="resultCount==0">
-              <td colspan="10" align="center">No record found</td>
+              <td v-bind:colspan="selected=='Done'?9:selected=='Hold'?11:10" align="center">No record found</td>
             </tr>
             <tr v-if="resultCount>0" v-for="(data,index) in listPendingRemittanceData">
               <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
@@ -222,12 +223,11 @@
               <td class="text-center">{{data.ClientId}}</td>
               <td class="text-center">{{data.CompanyName}}</td>
               <td class="text-center">{{data.Cycle}}</td>
-              <td class="text-center" v-if="selected=='Initiated'">{{data.CODAmount}}</td>
+              <td class="text-center">{{data.CODAmount}}</td>
               <td class="text-center">{{data.ExceptionAmount}} <i v-if="data.ExceptionAWB.length>0" class="fa fa-exclamation-circle" style="cursor: pointer;" aria-hidden="true" @click="exShipments(data.ExceptionAWB)"></i></td>
               <td class="text-center" v-if="selected!='Done'">{{data.WalletBalance}}</td>
               <td class="text-center" v-if="selected=='Done'">{{data.RemittanceDate}}</td>
-              <td class="text-center" v-if="selected!='Hold'">{{data.RemittanceAmount}} <i class="fa fa-exclamation-circle" style="cursor: pointer;" aria-hidden="true" @click="ltcRemitShipments(data.FromDate, data.ToDate, data.ClientId)"></i></td>
-              <td class="text-center" v-if="selected=='Hold'">{{data.CODAmount}}</td>
+              <td class="text-center">{{data.RemittanceAmount}} <i class="fa fa-exclamation-circle" style="cursor: pointer;" aria-hidden="true" @click="ltcRemitShipments(data.FromDate, data.ToDate, data.ClientId)"></i></td>
               <td class="text-center" v-if="selected=='Hold'">
                 <span @click="showComment(data.Remark)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.Remark">view</span>
               </td>
