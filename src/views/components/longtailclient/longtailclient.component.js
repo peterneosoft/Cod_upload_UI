@@ -120,7 +120,7 @@ export default {
     },
 
     getLTCRemittanceStatusWise (){
-      this.isLoading = true; this.listPendingRemittanceData=[]; this.resultCount = 0; let clientIdArr = [];
+      this.isLoading = true; this.listPendingRemittanceData=[]; let clientIdArr = [];
 
       if(this.SearchClientIds.length>0){
         clientIdArr = this.SearchClientIds;
@@ -153,10 +153,11 @@ export default {
           }
         })
         .then(result => {
+           this.resultCount = 0;
           if(result.data.code == 200){
             this.listPendingRemittanceData  = result.data.data;
-
             this.resultCount  = result.data.count;
+
             let totalRows     = result.data.count;
             if (totalRows < 10) {
                 this.pagecount = 1
@@ -180,7 +181,7 @@ export default {
 
     //to get pagination
     getPaginationData(pageNum) {
-      this.pageno = (pageNum - 1) * 20
+      this.pageno = (pageNum - 1) * 10
       this.getLTCRemittanceStatusWise();
     },
 
@@ -280,7 +281,7 @@ export default {
         }else if((this.fromDate && !this.toDate) || (!this.fromDate && this.toDate)){
           document.getElementById("fdate").innerHTML="Please select date range instead of single date."; return false;
         }else{
-          this.pageno = 0; this.resultCount = 0; this.reportlink = ''; this.ClientArr = []; document.getElementById("fdate").innerHTML="";
+          this.pageno = 0; this.reportlink = ''; this.ClientArr = []; document.getElementById("fdate").innerHTML="";
           this.getLTCRemittanceStatusWise();
         }
       }).catch(() => {
