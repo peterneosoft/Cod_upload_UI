@@ -243,7 +243,7 @@
                   <td v-if="selected=='Hold'" class="text-center" style="font-size: x-large;">
                     <button @click='action("Done", data)' class="btn btn-sm btn-ltc" title="Approve Client Remittance" type="button" style="width: 80px;">Approve</button>
                   </td>
-                  <td class="text-center" v-if="selected=='Done'">Rs {{data.RemittanceId}}</td>
+                  <td class="text-center" v-if="selected=='Done'">{{data.RemittanceId}}</td>
                 </tr>
               </tbody>
             </table><br>
