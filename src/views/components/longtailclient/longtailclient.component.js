@@ -26,7 +26,7 @@ export default {
       ClientList:[],
       isLoading:false,
       listPendingRemittanceData:[],
-      remDate:'',
+      //remDate:'',
       fromDate:'',
       toDate:'',
       selected:'Initiated',
@@ -60,7 +60,8 @@ export default {
 
   mounted() {
     var date = new Date();
-    remDate.max = fromDate.max = toDate.max = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
+    //remDate.max = ;
+    fromDate.max = toDate.max = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
 
     var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
     var bytes             = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
@@ -79,7 +80,8 @@ export default {
   methods: {
     changeRadio(ele){
       document.getElementById('ltcform').reset(); document.getElementById("fdate").innerHTML="";
-      this.checkAll = false; this.remDate = this.fromDate = this.toDate = ''; this.SearchClientIds=[]; this.Client=[];
+      this.checkAll = false; //this.remDate = '';
+      this.fromDate = this.toDate = ''; this.SearchClientIds=[]; this.Client=[];
       this.getLTCRemittanceStatusWise();
     },
 
@@ -139,7 +141,8 @@ export default {
         ClientId: this.SearchCIds,
         Status: this.selected,
         CreatedBy: this.localuserid,
-        fromDate: this.fromDate?this.fromDate:this.remDate?this.remDate:'',
+        //fromDate: this.fromDate?this.fromDate:this.remDate?this.remDate:'',
+        fromDate: this.fromDate?this.fromDate:'',
         toDate: this.toDate,
         offset:this.pageno,
         limit:10
@@ -275,7 +278,7 @@ export default {
     },
 
     onSubmit: function(event) {
-      this.$validator.validateAll().then((result) => {
+      this.$validator.validateAll().then(() => {
         if((this.fromDate && this.toDate) && (this.fromDate > this.toDate)){
           document.getElementById("fdate").innerHTML="LHS date should not be greater than RHS date."; return false;
         }else if((this.fromDate && !this.toDate) || (!this.fromDate && this.toDate)){
@@ -290,7 +293,8 @@ export default {
     },
 
     resetForm() {
-      this.remDate = ''; this.fromDate = this.toDate = ''; this.pageno = 0; this.Client = this.CODLedgerReports = []; this.resultCount = 0;
+      //this.remDate = '';
+      this.fromDate = this.toDate = ''; this.pageno = 0; this.Client = this.CODLedgerReports = []; this.resultCount = 0;
       this.excelLoading = false; this.ClientArr = this.exceptionList = this.shipmentList = []; this.SearchCIds = []; this.holdremark = '';
       this.$validator.reset(); this.errors.clear();
     },
