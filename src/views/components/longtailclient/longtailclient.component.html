@@ -232,7 +232,7 @@
                     <span @click="showComment(data.Remark)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.Remark">view</span>
                   </td>
                   <td v-if="selected=='Initiated'" class="text-center" style="font-size: x-large;">
-                    <b @click="PopUp(data.RemittanceId)">...</b>
+                    <b @click="PopUp(data.RemittanceId)" style="cursor: pointer;">...</b>
                     <b><span v-bind:id='`${"popUpText"+data.RemittanceId}`' class="popUpText">
                       <span @click='action("Done", data)' style="cursor: pointer;">Approve</span>
                       <span aria-hidden="true" @click="closeStatusRoleModal" style="margin-left: 10px;cursor: pointer;">×</span>

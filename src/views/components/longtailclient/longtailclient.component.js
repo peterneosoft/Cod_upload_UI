@@ -343,6 +343,7 @@ export default {
         })
         .then(res => {
           if(res.data.errorCode == 0 && res.data.filename){
+             this.isLoading = true;
              this.input = ({
                filename: res.data.filename,
                username: this.localuserid
@@ -356,12 +357,17 @@ export default {
                }
              })
              .then(result => {
-               this.reportlink = '';
-               this.getLTCRemittanceStatusWise();
-               this.exportData();
+               if(result.data.code==200){
+                 this.reportlink = ''; this.$alertify.success(result.data.msg);
+                 this.getLTCRemittanceStatusWise();
+                 this.exportData();
+               }else{
+                 this.$alertify.error('Bulk Remittance Failed.');
+               }
              }, error => {
-               console.error(error);this.$alertify.error('Upload Data Error.');
-             })
+               console.error(error);this.$alertify.error('Bulk Remittance Error.');
+             });
+             this.isLoading = false;
            }else{
              this.$alertify.error("CSV File Upload Error");
            }
