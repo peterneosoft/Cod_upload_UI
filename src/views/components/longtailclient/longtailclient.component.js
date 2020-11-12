@@ -266,7 +266,6 @@ export default {
         if (result.data.code == 200) {
           this.$alertify.success(result.data.msg); this.reportlink = '';
           this.getLTCRemittanceStatusWise();
-          this.exportData();
         } else {
           this.$alertify.error(result.data.msg)
         }
@@ -360,8 +359,9 @@ export default {
                }
              })
              .then(result => {
+               this.reportlink = '';
                if(result.data.code==200){
-                 this.reportlink = ''; this.$alertify.success(result.data.message);
+                 this.$alertify.success(result.data.message);
                  this.bulkResp.push({'success':result.data.success, 'failed':result.data.failed, 's3link':result.data.s3link});
                }else{
                  this.$alertify.error('Bulk Remittance Failed.');
