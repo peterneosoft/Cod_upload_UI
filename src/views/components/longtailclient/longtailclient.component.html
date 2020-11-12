@@ -265,7 +265,7 @@
                 <tr v-for="(data,index) in bulkResp">
                   <td scope="row" class="text-center"><strong>1</strong></td>
                   <td class="text-center">{{data.success}}</td>
-                  <td class="text-center">{{data.failed}}&nbsp;&nbsp;<b-link v-bind:href='`${data.s3link}`'>view</b-link></td>
+                  <td class="text-center">{{data.failed}}&nbsp;&nbsp;<b-link v-if="data.s3link" v-bind:href='`${data.s3link}`'>view</b-link></td>
                 </tr>
               </tbody>
             </table><br>

@@ -362,7 +362,7 @@ export default {
                this.reportlink = '';
                if(result.data.code==200){
                  this.$alertify.success(result.data.message);
-                 this.bulkResp.push({'success':result.data.success, 'failed':result.data.failed, 's3link':result.data.s3link});
+                 this.bulkResp.push({'success':result.data.success ? result.data.success : 0, 'failed':result.data.failed ? result.data.failed : 0, 's3link':result.data.s3link ? result.data.s3link : ''});
                }else{
                  this.$alertify.error('Bulk Remittance Failed.');
                }
