@@ -41,17 +41,17 @@
                 <span id="fdate" class="text-danger"></span>
               </div>
 
-              <div v-bind:class="selected=='Initiated'? 'col-md-8':'col-md-4'" style="margin-top:4%;">
+              <div v-bind:class="selected=='Initiated'? 'col-md-8':'col-md-4'" style="margin-top:3%;">
                 <span>
-                  <button class="btn btn-sm btn-primary" type="submit" style="border-radius: 5px;"><i class="fa fa-search"></i> Search</button>
-                  <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset" style="border-radius: 5px;"><i class="fa fa-ban"></i> Clear</button>
+                  <button class="btn btn-sm btn-primary" type="submit" style="border-radius: 5px; padding: 5px 12px;"><i class="fa fa-search"></i> Search</button>
+                  <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset" style="border-radius: 5px; padding: 5px 12px;"><i class="fa fa-ban"></i> Clear</button>
                 </span>
 
-                <span style="margin-left: 25%;">
-                  <button v-if="selected=='Initiated'" @click="exportData()" class="btn btn-sm btn-ltc" title="Download Remittance Report" type="button" style="width: 50px; border-radius: 5px;"><i class="fa fa-download"></i></button>
-                  <label v-if="selected=='Initiated'" title="Bulk Remittance" for="remittancefile" class="custom-file-upload btn-ltc" style="border-radius: 5px; padding: 5px 12px;">Bulk Upload <i class="fa fa-upload"></i></label><input @change="onUpload" type="file" name="remittancefile" id="remittancefile"/>
-                  <button v-if="selected=='Initiated'" @click='bulkAction("Hold")' class="btn btn-sm btn-ltc" title="Hold Client Remittance" type="button" style="width: 70px; border-radius: 5px;">Hold</button>
-                  <button v-if="selected!='Done'" @click='bulkAction("Done")' class="btn btn-sm btn-ltc" title="Approve Client Remittance" type="button" style="width: 85px; border-radius: 5px;">Approve</button>
+                <span style="margin-left: 20%;">
+                  <button v-if="selected=='Initiated'" @click="exportData()" class="btn btn-sm btn-ltc" title="Download Remittance Report" type="button" style="width: 50px;"><i class="fa fa-download"></i></button>
+                  <label v-if="selected=='Initiated'" title="Bulk Remittance" for="remittancefile" class="custom-file-upload btn-ltc" style="border-radius: 5px;">Bulk Upload <i class="fa fa-upload"></i></label><input @change="onUpload" type="file" name="remittancefile" id="remittancefile"/>
+                  <button v-if="selected=='Initiated'" @click='bulkAction("Hold")' class="btn btn-sm btn-ltc" title="Hold Client Remittance" type="button" style="width: 70px;">Hold</button>
+                  <button v-if="selected!='Done'" @click='bulkAction("Done")' class="btn btn-sm btn-ltc" title="Approve Client Remittance" type="button" style="width: 85px;">Approve</button>
                 </span>
               </div>
             </div>

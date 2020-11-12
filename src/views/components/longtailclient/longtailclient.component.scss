@@ -35,6 +35,9 @@ td{
   color: #fff;
   background-color: #2f353a;
   border-color: #2f353a;
+  padding: 5px 12px;
+  border-radius: 5px;
+  text-align: center;
 }
 
 .popUpText {
@@ -55,11 +58,10 @@ input[type="file"] {
     display: none;
 }
 .custom-file-upload {
-    display: inline-block;
-    padding: 6px 12px;
-    cursor: pointer;
-    width: 120px;
-    border-radius: 8px;
+  display: inline-block;
+  cursor: pointer;
+  width: 120px;
+  height: 33px;
 }
 
 table.scroll {
