@@ -50,7 +50,8 @@ export default {
       SearchCIds:[],
       holdremark:'',
       comment:'',
-      commentModalShow:false
+      commentModalShow:false,
+      bulkResp:[]
     }
   },
 
@@ -74,14 +75,13 @@ export default {
 
     this.GetClientData();
     this.getLTCRemittanceStatusWise();
-    this.exportData();
   },
 
   methods: {
     changeRadio(ele){
       document.getElementById('ltcform').reset(); document.getElementById("fdate").innerHTML="";
       this.checkAll = false; //this.remDate = '';
-      this.fromDate = this.toDate = ''; this.SearchClientIds=[]; this.Client=[];
+      this.fromDate = this.toDate = ''; this.SearchClientIds=[]; this.Client=[]; this.bulkResp = [];
       this.getLTCRemittanceStatusWise();
     },
 
@@ -122,7 +122,7 @@ export default {
     },
 
     getLTCRemittanceStatusWise (){
-      this.isLoading = true; this.listPendingRemittanceData=[]; let clientIdArr = [];
+      this.isLoading = true; this.listPendingRemittanceData=[]; let clientIdArr = []; this.bulkResp = [];
 
       if(this.SearchClientIds.length>0){
         clientIdArr = this.SearchClientIds;
@@ -284,7 +284,7 @@ export default {
         }else if((this.fromDate && !this.toDate) || (!this.fromDate && this.toDate)){
           document.getElementById("fdate").innerHTML="Please select date range instead of single date."; return false;
         }else{
-          this.pageno = 0; this.reportlink = ''; this.ClientArr = []; document.getElementById("fdate").innerHTML="";
+          this.pageno = 0; this.reportlink = ''; this.ClientArr = []; document.getElementById("fdate").innerHTML=""; this.bulkResp = [];
           this.getLTCRemittanceStatusWise();
         }
       }).catch(() => {
@@ -294,7 +294,7 @@ export default {
 
     resetForm() {
       //this.remDate = '';
-      this.fromDate = this.toDate = ''; this.pageno = 0; this.Client = this.CODLedgerReports = []; this.resultCount = 0;
+      this.fromDate = this.toDate = ''; this.pageno = 0; this.Client = this.CODLedgerReports = []; this.resultCount = 0; this.bulkResp = [];
       this.excelLoading = false; this.ClientArr = this.exceptionList = this.shipmentList = []; this.SearchCIds = []; this.holdremark = '';
       this.$validator.reset(); this.errors.clear();
     },
@@ -303,6 +303,7 @@ export default {
       if(this.reportlink){
         window.open(this.reportlink);
       }else{
+        this.excelLoading = true;
 
         this.input = ({
           CreatedBy: this.localuserid
@@ -318,11 +319,13 @@ export default {
         .then(result => {
           if(result.data.code == 200){
             this.reportlink = result.data.data;
+            window.open(this.reportlink);
           }else{
             this.reportlink = ''; this.$alertify.error('File Not Available For Bulk Remittance.');
           }
+          this.excelLoading = false;
         }, error => {
-          this.reportlink = ''; console.error(error); this.$alertify.error('Bulk Remittance File Error');
+          this.reportlink = ''; this.excelLoading = false; console.error(error); this.$alertify.error('Bulk Remittance File Error');
         })
       }
     },
@@ -343,7 +346,7 @@ export default {
         })
         .then(res => {
           if(res.data.errorCode == 0 && res.data.filename){
-             this.isLoading = true;
+             this.isLoading = true; this.bulkResp = [];
              this.input = ({
                filename: res.data.filename,
                username: this.localuserid
@@ -358,9 +361,8 @@ export default {
              })
              .then(result => {
                if(result.data.code==200){
-                 this.reportlink = ''; this.$alertify.success(result.data.msg);
-                 this.getLTCRemittanceStatusWise();
-                 this.exportData();
+                 this.reportlink = ''; this.$alertify.success(result.data.message);
+                 this.bulkResp.push({'success':result.data.success, 'failed':result.data.failed, 's3link':result.data.s3link});
                }else{
                  this.$alertify.error('Bulk Remittance Failed.');
                }
