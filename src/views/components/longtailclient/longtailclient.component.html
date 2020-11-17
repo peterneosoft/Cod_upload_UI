@@ -49,7 +49,7 @@
 
                 <span style="margin-left: 20%;">
                   <button v-if="selected=='Initiated'" @click="exportData()" class="btn btn-sm btn-ltc" title="Download Remittance Report" type="button" style="width: 50px;"><i class="fa fa-download"></i></button>
-                  <label v-if="selected=='Initiated'" title="Bulk Remittance" for="remittancefile" class="custom-file-upload btn-ltc" style="border-radius: 5px;">Bulk Upload <i class="fa fa-upload"></i></label><input @change="onUpload" type="file" name="remittancefile" id="remittancefile"/>
+                  <label v-if="selected=='Initiated'" title="Bulk Remittance" for="remittancefile" class="custom-file-upload btn-ltc" style="border-radius: 5px;">Bulk Upload <i class="fa fa-upload"></i></label><input @change="onUpload" type="file" name="remittancefile" id="remittancefile" placeholder="Bulk Remittance"/>
                   <button v-if="selected=='Initiated'" @click='bulkAction("Hold")' class="btn btn-sm btn-ltc" title="Hold Client Remittance" type="button" style="width: 70px;">Hold</button>
                   <button v-if="selected!='Done'" @click='bulkAction("Done")' class="btn btn-sm btn-ltc" title="Approve Client Remittance" type="button" style="width: 85px;">Approve</button>
                 </span>
@@ -246,8 +246,9 @@
                   <td class="text-center" v-if="selected=='Done'">{{data.RemittanceId}}</td>
                 </tr>
               </tbody>
-            </table><br>
-            <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'"></paginate>
+            </table>
+            <span v-show="!isFirefox" style="font-size: 12px;color: #d40000;">Note: Multi checkbox is fully supported in Firefox browser, you can use Firefox to browse the site.<br></span>
+            <br><paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'"></paginate>
           </div>
         </div>
 

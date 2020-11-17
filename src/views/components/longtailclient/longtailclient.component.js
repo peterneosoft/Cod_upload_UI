@@ -51,7 +51,8 @@ export default {
       holdremark:'',
       comment:'',
       commentModalShow:false,
-      bulkResp:[]
+      bulkResp:[],
+      isFirefox:false
     }
   },
 
@@ -72,6 +73,9 @@ export default {
 
     var userToken         = window.localStorage.getItem('accessuserToken');
     this.myStr            = userToken.replace(/"/g, '');
+
+    // Firefox 1.0+
+    this.isFirefox = typeof InstallTrigger !== 'undefined';
 
     this.GetClientData();
     this.getLTCRemittanceStatusWise();
@@ -364,14 +368,14 @@ export default {
                  this.$alertify.success(result.data.message);
                  this.bulkResp.push({'success':result.data.success ? result.data.success : 0, 'failed':result.data.failed ? result.data.failed : 0, 's3link':result.data.s3link ? result.data.s3link : ''});
                }else{
-                 this.$alertify.error('Bulk Remittance Failed.');
+                 this.$alertify.error(result.data.message);
                }
              }, error => {
                console.error(error);this.$alertify.error('Bulk Remittance Error.');
              });
              this.isLoading = false;
            }else{
-             this.$alertify.error("CSV File Upload Error");
+             this.$alertify.error(res.data.msg);
            }
            this.excelLoading = false;
         }, error => {
