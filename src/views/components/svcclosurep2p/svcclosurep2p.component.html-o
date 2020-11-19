@@ -6,24 +6,6 @@
           <div class="card-header"><i class="fa fa-align-justify"></i> COD Yesterday's Closure Of SVC</div>
           <div class="card-body">
             <form v-on:submit.prevent="onSubmit" id="svcform">
-              <div class="form-group" v-if="localhubIsRSC">
-                <div class="input-group">
-                  <div class="input-group-prepend" style="width: 140px;">
-                    <span class="input-group-text" style="width: 140px;">RSC Owner <font color="red">&nbsp;*</font></span>
-                  </div>
-                  <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="rscLoading" />
-                  <select class="form-control" id="EffectiveToDate" v-model="EffectiveToDate" name="EffectiveToDate" v-validate="{required: true}"
-                  v-bind:class="{'form-control': true, 'error': errors.has('EffectiveToDate') }" style="margin-right: -8px;">
-                    <option value="">--Select--</option>
-                    <option v-for="rscowner_obj in RSCOwnerList" v-bind:value="rscowner_obj.EffectiveToDate" >{{rscowner_obj.OutSourcingName}}</option>
-                  </select>
-                  <div class="input-group-append">
-                    <span class="input-group-text"><i class="fa fa-angle-down"></i></span>
-                  </div>
-                </div>
-                <span v-show="errors.has('EffectiveToDate')" class="text-danger">RSC owner is required.</span>
-              </div>
-
               <div class="form-group">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
