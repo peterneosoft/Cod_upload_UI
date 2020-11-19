@@ -15,7 +15,7 @@
                   <select class="form-control" id="EffectiveToDate" v-model="EffectiveToDate" name="EffectiveToDate" v-validate="{required: true}"
                   v-bind:class="{'form-control': true, 'error': errors.has('EffectiveToDate') }" style="margin-right: -8px;">
                     <option value="">--Select--</option>
-                    <option v-for="rscowner_obj in RSCOwnerList" v-bind:value="rscowner_obj.EffectiveToDate" >{{rscowner_obj.OutSourcingName}}</option>
+                    <option v-for="rscowner_obj in RSCOwnerList" v-bind:value="rscowner_obj.EffectiveToDate" >{{rscowner_obj.OutSourcingName}} - {{rscowner_obj.EffectiveFromDate}} To {{rscowner_obj.EffectiveToDate}}</option>
                   </select>
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-angle-down"></i></span>
