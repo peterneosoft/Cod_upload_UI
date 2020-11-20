@@ -84,7 +84,7 @@ export default {
   methods: {
     changeRadio(ele){
       document.getElementById('ltcform').reset(); document.getElementById("fdate").innerHTML="";
-      this.checkAll = false; //this.remDate = '';
+      this.checkAll = false; this.reportlink = ''; //this.remDate = '';
       this.fromDate = this.toDate = ''; this.SearchClientIds=[]; this.Client=[]; this.bulkResp = [];
       this.getLTCRemittanceStatusWise();
     },
@@ -160,7 +160,7 @@ export default {
           }
         })
         .then(result => {
-           this.resultCount = 0;
+          this.resultCount = 0;
           if(result.data.code == 200){
             this.listPendingRemittanceData  = result.data.data;
             this.resultCount  = result.data.count;
@@ -306,14 +306,27 @@ export default {
       if(this.reportlink){
         window.open(this.reportlink);
       }else{
-        this.excelLoading = true;
+        this.excelLoading = true; let api = '';
 
-        this.input = ({
-          CreatedBy: this.localuserid
-        })
+        if(this.selected=='Done'){
+          this.input = ({
+            ClientId: this.SearchCIds,
+            fromDate: this.fromDate,
+            toDate:   this.toDate
+          });
+
+          api = 'exportApprovedRemittance ';
+        }else{
+          this.input = ({
+            CreatedBy: this.localuserid
+          });
+
+          api = 'exportBulkLTCRemittance';
+        }
+
         axios({
           method: 'POST',
-          url: apiUrl.api_url + 'exportBulkLTCRemittance',
+          url: apiUrl.api_url+api,
           data: this.input,
           headers: {
             'Authorization': 'Bearer '+this.myStr
@@ -324,11 +337,13 @@ export default {
             this.reportlink = result.data.data;
             window.open(this.reportlink);
           }else{
-            this.reportlink = ''; this.$alertify.error('File Not Available For Bulk Remittance.');
+            this.reportlink = '';
+            this.$alertify.error(this.selected=='Done'?'Approved Remittance File Not Available.':'File Not Available For Bulk Remittance.');
           }
           this.excelLoading = false;
         }, error => {
-          this.reportlink = ''; this.excelLoading = false; console.error(error); this.$alertify.error('Bulk Remittance File Error');
+          this.reportlink = ''; this.excelLoading = false; console.error(error);
+          this.$alertify.error(this.selected=='Done'?'Approved Remittance File Error.':'Bulk Remittance File Error.');
         })
       }
     },
