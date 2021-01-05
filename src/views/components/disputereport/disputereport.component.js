@@ -39,7 +39,11 @@ export default {
       tilldate:'',
       SearchZoneIds:[],
       SearchZIds:[],
-      SearchHIds:[]
+      SearchHIds:[],
+      RSCLoading:false,
+      RSCList:[],
+      RSCName:[],
+      SearchRSCIds:[],
     }
   },
 
@@ -92,6 +96,23 @@ export default {
       else{ this.SearchHubIds = []; return true; }
     },
 
+    multipleRSC(){
+      let key = this.RSCName.length-1;
+      if(this.RSCName.length>0 && this.RSCName[key].HubID == 0){
+        this.SearchRSCIds = [];
+        this.RSCName = this.RSCName[key];
+
+        for (let item of this.RSCList) {
+          if (item.HubID != 0) {
+            this.SearchRSCIds.push(item.HubID);
+          }
+        }
+      }
+
+      if(this.RSCName.HubID == 0){ return false; }
+      else{ this.SearchRSCIds = []; return true; }
+    },
+
     addHubData() {
       let zData = this.zoneIdArr = [];  this.hubList = []; this.HubId = []; this.RSCList = []; this.RSCName = []; this.disableHub = false;
       if($.isArray(this.zone) === false){
@@ -106,6 +127,7 @@ export default {
 
       if(zData.length===1 && zData[0].hubzoneid > 0){
         this.getHubData(zData[0].hubzoneid);
+        this.getRSCData(zData[0].hubzoneid);
       }else{
         this.disableHub = true;
       }
@@ -147,9 +169,8 @@ export default {
     },
 
     getDisputeReport(){
-      this.isLoading = true;
+      this.isLoading = true; let zData = []; let hubArr = []; let RSCArr = [];
 
-      let zData = [];
       if(this.SearchZoneIds.length>0){
         zData = this.SearchZoneIds;
       }else{
@@ -159,7 +180,6 @@ export default {
         });
       }
 
-      let hubArr = [];
       if(this.SearchHubIds.length>0){
         hubArr = this.SearchHubIds;
       }else{
@@ -172,7 +192,20 @@ export default {
         });
       }
 
-      this.SearchZIds = zData; this.SearchHIds = hubArr;
+      if(this.SearchRSCIds.length>0){
+        RSCArr = this.SearchRSCIds;
+      }else{
+        if($.isArray(this.RSCName) === false){
+          this.RSCName = new Array(this.RSCName);
+        }
+
+        this.RSCName.forEach(function (val) {
+          RSCArr.push(val.HubID);
+        });
+      }
+
+      let hubIdArr    = [...new Set([].concat(...hubArr.concat(RSCArr)))];
+      this.SearchZIds = zData; this.SearchHIds = hubIdArr;
 
       this.input = ({
         hubid: this.SearchHIds,
@@ -269,6 +302,33 @@ export default {
         })
     },
 
+    //to get All Zone Wise RSC List
+    getRSCData(zoneid) {
+      if(zoneid==""){
+        return false;
+      }
+      this.input = ({
+          zoneid: zoneid
+      })
+      this.RSCLoading = true;
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'external/getzonersc',
+          'data': this.input,
+          headers: {
+            'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+          this.RSCLoading = false; this.RSCName = []; this.RSCList = [];
+          if(result.data.rsc.code == 200){
+            this.RSCList = [{HubID:'0', HubName:'All RSC', HubCode:'All RSC'}].concat(result.data.rsc.data);
+          }
+        }, error => {
+          this.RSCLoading = false; console.error(error)
+        })
+    },
+
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if(result){
@@ -281,7 +341,7 @@ export default {
     },
 
     resetForm() {
-      this.tilldate = this.zone = ''; this.hubList = this.HubId = this.DisputeReport = this.SearchZIds = this.SearchHIds = [];
+      this.tilldate = this.zone = ''; this.hubList = this.HubId = this.RSCList = this.RSCName = this.DisputeReport = this.SearchZIds = this.SearchHIds = [];
       this.exportf = this.disableHub = false; this.pageno = this.resultCount = 0; this.reportlink = '';
       this.$validator.reset(); this.errors.clear();
     },
