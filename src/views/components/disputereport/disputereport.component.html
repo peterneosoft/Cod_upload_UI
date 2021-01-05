@@ -76,7 +76,7 @@
                     <th class="text-center tableheader"><b>#</b></th>
                     <th class="text-center tableheader"><b>Zone</b></th>
                     <th class="text-center tableheader"><b>Hub/ SVC Name</b></th>
-                    <th class="text-center tableheader"><b>RSC Name</b></th>
+                    <!-- <th class="text-center tableheader"><b>RSC Name</b></th> -->
                     <th class="text-center tableheader"><b>AWB Number</b></th>
                     <th class="text-center tableheader"><b>Delivery Date</b></th>
                     <th class="text-center tableheader"><b>Dispute Amount ( <i class="fa fa-rupee"></i> )</b></th>
@@ -86,13 +86,13 @@
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td colspan="9" align="center">No record found</td>
+                    <td colspan="8" align="center">No record found</td>
                   </tr>
                   <tr v-for="(dispute,index) in DisputeReport">
                     <td class="text-center">{{pageno+index+1}}</td>
                     <td class="text-center">{{dispute.Zone}}</td>
                     <td class="text-center">{{dispute.HubName}}</td>
-                    <td class="text-center">{{dispute.rscowner}}</td>
+                    <!-- <td class="text-center">{{dispute.rscowner}}</td> -->
                     <td class="text-center">{{dispute.AWB}}</td>
                     <td class="text-center">{{dispute.DeliveryDate}}</td>
                     <td class="text-center">{{dispute.Amount}}</td>
