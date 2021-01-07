@@ -33,6 +33,7 @@ export default {
       zoneList: [],
       listFinanceledgerData: [],
       FinanceReasonList: [],
+      allFinanceReason: [],
       financereason: '',
       financeconfirmdate: '',
       financeconfirmamount: '',
@@ -254,6 +255,7 @@ export default {
         })
         .then(result => {
           this.FinanceReasonList = result.data.Reasons.data;
+          this.allFinanceReason = result.data.Reasons.data;
         }, error => {
           console.error(error)
         })
@@ -500,7 +502,10 @@ export default {
     onUpdate: function() {
       document.getElementById("fr").innerHTML=""; document.getElementById("fcd").innerHTML=""; document.getElementById("fca").innerHTML=""; this.AWBAmount = '';
 
-      if(this.financereason && this.financeconfirmdate){
+      if(this.financereason == 367){
+        this.FCModal = true; this.$refs.myClosureModalRef.show();
+        this.hideConfModal(2);
+      }else if(this.financereason && this.financeconfirmdate){
         if((this.financereason == 125 || this.financereason == 218) && this.financeconfirmamount){
           if(!this.radio){
             document.getElementById("cr").innerHTML="Radio selection is required."; return false;
@@ -652,7 +657,13 @@ export default {
       this.hubid          = data.hubid,
       this.deliverydate   = data.deliverydate,
       this.formatdeldate  = data.formatdeldate,
-      this.bankid         = data.bankid
+      this.bankid         = data.bankid;
+
+      if(data.financereasonid == 366){
+        this.FinanceReasonList = this.allFinanceReason.filter(item => (item['ReasonsID'] == 367));
+      }else{
+        this.FinanceReasonList = this.allFinanceReason.filter(item => (item['ReasonsID'] != 366 && item['ReasonsID'] != 367));
+      }
     },
   }
 }

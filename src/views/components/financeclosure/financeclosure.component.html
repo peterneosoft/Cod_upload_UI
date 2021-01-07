@@ -235,7 +235,7 @@
                             <span id="fr" class="text-danger"></span>
                           </b-form-fieldset>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-4" v-show="(![367].includes(financereason))">
                           <b-form-fieldset>
                             <label>Amount Received Date <font color="red">&nbsp;*</font></label>
                             <b-input-group left="<i class='fa fa-calendar'></i>">
@@ -253,7 +253,7 @@
                             <span id="fca" class="text-danger"></span>
                           </b-form-fieldset>
                         </div>
-                        <div class="col-lg-4" v-show="([84,124,187,125,218].includes(financereason))">
+                        <div class="col-lg-4" v-show="([84,124,187,125,218,367].includes(financereason))">
                           <b-form-fieldset>
                             <label>Comment</label>
                             <b-input-group>

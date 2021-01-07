@@ -41,7 +41,7 @@
               <div class="form-group">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
-                    <span class="input-group-text" style="width: 140px;">{{isFnF ? 'FnF Date' : 'Deposit Date'}}<font color="red">&nbsp;*</font></span>
+                    <span class="input-group-text" style="width: 140px;">Deposit Date<font color="red">&nbsp;*</font></span>
                   </div>
                   <b-form-input id="DepositDate" type="date" name="DepositDate" v-validate="{required: true}"
                   v-model="DepositDate" v-bind:class="{'form-control': true, 'error': errors.has('DepositDate') }" style="margin-right: -5px;"></b-form-input>
@@ -49,7 +49,7 @@
                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                   </div>
                 </div>
-                <span v-show="errors.has('DepositDate')" class="text-danger">{{isFnF ? 'FnF date is required.' : 'Deposit date is required.'}}</span>
+                <span v-show="errors.has('DepositDate')" class="text-danger">Deposit date is required</span>
               </div>
 
               <div class="form-group">
