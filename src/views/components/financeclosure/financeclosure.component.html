@@ -235,9 +235,9 @@
                             <span id="fr" class="text-danger"></span>
                           </b-form-fieldset>
                         </div>
-                        <div class="col-md-4" v-show="(![367].includes(financereason))">
+                        <div class="col-md-4">
                           <b-form-fieldset>
-                            <label>Amount Received Date <font color="red">&nbsp;*</font></label>
+                            <label>{{financereason == 367 ? 'FnF completed Date' : 'Amount Received Date'}} <font color="red">&nbsp;*</font></label>
                             <b-input-group left="<i class='fa fa-calendar'></i>">
                               <input type="date" placeholder="Enter Amount Received Date" name="financeconfirmdate" id="financeconfirmdate" v-model="financeconfirmdate" v-bind:class="{'form-control': true}">
                             </b-input-group>

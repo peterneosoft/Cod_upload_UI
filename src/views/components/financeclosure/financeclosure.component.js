@@ -502,10 +502,7 @@ export default {
     onUpdate: function() {
       document.getElementById("fr").innerHTML=""; document.getElementById("fcd").innerHTML=""; document.getElementById("fca").innerHTML=""; this.AWBAmount = '';
 
-      if(this.financereason == 367){
-        this.FCModal = true; this.$refs.myClosureModalRef.show();
-        this.hideConfModal(2);
-      }else if(this.financereason && this.financeconfirmdate){
+      if(this.financereason && this.financeconfirmdate){
         if((this.financereason == 125 || this.financereason == 218) && this.financeconfirmamount){
           if(!this.radio){
             document.getElementById("cr").innerHTML="Radio selection is required."; return false;
