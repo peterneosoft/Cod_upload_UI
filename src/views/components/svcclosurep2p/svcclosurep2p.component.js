@@ -136,7 +136,12 @@ export default {
       todDate:'',
       resetdata:'',
       resetDD:'',
-      ResetmodalShow:false
+      ResetmodalShow:false,
+      localhubIsRSC:false,
+      RSCOwnerList:[],
+      rscLoading:false,
+      RSCOwner:'',
+      isFnF:false
     }
   },
 
@@ -177,13 +182,15 @@ export default {
     DepositDate.min = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
 
     this.BatchID = this.localhubid+''+Math.floor(Math.random() * (Math.pow(10,5)));
+
+    this.todDate = new Date().toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
+
     await this.GetDenominationData();
     await this.GetSVCExceptionData();
     await this.GetReasonList();
     await this.GetSVCledgerData();
     await this.GetShipmentUpdate();
-
-    this.todDate = new Date().toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
+    if(this.localhubIsRSC) await this.getRSCOwnerData();
   },
 
   methods: {
@@ -374,11 +381,21 @@ export default {
         $('span[id^="vri"]').hide();
         $('span[id^="vrl"]').show();
 
-        this.input = ({
+        if(this.RSCOwner){
+          this.input = ({
+            offset: this.pageno,
+            limit: 10,
+            hubid: this.localhubid,
+            fromdate: this.RSCOwner.EffectiveFromDate,
+            todate: this.RSCOwner.EffectiveToDate
+          })
+        }else{
+          this.input = ({
             offset: this.pageno,
             limit: 10,
             hubid: this.localhubid
-        })
+          })
+        }
         this.isLoading = true;
         axios({
             method: 'POST',
@@ -391,7 +408,7 @@ export default {
         .then(result => {
           if(result.data.code == 200){
             this.listSVCledgerData = result.data.data;
-            this.isLoading = false;
+
             let totalRows     = result.data.count;
             this.resultCount  = result.data.count;
             this.resultdate  = result.data.date;
@@ -401,11 +418,11 @@ export default {
                 this.pagecount = Math.ceil(totalRows / 10)
             }
           }else{
-            this.resultCount  = 0;
-            this.isLoading = false;
+            this.resultCount  = 0; this.listSVCledgerData = [];
           }
+          this.isLoading = false;
         }, error => {
-            console.error(error)
+            this.isLoading = false; console.error(error);
         })
     },
 
@@ -465,8 +482,8 @@ export default {
           }
         }
         document.getElementById('tot_amt').value = this.tot_amt;
-        this.Deposit_Amount = "";
-        this.Deposit_Amount = this.tot_amt;
+
+        if(!this.isFnF) this.Deposit_Amount = this.tot_amt;
       }
     },
 
@@ -554,139 +571,182 @@ export default {
       let DepositReasonExcepAmount = ''; this.unmatchedAmt = 0;
       DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount));
 
-      if(this.CardAmount > 0){ //65
-        //DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat((this.ReasonAmount)?this.ReasonAmount:'0')+parseFloat(this.CardAmount)));
-        DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.CardAmount)));
-      }
+      if(this.RSCOwner && this.isFnF){
 
-      //let TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount)-parseFloat(this.CardAmount))));
-      let TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))));
-
-      let p2pamt = parseInt(this.p2pAmount);
-      if(DepositAmount !== parseInt(this.tot_amt)){
-        this.$alertify.error("Denomination details & Deposit amount should be same, please check.");
-
-        let error = document.getElementById("d_a");
-         error.innerHTML      = "Denomination details & Deposit amount should be same, please check.";
-         error.style.display  = "block";
-         return false;
-      }else{
-        if(p2pamt > 0){
-          DepositAmount = DepositAmount - p2pamt;
-        }
-
-        document.getElementById("d_a").style.display = "none";
-
-        this.unmatchedAmt = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositReasonExcepAmount)));
-
-        let ClosingBalance = 0;
-
-        if(this.unmatchedAmt > 0 && this.unmatchedAmt <= 5){
-          this.unmatchedAmt = 0;
-        }else{
-          if((DepositReasonExcepAmount < TolatCollection) && (this.unmatchedAmt>0)){
-
-            if(!this.lowdis){
-
-              this.showModal(this.unmatchedAmt);
-              return false;
-            }else{
-
-              if((this.CardAmount>0) && !this.lowdis && (this.unmatchedAmt>0)){ //65
-                this.$alertify.error("Total outstanding COD amount and deposit amount including sum of dispute amount is should be same, please check.");
-                return false;
-              }else{
-                if(!this.amoimp){ this.reasonFileList=[]; }
-                this.hideModal();
-              }
-            }
-          }else if((this.CardAmount > 0) && (DepositReasonExcepAmount > TolatCollection)){
-            if(parseInt(DepositReasonExcepAmount - TolatCollection) > 5){
-              this.unmatchedAmt = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(this.Deposit_Amount)));
-              this.$alertify.error("Deposit amount including sum of dispute amount should not be greater than total outstanding COD amount and extra amount should not more than 5 Rs.");
-
-              let error            = document.getElementById("d_a");
-              error.innerHTML      = "Deposit amount including sum of dispute amount should not be greater than total outstanding COD amount and extra amount should not more than 5 Rs.";
-              error.style.display  = "block"; return false;
-            }
-          }
-        }
-        ClosingBalance = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositAmount)));
-
-        let NoteCountArr = []; let DenominationIDArr = [];
-        if(this.DenominationArr.length > 0){
-          this.DenominationArr.forEach(function (denomi) {
-            NoteCountArr.push(parseInt(document.getElementById("mo"+denomi).value) / parseInt(denomi));
-            DenominationIDArr.push(parseInt(document.getElementById("moi"+denomi).value));
-          });
-        }
-
-        let OpeningBalance = parseFloat(this.closingBalance);
-        let CODAmount = parseFloat(Math.round(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)));
         if(this.hideCM==1){
           this.showConfModal(); return false;
         }
-        if(this.lowdis || this.unmatchedAmt<=0){
-          this.disableButton = true; this.subLoading = true;
-          this.input = ({
-              DepositDate: this.DepositDate,
-              DeliveryDate: this.DeliveryDate,
-              Deposit_Amount: DepositAmount,
-              DepositType: this.DepositType,
-              BankID: this.BankMasterId,
-              BankDeposit: DepositAmount,
-              TransactionID: this.TransactionID,
-              ReasonID: (this.amoimpReason)?this.amoimpReason:null,
-              ReasonAmount: 0,
-              AWBNo: (this.DisputeArr)?this.DisputeArr:new Array(),
-              CardAmount: (this.CardAmount)?this.CardAmount:0,
-              CreatedBy: this.localuserid,
-              HubId: this.localhubid,
-              HubZoneId: this.localhubzoneid,
-              DifferenceAmount: 0,
-              TolatCollection: TolatCollection,
-              StatusID: 1,
-              OpeningBalance: OpeningBalance,
-              ClosingBalance: (ClosingBalance)?ClosingBalance:0,
-              FinanceConfirmAmount: 0,
-              CODAmount: CODAmount,
-              IsActive: true,
-              BatchID: this.BatchID,
-              p2pamt: p2pamt,
-              totalAmtdeposit: DepositAmount + p2pamt,
-              Denomination: this.DenominationArr,
-              NoteCount: NoteCountArr,
-              DenominationID: DenominationIDArr,
-              exceptionId: this.exceptionArr,
-              exceptionAmount: this.exceptionAmount,
-              hubIsRSC: this.localhubIsRSC,
-              financeclosingamt: parseInt(this.financeclosingamt)
-          })
 
-          axios({
-              method: 'POST',
-              'url': apiUrl.api_url + 'submitSVCClosure',
-              'data': this.input,
-              headers: {
-                  'Authorization': 'Bearer '+this.myStr
-              }
-          })
-          .then((response) => {
-            this.hideCM = 1;
-            if (response.data.errorCode == 0) {
-              this.$alertify.success(response.data.msg);
-              this.disableButton = false; this.subLoading = false;
-              window.scrollBy(0, 1000); this.resetForm();
-            } else if (response.data.errorCode == -1) {
-              this.$alertify.error(response.data.msg)
+        this.disableButton = true; this.subLoading = true;
+        this.input = ({
+            DepositDate:      this.DepositDate,
+            BankDeposit:      DepositReasonExcepAmount,
+            CreatedBy:        this.localuserid,
+            HubId:            this.localhubid,
+            BatchID:          this.BatchID,
+            EffectiveToDate:  this.RSCOwner.EffectiveToDate
+        })
+
+        axios({
+            method: 'POST',
+            'url': apiUrl.api_url + 'RSCFnFClosure',
+            'data': this.input,
+            headers: {
+                'Authorization': 'Bearer '+this.myStr
             }
-          })
-          .catch((httpException) => {
-            this.hideCM = 1; this.disableButton = false; this.subLoading = false;
-            this.$alertify.error('Error occured')
-          });
+        })
+        .then((response) => {
+          this.hideCM = 1;
+
+          if (response.data.errorCode == 0) {
+            this.$alertify.success(response.data.msg);
+            this.disableButton = false; this.subLoading = false;
+            window.scrollBy(0, 1000); this.resetForm();
+          } else if (response.data.errorCode == -1) {
+            this.$alertify.error(response.data.msg)
+          }
+        }).catch((httpException) => {
+          this.hideCM = 1; this.disableButton = false; this.subLoading = false;
+          this.$alertify.error('Error occured')
+        });
+
+      }else{
+
+        if(this.CardAmount > 0){ //65
+          //DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat((this.ReasonAmount)?this.ReasonAmount:'0')+parseFloat(this.CardAmount)));
+          DepositReasonExcepAmount = parseFloat(Math.round(DepositAmount+parseFloat(this.CardAmount)));
+        }
+
+        //let TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount)-parseFloat(this.CardAmount))));
+        let TolatCollection = parseFloat(Math.round((parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount))));
+
+        let p2pamt = parseInt(this.p2pAmount);
+        if(DepositAmount !== parseInt(this.tot_amt)){
+          this.$alertify.error("Denomination details & Deposit amount should be same, please check.");
+
+          let error = document.getElementById("d_a");
+           error.innerHTML      = "Denomination details & Deposit amount should be same, please check.";
+           error.style.display  = "block";
+           return false;
         }else{
-          this.hideCM = 1; this.$alertify.error('Error occured')
+          if(p2pamt > 0){
+            DepositAmount = DepositAmount - p2pamt;
+          }
+
+          document.getElementById("d_a").style.display = "none";
+
+          this.unmatchedAmt = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositReasonExcepAmount)));
+
+          let ClosingBalance = 0;
+
+          if(this.unmatchedAmt > 0 && this.unmatchedAmt <= 5){
+            this.unmatchedAmt = 0;
+          }else{
+            if((DepositReasonExcepAmount < TolatCollection) && (this.unmatchedAmt>0)){
+
+              if(!this.lowdis){
+
+                this.showModal(this.unmatchedAmt);
+                return false;
+              }else{
+
+                if((this.CardAmount>0) && !this.lowdis && (this.unmatchedAmt>0)){ //65
+                  this.$alertify.error("Total outstanding COD amount and deposit amount including sum of dispute amount is should be same, please check.");
+                  return false;
+                }else{
+                  if(!this.amoimp){ this.reasonFileList=[]; }
+                  this.hideModal();
+                }
+              }
+            }else if((this.CardAmount > 0) && (DepositReasonExcepAmount > TolatCollection)){
+              if(parseInt(DepositReasonExcepAmount - TolatCollection) > 5){
+                this.unmatchedAmt = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(this.Deposit_Amount)));
+                this.$alertify.error("Deposit amount including sum of dispute amount should not be greater than total outstanding COD amount and extra amount should not more than 5 Rs.");
+
+                let error            = document.getElementById("d_a");
+                error.innerHTML      = "Deposit amount including sum of dispute amount should not be greater than total outstanding COD amount and extra amount should not more than 5 Rs.";
+                error.style.display  = "block"; return false;
+              }
+            }
+          }
+
+          ClosingBalance = parseFloat(Math.round(parseFloat(TolatCollection)-parseFloat(DepositAmount)));
+
+          let NoteCountArr = []; let DenominationIDArr = [];
+          if(this.DenominationArr.length > 0){
+            this.DenominationArr.forEach(function (denomi) {
+              NoteCountArr.push(parseInt(document.getElementById("mo"+denomi).value) / parseInt(denomi));
+              DenominationIDArr.push(parseInt(document.getElementById("moi"+denomi).value));
+            });
+          }
+
+          let OpeningBalance = parseFloat(this.closingBalance);
+          let CODAmount = parseFloat(Math.round(parseFloat(this.yesterdayCODAmt)+parseFloat(p2pamt)));
+          if(this.hideCM==1){
+            this.showConfModal(); return false;
+          }
+          if(this.lowdis || this.unmatchedAmt<=0){
+            this.disableButton = true; this.subLoading = true;
+            this.input = ({
+                DepositDate: this.DepositDate,
+                DeliveryDate: this.DeliveryDate,
+                Deposit_Amount: DepositAmount,
+                DepositType: this.DepositType,
+                BankID: this.BankMasterId,
+                BankDeposit: DepositAmount,
+                TransactionID: this.TransactionID,
+                ReasonID: (this.amoimpReason)?this.amoimpReason:null,
+                ReasonAmount: 0,
+                AWBNo: (this.DisputeArr)?this.DisputeArr:new Array(),
+                CardAmount: (this.CardAmount)?this.CardAmount:0,
+                CreatedBy: this.localuserid,
+                HubId: this.localhubid,
+                HubZoneId: this.localhubzoneid,
+                DifferenceAmount: 0,
+                TolatCollection: TolatCollection,
+                StatusID: 1,
+                OpeningBalance: OpeningBalance,
+                ClosingBalance: (ClosingBalance)?ClosingBalance:0,
+                FinanceConfirmAmount: 0,
+                CODAmount: CODAmount,
+                IsActive: true,
+                BatchID: this.BatchID,
+                p2pamt: p2pamt,
+                totalAmtdeposit: DepositAmount + p2pamt,
+                Denomination: this.DenominationArr,
+                NoteCount: NoteCountArr,
+                DenominationID: DenominationIDArr,
+                exceptionId: this.exceptionArr,
+                exceptionAmount: this.exceptionAmount,
+                hubIsRSC: this.localhubIsRSC,
+                financeclosingamt: parseInt(this.financeclosingamt)
+            })
+
+            axios({
+                method: 'POST',
+                'url': apiUrl.api_url + 'submitSVCClosure',
+                'data': this.input,
+                headers: {
+                    'Authorization': 'Bearer '+this.myStr
+                }
+            })
+            .then((response) => {
+              this.hideCM = 1;
+              if (response.data.errorCode == 0) {
+                this.$alertify.success(response.data.msg);
+                this.disableButton = false; this.subLoading = false;
+                window.scrollBy(0, 1000); this.resetForm();
+              } else if (response.data.errorCode == -1) {
+                this.$alertify.error(response.data.msg)
+              }
+            })
+            .catch((httpException) => {
+              this.hideCM = 1; this.disableButton = false; this.subLoading = false;
+              this.$alertify.error('Error occured')
+            });
+          }else{
+            this.hideCM = 1; this.$alertify.error('Error occured')
+          }
         }
       }
     },
@@ -835,7 +895,9 @@ export default {
 
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
-         document.getElementById("d_a").style.display = "none"; this.DisputeArr = []; this.CardAmount = 0;
+        if(!this.isFnF) document.getElementById("d_a").style.display = "none";
+
+        this.DisputeArr = []; this.CardAmount = 0;
 
          if(this.amoimp && this.reasonFileList.length<=0){
            let error = document.getElementById("rss"); error.innerHTML = "Reason slip used for tax payment/ imprest is required Or please check file extension.";
@@ -849,7 +911,7 @@ export default {
 
          if(result){
 
-           if((this.tot_amt != 0 && this.tot_amt != parseInt(this.Deposit_Amount))||!this.tot_amt){
+           if(((this.tot_amt != 0 && this.tot_amt != parseInt(this.Deposit_Amount))||!this.tot_amt) && !this.isFnF){
 
               let error = document.getElementById("d_a");
               error.innerHTML = "Total denomination & deposit amount should be same, please check.";
@@ -883,7 +945,7 @@ export default {
       this.pageno = this.tot_amt = this.unmatchedAmt = this.CardAmount = 0;
       this.uploadFileList = []; this.reasonFileList = []; this.BankList = []; this.exception = []; this.exceptionList = []; this.exceptionArr = [];
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.ReasonSlip = this.Reason = '';
-      this.DisputeArr = [];
+      this.DisputeArr = []; this.RSCOwner = '';
       this.amoimp = this.vendrec = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = this.srabsc = this.srtpsr = this.srtptsvc = this.lowdis = this.nddiss = this.waliss = this.raziss = this.paypiss = false;
       this.ReasonAmount = this.vendrecAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.srabscAWBNo = this.srtpsrAmt = this.srtptsvcAmt = this.nddissAWBNo = this.walissAWBNo = this.razissAWBNo = this.paypissAWBNo = '';
       this.amoimpReason = this.vendrecReason = this.cassnatReason = this.carissReason = this.paychgReason = this.casstolReason = this.theftstolReason = this.wrongdelReason = this.srabscReason = this.srtpsrReason = this.srtptsvcReason = this.lowdisReason = this.nddissReason = this.walissReason = this.razissReason = this.paypissReason = '';
@@ -1087,8 +1149,7 @@ export default {
         statusid:         data.statusid,
         financereasonid:  data.financereasonid,
         createdby:        data.createdby,
-        username:         this.localuserid,
-        deliverydate:     this.resetDD
+        username:         this.localuserid
       });
 
       axios({
@@ -1113,5 +1174,65 @@ export default {
           console.error('exception is:::::::::', httpException); this.isLoading = false; this.$alertify.error('Error Occured');
       });
     },
+
+    //to get RSC Wise RSC Owner List
+    getRSCOwnerData() {
+      this.rscLoading = true; this.RSCOwnerList = [];
+
+      this.input = ({ hubid: this.localhubid });
+      axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'getHubRSCOwnerDetails',
+          'data': this.input,
+          headers: {
+            'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+          this.rscLoading = false;
+
+          if(result.data.code == 200){
+            this.RSCOwnerList = result.data.RSCOwnerArr;
+          }
+        }, error => {
+          this.rscLoading = false; console.error(error);
+        })
+    },
+
+    setRSCOwner(){
+
+      this.GetSVCledgerData();
+
+      if(this.RSCOwner && (this.todDate > this.RSCOwner.EffectiveToDate)) this.isFnF = true; else this.isFnF = false;
+
+      if(this.RSCOwner){
+        this.closingBalance = this.TolatCollection = this.pendingCODAmt = this.yesterdayCODAmt = this.exceptionAmount = 0;
+        this.penAmtLoading = true; this.disableButton = true;
+
+        this.input = ({
+          EffectiveToDate: this.RSCOwner.EffectiveToDate,
+          hubid: this.localhubid
+        })
+
+        axios({
+            method: 'POST',
+            'url': apiUrl.api_url + 'rscvendorpendingamt',
+            'data': this.input,
+            headers: {
+                'Authorization': 'Bearer '+this.myStr
+            }
+        })
+        .then(result => {
+          if(result.data.code == 200){
+            this.TolatCollection = this.pendingCODAmt = parseFloat(Math.round(result.data.data.closingbalance));
+            this.BatchID         = (result.data.data.batchid != 0 && result.data.data.batchid != null) ? result.data.data.batchid : this.BatchID;
+          }
+
+          this.penAmtLoading = false; this.disableButton = false;
+        }, error => {
+          this.penAmtLoading = false; console.error(error);
+        })
+      }else{ this.GetShipmentUpdate(); }
+    }
   }
 }

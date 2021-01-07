@@ -136,13 +136,7 @@ export default {
       todDate:'',
       resetdata:'',
       resetDD:'',
-      ResetmodalShow:false,
-      localhubIsRSC:false,
-      RSCOwnerList:[],
-      rscLoading:false,
-      EffectiveToDate:'',
-      isFnF:false,
-      FnFCompleted:''
+      ResetmodalShow:false
     }
   },
 
@@ -183,15 +177,13 @@ export default {
     DepositDate.min = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
 
     this.BatchID = this.localhubid+''+Math.floor(Math.random() * (Math.pow(10,5)));
-
-    this.todDate = new Date().toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
-
     await this.GetDenominationData();
     await this.GetSVCExceptionData();
     await this.GetReasonList();
     await this.GetSVCledgerData();
     await this.GetShipmentUpdate();
-    if(this.localhubIsRSC) await this.getRSCOwnerData();
+
+    this.todDate = new Date().toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
   },
 
   methods: {
@@ -668,8 +660,7 @@ export default {
               exceptionId: this.exceptionArr,
               exceptionAmount: this.exceptionAmount,
               hubIsRSC: this.localhubIsRSC,
-              financeclosingamt: parseInt(this.financeclosingamt),
-              EffectiveToDate: (this.EffectiveToDate ? this.EffectiveToDate : null)
+              financeclosingamt: parseInt(this.financeclosingamt)
           })
 
           axios({
@@ -892,7 +883,7 @@ export default {
       this.pageno = this.tot_amt = this.unmatchedAmt = this.CardAmount = 0;
       this.uploadFileList = []; this.reasonFileList = []; this.BankList = []; this.exception = []; this.exceptionList = []; this.exceptionArr = [];
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.ReasonSlip = this.Reason = '';
-      this.DisputeArr = []; this.EffectiveToDate = '';
+      this.DisputeArr = [];
       this.amoimp = this.vendrec = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = this.srabsc = this.srtpsr = this.srtptsvc = this.lowdis = this.nddiss = this.waliss = this.raziss = this.paypiss = false;
       this.ReasonAmount = this.vendrecAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.srabscAWBNo = this.srtpsrAmt = this.srtptsvcAmt = this.nddissAWBNo = this.walissAWBNo = this.razissAWBNo = this.paypissAWBNo = '';
       this.amoimpReason = this.vendrecReason = this.cassnatReason = this.carissReason = this.paychgReason = this.casstolReason = this.theftstolReason = this.wrongdelReason = this.srabscReason = this.srtpsrReason = this.srtptsvcReason = this.lowdisReason = this.nddissReason = this.walissReason = this.razissReason = this.paypissReason = '';
@@ -1096,7 +1087,8 @@ export default {
         statusid:         data.statusid,
         financereasonid:  data.financereasonid,
         createdby:        data.createdby,
-        username:         this.localuserid
+        username:         this.localuserid,
+        deliverydate:     this.resetDD
       });
 
       axios({
@@ -1121,35 +1113,5 @@ export default {
           console.error('exception is:::::::::', httpException); this.isLoading = false; this.$alertify.error('Error Occured');
       });
     },
-
-    //to get RSC Wise RSC Owner List
-    getRSCOwnerData() {
-      this.rscLoading = true; this.RSCOwnerList = [];
-
-      this.input = ({ hubid: this.localhubid });
-      axios({
-          method: 'POST',
-          url: apiUrl.api_url + 'getHubRSCOwnerDetails',
-          'data': this.input,
-          headers: {
-            'Authorization': 'Bearer '+this.myStr
-          }
-        })
-        .then(result => {
-          this.rscLoading = false;
-
-          if(result.data.code == 200){
-            this.RSCOwnerList = result.data.RSCOwnerArr;
-          }
-        }, error => {
-          this.rscLoading = false; console.error(error);
-        })
-    },
-
-    setRSCOwner(){
-      if(this.EffectiveToDate && (this.todDate > this.EffectiveToDate)) this.isFnF = true; else this.isFnF = false;
-
-      console.log(this.EffectiveToDate,' ==this.isFnF== ', this.isFnF);
-    }
   }
 }

@@ -6,7 +6,25 @@
           <div class="card-header"><i class="fa fa-align-justify"></i> COD Yesterday's Closure Of SVC</div>
           <div class="card-body">
             <form v-on:submit.prevent="onSubmit" id="svcform">
-              <div class="form-group">
+              <div class="form-group" v-if="localhubIsRSC">
+                <div class="input-group">
+                  <div class="input-group-prepend" style="width: 140px;">
+                    <span class="input-group-text" style="width: 140px;">RSC Owner <font color="red">&nbsp;*</font></span>
+                  </div>
+                  <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="rscLoading" />
+                  <select class="form-control" @change="setRSCOwner()" id="RSCOwner" v-model="RSCOwner" name="RSCOwner" v-validate="{required: true}"
+                  v-bind:class="{'form-control': true, 'error': errors.has('RSCOwner') }" style="margin-right: -8px;">
+                    <option value="">--Select--</option>
+                    <option v-for="rscowner_obj in RSCOwnerList" v-bind:value="rscowner_obj" >{{rscowner_obj.OutSourcingName}} - {{rscowner_obj.EffectiveFromDate}} To {{rscowner_obj.EffectiveToDate}}</option>
+                  </select>
+                  <div class="input-group-append">
+                    <span class="input-group-text"><i class="fa fa-angle-down"></i></span>
+                  </div>
+                </div>
+                <span v-show="errors.has('RSCOwner')" class="text-danger">RSC owner is required.</span>
+              </div>
+
+              <div class="form-group" v-show="!isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Delivery Date <font color="red">&nbsp;*</font></span>
@@ -23,7 +41,7 @@
               <div class="form-group">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
-                    <span class="input-group-text" style="width: 140px;">Deposit Date <font color="red">&nbsp;*</font></span>
+                    <span class="input-group-text" style="width: 140px;">{{isFnF ? 'FnF Date' : 'Deposit Date'}}<font color="red">&nbsp;*</font></span>
                   </div>
                   <b-form-input id="DepositDate" type="date" name="DepositDate" v-validate="{required: true}"
                   v-model="DepositDate" v-bind:class="{'form-control': true, 'error': errors.has('DepositDate') }" style="margin-right: -5px;"></b-form-input>
@@ -31,7 +49,7 @@
                     <span class="input-group-text"><i class="fa fa-calendar"></i></span>
                   </div>
                 </div>
-                <span v-show="errors.has('DepositDate')" class="text-danger">Deposit date is required. </span>
+                <span v-show="errors.has('DepositDate')" class="text-danger">{{isFnF ? 'FnF date is required.' : 'Deposit date is required.'}}</span>
               </div>
 
               <div class="form-group">
@@ -39,7 +57,7 @@
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Deposit Amount <font color="red">&nbsp;*</font></span>
                   </div>
-                  <input class="form-control" disabled @change="changeDepType" id="Deposit_Amount" type="text" name="Deposit_Amount" placeholder="Enter Deposit Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8"
+                  <input class="form-control" v-bind:disabled="!isFnF" @change="changeDepType" id="Deposit_Amount" type="text" name="Deposit_Amount" placeholder="Enter Deposit Amount" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8"
                     v-validate="{required: true}" v-model="Deposit_Amount" v-bind:class="{'form-control': true, 'error': errors.has('Deposit_Amount') }" style="margin-right: 0px;">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-rupee"></i></span>
@@ -49,7 +67,7 @@
                 <span id="d_a" v-show="errors.has('Deposit_Amount')" class="text-danger"><br/>Deposit amount is required. </span>
               </div>
 
-              <div class="form-group">
+              <div class="form-group" v-if="!isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Deposit Type <font color="red">&nbsp;*</font></span>
@@ -68,7 +86,7 @@
                   <span v-show="errors.has('DepositType')" class="text-danger">Deposit type is required.  </span>
               </div>
 
-              <div class="form-group">
+              <div class="form-group" v-if="!isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Bank Name <font color="red">&nbsp;*</font></span>
@@ -86,7 +104,7 @@
                 <span v-show="errors.has('BankMasterId')" class="text-danger">Bank name is required.</span>
               </div>
 
-              <div class="form-group">
+              <div class="form-group" v-if="!isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Transaction Id <font color="red">&nbsp;*</font></span>
@@ -101,7 +119,7 @@
                 <span v-show="errors.has('TransactionID')" class="text-danger"><br>Transaction id is required.</span>
               </div>
 
-              <div class="form-group" v-if="exceptionList.length>0">
+              <div class="form-group" v-if="exceptionList.length>0 && !isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Exception AWB No.</span>
@@ -116,7 +134,7 @@
                 </div>
               </div>
 
-              <div class="form-group" v-if="exceptionList.length>0">
+              <div class="form-group" v-if="exceptionList.length>0 && !isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Exception Amount</span>
@@ -129,7 +147,7 @@
                 </div>
               </div>
 
-              <div class="form-group" v-show="DepositType != ''">
+              <div class="form-group">
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="DepositLoading" />
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
@@ -162,7 +180,7 @@
                 <span v-show="errors.has('Reason')" class="text-danger">{{unmatchedAmt}} Rs is remaining amount, please select reason.</span>
               </div> -->
 
-              <div class="multiselect" v-show="unmatchedAmt > 0">
+              <div class="multiselect" v-if="!isFnF" v-show="unmatchedAmt > 0">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Reason <font color="red">&nbsp;*</font></span>
@@ -184,7 +202,7 @@
                 <span class="text-danger">Note: {{unmatchedAmt}} Rs is remaining amount, please select reason.</span>
               </div>
 
-              <div class="form-group" v-if="unmatchedAmt > 0 && amoimp">
+              <div class="form-group" v-if="unmatchedAmt > 0 && amoimp && !isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Reason Amount <font color="red">&nbsp;*</font></span>
@@ -198,7 +216,7 @@
                 <span v-show="errors.has('ReasonAmount')" class="text-danger">Reason amount used for tax payment/ imprest is required.</span>
               </div>
 
-              <div class="form-group" v-if="unmatchedAmt > 0 && amoimp">
+              <div class="form-group" v-if="unmatchedAmt > 0 && amoimp && !isFnF">
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="ReasonLoading" />
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
@@ -214,7 +232,7 @@
                 <a v-bind:title='`${file.name}`' v-for="file in reasonFileList" v-bind:href='`${file.url}`'><i class="fa fa-download" aria-hidden="true" style="font-size:25px; color:#4b8cbb; margin: 10px 15px 1px 10px;"></i></a>
               </div>
 
-              <div class="form-group" v-if="unmatchedAmt > 0 && cariss">
+              <div class="form-group" v-if="unmatchedAmt > 0 && cariss && !isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
@@ -229,7 +247,7 @@
                 <span id="awb_n" v-show="errors.has('carissAWBNo')" class="text-danger"><br>Card AWB No. is required.</span>
               </div>
 
-              <div class="form-group" v-if="unmatchedAmt > 0 && cassnat">
+              <div class="form-group" v-if="unmatchedAmt > 0 && cassnat && !isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
@@ -244,7 +262,7 @@
                 <span id="awb_n" v-show="errors.has('cassnatAWBNo')" class="text-danger"><br>Cash/shipmet snatched by Customer AWB No. is required.</span>
               </div>
 
-              <div class="form-group" v-if="unmatchedAmt > 0 && paychg">
+              <div class="form-group" v-if="unmatchedAmt > 0 && paychg && !isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
@@ -259,7 +277,7 @@
                 <span id="awb_n" v-show="errors.has('paychgAWBNo')" class="text-danger"><br>Payment Mode Changed AWB No. is required.</span>
               </div>
 
-              <div class="form-group" v-if="unmatchedAmt > 0 && vendrec">
+              <div class="form-group" v-if="unmatchedAmt > 0 && vendrec && !isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
@@ -274,7 +292,7 @@
                 <span id="awb_n" v-show="errors.has('vendrecAWBNo')" class="text-danger"><br>Vendor Recovery AWB No. is required.</span>
               </div>
 
-              <div class="form-group" v-if="unmatchedAmt > 0 && casstol">
+              <div class="form-group" v-if="unmatchedAmt > 0 && casstol && !isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
@@ -289,7 +307,7 @@
                 <span id="awb_n" v-show="errors.has('casstolAWBNo')" class="text-danger"><br>Cash stolen by unidentified party AWB No. is required.</span>
               </div>
 
-              <div class="form-group" v-if="unmatchedAmt > 0 && theftstol">
+              <div class="form-group" v-if="unmatchedAmt > 0 && theftstol && !isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
@@ -304,7 +322,7 @@
                 <span id="awb_n" v-show="errors.has('theftstolAWBNo')" class="text-danger"><br>Theft/Stolen cases AWB No. is required.</span>
               </div>
 
-              <div class="form-group" v-if="unmatchedAmt > 0 && wrongdel">
+              <div class="form-group" v-if="unmatchedAmt > 0 && wrongdel && !isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
@@ -319,7 +337,7 @@
                 <span id="awb_n" v-show="errors.has('wrongdelAWBNo')" class="text-danger"><br>Wrong Delivered Shipments AWB No. is required.</span>
               </div>
 
-              <div class="form-group" v-if="unmatchedAmt > 0 && srabsc">
+              <div class="form-group" v-if="unmatchedAmt > 0 && srabsc && !isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">AWB No. <font color="red">&nbsp;*</font></span>
@@ -348,7 +366,7 @@
                 <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Please enter comma (,) seperated AWB number.</span>
                 <span id="awb_n" v-show="errors.has('srtpsrAWBNo')" class="text-danger"><br>Short payment by SR AWB No. is required.</span>
               </div> -->
-              <div class="form-group" v-if="unmatchedAmt > 0 && srtpsr">
+              <div class="form-group" v-if="unmatchedAmt > 0 && srtpsr && !isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Amount <font color="red">&nbsp;*</font></span>
@@ -362,7 +380,7 @@
                 <span v-show="errors.has('srtpsrAmt')" class="text-danger">Short payment by SR amount is required.</span>
               </div>
 
-              <div class="form-group" v-if="unmatchedAmt > 0 && nddiss">
+              <div class="form-group" v-if="unmatchedAmt > 0 && nddiss && !isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text">AWB No. <font color="red">&nbsp;*</font></span>
@@ -373,7 +391,7 @@
                 <span id="awb_n" v-show="errors.has('nddissAWBNo')" class="text-danger">Non-Delivery dispute AWB No. is required.</span>
               </div>
 
-              <div class="form-group" v-if="unmatchedAmt > 0 && waliss">
+              <div class="form-group" v-if="unmatchedAmt > 0 && waliss && !isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text">AWB No. <font color="red">&nbsp;*</font></span>
@@ -384,7 +402,7 @@
                 <span id="awb_n" v-show="errors.has('walissAWBNo')" class="text-danger">Wallet AWB No. is required.</span>
               </div>
 
-              <div class="form-group" v-if="unmatchedAmt > 0 && paypiss">
+              <div class="form-group" v-if="unmatchedAmt > 0 && paypiss && !isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text">AWB No. <font color="red">&nbsp;*</font></span>
@@ -395,7 +413,7 @@
                 <span id="awb_n" v-show="errors.has('paypissAWBNo')" class="text-danger">Payphi AWB No. is required.</span>
               </div>
 
-              <div class="form-group" v-if="unmatchedAmt > 0 && srtptsvc">
+              <div class="form-group" v-if="unmatchedAmt > 0 && srtptsvc && !isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend" style="width: 140px;">
                     <span class="input-group-text" style="width: 140px;">Amount <font color="red">&nbsp;*</font></span>
@@ -409,7 +427,7 @@
                 <span v-show="errors.has('srtptsvcAmt')" class="text-danger">Short payment (theft at SVC) amount is required.</span>
               </div>
 
-              <div class="form-group" v-if="unmatchedAmt > 0 && raziss">
+              <div class="form-group" v-if="unmatchedAmt > 0 && raziss && !isFnF">
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text">AWB No. <font color="red">&nbsp;*</font></span>
