@@ -46,6 +46,7 @@ export default {
       selected: 'svcoutstanding',
       options: [
         { text: 'SVC Outstanding', value: 'svcoutstanding' },
+        { text: 'RSC Outstanding', value: 'rscoutstanding' },
         { text: 'Finance Outstanding', value: 'financeoutstanding' },
         { text: 'COD Summary', value: 'summary' }
       ],
@@ -133,7 +134,10 @@ export default {
       this.zoneIdArr = zData;
 
       if(zData.length===1 && zData[0].hubzoneid > 0){
-        this.getHubData(zData[0].hubzoneid);
+
+        if(this.selected!='rscoutstanding'){
+          this.getHubData(zData[0].hubzoneid);
+        }
         this.getRSCData(zData[0].hubzoneid);
       }else{
         this.disableHub = true;
@@ -164,6 +168,13 @@ export default {
           rep = apiUrl.api_url + 'exportSVCOutstandingReport';
         }else if(this.selected=='financeoutstanding' && this.deliverydate){
           rep = apiUrl.api_url + 'exportCODOutstandingReport';
+        }else if(this.selected=='rscoutstanding'){
+          rep = apiUrl.api_url + 'exportRSCOutstandingReport';
+
+          this.input = ({
+            hubid: this.SearchHIds,
+            zoneid: this.SearchZIds
+          })
         }
 
         axios({
@@ -240,6 +251,15 @@ export default {
         rep = apiUrl.api_url + 'getSVCOutstandingReport';
       }else if(this.selected=='financeoutstanding' && this.deliverydate){
         rep = apiUrl.api_url + 'getCODOutstandingReport';
+      }else if(this.selected=='rscoutstanding'){
+        rep = apiUrl.api_url + 'getRSCOutstandingReport';
+
+        this.input = ({
+          hubid: this.SearchHIds,
+          zoneid: this.SearchZIds,
+          offset:this.pageno,
+          limit:10
+        })
       }
 
       axios({
@@ -363,11 +383,13 @@ export default {
       this.$validator.validateAll().then(() => {
         if(this.selected){
           this.pageno = 0; document.getElementById("opt").innerHTML=""; this.exportf = false;
-          if((this.selected=='summary' || this.selected=='svcoutstanding' || this.selected=='financeoutstanding') && this.deliverydate){
+          if(((this.selected=='summary' || this.selected=='svcoutstanding' || this.selected=='financeoutstanding') && this.deliverydate) || this.selected=='rscoutstanding'){
+            if(this.selected == 'rscoutstanding' && this.RSCName.length<=0) return false;
+console.log('this.RSCName==', this.RSCName);
             this.reportlink = ''; this.getCODOutstandingReport();
           }
         }else{
-          document.getElementById("opt").innerHTML="Please choose atleast one search option ( SVC Outstanding OR Finance Outstanding OR COD Summary )."; return false;
+          document.getElementById("opt").innerHTML="Please choose atleast one search option ( SVC Outstanding OR RSC Owner OR Finance Outstanding OR COD Summary)."; return false;
         }
       }).catch(() => {
         console.log('errors exist', this.errors)
@@ -376,7 +398,7 @@ export default {
 
     resetForm() {
       this.deliverydate = this.zone = ''; this.hubList = this.HubId = this.RSCList = this.RSCName = this.CODOutstandingReport = this.SearchZIds = this.SearchHIds = [];
-      this.exportf = this.disableHub = false; this.pageno = this.resultCount = 0; this.reportlink = '';
+      this.exportf = this.disableHub = this.RSCLoading = this.zoneLoading = false; this.pageno = this.resultCount = 0; this.reportlink = '';
       this.$validator.reset(); this.errors.clear();
     }
   }

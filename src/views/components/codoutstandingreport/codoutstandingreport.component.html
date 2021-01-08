@@ -25,7 +25,7 @@
                   <span v-show="errors.has('zone')" class="text-danger">Zone is required.</span>
                 </div>
 
-                <div class="col-md-4" v-show="selected=='summary'">
+                <div class="col-md-4" v-show="(['summary','rscoutstanding'].includes(selected))">
                   <label>Zone <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="zoneLoading" />
@@ -36,7 +36,7 @@
                   <span v-show="errors.has('zone')" class="text-danger">Zone is required.</span>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-4" v-show="selected != 'rscoutstanding'">
                   <label>Hub / SVC</label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="hubLoading" />
@@ -47,17 +47,18 @@
                 </div>
 
                 <div class="col-md-4">
-                  <label>RSC / SVC</label>
+                  <label>RSC <font color="red" v-show="selected == 'rscoutstanding'">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="RSCLoading" />
-                    <Multiselect :options="RSCList" placeholder="Select RSC / SVC" v-bind:multiple="multipleRSC()" v-bind:disabled="disableHub" name="RSCName" id="RSCName" v-model="RSCName" label="HubName" track-by="HubName" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
+                    <Multiselect :options="RSCList" placeholder="Select RSC / SVC" v-bind:multiple="multipleRSC()" v-bind:disabled="disableHub" v-validate="`${selected == 'rscoutstanding' ? 'required' : ''}`" name="RSCName" id="RSCName" v-model="RSCName" label="HubName" track-by="HubName" :optionHeight="100" :hide-selected="false" style="border: 1px solid #c2cfd6;z-index:999">
                      <template slot="noResult"><p>No Record Found.</p></template>
                     </Multiselect>
                   </b-input-group>
+                  <span v-show="errors.has('RSCName')" class="text-danger">RSC is required.</span>
                 </div>
               </div>
 
-              <div class="form-group row">
+              <div class="form-group row" v-show="selected != 'rscoutstanding'">
                 <div class="col-md-4">
                   <label v-if="selected=='svcoutstanding'">Till Delivery Date <font color="red">*</font></label>
                   <label v-if="selected=='financeoutstanding'">Bank Credit Date <font color="red">*</font></label>
@@ -94,31 +95,24 @@
                     <th class="text-center tableheader"><b>#</b></th>
                     <th class="text-center tableheader"><b>Zone</b></th>
                     <th class="text-center tableheader"><b>Hub/SVC Name</b></th>
-                    <!-- <th class="text-center tableheader"><b>RSC Name</b></th> -->
-                    <th class="text-center tableheader" v-if="selected=='svcoutstanding'"><b>Till Date</b></th>
-                    <th class="text-center tableheader" v-if="selected=='financeoutstanding'"><b>Bank Credit Date</b></th>
-                    <th class="text-center tableheader" v-if="selected=='summary'"><b>Delivery Date</b></th>
-                    <th class="text-center tableheader" v-if="selected=='svcoutstanding'"><b>SVC Outstanding Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader" v-if="selected=='rscoutstanding'"><b>RSC Owner</b></th>
+                    <th class="text-center tableheader"><b>{{ selected=='financeoutstanding' ? 'Bank Credit Date' : selected=='summary' ? 'Delivery Date' : selected=='rscoutstanding' ? 'Duration' : 'Till Date' }}</b></th>
+                    <th class="text-center tableheader"><b>{{ selected=='financeoutstanding' ? 'Finance Outstanding' : selected=='summary' ? 'COD' : selected=='rscoutstanding' ? 'RSC Outstanding' : 'SVC Outstanding' }} Amount ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader" v-if="selected=='svcoutstanding'"><b>Pending Days</b></th>
-                    <th class="text-center tableheader" v-if="selected=='financeoutstanding'"><b>Finance Outstanding Amount ( <i class="fa fa-rupee"></i> )</b></th>
-                    <th class="text-center tableheader" v-if="selected=='summary'"><b>COD Amount ( <i class="fa fa-rupee"></i> )</b></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td v-if="selected=='svcoutstanding'" colspan="6" align="center">No record found</td>
-                    <td v-if="(['summary','financeoutstanding'].includes(selected))" colspan="5" align="center">No record found</td>
+                    <td v-bind:colspan="`${selected=='svcoutstanding' || selected=='rscoutstanding' ? 6 : 5 }`" align="center">No record found</td>
                   </tr>
                   <tr v-for="(CODOutstanding,index) in CODOutstandingReport">
                     <td class="text-center">{{pageno+index+1}}</td>
                     <td class="text-center">{{CODOutstanding.zonename}}</td>
                     <td class="text-center">{{CODOutstanding.hubname}}</td>
-                    <!-- <td class="text-center">{{CODOutstanding.rscowner}}</td> -->
-                    <td class="text-center">{{CODOutstanding.deliverydate}}</td>
-                    <td class="text-center" v-if="selected=='svcoutstanding'">{{CODOutstanding.svcoutstanding}}</td>
+                    <td class="text-center" v-show="selected == 'rscoutstanding'">{{CODOutstanding.rscowner}}</td>
+                    <td class="text-center">{{selected=='rscoutstanding' ? CODOutstanding.period : CODOutstanding.deliverydate }}</td>
+                    <td class="text-center">{{ selected=='financeoutstanding' ? CODOutstanding.financeoutstanding : selected=='summary' ? CODOutstanding.codamount : selected=='rscoutstanding' ? CODOutstanding.rscoutstanding : CODOutstanding.svcoutstanding }}</td>
                     <td class="text-center" v-if="selected=='svcoutstanding'">{{CODOutstanding.pendingDays}}</td>
-                    <td class="text-center" v-if="selected=='financeoutstanding'">{{CODOutstanding.financeoutstanding}}</td>
-                    <td class="text-center" v-if="selected=='summary'">{{CODOutstanding.codamount}}</td>
                   </tr>
                 </tbody>
               </table><br>
