@@ -219,11 +219,12 @@
                     <span class="dot1"></span> System Closure
                     <span class="dot2"></span> Tax Payment/Imprest
                     <span class="dot3"></span> Amount Mismatched
+                    <span class="dot4"></span> RSC Vendor
                   </font>
                 &nbsp; )
 
                 <span v-if="exportf==false && resultCount>0" style="margin-left: 20%;"><font style="font-size: 12px;color: red;font-weight: bold;">Report available in few seconds..</font></span>
-                <span v-show="exportf" style="margin-left: 35%; cursor: pointer;" @click="exportHubWiswData()">
+                <span v-show="exportf" style="margin-left: 25%; cursor: pointer;" @click="exportHubWiswData()">
                   <button class="btn btn-sm btn-success" type="button"><i class="fa fa-download"></i> Export</button>
                 </span>
               </h4>
@@ -262,7 +263,7 @@
                   <tr v-if="resultCount==0">
                     <td colspan="24" align="center">No record found</td>
                   </tr>
-                  <tr v-for="(CODLedger_List,index) in CODLedgerReports" v-bind:class="`${(CODLedger_List.createdby == 'schedular@xpressbees.com') || (CODLedger_List.deposittype) == '' ? 'scheduler' : '' || CODLedger_List.reasonid == 65 ? 'other' : '' || ([84,124,187,218,125].includes(CODLedger_List.financereasonid)) ? 'mismatched' : ''}`">
+                  <tr v-for="(CODLedger_List,index) in CODLedgerReports" v-bind:class="`${(CODLedger_List.createdby == 'schedular@xpressbees.com') || (CODLedger_List.deposittype == '' && ![366,367].includes(CODLedger_List.financereasonid)) ? 'scheduler' : '' || CODLedger_List.reasonid == 65 ? 'other' : '' || ([84,124,187,218,125].includes(CODLedger_List.financereasonid)) ? 'mismatched' : ([366,367].includes(CODLedger_List.financereasonid)) ? 'fnfrsc' : ''}`">
                     <td class="text-center">{{pageno+index+1}}</td>
                     <td class="text-center">{{CODLedger_List.zonename}}</td>
                     <td class="text-center">{{CODLedger_List.hubname}}</td>

@@ -96,14 +96,14 @@
                     <th class="text-center tableheader"><b>Zone</b></th>
                     <th class="text-center tableheader"><b>Hub/SVC Name</b></th>
                     <th class="text-center tableheader" v-if="selected=='rscoutstanding'"><b>RSC Owner</b></th>
-                    <th class="text-center tableheader"><b>{{ selected=='financeoutstanding' ? 'Bank Credit Date' : selected=='summary' ? 'Delivery Date' : selected=='rscoutstanding' ? 'Duration' : 'Till Date' }}</b></th>
+                    <th class="text-center tableheader"><b>{{ selected=='financeoutstanding' ? 'Bank Credit Date' : selected=='summary' ? 'Delivery Date' : selected=='rscoutstanding' ? 'Working Duration' : 'Till Date' }}</b></th>
                     <th class="text-center tableheader"><b>{{ selected=='financeoutstanding' ? 'Finance Outstanding' : selected=='summary' ? 'COD' : selected=='rscoutstanding' ? 'RSC Outstanding' : 'SVC Outstanding' }} Amount ( <i class="fa fa-rupee"></i> )</b></th>
-                    <th class="text-center tableheader" v-if="selected=='svcoutstanding'"><b>Pending Days</b></th>
+                    <th class="text-center tableheader" v-if="selected=='svcoutstanding' || selected=='rscoutstanding'"><b>{{ selected=='rscoutstanding' ? 'Status' : 'Pending Days' }}</b></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td v-bind:colspan="`${selected=='svcoutstanding' || selected=='rscoutstanding' ? 6 : 5 }`" align="center">No record found</td>
+                    <td v-bind:colspan="`${selected=='svcoutstanding' ? 6 : selected=='rscoutstanding' ? 7 : 5 }`" align="center">No record found</td>
                   </tr>
                   <tr v-for="(CODOutstanding,index) in CODOutstandingReport">
                     <td class="text-center">{{pageno+index+1}}</td>
@@ -113,6 +113,7 @@
                     <td class="text-center">{{selected=='rscoutstanding' ? CODOutstanding.period : CODOutstanding.deliverydate }}</td>
                     <td class="text-center">{{ selected=='financeoutstanding' ? CODOutstanding.financeoutstanding : selected=='summary' ? CODOutstanding.codamount : selected=='rscoutstanding' ? CODOutstanding.rscoutstanding : CODOutstanding.svcoutstanding }}</td>
                     <td class="text-center" v-if="selected=='svcoutstanding'">{{CODOutstanding.pendingDays}}</td>
+                    <td class="text-center" v-if="selected=='rscoutstanding'" v-bind:class="`${(CODOutstanding.status == 'Active') ? 'rscAc' : 'rscIn'}`">{{CODOutstanding.status}}</td>
                   </tr>
                 </tbody>
               </table><br>

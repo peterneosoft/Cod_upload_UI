@@ -146,6 +146,10 @@ td{
 	background-color: #E58080;
 }
 
+.fnfrsc {
+	background-color: #FF6C00;;
+}
+
 .scrolltb {
   display: block;
   overflow-x: auto;
@@ -295,6 +299,15 @@ table.scroll thead th:last-child {
   height: 15px;
   width: 15px;
   background-color: #E58080;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left:20px;
+}
+
+.dot4 {
+  height: 15px;
+  width: 15px;
+  background-color: #FF6C00;
   border-radius: 50%;
   display: inline-block;
   margin-left:20px;

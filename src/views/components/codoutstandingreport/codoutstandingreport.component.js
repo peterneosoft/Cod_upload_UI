@@ -45,8 +45,8 @@ export default {
       searchview:'',
       selected: 'svcoutstanding',
       options: [
-        { text: 'SVC Outstanding', value: 'svcoutstanding' },
-        { text: 'RSC Outstanding', value: 'rscoutstanding' },
+        { text: 'RSC/SVC Outstanding', value: 'svcoutstanding' },
+        { text: 'RSC Vendor Wise', value: 'rscoutstanding' },
         { text: 'Finance Outstanding', value: 'financeoutstanding' },
         { text: 'COD Summary', value: 'summary' }
       ],
@@ -383,9 +383,9 @@ export default {
       this.$validator.validateAll().then(() => {
         if(this.selected){
           this.pageno = 0; document.getElementById("opt").innerHTML=""; this.exportf = false;
+
           if(((this.selected=='summary' || this.selected=='svcoutstanding' || this.selected=='financeoutstanding') && this.deliverydate) || this.selected=='rscoutstanding'){
             if(this.selected == 'rscoutstanding' && this.RSCName.length<=0) return false;
-console.log('this.RSCName==', this.RSCName);
             this.reportlink = ''; this.getCODOutstandingReport();
           }
         }else{
