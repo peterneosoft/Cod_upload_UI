@@ -95,7 +95,7 @@
                     <th class="text-center tableheader"><b>#</b></th>
                     <th class="text-center tableheader"><b>Zone</b></th>
                     <th class="text-center tableheader"><b>Hub/SVC Name</b></th>
-                    <th class="text-center tableheader" v-if="selected=='rscoutstanding'"><b>RSC Owner</b></th>
+                    <th class="text-center tableheader" v-show="(['svcoutstanding','rscoutstanding'].includes(selected))"><b>RSC Owner</b></th>
                     <th class="text-center tableheader"><b>{{ selected=='financeoutstanding' ? 'Bank Credit Date' : selected=='summary' ? 'Delivery Date' : selected=='rscoutstanding' ? 'Working Duration' : 'Till Date' }}</b></th>
                     <th class="text-center tableheader"><b>{{ selected=='financeoutstanding' ? 'Finance Outstanding' : selected=='summary' ? 'COD' : selected=='rscoutstanding' ? 'RSC Outstanding' : 'SVC Outstanding' }} Amount ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader" v-if="selected=='svcoutstanding' || selected=='rscoutstanding'"><b>{{ selected=='rscoutstanding' ? 'Status' : 'Pending Days' }}</b></th>
@@ -103,13 +103,13 @@
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td v-bind:colspan="`${selected=='svcoutstanding' ? 6 : selected=='rscoutstanding' ? 7 : 5 }`" align="center">No record found</td>
+                    <td v-bind:colspan="`${selected=='svcoutstanding' || selected=='rscoutstanding' ? 7 : 5 }`" align="center">No record found</td>
                   </tr>
                   <tr v-for="(CODOutstanding,index) in CODOutstandingReport">
                     <td class="text-center">{{pageno+index+1}}</td>
                     <td class="text-center">{{CODOutstanding.zonename}}</td>
                     <td class="text-center">{{CODOutstanding.hubname}}</td>
-                    <td class="text-center" v-show="selected == 'rscoutstanding'">{{CODOutstanding.rscowner}}</td>
+                    <td class="text-center" v-show="(['svcoutstanding','rscoutstanding'].includes(selected))">{{CODOutstanding.rscowner}}</td>
                     <td class="text-center">{{selected=='rscoutstanding' ? CODOutstanding.period : CODOutstanding.deliverydate }}</td>
                     <td class="text-center">{{ selected=='financeoutstanding' ? CODOutstanding.financeoutstanding : selected=='summary' ? CODOutstanding.codamount : selected=='rscoutstanding' ? CODOutstanding.rscoutstanding : CODOutstanding.svcoutstanding }}</td>
                     <td class="text-center" v-if="selected=='svcoutstanding'">{{CODOutstanding.pendingDays}}</td>
