@@ -1203,9 +1203,10 @@ export default {
 
       this.GetSVCledgerData();
 
-      if(this.RSCOwner && (this.todDate > this.RSCOwner.EffectiveToDate)) this.isFnF = true; else this.isFnF = false;
+      if(this.RSCOwner && (this.RSCOwner.EffectiveToDate < this.DeliveryDate)){
 
-      if(this.RSCOwner){
+	this.isFnF = true;
+
         this.closingBalance = this.TolatCollection = this.pendingCODAmt = this.yesterdayCODAmt = this.exceptionAmount = 0;
         this.penAmtLoading = true; this.disableButton = true;
 
@@ -1232,7 +1233,7 @@ export default {
         }, error => {
           this.penAmtLoading = false; console.error(error);
         })
-      }else{ this.GetShipmentUpdate(); }
+      }else{ this.isFnF = false; this.GetShipmentUpdate(); }
     }
   }
 }
