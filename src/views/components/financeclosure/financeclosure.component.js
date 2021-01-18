@@ -101,8 +101,8 @@ export default {
 
   methods: {
     multipleHub(){
-      let key = this.HubId.length-1;
-      if(this.HubId.length>0 && this.HubId[key].HubID == 0){
+      let key = this.HubId ? this.HubId.length-1 : 0;
+      if(this.HubId && this.HubId.length>0 && this.HubId[key].HubID == 0){
         this.SearchHubIds = [];
         this.HubId = this.HubId[key];
 
@@ -113,13 +113,13 @@ export default {
         }
       }
 
-      if(this.HubId.HubID == 0){ return false; }
+      if(this.HubId && this.HubId.HubID == 0){ return false; }
       else{ this.SearchHubIds = []; return true; }
     },
 
     multipleRSC(){
-      let key = this.RSCName.length-1;
-      if(this.RSCName.length>0 && this.RSCName[key].HubID == 0){
+      let key = this.RSCName ? this.RSCName.length-1 : 0;
+      if(this.RSCName && this.RSCName.length>0 && this.RSCName[key].HubID == 0){
         this.SearchRSCIds = [];
         this.RSCName = this.RSCName[key];
 
@@ -130,7 +130,7 @@ export default {
         }
       }
 
-      if(this.RSCName.HubID == 0){ return false; }
+      if(this.RSCName && this.RSCName.HubID == 0){ return false; }
       else{ this.SearchRSCIds = []; return true; }
     },
 
@@ -656,10 +656,10 @@ export default {
       this.formatdeldate  = data.formatdeldate,
       this.bankid         = data.bankid;
 
-      if(data.financereasonid == 366){
-        this.FinanceReasonList = this.allFinanceReason.filter(item => (item['ReasonsID'] == 367));
+      if(data.financereasonid == 366 || data.financereasonid == 168){
+        this.FinanceReasonList = this.allFinanceReason.filter(item => (item['ReasonsID'] == 367 && item['ReasonsID'] == 169));
       }else{
-        this.FinanceReasonList = this.allFinanceReason.filter(item => (item['ReasonsID'] != 366 && item['ReasonsID'] != 367));
+        this.FinanceReasonList = this.allFinanceReason.filter(item => (item['ReasonsID'] != 366 && item['ReasonsID'] != 367 && item['ReasonsID'] != 168 && item['ReasonsID'] != 169));
       }
     },
   }

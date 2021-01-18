@@ -112,7 +112,7 @@
                   <tr v-if="resultCount==0">
                     <td colspan="13" align="center">No record found</td>
                   </tr>
-                  <tr v-for="(CODLedger_List,index) in CODLedgerReports" v-bind:class="`${(CODLedger_List.createdby == 'schedular@xpressbees.com') || (CODLedger_List.deposittype == '' && ![366,367].includes(CODLedger_List.financereasonid)) ? 'scheduler' : '' || CODLedger_List.reasonid == 65 ? 'other' : '' || ([84,124,187,218,125].includes(CODLedger_List.financereasonid)) ? 'mismatched' : ([366,367].includes(CODLedger_List.financereasonid)) ? 'fnfrsc' : ''}`">
+                  <tr v-for="(CODLedger_List,index) in CODLedgerReports" v-bind:class="`${(CODLedger_List.createdby == 'schedular@xpressbees.com') || (CODLedger_List.deposittype == '' && ![366,367,168,169].includes(CODLedger_List.financereasonid)) ? 'scheduler' : '' || CODLedger_List.reasonid == 65 ? 'other' : '' || ([84,124,187,218,125].includes(CODLedger_List.financereasonid)) ? 'mismatched' : ([366,367,168,169].includes(CODLedger_List.financereasonid)) ? 'fnfrsc' : ''}`">
                     <td class="text-center">{{pageno+index+1}}</td>
                     <td class="text-center">
                       <i @click.prevent="getSVCRowData(CODLedger_List)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
