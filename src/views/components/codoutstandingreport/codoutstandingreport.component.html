@@ -14,18 +14,7 @@
               </b-form-fieldset>
 
               <div class="form-group row">
-                <div class="col-md-4" v-show="(['svcoutstanding','financeoutstanding'].includes(selected))">
-                  <label>Zone <font color="red">*</font></label>
-                  <b-input-group left="<i class='fa fa-list'></i>">
-                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="zoneLoading" />
-                    <Multiselect :options="zoneList" name="zone" id="zone" v-model="zone" v-bind:multiple="multiple()" @input="addHubData" v-validate="{required: true}" v-bind:class="{'error': errors.has('zone') }" placeholder="Select Zone" label="hubzonename" track-by="hubzoneid" :optionHeight="100" :preselect-first="false" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
-                       <template slot="noResult"><p>No Record Found.</p></template>
-                    </Multiselect>
-                  </b-input-group>
-                  <span v-show="errors.has('zone')" class="text-danger">Zone is required.</span>
-                </div>
-
-                <div class="col-md-4" v-show="(['summary','rscoutstanding'].includes(selected))">
+                <div class="col-md-4">
                   <label>Zone <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="zoneLoading" />
