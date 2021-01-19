@@ -1149,7 +1149,8 @@ export default {
         statusid:         data.statusid,
         financereasonid:  data.financereasonid,
         createdby:        data.createdby,
-        username:         this.localuserid
+        username:         this.localuserid,
+        deliverydate:     this.resetDD
       });
 
       axios({

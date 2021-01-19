@@ -657,7 +657,7 @@ export default {
       this.bankid         = data.bankid;
 
       if(data.financereasonid == 366 || data.financereasonid == 168){
-        this.FinanceReasonList = this.allFinanceReason.filter(item => (item['ReasonsID'] == 367 && item['ReasonsID'] == 169));
+        this.FinanceReasonList = this.allFinanceReason.filter(item => (item['ReasonsID'] == 367 || item['ReasonsID'] == 169));
       }else{
         this.FinanceReasonList = this.allFinanceReason.filter(item => (item['ReasonsID'] != 366 && item['ReasonsID'] != 367 && item['ReasonsID'] != 168 && item['ReasonsID'] != 169));
       }
