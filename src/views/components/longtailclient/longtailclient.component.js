@@ -52,7 +52,12 @@ export default {
       comment:'',
       commentModalShow:false,
       bulkResp:[],
-      isFirefox:false
+      isFirefox:false,
+      delvLoading:false,
+      delvcycle:[],
+      SearchDelvcycleIds:[],
+      DelvCycleList:[],
+      utr:''
     }
   },
 
@@ -216,10 +221,10 @@ export default {
 
     action(type, data){
       $('span[id^="popUpText"]').hide();
-      this.ClientArr = []; this.singleArr = []; this.status = ''; this.status = type; this.holdremark = '';
+      this.ClientArr = []; this.singleArr = []; this.status = ''; this.status = type; this.holdremark = ''; this.utr = '';
 
       this.singleArr.push(data);
-      if(type=='Hold'){
+      if(type=='Hold' || type=='UTR'){
         this.$refs.myClosureModalRef.show();
       }else{
         this.$refs.myModalRef.show();
@@ -254,14 +259,17 @@ export default {
         clientArr.map(item => { item.Remark = this.holdremark; });
       }
 
-      this.input = ({
-        remittanceArray: clientArr,
-        Status: this.status,
-        CreatedBy: this.localuserid
-      })
+      let url = 'ltcremittanceManualClosure';
+      if(this.status=='UTR'){
+        url = 'updateUTR';
+        this.input = ({ RemittanceId: this.singleArr[0].RemittanceId, UTRNo: this.utr, username: this.localuserid });
+      }else{
+        this.input = ({ remittanceArray: clientArr, Status: this.status, CreatedBy: this.localuserid });
+      }
+
       axios({
         method: 'POST',
-        'url': apiUrl.api_url + 'ltcremittanceManualClosure',
+        'url': apiUrl.api_url + url,
         'data': this.input,
         headers: {
             'Authorization': 'Bearer '+this.myStr
@@ -447,6 +455,47 @@ export default {
 
     showComment(ele){
       this.comment = []; this.comment = ele; this.$refs.myCommentModalRef.show();
+    },
+
+    addDelvCycle() {
+      this.input = ({
+        fromDate: this.fromDate,
+        toDate: this.toDate
+      })
+      this.delvLoading = true;
+      axios({
+        method: 'POST',
+        url: apiUrl.api_url + 'getdeliverycycle',
+        'data': this.input,
+        headers: {
+          'Authorization': 'Bearer '+this.myStr
+        }
+      })
+      .then(result => {
+        this.delvLoading = false; this.RSCName = []; this.RSCList = [];
+        if(result.data.rsc.code == 200){
+          this.RSCList = [{HubID:'0', HubName:'All RSC', HubCode:'All RSC'}].concat(result.data.rsc.data);
+        }
+      }, error => {
+        this.RSCLoading = false; console.error(error)
+      })
+    },
+
+    multipleD(){
+      let key = this.delvcycle.length-1;
+      if(this.delvcycle.length>0 && this.delvcycle[key].DelvCycleId == 0){
+        this.SearchDelvCycleIds = [];
+        this.delvcycle = this.delvcycle[key];
+
+        for (let item of this.DelvCycleList) {
+          if (item.DelvCycleId != 0) {
+            this.SearchDelvCycleIds.push(item.DelvCycleId);
+          }
+        }
+      }
+
+      if(this.delvcycle.DelvCycleId == 0){ return false; }
+      else{ this.SearchDelvCycleIds = []; return true; }
     },
   }
 }
