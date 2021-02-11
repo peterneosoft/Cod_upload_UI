@@ -57,7 +57,7 @@ export default {
       delvcycle:[],
       SearchDelvcycleIds:[],
       DelvCycleList:[],
-      utr:''
+      utrno:''
     }
   },
 
@@ -184,11 +184,13 @@ export default {
     },
 
     closeStatusRoleModal(){
-       this.ModalShow = false;
+       this.ModalShow         = false;
        this.modalShipmentShow = false;
-       this.FCModal = false;
-       this.commentModalShow = false;
+       this.FCModal           = false;
+       this.commentModalShow  = false;
        $('span[id^="popUpText"]').hide();
+        this.utrno            = '';
+        this.holdremark       = '';
     },
 
     //to get pagination
@@ -220,8 +222,8 @@ export default {
     },
 
     action(type, data){
-      $('span[id^="popUpText"]').hide();
-      this.ClientArr = []; this.singleArr = []; this.status = ''; this.status = type; this.holdremark = ''; this.utr = '';
+      $('span[id^="popUpText"]').hide(); document.getElementById("utrHolderr").style.display = "none";
+      this.ClientArr = []; this.singleArr = []; this.status = ''; this.status = type;
 
       this.singleArr.push(data);
       if(type=='Hold' || type=='UTR'){
@@ -247,8 +249,8 @@ export default {
     },
 
     hideModal(ele) {
-      this.$refs.myModalRef.hide();
-      if(ele == 0){ this.remittance(); }
+      this.$refs.myModalRef.hide(); document.getElementById("utrHolderr").style.display = "none";
+      if(ele == 0){ this.remittance(); }else{ this.holdremark = ''; this.utrno = ''; }
     },
 
     remittance(){
@@ -262,7 +264,7 @@ export default {
       let url = 'ltcremittanceManualClosure';
       if(this.status=='UTR'){
         url = 'updateUTR';
-        this.input = ({ RemittanceId: this.singleArr[0].RemittanceId, UTRNo: this.utr, username: this.localuserid });
+        this.input = ({ RemittanceId: this.singleArr[0].RemittanceId, UTRNo: this.utrno, username: this.localuserid });
       }else{
         this.input = ({ remittanceArray: clientArr, Status: this.status, CreatedBy: this.localuserid });
       }
@@ -281,10 +283,9 @@ export default {
         } else {
           this.$alertify.error(result.data.msg)
         }
-        this.isLoading = false;  this.ClientArr = []; this.singleArr = []; this.checkAll = false;
+        this.isLoading = false; this.ClientArr = []; this.singleArr = []; this.checkAll = false; this.holdremark = ''; this.utrno = '';
       }, error => {
-        this.isLoading = false; this.checkAll = false;  this.ClientArr = []; this.singleArr = [];
-        console.log('error',error); this.$alertify.error('Remittance Error');
+        this.isLoading = false; this.checkAll = false; this.ClientArr = []; this.singleArr = []; this.holdremark = ''; this.utrno = ''; this.$alertify.error('Remittance Error');
       })
     },
 
@@ -306,7 +307,7 @@ export default {
     resetForm() {
       //this.remDate = '';
       this.fromDate = this.toDate = ''; this.pageno = 0; this.Client = this.CODLedgerReports = []; this.resultCount = 0; this.bulkResp = [];
-      this.excelLoading = false; this.ClientArr = this.exceptionList = this.shipmentList = []; this.SearchCIds = []; this.holdremark = '';
+      this.excelLoading = false; this.ClientArr = this.exceptionList = this.shipmentList = []; this.SearchCIds = []; this.holdremark = ''; this.utrno = '';
       this.$validator.reset(); this.errors.clear();
     },
 
@@ -446,6 +447,7 @@ export default {
           if(this.status!='Hold'){ this.holdremark = ''; }
           this.FCModal = false; this.$refs.myClosureModalRef.hide(); this.$refs.myModalRef.show();
         }else{
+          if(this.status=='UTR' || this.status=='Hold'){ document.getElementById("utrHolderr").style.display = "block"; }
           this.$alertify.error('Update Error');
         }
       }).catch(() => {

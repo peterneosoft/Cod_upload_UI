@@ -166,9 +166,10 @@
                             <b-form-fieldset>
                               <label v-if="status!='UTR'">Remark</label>
                               <b-input-group>
-                                <textarea v-if="status!='UTR'" rows="4" name = "holdremark" id="holdremark" ref="textarea" v-model="holdremark" v-validate="{required: true}" placeholder="Enter Hold Remark..." v-bind:class="{'form-control': true, 'error': errors.has('holdremark') }"></textarea>
-                                <b-form-input v-if="status=='UTR'" type="text" id="utr" name="utr" v-model="utr" placeholder="Enter UTR Number" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('utr') }"></b-form-input>
+                                <textarea v-if="status!='UTR'" rows="4" name = "holdremark" id="holdremark" ref="textarea" v-model="holdremark" v-validate="{required: true}" placeholder="Enter Hold Remark" v-bind:class="{'form-control': true, 'error': errors.has('holdremark') }"></textarea>
+                                <input v-if="status=='UTR'" type="text" id="utrno" name="utrno" v-model="utrno" placeholder="Enter UTR Number" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('utrno') }">
                               </b-input-group>
+                              <span id="utrHolderr" class="text-danger">{{ status=='UTR' ? 'UTR number' : 'Hold Remark' }} is required. </span>
                             </b-form-fieldset>
                           </div>
                         </div>
@@ -230,7 +231,7 @@
               </thead>
               <tbody>
                 <tr v-if="resultCount==0">
-                  <td v-bind:colspan="selected=='Done'?9:selected=='Hold'?11:10" align="center">No record found</td>
+                  <td v-bind:colspan="selected=='Done' ? 10 : 11" align="center">No record found</td>
                 </tr>
                 <tr v-if="resultCount>0" v-for="(data,index) in listPendingRemittanceData">
                   <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
