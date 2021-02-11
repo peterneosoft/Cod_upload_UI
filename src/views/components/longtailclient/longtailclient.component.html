@@ -52,13 +52,13 @@
                 <span id="delverr" class="text-danger"></span>
               </div> -->
 
-              <div class="col-md-12" style="margin-top:3%;">
+              <div v-bind:class="selected=='Initiated' ? 'col-md-8' : selected=='Hold' ? 'col-md-4' : 'col-md-4'" style="margin-top:3%;">
                 <span>
                   <button class="btn btn-sm btn-primary" type="submit" style="border-radius: 5px; padding: 5px 12px;"><i class="fa fa-search"></i> Search</button>
                   <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset" style="border-radius: 5px; padding: 5px 12px;"><i class="fa fa-ban"></i> Clear</button>
                 </span>
 
-                <span style="margin-left: 20%;">
+                <span v-bind:style="selected=='Done' ? 'margin-left: 2%' : 'margin-left: 25%'">
                   <button v-if="selected=='Initiated'" @click="exportData()" class="btn btn-sm btn-ltc" title="Download Remittance Report" type="button" style="width: 50px;"><i class="fa fa-download"></i></button>
                   <label v-if="selected=='Initiated'" title="Bulk Remittance" for="remittancefile" class="custom-file-upload btn-ltc" style="border-radius: 5px;">Bulk Upload <i class="fa fa-upload"></i></label><input @change="onUpload" type="file" name="remittancefile" id="remittancefile" placeholder="Bulk Remittance"/>
                   <button v-if="selected=='Initiated'" @click='bulkAction("Hold")' class="btn btn-sm btn-ltc" title="Hold Client Remittance" type="button" style="width: 70px;">Hold</button>

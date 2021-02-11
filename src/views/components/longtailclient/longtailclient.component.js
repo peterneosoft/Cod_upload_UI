@@ -184,13 +184,13 @@ export default {
     },
 
     closeStatusRoleModal(){
-       this.ModalShow         = false;
-       this.modalShipmentShow = false;
-       this.FCModal           = false;
-       this.commentModalShow  = false;
-       $('span[id^="popUpText"]').hide();
-        this.utrno            = '';
-        this.holdremark       = '';
+      $('span[id^="popUpText"]').hide();
+      this.utrno             = '';
+      this.holdremark        = '';
+      this.ModalShow         = false;
+      this.modalShipmentShow = false;
+      this.FCModal           = false;
+      this.commentModalShow  = false;
     },
 
     //to get pagination
@@ -227,7 +227,7 @@ export default {
 
       this.singleArr.push(data);
       if(type=='Hold' || type=='UTR'){
-        this.$refs.myClosureModalRef.show();
+        this.FCModal = true; this.$refs.myClosureModalRef.show();
       }else{
         this.$refs.myModalRef.show();
       }
@@ -239,7 +239,7 @@ export default {
         this.status = type;
 
         if(type=='Hold'){
-          this.$refs.myClosureModalRef.show();
+          this.FCModal = true; this.$refs.myClosureModalRef.show();
         }else{
           this.$refs.myModalRef.show();
         }
@@ -249,7 +249,7 @@ export default {
     },
 
     hideModal(ele) {
-      this.$refs.myModalRef.hide(); document.getElementById("utrHolderr").style.display = "none";
+      document.getElementById("utrHolderr").style.display = "none"; this.$refs.myModalRef.hide();
       if(ele == 0){ this.remittance(); }else{ this.holdremark = ''; this.utrno = ''; }
     },
 
@@ -445,7 +445,8 @@ export default {
       this.$validator.validateAll().then((result) => {
         if(result){
           if(this.status!='Hold'){ this.holdremark = ''; }
-          this.FCModal = false; this.$refs.myClosureModalRef.hide(); this.$refs.myModalRef.show();
+          if(this.status!='UTR'){ this.utrno = ''; }
+          this.$refs.myClosureModalRef.hide(); this.$refs.myModalRef.show();
         }else{
           if(this.status=='UTR' || this.status=='Hold'){ document.getElementById("utrHolderr").style.display = "block"; }
           this.$alertify.error('Update Error');
