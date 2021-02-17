@@ -57,6 +57,7 @@ export default {
       delvcycle:[],
       SearchDelvcycleIds:[],
       DelvCycleList:[],
+      SearchDIds:[],
       utrno:''
     }
   },
@@ -111,8 +112,25 @@ export default {
       else{ this.SearchClientIds = []; return true; }
     },
 
+    multipleD(){
+      let key = this.delvcycle.length-1;
+      if(this.delvcycle.length>0 && this.delvcycle[key].fromDate == 0){
+        this.SearchDelvcycleIds = [];
+        this.delvcycle = this.delvcycle[key];
+
+        for (let item of this.DelvCycleList) {
+          if (item.fromDate != 0) {
+            this.SearchDelvcycleIds.push(item.fromDate);
+          }
+        }
+      }
+
+      if(this.delvcycle.fromDate == 0){ return false; }
+      else{ this.SearchDelvcycleIds = []; return true; }
+    },
+
     GetClientData() {
-      this.clientLoading = true; this.ClientList = [];
+      this.clientLoading = true; this.ClientList = []; this.DelvCycleList = []; this.delvLoading = true;
       axios({
         method: 'POST',
         url: apiUrl.api_url + 'getLTCClientList',
@@ -123,15 +141,16 @@ export default {
       }).then(result => {
         if(result.data.code == 200){
           this.ClientList = [{ClientId:'0', CompanyName:'All Client'}].concat(result.data.data);
+          this.DelvCycleList = [{fromDate:'0', cycle:'All Cycle'}].concat(result.data.remitcycle);
         }
-        this.clientLoading = false;
+        this.clientLoading = false; this.delvLoading = false;
       }, error => {
-        this.clientLoading = false; console.error(error)
+        this.clientLoading = false; this.delvLoading = false; console.error(error)
       })
     },
 
     getLTCRemittanceStatusWise (){
-      this.isLoading = true; this.listPendingRemittanceData=[]; let clientIdArr = []; this.bulkResp = [];
+      this.isLoading = true; this.listPendingRemittanceData=[]; let clientIdArr = []; this.bulkResp = []; let delvCycleArr = [];
 
       if(this.SearchClientIds.length>0){
         clientIdArr = this.SearchClientIds;
@@ -146,15 +165,29 @@ export default {
       }
       this.SearchCIds = clientIdArr;
 
+      if(this.SearchDelvcycleIds.length>0){
+        delvCycleArr = this.SearchDelvcycleIds;
+      }else{
+        if($.isArray(this.delvcycle) === false){
+          this.delvcycle = new Array(this.delvcycle);
+        }
+
+        this.delvcycle.forEach(function (val) {
+          delvCycleArr.push(val.fromDate);
+        });
+      }
+      this.SearchDIds = delvCycleArr;
+
       this.input = ({
         ClientId: this.SearchCIds,
         Status: this.selected,
         CreatedBy: this.localuserid,
         //fromDate: this.fromDate?this.fromDate:this.remDate?this.remDate:'',
         fromDate: this.fromDate?this.fromDate:'',
-        toDate: this.toDate,
+        toDate: this.toDate?this.toDate:'',
         offset:this.pageno,
-        limit:10
+        limit:10,
+        remitcycle:this.SearchDIds
       })
       axios({
           method: 'POST',
@@ -307,7 +340,7 @@ export default {
     resetForm() {
       //this.remDate = '';
       this.fromDate = this.toDate = ''; this.pageno = 0; this.Client = this.CODLedgerReports = []; this.resultCount = 0; this.bulkResp = [];
-      this.excelLoading = false; this.ClientArr = this.exceptionList = this.shipmentList = []; this.SearchCIds = []; this.holdremark = ''; this.utrno = '';
+      this.excelLoading = false; this.ClientArr = this.exceptionList = this.shipmentList = []; this.SearchCIds = []; this.SearchDIds = []; this.holdremark = ''; this.utrno = '';
       this.$validator.reset(); this.errors.clear();
     },
 
@@ -319,9 +352,10 @@ export default {
 
         if(this.selected=='Done'){
           this.input = ({
-            ClientId: this.SearchCIds,
-            fromDate: this.fromDate,
-            toDate:   this.toDate
+            ClientId:   this.SearchCIds,
+            fromDate: this.fromDate?this.fromDate:'',
+            toDate: this.toDate?this.toDate:'',
+            remitcycle: this.SearchDIds
           });
 
           api = 'exportApprovedRemittance ';
@@ -482,23 +516,6 @@ export default {
       }, error => {
         this.RSCLoading = false; console.error(error)
       })
-    },
-
-    multipleD(){
-      let key = this.delvcycle.length-1;
-      if(this.delvcycle.length>0 && this.delvcycle[key].DelvCycleId == 0){
-        this.SearchDelvCycleIds = [];
-        this.delvcycle = this.delvcycle[key];
-
-        for (let item of this.DelvCycleList) {
-          if (item.DelvCycleId != 0) {
-            this.SearchDelvCycleIds.push(item.DelvCycleId);
-          }
-        }
-      }
-
-      if(this.delvcycle.DelvCycleId == 0){ return false; }
-      else{ this.SearchDelvCycleIds = []; return true; }
     },
   }
 }
