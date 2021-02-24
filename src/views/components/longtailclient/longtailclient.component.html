@@ -205,6 +205,7 @@
       <div class="row">
         <div class="col-12" v-if="bulkResp.length==0">
           <div class="card-headerfrm" style="margin-bottom: 15px;">
+            <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
             <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
             <table class="table-bordered table-hover tbl datatables scrolltb" style="width:100%;">
               <thead>
@@ -230,7 +231,7 @@
               </thead>
               <tbody>
                 <tr v-if="resultCount==0">
-                  <td v-bind:colspan="selected=='Done' ? 10 : 11" align="center">No record found</td>
+                  <td v-bind:colspan="selected=='Initiated' ? 10 : 11" align="center">No record found</td>
                 </tr>
                 <tr v-if="resultCount>0" v-for="(data,index) in listPendingRemittanceData">
                   <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>

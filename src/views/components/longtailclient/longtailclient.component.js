@@ -339,7 +339,7 @@ export default {
 
     resetForm() {
       //this.remDate = '';
-      this.fromDate = this.toDate = ''; this.pageno = 0; this.Client = this.CODLedgerReports = []; this.resultCount = 0; this.bulkResp = [];
+      this.fromDate = this.toDate = ''; this.pageno = 0; this.Client = this.CODLedgerReports = []; this.resultCount = 0; this.bulkResp = []; this.delvcycle = [];
       this.excelLoading = false; this.ClientArr = this.exceptionList = this.shipmentList = []; this.SearchCIds = []; this.SearchDIds = []; this.holdremark = ''; this.utrno = '';
       this.$validator.reset(); this.errors.clear();
     },
