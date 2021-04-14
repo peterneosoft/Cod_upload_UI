@@ -57,7 +57,8 @@ export default {
       totalPayphiAmt:0,
       totalCardAmt:0,
       totalWalletAmt:0,
-      totalRazorpayAmt:0
+      totalRazorpayAmt:0,
+      finalHybridList:[]
     }
   },
   computed: {
@@ -109,7 +110,7 @@ export default {
     },
 
     resetForm() {
-      this.deliverydate = this.deldate = this.reportlink = this.SR_Name = this.Agent_Name = ''; this.srSummaryList = this.DelToInscanList = this.SRList = []; this.resultCount = this.pageno = this.pagecount = 0;
+      this.deliverydate = this.deldate = this.reportlink = this.SR_Name = this.Agent_Name = ''; this.srSummaryList = this.DelToInscanList = this.finalHybridList = this.SRList = []; this.resultCount = this.pageno = this.pagecount = 0;
       this.totalCashAmt = this.totalPayphiAmt = this.totalCardAmt = this.totalWalletAmt = this.totalRazorpayAmt = 0;
       this.exportf = false; this.$validator.reset(); this.errors.clear();
       this.GetDeliveryAgentData();
@@ -147,11 +148,12 @@ export default {
           this.totalRazorpayAmt = result.data.totalRazorpayAmt;
 
           this.DelToInscanList  = result.data.DelToInscanArr;
+          this.finalHybridList  = result.data.finalHybridArr;
 
           this.pagecount        = 1;
           this.exportf          = true;
         }else{
-          this.srSummaryList = this.DelToInscanList = []; this.resultCount = this.pagecount = 0; this.exportf = false;
+          this.srSummaryList = this.DelToInscanList = this.finalHybridList = []; this.resultCount = this.pagecount = 0; this.exportf = false;
           this.totalCashAmt = this.totalPayphiAmt = this.totalCardAmt = this.totalWalletAmt = this.totalRazorpayAmt = 0;
         }
       }, error => {

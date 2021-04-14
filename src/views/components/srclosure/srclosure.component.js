@@ -156,7 +156,13 @@ export default {
       hideCM:1,
       TodaysRazorpayCount:0,
       TodaysRazorpay:0,
-      deliveredRazorpayArr:[]
+      deliveredRazorpayArr:[],
+      hybridCashArr:[],
+      hybridPayphiArr:[],
+      hybridWalletArr:[],
+      hybridCardArr:[],
+      hybridRazorpayArr:[],
+      hyb:''
     }
   },
 
@@ -205,10 +211,11 @@ export default {
         this.modalSRNameShow = false
     },
 
-    showShippingidModal(typ, ele){
-      this.awbnotype = ''; this.awbArr = [];
+    showShippingidModal(typ, ele, hyb=''){
+      this.awbnotype = ''; this.awbArr = []; this.hyb = '';
       this.awbnotype = typ;
       this.awbArr = ele;
+      this.hyb = hyb;
       this.$refs.shippingModalRef.show();
     },
 
@@ -417,7 +424,7 @@ export default {
       this.Regionshow = this.RightSRLedger = this.SRLedgerDetails = false;
       this.assign = this.card = this.cash = this.cod = this.ndr = this.prepaid = this.wallet = this.payphi = 0;
       this.assignArr = this.cardArr = this.cashArr = this.ndrArr = this.prepaidArr = this.walletArr = this.payphiArr = this.awbArr = this.codArr = [];
-      this.SR_Name = this.Deposit_Amount = this.Reason = this.tot_amt = this.awbnotype = '';
+      this.SR_Name = this.Deposit_Amount = this.Reason = this.tot_amt = this.awbnotype = this.hyb = '';
 
       this.DisputeArr = this.DenomDetail = []; this.CardAmount = 0;
 
@@ -436,6 +443,8 @@ export default {
           srid: this.SR_Name
        })
        this.isLoading = true;
+       this.hybridCashArr = []; this.hybridPayphiArr = []; this.hybridWalletArr = []; this.hybridCardArr = []; this.hybridRazorpayArr = [];
+
        axios({
            method: 'POST',
            url: apiUrl.api_url + 'getRightSRLedgerDetails',
@@ -460,20 +469,33 @@ export default {
                this.deliveredCardArr    = result.data.CODDetailsArr[0].cardArr
                this.deliveredRazorpayArr= result.data.CODDetailsArr[0].razorpayArr
 
-               this.TodaysCash          = result.data.CODDetailsArr[0].cashAmt
-               this.TodaysPayphi        = result.data.CODDetailsArr[0].payphiAmt
-               this.TodaysWallet        = result.data.CODDetailsArr[0].walletAmt
-               this.TodaysCard          = result.data.CODDetailsArr[0].cardAmt
-               this.TodaysRazorpay      = result.data.CODDetailsArr[0].razorpayAmt
+               this.TodaysCash          = parseFloat(result.data.CODDetailsArr[0].cashAmt)
+               this.TodaysPayphi        = parseFloat(result.data.CODDetailsArr[0].payphiAmt)
+               this.TodaysWallet        = parseFloat(result.data.CODDetailsArr[0].walletAmt)
+               this.TodaysCard          = parseFloat(result.data.CODDetailsArr[0].cardAmt)
+               this.TodaysRazorpay      = parseFloat(result.data.CODDetailsArr[0].razorpayAmt)
 
                this.TodaysCashCount     = result.data.CODDetailsArr[0].cash
                this.TodaysPayphiCount   = result.data.CODDetailsArr[0].payphi
                this.TodaysWalletCount   = result.data.CODDetailsArr[0].wallet
                this.TodaysCardCount     = result.data.CODDetailsArr[0].card
                this.TodaysRazorpayCount = result.data.CODDetailsArr[0].razorpay
+
+               //Hybrid Data//
+
+               result.data.CODDetailsArr[0].hybridArr.map(el=>{
+
+                 if(el.PaymentMode === 'Cash'){ this.TodaysCash += parseFloat(el.cashAmt); this.hybridCashArr.push(el); }
+                 else if(el.PaymentMode === 'Payphi'){ this.TodaysPayphi += parseFloat(el.cashAmt); this.hybridPayphiArr.push(el); }
+                 else if(el.PaymentMode === 'Card'){ this.TodaysCard +=parseFloat(el.cashAmt); this.hybridCardArr.push(el); }
+                 else if(el.PaymentMode === 'Wallet'){ this.TodaysWallet += parseFloat(el.cashAmt); this.hybridWalletArr.push(el); }
+                 else if(el.PaymentMode === 'Razorpay'){ this.TodaysRazorpay += parseFloat(el.cashAmt); this.hybridRazorpayArr.push(el); }
+              })
+
              }else{
                this.TodaysCash = this.TodaysPayphi = this.TodaysWallet = this.TodaysCard = this.TodaysCashCount = this.TodaysPayphiCount = this.TodaysWalletCount = this.TodaysCardCount =  this.TodaysRazorpayCount =  this.TodaysRazorpay = 0;
                this.deliveredCashArr = this.deliveredPayphiArr = this.deliveredWalletArr = this.deliveredCardArr = this.deliveredRazorpayArr = [];
+               this.hybridCashArr = []; this.hybridPayphiArr = []; this.hybridWalletArr = []; this.hybridCardArr = []; this.hybridRazorpayArr = [];
              }
            }else{
               this.isLoading = false;
@@ -541,7 +563,7 @@ export default {
             if(result.data.code == 204){
               this.assign = this.card = this.cash = this.cod = this.ndr = this.prepaid = this.wallet = this.payphi = 0;
               this.assignArr = this.cardArr = this.cashArr = this.ndrArr = this.prepaidArr = this.walletArr = this.payphiArr = this.awbArr = this.codArr = [];
-              this.awbnotype = '';
+              this.awbnotype = this.hyb = '';
               this.Loading = false;
             }
 

@@ -363,8 +363,9 @@
             <table class="table-responsive-sm table-bordered table-hover tbl datatables" style="width:100%;">
               <thead>
                 <tr class="text-primary">
-                  <th class="text-center tableheader" style="width: 30%"><b>Type</b></th>
-                  <th class="text-center tableheader" style="width: 30%"><b>Count</b></th>
+                  <th class="text-center tableheader" style="width: 20%"><b>Type</b></th>
+                  <th class="text-center tableheader" style="width: 15%"><b>Single</b></th>
+                  <th class="text-center tableheader" style="width: 15%"><b>Hybrid</b></th>
                   <th class="text-center tableheader" style="width: 30%"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
                 </tr>
               </thead>
@@ -373,30 +374,40 @@
                   <td class="text-center" style="width: 30%">Cash</td>
                   <td v-if="TodaysCashCount > 0" class="text-center" @click="showShippingidModal('Cash AWB Numbers', deliveredCashArr)" style="width: 30%; cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{TodaysCashCount}}</td>
                   <td class="text-center" v-if="TodaysCashCount<=0">{{TodaysCashCount}}</td>
+                  <td v-if="hybridCashArr.length > 0" class="text-center" @click="showShippingidModal('Cash AWB Numbers', hybridCashArr, 'hybrid')" style="width: 30%; cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{hybridCashArr.length}}</td>
+                  <td class="text-center" v-if="hybridCashArr.length<=0">0</td>
                   <td class="text-center" style="width: 30%">{{TodaysCash}}</td>
                 </tr>
                 <tr>
                   <td class="text-center" style="width: 30%">Payphi</td>
                   <td v-if="TodaysPayphiCount > 0" class="text-center" @click="showShippingidModal('Payphi AWB Numbers', deliveredPayphiArr)" style="width: 30%; cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{TodaysPayphiCount}}</td>
                   <td class="text-center" v-if="TodaysPayphiCount<=0">{{TodaysPayphiCount}}</td>
+                  <td v-if="hybridPayphiArr.length > 0" class="text-center" @click="showShippingidModal('Payphi AWB Numbers', hybridPayphiArr, 'hybrid')" style="width: 30%; cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{hybridPayphiArr.length}}</td>
+                  <td class="text-center" v-if="hybridPayphiArr.length<=0">0</td>
                   <td class="text-center" style="width: 30%">{{TodaysPayphi}}</td>
                 </tr>
                 <tr>
                   <td class="text-center" style="width: 30%">Card</td>
                   <td v-if="TodaysCardCount > 0" class="text-center" @click="showShippingidModal('Card AWB Numbers', deliveredCardArr)" style="width: 30%; cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{TodaysCardCount}}</td>
                   <td class="text-center" v-if="TodaysCardCount<=0">{{TodaysCardCount}}</td>
+                  <td v-if="hybridCardArr.length > 0" class="text-center" @click="showShippingidModal('Card AWB Numbers', hybridCardArr, 'hybrid')" style="width: 30%; cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{hybridCardArr.length}}</td>
+                  <td class="text-center" v-if="hybridCardArr.length<=0">0</td>
                   <td class="text-center" style="width: 30%">{{TodaysCard}}</td>
                 </tr>
                 <tr>
                   <td class="text-center" style="width: 30%">Wallet</td>
                   <td v-if="TodaysWalletCount > 0" class="text-center" @click="showShippingidModal('Wallet AWB Numbers', deliveredWalletArr)" style="width: 30%; cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{TodaysWalletCount}}</td>
                   <td class="text-center" v-if="TodaysWalletCount<=0">{{TodaysWalletCount}}</td>
+                  <td v-if="hybridWalletArr.length > 0" class="text-center" @click="showShippingidModal('Wallet AWB Numbers', hybridWalletArr, 'hybrid')" style="width: 30%; cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{hybridWalletArr.length}}</td>
+                  <td class="text-center" v-if="hybridWalletArr.length<=0">0</td>
                   <td class="text-center" style="width: 30%">{{TodaysWallet}}</td>
                 </tr>
                 <tr>
                   <td class="text-center" style="width: 30%">Razorpay</td>
                   <td v-if="TodaysRazorpayCount > 0" class="text-center" @click="showShippingidModal('Razorpay AWB Numbers', deliveredRazorpayArr)" style="width: 30%; cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{TodaysRazorpayCount}}</td>
                   <td class="text-center" v-if="TodaysRazorpayCount<=0">{{TodaysRazorpayCount}}</td>
+                  <td v-if="hybridRazorpayArr.length > 0" class="text-center" @click="showShippingidModal('Razorpay AWB Numbers', hybridRazorpayArr, 'hybrid')" style="width: 30%; cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{hybridRazorpayArr.length}}</td>
+                  <td class="text-center" v-if="hybridRazorpayArr.length<=0">0</td>
                   <td class="text-center" style="width: 30%">{{TodaysRazorpay}}</td>
                 </tr>
               </tbody>
@@ -444,14 +455,20 @@
                   <tr class="text-primary">
                     <th class="text-center tableheader" style="width: 25px"><b>#</b></th>
                     <th class="text-center tableheader" style="width: 298px"><b>AWB Number</b></th>
-                    <th class="text-center tableheader" style="width: 128px"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th v-if="!hyb" class="text-center tableheader" style="width: 128px"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th v-if="hyb" class="text-center tableheader" style="width: 128px"><b>Cash Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th v-if="hyb" class="text-center tableheader" style="width: 128px"><b>Digital Amount ( <i class="fa fa-rupee"></i> )</b></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(val,index) in awbArr">
                     <td class="text-center">{{index+1}}</td>
-                    <td class="text-center" style="width: 70%">{{val.ShippingID}}</td>
-                    <td class="text-center" style="width: 30%">{{val.Amount}}</td>
+                    <td v-if="!hyb" class="text-center" style="width: 70%">{{val.ShippingID}}</td>
+                    <td v-if="!hyb" class="text-center" style="width: 30%">{{val.Amount}}</td>
+
+                    <td v-if="hyb" class="text-center" style="width: 60%">{{val.ShippingID}}</td>
+                    <td v-if="hyb" class="text-center" style="width: 20%">{{val.cashAmt}}</td>
+                    <td v-if="hyb" class="text-center" style="width: 20%">{{val.digitalAmt}}</td>
                   </tr>
                 </tbody>
               </table>
@@ -461,7 +478,9 @@
                   <tr class="text-primary">
                     <th class="text-center tableheader" style="width: 18px"><b>#</b></th>
                     <th class="text-center tableheader" style="width: 312px"><b>AWB Number</b></th>
-                    <th class="text-center tableheader" style="width: 133px"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th v-if="!hyb" class="text-center tableheader" style="width: 133px"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th v-if="hyb" class="text-center tableheader" style="width: 128px"><b>Cash Amount ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th v-if="hyb" class="text-center tableheader" style="width: 128px"><b>Digital Amount ( <i class="fa fa-rupee"></i> )</b></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -470,8 +489,12 @@
                   </tr>
                   <tr v-for="(val,index) in awbArr">
                     <td class="text-center">{{index+1}}</td>
-                    <td class="text-center" style="width: 70%">{{val.ShippingID}}</td>
-                    <td class="text-center" style="width: 30%">{{val.Amount}}</td>
+                    <td v-if="!hyb" class="text-center" style="width: 70%">{{val.ShippingID}}</td>
+                    <td v-if="!hyb" class="text-center" style="width: 30%">{{val.Amount}}</td>
+
+                    <td v-if="hyb" class="text-center" style="width: 60%">{{val.ShippingID}}</td>
+                    <td v-if="hyb" class="text-center" style="width: 20%">{{val.cashAmt}}</td>
+                    <td v-if="hyb" class="text-center" style="width: 20%">{{val.digitalAmt}}</td>
                   </tr>
                 </tbody>
               </table>
