@@ -469,11 +469,11 @@ export default {
                this.deliveredCardArr    = result.data.CODDetailsArr[0].cardArr
                this.deliveredRazorpayArr= result.data.CODDetailsArr[0].razorpayArr
 
-               this.TodaysCash          = parseFloat(result.data.CODDetailsArr[0].cashAmt)
-               this.TodaysPayphi        = parseFloat(result.data.CODDetailsArr[0].payphiAmt)
-               this.TodaysWallet        = parseFloat(result.data.CODDetailsArr[0].walletAmt)
-               this.TodaysCard          = parseFloat(result.data.CODDetailsArr[0].cardAmt)
-               this.TodaysRazorpay      = parseFloat(result.data.CODDetailsArr[0].razorpayAmt)
+               this.TodaysCash          = parseFloat(result.data.CODDetailsArr[0].cashAmt) + parseFloat(result.data.CODDetailsArr[0].hybridCashAmt)
+               this.TodaysPayphi        = parseFloat(result.data.CODDetailsArr[0].payphiAmt) + parseFloat(result.data.CODDetailsArr[0].hybridPayphiAmt)
+               this.TodaysWallet        = parseFloat(result.data.CODDetailsArr[0].walletAmt) + parseFloat(result.data.CODDetailsArr[0].hybridWalletAmt)
+               this.TodaysCard          = parseFloat(result.data.CODDetailsArr[0].cardAmt) + parseFloat(result.data.CODDetailsArr[0].hybridCardAmt)
+               this.TodaysRazorpay      = parseFloat(result.data.CODDetailsArr[0].razorpayAmt) + parseFloat(result.data.CODDetailsArr[0].hybridRazorpayAmt)
 
                this.TodaysCashCount     = result.data.CODDetailsArr[0].cash
                this.TodaysPayphiCount   = result.data.CODDetailsArr[0].payphi
@@ -481,15 +481,16 @@ export default {
                this.TodaysCardCount     = result.data.CODDetailsArr[0].card
                this.TodaysRazorpayCount = result.data.CODDetailsArr[0].razorpay
 
+               this.hybridCashArr = result.data.todaysHybridArr
+
                //Hybrid Data//
 
                result.data.CODDetailsArr[0].hybridArr.map(el=>{
 
-                 if(el.PaymentMode === 'Cash'){ this.TodaysCash += parseFloat(el.cashAmt); this.hybridCashArr.push(el); }
-                 else if(el.PaymentMode === 'Payphi'){ this.TodaysPayphi += parseFloat(el.cashAmt); this.hybridPayphiArr.push(el); }
-                 else if(el.PaymentMode === 'Card'){ this.TodaysCard +=parseFloat(el.cashAmt); this.hybridCardArr.push(el); }
-                 else if(el.PaymentMode === 'Wallet'){ this.TodaysWallet += parseFloat(el.cashAmt); this.hybridWalletArr.push(el); }
-                 else if(el.PaymentMode === 'Razorpay'){ this.TodaysRazorpay += parseFloat(el.cashAmt); this.hybridRazorpayArr.push(el); }
+                 if(el.PaymentMode === 'Payphi') this.hybridPayphiArr.push(el);
+                 else if(el.PaymentMode === 'Card') this.hybridCardArr.push(el);
+                 else if(el.PaymentMode === 'Wallet') this.hybridWalletArr.push(el);
+                 else if(el.PaymentMode === 'Razorpay') this.hybridRazorpayArr.push(el);
               })
 
              }else{
