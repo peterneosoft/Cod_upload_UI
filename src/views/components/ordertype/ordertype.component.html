@@ -59,7 +59,9 @@
                     <th class="text-center tableheader"><b>Status</b></th>
                     <th class="text-center tableheader"><b>Shipment Status</b></th>
                     <th class="text-center tableheader"><b>Order Type</b></th>
-                    <th class="text-center tableheader"><b>COD Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Cash ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Digital ( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>COD ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Hub Name</b></th>
                     <th class="text-center tableheader"><b>Last Modified By</b></th>
                     <th class="text-center tableheader"><b>Last Modified Date</b></th>
@@ -67,7 +69,7 @@
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td colspan="9" align="center">No record found</td>
+                    <td colspan="11" align="center">No record found</td>
                   </tr>
                   <tr v-for="(shipmentobj,index) in shipmentList">
                     <td class="text-center">{{pageno+index+1}}</td>
@@ -75,6 +77,8 @@
                     <td class="text-center">{{shipmentobj.Status}}</td>
                     <td class="text-center">{{shipmentobj.ShipmentStatus}}</td>
                     <td class="text-center">{{shipmentobj.OrderType}}</td>
+                    <td class="text-center">{{shipmentobj.CashPayment}}</td>
+                    <td class="text-center">{{shipmentobj.DigitalPayment}}</td>
                     <td class="text-center">{{shipmentobj.NetPayment}}</td>
                     <td class="text-center">{{shipmentobj.CurrentHubName}}</td>
                     <td class="text-center">{{shipmentobj.LastModifiedBy}}</td>

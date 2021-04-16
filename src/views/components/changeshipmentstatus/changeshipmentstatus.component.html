@@ -53,7 +53,9 @@
                     <th class="text-center tableheader"><b>Order Type</b></th>
                     <th class="text-center tableheader"><b>Epayment Type</b></th>
                     <th class="text-center tableheader"><b>OctroiMRP <br>( <i class="fa fa-rupee"></i> )</b></th>
-                    <th class="text-center tableheader"><b>Net Payment <br>( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Cash Payment<br>( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Digital Payment<br>( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Net Payment<br>( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader"><b>Origin Hub Name</b></th>
                     <th class="text-center tableheader"><b>Final Destination Name</b></th>
                     <th class="text-center tableheader"><b>Current Hub Name</b></th>
@@ -63,7 +65,7 @@
                 </thead>
                 <tbody>
                   <tr v-if="resultCount==0">
-                    <td colspan="13" align="center">No record found</td>
+                    <td colspan="15" align="center">No record found</td>
                   </tr>
                   <tr v-for="(shipmentobj,index) in shipmentList">
                     <td class="text-center">{{pageno+index+1}}</td>
@@ -73,6 +75,8 @@
                     <td class="text-center">{{shipmentobj.OrderType}}</td>
                     <td class="text-center">{{shipmentobj.EpaymentType}}</td>
                     <td class="text-center">{{shipmentobj.OctroiMRP}}</td>
+                    <td class="text-center">{{shipmentobj.CashPayment}}</td>
+                    <td class="text-center">{{shipmentobj.DigitalPayment}}</td>
                     <td class="text-center">{{shipmentobj.NetPayment}}</td>
                     <td class="text-center">{{shipmentobj.OriginHubName}}</td>
                     <td class="text-center">{{shipmentobj.FinalDestinationHubName}}</td>
