@@ -35,7 +35,11 @@ export default {
       submitLoading:false,
       confModalShow:false,
       EpaymentNameList:[],
-      shipmentList:[]
+      shipmentList:[],
+      EpaymentHybridList:[],
+      cashAmt:'',
+      digitalAmt:'',
+      NetPayment:''
     }
   },
 
@@ -58,6 +62,13 @@ export default {
       {'EpaymentType':'wallet', 'EpaymentName':'PayTM'},
       {'EpaymentType':'payphi', 'EpaymentName':'Payphi'},
       {'EpaymentType':'card', 'EpaymentName':'Mosambee'},
+      {'EpaymentType':'razorpay', 'EpaymentName':'Razorpay'},
+    ];
+
+    this.EpaymentHybridList = [
+      {'EpaymentType':'wallet', 'EpaymentName':'Wallet'},
+      {'EpaymentType':'payphi', 'EpaymentName':'Payphi'},
+      {'EpaymentType':'card', 'EpaymentName':'Card'},
       {'EpaymentType':'razorpay', 'EpaymentName':'Razorpay'},
     ];
   },
@@ -87,7 +98,9 @@ export default {
           EPaymentTypeFrom:this.OEpayType,
           EPaymentType: this.eptype,
           EPaymentName: this.epname,
-          hubid: this.hubid
+          hubid: this.hubid,
+          CashPayment: this.cashAmt,
+          DigitalPayment: this.digitalAmt
       })
       axios({
           method: 'POST',
@@ -140,22 +153,23 @@ export default {
           }
         })
         .then(result => {
-          this.shipmentList = [];
+          this.shipmentList = []; this.NetPayment='';
           if(result.data.code == 200){
 
             this.shipmentLoading  = this.submitLoading = false;
             this.shipmentList     = result.data.data;
             this.hubid            = this.shipmentList[0].CurrentHubID;
             this.OEpayType        = this.shipmentList[0].EpaymentType;
+            this.NetPayment       = this.shipmentList[0].NetPayment;
             this.resultCount      = result.data.count;
             this.pagecount        = 1
           }else{
             this.shipmentLoading = this.submitLoading = false;
-            this.resultCount  = 0
+            this.resultCount  = 0;
             this.$alertify.error(result.data.msg);
           }
         }, error => {
-          this.shipmentLoading = this.submitLoading = false;
+          this.shipmentLoading = this.submitLoading = false; this.NetPayment='';
           console.error(error)
           this.$alertify.error('Error Occured');
         })
@@ -185,6 +199,14 @@ export default {
           this.eptype = event.target[1].selectedOptions[0].text;
           this.epname = event.target[2].selectedOptions[0].text;
 
+          if(this.epaymenttype=='hybrid'){
+            if(parseFloat(Math.round(parseFloat(this.cashAmt)+parseFloat(this.digitalAmt)))!=parseFloat(Math.round(this.NetPayment))){
+              this.$alertify.error('Invalid cash amount, sum of cash & digital amount should be equal to net payment.'); return false;
+            }
+          }else{
+            this.cashAmt = ''; this.digitalAmt = '';
+          }
+
           this.showConfirmationModal(event);
         }
       }).catch(() => {
@@ -194,7 +216,7 @@ export default {
 
     resetForm() {
       this.pageno = this.resultCount = 0; this.shipmentList = []; this.shipmentLoading = false; this.epaymenttype = this.epaymentname = '';
-      this.OEpayType = this.NEpayType = this.eptype = this.epname = this.hubid = '';
+      this.OEpayType = this.NEpayType = this.eptype = this.epname = this.hubid = ''; this.NetPayment='';
       this.$validator.reset(); this.errors.clear();
     },
   }

@@ -124,6 +124,39 @@
       </div>
      </div>
 
+     <div class="col-12" v-if="finalHybridList.length>0">
+       <div class="card-headerfrm" style="margin-bottom: 15px;">
+         <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Hybrid Shipments</h4>
+         <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+         <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+           <thead>
+             <tr class="text-primary">
+               <th class="text-center tableheader"><b>#</b></th>
+               <th class="text-center tableheader"><b>SR Name</b></th>
+               <th class="text-center tableheader"><b>Delivery Date</b></th>
+               <th class="text-center tableheader"><b>AWB Number</b></th>
+               <th class="text-center tableheader"><b>Cash Amount(<i class="fa fa-rupee"></i>)</b></th>
+               <th class="text-center tableheader"><b>Digital Amount(<i class="fa fa-rupee"></i>)</b></th>
+               <th class="text-center tableheader"><b>Total Amount(<i class="fa fa-rupee"></i>)</b></th>
+               <th class="text-center tableheader"><b>Payment Mode</b></th>
+             </tr>
+           </thead>
+           <tbody>
+             <tr v-for="(val,index) in finalHybridList">
+               <td scope="row" class="text-center"><strong>{{index+1}}</strong></td>
+               <td class="text-center">{{val.SRName}}</td>
+               <td class="text-center">{{val.DeliveryDate}}</td>
+               <td class="text-center">{{val.ShippingID}}</td>
+               <td class="text-center">{{val.CashPayment}}</td>
+               <td class="text-center">{{val.DigitalPayment}}</td>
+               <td class="text-center">{{val.TotalAmount}}</td>
+               <td class="text-center">{{val.PaymentMode}}</td>
+             </tr>
+           </tbody>
+         </table>
+       </div>
+      </div>
+
      <b-modal ref="shippingModalRef" v-model="modalShippingShow"  id=#confirmationmodal1 title="Confirmation">
        <div role="document">
          <div class="modal-content">

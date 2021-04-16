@@ -50,7 +50,8 @@ export default {
       totalCardAmt:0,
       totalWalletAmt:0,
       totalRazorpayAmt:0,
-      role:''
+      role:'',
+      finalHybridList:[]
     }
   },
   computed: {
@@ -157,7 +158,7 @@ export default {
     },
 
     resetForm() {
-      this.deliverydate = this.deldate = this.HubId = this.zone = this.reportlink = ''; this.hubList = this.srSummaryList = []; this.resultCount = this.pageno = this.pagecount = 0;
+      this.deliverydate = this.deldate = this.HubId = this.zone = this.reportlink = ''; this.hubList = this.srSummaryList = this.finalHybridArr = []; this.resultCount = this.pageno = this.pagecount = 0;
       this.totalCashAmt = this.totalPayphiAmt = this.totalCardAmt = this.totalWalletAmt = this.totalRazorpayAmt = 0;
       this.exportf = false; this.$validator.reset(); this.errors.clear();
     },
@@ -193,11 +194,13 @@ export default {
           this.totalWalletAmt   = result.data.totalWalletAmt;
           this.totalRazorpayAmt = result.data.totalRazorpayAmt;
 
+          this.finalHybridList  = result.data.finalHybridArr;
+
           this.pagecount        = 1;
           this.exportf          = true;
         }else{
           this.totalCashAmt = this.totalPayphiAmt = this.totalCardAmt = this.totalWalletAmt = this.totalRazorpayAmt = 0;
-          this.srSummaryList = []; this.resultCount = this.pagecount = 0; this.exportf = false;
+          this.srSummaryList = this.finalHybridList = []; this.resultCount = this.pagecount = 0; this.exportf = false;
         }
       }, error => {
         this.isLoading = this.exportf = false;
