@@ -216,7 +216,7 @@ export default {
 
     resetForm() {
       this.pageno = this.resultCount = 0; this.shipmentList = []; this.shipmentLoading = false; this.epaymenttype = this.epaymentname = '';
-      this.OEpayType = this.NEpayType = this.eptype = this.epname = this.hubid = ''; this.NetPayment='';
+      this.OEpayType = this.NEpayType = this.eptype = this.epname = this.hubid = ''; this.NetPayment=''; this.cashAmt=''; this.digitalAmt='';
       this.$validator.reset(); this.errors.clear();
     },
   }

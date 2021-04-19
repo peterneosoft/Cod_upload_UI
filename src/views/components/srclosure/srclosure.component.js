@@ -481,16 +481,21 @@ export default {
                this.TodaysCardCount     = result.data.CODDetailsArr[0].card
                this.TodaysRazorpayCount = result.data.CODDetailsArr[0].razorpay
 
-               this.hybridCashArr = result.data.todaysHybridArr
+               this.hybridCashArr = result.data.CODDetailsArr[0].hybridArr
 
                //Hybrid Data//
 
                result.data.CODDetailsArr[0].hybridArr.map(el=>{
 
-                 if(el.PaymentMode === 'Payphi') this.hybridPayphiArr.push(el);
-                 else if(el.PaymentMode === 'Card') this.hybridCardArr.push(el);
-                 else if(el.PaymentMode === 'Wallet') this.hybridWalletArr.push(el);
-                 else if(el.PaymentMode === 'Razorpay') this.hybridRazorpayArr.push(el);
+                 if(el.PaymentMode === 'Payphi'){
+                   this.hybridPayphiArr.push(el);
+                 }else if(el.PaymentMode === 'Card'){
+                   this.hybridCardArr.push(el);
+                 }else if(el.PaymentMode === 'Wallet'){
+                   this.hybridWalletArr.push(el);
+                 }else if(el.PaymentMode === 'Razorpay'){
+                   this.hybridRazorpayArr.push(el);
+                 }
               })
 
              }else{
