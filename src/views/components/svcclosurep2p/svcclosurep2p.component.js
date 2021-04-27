@@ -58,6 +58,8 @@ export default {
       nddissAWBNo: '',
       walissAWBNo: '',
       razissAWBNo: '',
+      habridpiAWBNo: '',
+      habridpiAMT: '',
       paypissAWBNo: '',
       srtpsrAmt: '',
       srtptsvcAmt: '',
@@ -74,6 +76,7 @@ export default {
       nddissReason: '',
       walissReason: '',
       razissReason: '',
+      habridpiReason: '',
       paypissReason: '',
       CardAmount: 0,
       DisputeArr: [],
@@ -118,6 +121,7 @@ export default {
       nddiss: false,
       waliss: false,
       raziss: false,
+      habridpi: false,
       paypiss: false,
       modalAWBNoShow:false,
       awbnotype:'',
@@ -522,6 +526,8 @@ export default {
 
       if(this.razissAWBNo) awbArr.push({ ReasonID:this.razissReason, AWBNo:this.checkAWB(this.razissAWBNo) });
 
+      if(this.habridpiAWBNo) awbArr.push({ ReasonID:this.habridpiReason, AWBNo:this.checkAWB(this.habridpiAWBNo), ReasonAmt:this.habridpiAMT });
+
       axios({
         method: 'POST',
         'url': apiUrl.api_url + 'getAWBNo',
@@ -924,7 +930,7 @@ export default {
               this.unmatchedAmt = 0;
               this.showExModal(parseInt(parseInt(Math.round(parseFloat(this.Deposit_Amount))) - parseInt(Math.round(parseFloat(this.pendingCODAmt)+parseFloat(this.yesterdayCODAmt)-parseFloat(this.exceptionAmount)))));
             }else{
-              if(this.amoimp || this.cariss || this.paychg || this.cassnat || this.casstol || this.theftstol || this.vendrec || this.wrongdel || this.srabsc || this.srtpsr || this.srtptsvc || this.lowdis || this.nddissReason || this.walissReason || this.razissReason || this.paypissReason){
+              if(this.amoimp || this.cariss || this.paychg || this.cassnat || this.casstol || this.theftstol || this.vendrec || this.wrongdel || this.srabsc || this.srtpsr || this.srtptsvc || this.lowdis || this.nddissReason || this.walissReason || this.razissReason || this.paypissReason || this.habridpiReason){
                 this.cardawbno(event);
               }else{
                 this.saveSvcClosure();
@@ -946,9 +952,9 @@ export default {
       this.uploadFileList = []; this.reasonFileList = []; this.BankList = []; this.exception = []; this.exceptionList = []; this.exceptionArr = [];
       this.DepositDate = this.Deposit_Amount = this.DepositType = this.BankMasterId = this.TransactionID = this.DepositSlip = this.ReasonSlip = this.Reason = '';
       this.DisputeArr = []; this.RSCOwner = '';
-      this.amoimp = this.vendrec = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = this.srabsc = this.srtpsr = this.srtptsvc = this.lowdis = this.nddiss = this.waliss = this.raziss = this.paypiss = false;
-      this.ReasonAmount = this.vendrecAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.srabscAWBNo = this.srtpsrAmt = this.srtptsvcAmt = this.nddissAWBNo = this.walissAWBNo = this.razissAWBNo = this.paypissAWBNo = '';
-      this.amoimpReason = this.vendrecReason = this.cassnatReason = this.carissReason = this.paychgReason = this.casstolReason = this.theftstolReason = this.wrongdelReason = this.srabscReason = this.srtpsrReason = this.srtptsvcReason = this.lowdisReason = this.nddissReason = this.walissReason = this.razissReason = this.paypissReason = '';
+      this.amoimp = this.vendrec = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = this.srabsc = this.srtpsr = this.srtptsvc = this.lowdis = this.nddiss = this.waliss = this.raziss = this.paypiss = this.habridpi = false;
+      this.ReasonAmount = this.vendrecAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.srabscAWBNo = this.srtpsrAmt = this.srtptsvcAmt = this.nddissAWBNo = this.walissAWBNo = this.razissAWBNo = this.paypissAWBNo = this.habridpiAWBNo = this.habridpiAMT = '';
+      this.amoimpReason = this.vendrecReason = this.cassnatReason = this.carissReason = this.paychgReason = this.casstolReason = this.theftstolReason = this.wrongdelReason = this.srabscReason = this.srtpsrReason = this.srtptsvcReason = this.lowdisReason = this.nddissReason = this.walissReason = this.razissReason = this.paypissReason = this.habridpiReason = '';
       $('#denomlist input[type="text"]').val(0); $('#denomlist input[type="number"]').val('');
       document.getElementById("d_a").style.display = "none";
       this.GetSVCExceptionData();
@@ -976,7 +982,7 @@ export default {
     changeDepType(){ //change deposit Amount
      this.unmatchedAmt = this.CardAmount = 0; this.Reason = ''; this.ReasonAmount = ''; this.DisputeArr = []; this.reasonFileList = [];
      this.amoimp = this.vendrec = this.lowdis = this.cassnat = this.cariss = this.paychg = this.casstol = this.theftstol = this.wrongdel = this.srabsc = this.srtpsr = this.srtptsvc = this.nddiss = this.waliss = this.raziss = this.paypiss = false;
-     this.ReasonAmount = this.vendrecAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.srabscAWBNo = this.srtpsrAmt = this.srtptsvcAmt = this.nddissAWBNo = this.walissAWBNo = this.razissAWBNo = this.paypissAWBNo = '';
+     this.ReasonAmount = this.vendrecAWBNo = this.cassnatAWBNo = this.carissAWBNo = this.paychgAWBNo = this.casstolAWBNo = this.theftstolAWBNo = this.wrongdelAWBNo = this.srabscAWBNo = this.srtpsrAmt = this.srtptsvcAmt = this.nddissAWBNo = this.walissAWBNo = this.razissAWBNo = this.paypissAWBNo = this.habridpiAWBNo = this.habridpiAMT = '';
 
       $('input[name="reason"]').each(function() {
   			this.checked = false;
@@ -999,7 +1005,6 @@ export default {
     },
 
     showHideReasonField(Reason){
-
       if(($('#'+Reason).prop("checked") == true) && Reason){
         if(Reason == 65){
           this.amoimp = true; this.amoimpReason = Reason;
@@ -1033,6 +1038,8 @@ export default {
           this.paypiss = true; this.paypissReason = Reason;
         }else if((process.env.NODE_ENV == 'development' && Reason == 365) || (process.env.NODE_ENV == 'production' && Reason == 167)){
           this.raziss = true; this.razissReason = Reason;
+        }else if(Reason == 369){
+          this.habridpi = true; this.habridpiReason = Reason;
         }
       }else{
         if(Reason == 65){
@@ -1067,6 +1074,8 @@ export default {
           this.paypiss = false; this.paypissAWBNo = ''; this.paypissReason = '';
         }else if((process.env.NODE_ENV == 'development' && Reason == 365) || (process.env.NODE_ENV == 'production' && Reason == 167)){
           this.raziss = false; this.razissAWBNo = ''; this.razissReason = '';
+        }else if(Reason == 369){
+          this.habridpi = false; this.habridpiAWBNo = ''; this.habridpiAMT = ''; this.habridpiReason = '';
         }
       }
     },
