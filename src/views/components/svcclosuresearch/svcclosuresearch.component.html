@@ -70,7 +70,7 @@
                     <td class="text-center" style="width: 49%" v-if="val.ReasonAmt">
                       <table class="table-bordered table-hover tbl datatables">
                         <tr>
-                          <td class="text-center" style="width:20%">&nbsp;</td>
+                          <td class="text-center" style="width:20%">{{val.awb.map(x => Object.keys(x)[0]).join(', ')}}</td>
                           <td class="text-center" style="width:9%">{{val.ReasonAmt}}</td>
                         </tr>
                       </table>
