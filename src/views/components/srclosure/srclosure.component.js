@@ -823,8 +823,6 @@ export default {
           this.cariss = true; this.carissReason = Reason;
         }else if(Reason == 70){
           this.codnttim = true; this.codnttimReason = Reason;
-        }else if(Reason == 368){
-          this.habridpi = true; this.habridpiReason = Reason;
         }else if((process.env.NODE_ENV == 'development' && Reason == 185) || (process.env.NODE_ENV == 'production' && Reason == 122)){
           this.paychg = true; this.paychgReason = Reason;
         }else if((process.env.NODE_ENV == 'development' && Reason == 251) || (process.env.NODE_ENV == 'production' && Reason == 126)){
@@ -839,6 +837,8 @@ export default {
           this.paypiss = true; this.paypissReason = Reason;
         }else if((process.env.NODE_ENV == 'development' && Reason == 364) || (process.env.NODE_ENV == 'production' && Reason == 166)){
           this.raziss = true; this.razissReason = Reason;
+        }else if((process.env.NODE_ENV == 'development' && Reason == 368) || (process.env.NODE_ENV == 'production' && Reason == 170)){
+          this.habridpi = true; this.habridpiReason = Reason;
         }
 
       }else{
@@ -862,8 +862,6 @@ export default {
           this.cariss = false; this.carissAWBNo = ''; this.carissReason = '';
         }else if(Reason == 70){
           this.codnttim = false; this.codnttimReason = Reason;
-        }else if(Reason == 368){
-          this.habridpi = false; this.habridpiAWBNo = ''; this.habridpiAMT = ''; this.habridpiReason = '';
         }else if((process.env.NODE_ENV == 'development' && Reason == 185) || (process.env.NODE_ENV == 'production' && Reason == 122)){
           this.paychg = false; this.paychgAWBNo = ''; this.paychgReason = '';
         }else if((process.env.NODE_ENV == 'development' && Reason == 251) || (process.env.NODE_ENV == 'production' && Reason == 126)){
@@ -878,6 +876,8 @@ export default {
           this.paypiss = false; this.paypissAWBNo = ''; this.paypissReason = '';
         }else if((process.env.NODE_ENV == 'development' && Reason == 364) || (process.env.NODE_ENV == 'production' && Reason == 166)){
           this.raziss = false; this.razissAWBNo = ''; this.razissReason = '';
+        }else if((process.env.NODE_ENV == 'development' && Reason == 368) || (process.env.NODE_ENV == 'production' && Reason == 170)){
+          this.habridpi = false; this.habridpiAWBNo = ''; this.habridpiAMT = ''; this.habridpiReason = '';
         }
       }
     },

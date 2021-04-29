@@ -1038,7 +1038,7 @@ export default {
           this.paypiss = true; this.paypissReason = Reason;
         }else if((process.env.NODE_ENV == 'development' && Reason == 365) || (process.env.NODE_ENV == 'production' && Reason == 167)){
           this.raziss = true; this.razissReason = Reason;
-        }else if(Reason == 369){
+        }else if((process.env.NODE_ENV == 'development' && Reason == 369) || (process.env.NODE_ENV == 'production' && Reason == 171)){
           this.habridpi = true; this.habridpiReason = Reason;
         }
       }else{
@@ -1074,7 +1074,7 @@ export default {
           this.paypiss = false; this.paypissAWBNo = ''; this.paypissReason = '';
         }else if((process.env.NODE_ENV == 'development' && Reason == 365) || (process.env.NODE_ENV == 'production' && Reason == 167)){
           this.raziss = false; this.razissAWBNo = ''; this.razissReason = '';
-        }else if(Reason == 369){
+        }else if((process.env.NODE_ENV == 'development' && Reason == 369) || (process.env.NODE_ENV == 'production' && Reason == 171)){
           this.habridpi = false; this.habridpiAWBNo = ''; this.habridpiAMT = ''; this.habridpiReason = '';
         }
       }
