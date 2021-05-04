@@ -106,17 +106,17 @@
 
               <div class="form-group" v-if="!isFnF">
                 <div class="input-group">
-                  <div class="input-group-prepend" style="width: 140px;">
-                    <span class="input-group-text" style="width: 140px;">Transaction Id <font color="red">&nbsp;*</font></span>
+                  <div class="input-group-prepend" style="width: 190px;margin-left: -5px;">
+                    <span class="input-group-text" style="width: 190px;">UTR/NEFT/Transaction Id <font color="red">&nbsp;*</font></span>
                   </div>
-                  <input class="form-control" id="TransactionID" type="text" name="TransactionID" placeholder="Enter Transaction Id/UTR/NEFT Number" v-validate="{required: true}"
-                  v-model="TransactionID" v-bind:class="{'form-control': true, 'error': errors.has('TransactionID') }" style="margin-right: -5px;">
+                  <input class="form-control" id="TransactionID" type="text" name="TransactionID" placeholder="Enter UTR/NEFT/Transaction Id" v-validate="{required: true}"
+                  v-model="TransactionID" v-bind:class="{'form-control': true, 'error': errors.has('TransactionID') }" style="margin-right: -5px;padding-left: -5px;">
                   <div class="input-group-append">
                     <span class="input-group-text"><i class="fa fa-exchange"></i></span>
                   </div>
                 </div>
-                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Enter comma (,) separated transaction ids.</span>
-                <span v-show="errors.has('TransactionID')" class="text-danger"><br>Transaction id is required.</span>
+                <span class="text" style="font-size: 0.8rem; color: #5D5D5D;">Note: Enter comma (,) separated UTR/NEFT/Transaction Ids.</span>
+                <span v-show="errors.has('TransactionID')" class="text-danger"><br>UTR/NEFT/Transaction Id is required.</span>
               </div>
 
               <div class="form-group" v-if="exceptionList.length>0 && !isFnF">
