@@ -120,6 +120,13 @@
                     <b-form-input disabled id="rtgs" type="text" placeholder="Enter RTGS/IFSC" name="rtgs" v-model="rtgs"></b-form-input>
                   </b-input-group>
                 </div>
+                <div class="col-md-4">
+                  <label>Contact Email Id</label>
+                  <b-input-group left="<i class='fa fa-bank'></i>">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
+                    <b-form-input id="ContactEmailid" type="text" placeholder="Enter Contact Email Id" name="ContactEmailid" v-model="ContactEmailid"></b-form-input>
+                  </b-input-group>
+                </div>
               </div>
               <div class="card-footer">
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="submitLoading" />
@@ -171,6 +178,7 @@
               <th class="text-center tableheader"><b>Client Account No</b></th>
               <th class="text-center tableheader"><b>Contact Mail Id</b></th>
               <th class="text-center tableheader"><b>NEFT No</b></th>
+              <th class="text-center tableheader"><b>Cancel Cheque</b></th>
                 <th class="text-center tableheader"><b>Action</b></th>
             </tr>
           </thead>
@@ -189,6 +197,10 @@
               <td>{{data.ClientAccountNo}}</td>
               <td>{{data.CustomerMailId}}</td>
               <td>{{data.NEFTNo}}</td>
+              <td>
+                <a :href="data.cancelCheque" style="cursor: pointer; color: rgb(25, 25, 112); text-decoration: underline;"  v-if="data.cancelCheque && data.cancelCheque!=0">view</a>
+              </td>
+
               <td class="text-center"><i @click.prevent="getClientCODRemittanceRowData(data, resultCount), AddEditClientTAT = '1', scrollWin()" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></td>
             </tr>
           </tbody>
