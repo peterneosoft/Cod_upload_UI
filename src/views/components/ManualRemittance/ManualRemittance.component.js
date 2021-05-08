@@ -27,13 +27,14 @@ export default {
             Search: 0,
             totalSum: 0,
             Client: "",
+            recordType: 'tatoverdue',
             clientLoading: false,
             ClientList: [],
             isLoading: false,
             listPendingRemittanceData: [],
             listPendingRemittanceDataToDate: [],
             fromDate: '',
-            toDate: '',
+            ToDate: '',
             modalShow: false,
             currentdate: '',
             ReasonModalShow: false,
@@ -111,6 +112,7 @@ export default {
         hideConfModal(ele) {
             if (ele == 0) {
                 this.$refs.myConfModalRef.hide();
+
                 this.okButtonClicked(this.newformdate, this.newtodate, this.newdata)
 
             } else {
@@ -290,41 +292,115 @@ export default {
             } else {
 
                 this.closeModal();
+                if (this.recordType = 'adhoc') {
 
-                this.input = ({
-                    FromDate: this.form.oldFromDate[data.ClientId],
-                    ToDate: data.ToDate,
-                    ShipmentCount: data.ShipmentCount,
-                    ClientId: data.ClientId,
-                    CODAmount: data.CODAmount,
-                    FreightAmount: data.FreightAmount,
-                    ExceptionAmount: data.ExceptionAmount,
-                    ExceptionAWB: data.ExceptionAWB,
-                    PayableAmount: data.PayableAmount,
-                    UTRNo: "",
-                    username: this.localuserid
-                })
-                axios({
-                    method: 'POST',
-                    'url': apiUrl.api_url + 'remittanceManualClosure',
-                    'data': this.input,
-                    headers: {
-                        'Authorization': 'Bearer ' + this.myStr
-                    }
-                }).then(result => {
-                    if (result.data.code == 200) {
-                        this.$alertify.success(result.data.msg);
-                        this.manualCODRemittance();
-                        this.insertEmailRemittance();
-                    } else {
+                    this.input = ({
+                        FromDate: this.form.oldFromDate[data.ClientId],
+                        ToDate: data.ToDate,
+                        ShipmentCount: data.ShipmentCount,
+                        ClientId: data.ClientId,
+                        CODAmount: data.CODAmount,
+                        FreightAmount: data.FreightAmount,
+                        ExceptionAmount: data.ExceptionAmount,
+                        ExceptionAWB: data.ExceptionAWB,
+                        PayableAmount: data.PayableAmount,
+                        UTRNo: "",
+                        username: this.localuserid,
+                        RemittanceType: data.RemittanceType,
+                    })
+                    axios({
+                        method: 'POST',
+                        'url': apiUrl.api_url + 'processAdhocRemittance',
+                        'data': this.input,
+                        headers: {
+                            'Authorization': 'Bearer ' + this.myStr
+                        }
+                    }).then(result => {
+                        if (result.data.code == 200) {
+                            this.$alertify.success(result.data.msg);
+                            this.manualCODRemittance();
+                            this.insertEmailRemittance();
+                        } else {
+                            this.isLoading = false;
+                            this.$alertify.error(result.data.msg)
+                        }
+                    }, error => {
+                        console.error(error)
                         this.isLoading = false;
-                        this.$alertify.error(result.data.msg)
-                    }
-                }, error => {
-                    console.error(error)
-                    this.isLoading = false;
-                    this.$alertify.error('Error Occured');
-                })
+                        this.$alertify.error('Error Occured');
+                    })
+                } else {
+                    this.input = ({
+                        FromDate: this.form.oldFromDate[data.ClientId],
+                        ToDate: data.ToDate,
+                        ShipmentCount: data.ShipmentCount,
+                        ClientId: data.ClientId,
+                        CODAmount: data.CODAmount,
+                        FreightAmount: data.FreightAmount,
+                        ExceptionAmount: data.ExceptionAmount,
+                        ExceptionAWB: data.ExceptionAWB,
+                        PayableAmount: data.PayableAmount,
+                        UTRNo: "",
+                        username: this.localuserid
+                    })
+                    axios({
+                        method: 'POST',
+                        'url': apiUrl.api_url + 'remittanceManualClosure',
+                        'data': this.input,
+                        headers: {
+                            'Authorization': 'Bearer ' + this.myStr
+                        }
+                    }).then(result => {
+                        if (result.data.code == 200) {
+                            this.$alertify.success(result.data.msg);
+                            this.manualCODRemittance();
+                            this.insertEmailRemittance();
+                        } else {
+                            this.isLoading = false;
+                            this.$alertify.error(result.data.msg)
+                        }
+                    }, error => {
+                        console.error(error)
+                        this.isLoading = false;
+                        this.$alertify.error('Error Occured');
+                    })
+                }
+            }
+        },
+        onAdHoctance(fromDate, toDate, data) {
+
+            if ((!fromDate || !this.form.oldFromDate[data.ClientId]) || (!toDate || !this.form.oldToDate[data.ClientId])) {
+
+                this.$alertify.error('From date & To / Delivery date should not be empty.');
+                return false;
+            } else if (fromDate != this.form.oldFromDate[data.ClientId]) {
+
+                let fdate = new Date(this.form.oldFromDate[data.ClientId]);
+                this.ofd = 'Remittance for client ' + data.CompanyName + ', From date should be: ' + (fdate.getDate() <= 9 ? '0' + fdate.getDate() : fdate.getDate()) + "/" + ((fdate.getMonth() + 1) <= 9 ? '0' + (fdate.getMonth() + 1) : (fdate.getMonth() + 1)) + "/" + fdate.getFullYear();
+                this.showModal();
+                return false;
+            } else if (toDate > this.form.oldToDate[data.ClientId]) {
+
+                let tdate = new Date(this.form.oldToDate[data.ClientId]);
+                this.ofd = 'Remittance for client ' + data.CompanyName + ', To / Delivery date should be: ' + (tdate.getDate() <= 9 ? '0' + tdate.getDate() : tdate.getDate()) + "/" + ((tdate.getMonth() + 1) <= 9 ? '0' + (tdate.getMonth() + 1) : (tdate.getMonth() + 1)) + "/" + tdate.getFullYear();
+                this.showModal();
+                return false;
+            } else if (data.ShipmentCount == 0) {
+
+                let fdate = new Date(data.FromDate);
+                fdate = (fdate.getDate() <= 9 ? '0' + fdate.getDate() : fdate.getDate()) + "/" + ((fdate.getMonth() + 1) <= 9 ? '0' + (fdate.getMonth() + 1) : (fdate.getMonth() + 1)) + "/" + fdate.getFullYear();
+                let tdate = new Date(data.ToDate);
+                tdate = (tdate.getDate() <= 9 ? '0' + tdate.getDate() : tdate.getDate()) + "/" + ((tdate.getMonth() + 1) <= 9 ? '0' + (tdate.getMonth() + 1) : (tdate.getMonth() + 1)) + "/" + tdate.getFullYear();
+
+                this.ofd = 'Remittance COD amount for client ' + data.CompanyName + ' & date from ' + fdate + ' to ' + tdate + ' is 0.00';
+                this.showModal();
+                return false;
+            } else {
+                this.newformdate = fromDate;
+                this.newtodate = toDate;
+                this.newdata = data;
+                this.recordType = 'adhoc';
+                this.showConfirmationModal();
             }
         },
         /**
@@ -412,6 +488,7 @@ export default {
                 .then(result => {
                     if (result.data.code == 200) {
                         this.isLoading = false;
+                        this.recordType = 'tatoverdue';
                         this.listPendingRemittanceData = result.data.remittanceArr;
                         this.resultCount = result.data.remittanceArr.length;
                         let totalRows = result.data.remittanceArr.length;
@@ -524,8 +601,7 @@ export default {
                         if (result.data.code == 200) {
                             // this.adhocDate(result.data.remittanceObj.FromDate, result.data.remittanceObj.ToDate, ClientId);
                             let newRemittedArrays = [];
-                            let newRemittedArray = '';
-
+                            this.recordType = 'adhoc';
                             newRemittedArrays = [{
                                 'FromDate': result.data.remittanceObj.FromDate,
                                 'ToDate': result.data.remittanceObj.ToDate,
@@ -540,9 +616,28 @@ export default {
                                 'ShipmentCount': result.data.remittanceObj.ShipmentCount,
                             }]
 
+
+                            this.form.toDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.ToDate;
+                            this.form.FromDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.FromDate;
+
+                            this.form.oldToDate[result.data.remittanceObj.ClientId] = null;
+                            this.form.oldFromDate[result.data.remittanceObj.ClientId] = null;
+
+                            if (this.form.oldFromDate[result.data.remittanceObj.ClientId] == null) {
+                                this.form.oldFromDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.FromDate;
+                            }
+                            if (this.form.oldToDate[result.data.remittanceObj.ClientId] == null) {
+                                this.form.oldToDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.ToDate;
+                            }
+
+                            $('#FromDate' + result.data.remittanceObj.ClientId).val(result.data.remittanceObj.FromDate);
+                            $('#toDate' + result.data.remittanceObj.ClientId).val(result.data.remittanceObj.ToDate);
+
+
                             this.listPendingRemittanceData = newRemittedArrays;
                             this.resultCount = newRemittedArrays.length;
                             this.isLoading = false;
+
 
                         } else {
                             this.resultCount = 0;
@@ -558,7 +653,7 @@ export default {
             }
         },
         adhocDateChnage(ClientId, CompanyName) {
-
+            this.listPendingRemittanceData = [];
             if (!ClientId) {
 
                 this.$alertify.error('Client Name is mandatory.');
@@ -586,7 +681,6 @@ export default {
                         if (result.data.code == 200) {
                             // this.adhocDate(result.data.remittanceObj.FromDate, result.data.remittanceObj.ToDate, ClientId);
                             let newRemittedArrays = [];
-                            let newRemittedArray = '';
 
                             newRemittedArrays = [{
                                 'FromDate': result.data.remittanceObj.FromDate,
@@ -601,6 +695,22 @@ export default {
                                 'RemittanceType': result.data.remittanceObj.RemittanceType,
                                 'ShipmentCount': result.data.remittanceObj.ShipmentCount,
                             }]
+
+                            this.form.toDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.ToDate;
+                            this.form.FromDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.FromDate;
+
+                            this.form.oldToDate[result.data.remittanceObj.ClientId] = null;
+                            this.form.oldFromDate[result.data.remittanceObj.ClientId] = null;
+
+                            if (this.form.oldFromDate[result.data.remittanceObj.ClientId] == null) {
+                                this.form.oldFromDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.FromDate;
+                            }
+                            if (this.form.oldToDate[result.data.remittanceObj.ClientId] == null) {
+                                this.form.oldToDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.ToDate;
+                            }
+
+                            $('#FromDate' + result.data.remittanceObj.ClientId).val(result.data.remittanceObj.FromDate);
+                            $('#toDate' + result.data.remittanceObj.ClientId).val(result.data.remittanceObj.ToDate);
 
                             this.listPendingRemittanceData = newRemittedArrays;
                             this.resultCount = newRemittedArrays.length;
@@ -642,7 +752,7 @@ export default {
                     })
                     .then(result => {
                         if (result.data.code == 200) {
-                            this.form.oldToDate[ClientId] = this.form.toDate[ClientId] = result.data.data[0].ToDate;
+                            this.form.oldToDate[ClientId] = this.form.ToDate[ClientId] = result.data.data[0].ToDate;
                             this.form.oldFromDate[ClientId] = this.form.FromDate[ClientId] = result.data.data[0].FromDate;
                             this.listPendingRemittanceData = result.data.data;
                             this.resultCount = result.data.data.length;

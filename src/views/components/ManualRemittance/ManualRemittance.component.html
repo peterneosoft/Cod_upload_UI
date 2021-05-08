@@ -22,7 +22,7 @@
                             <label>Client Name <font color="red">*</font></label>
                             <b-input-group left="<i class='fa fa-list'></i>">
                                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="clientLoading" />
-                                <Multiselect :options="ClientList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                                <Multiselect :options="ClientList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;">
                                     <template slot="noResult">
                                         <p>No Record Found.</p>
                                     </template>
@@ -110,7 +110,10 @@
                                 <span v-if="data.ExceptionAWB.length<=0">{{data.ExceptionAmount}}</span>
                             </td>
                             <td :data-pay="'pay'+data.ClientId">{{data.PayableAmount}}</td>
-                            <td><button class="btn btn-sm btn-primary" @click="onRemittance(form.FromDate[data.ClientId], form.toDate[data.ClientId], data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button></td>
+                            <td>
+                                <button v-if="recordType=='tatoverdue'" class="btn btn-sm btn-primary" @click="onRemittance(form.FromDate[data.ClientId], form.toDate[data.ClientId], data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button>
+                                <button v-if="recordType=='adhoc'" class="btn btn-sm btn-primary" @click="onAdHoctance(form.FromDate[data.ClientId], form.toDate[data.ClientId], data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button>
+                            </td>
                         </tr>
                     </tbody>
                 </table><br>
