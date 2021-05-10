@@ -31,8 +31,11 @@ export default {
             clientLoading: false,
             ClientList: [],
             isLoading: false,
+            notApproved: 1,
             listPendingRemittanceData: [],
             listPendingRemittanceDataToDate: [],
+            listPendingRemittanceDatas: [],
+            resultCounts: 0,
             fromDate: '',
             ToDate: '',
             modalShow: false,
@@ -47,6 +50,7 @@ export default {
             ofd: '',
             fromdates: '',
             todates: '',
+            newClientId: '',
             form: {
                 toDate: [],
                 FromDate: [],
@@ -130,8 +134,8 @@ export default {
             return name + key;
         },
 
-        onChangeDate(fromDate, toDate, ClientId) {
-
+        onChangeDate(fromDate, toDate, ClientId, CompanyName, RemittanceType) {
+            this.notApproved = 1;
             if (!toDate || !fromDate) {
 
                 this.$alertify.error('From date & To/ Delivery date should not be empty.');
@@ -183,7 +187,9 @@ export default {
                         ClientId,
                         fromDate,
                         toDate,
-                        username: this.localuserid
+                        username: this.localuserid,
+                        CompanyName,
+                        RemittanceType
                     }
 
                     axios({
@@ -226,7 +232,7 @@ export default {
         },
 
         onRemittance(fromDate, toDate, data) {
-
+            this.notApproved = 1;
             if ((!fromDate || !this.form.oldFromDate[data.ClientId]) || (!toDate || !this.form.oldToDate[data.ClientId])) {
 
                 this.$alertify.error('From date & To / Delivery date should not be empty.');
@@ -262,7 +268,7 @@ export default {
         },
 
         okButtonClicked(fromDate, toDate, data) {
-
+            this.notApproved = 1;
             if ((!fromDate || !this.form.oldFromDate[data.ClientId]) || (!toDate || !this.form.oldToDate[data.ClientId])) {
 
                 this.$alertify.error('From date & To / Delivery date should not be empty.');
@@ -299,6 +305,7 @@ export default {
                         ToDate: data.ToDate,
                         ShipmentCount: data.ShipmentCount,
                         ClientId: data.ClientId,
+                        CompanyName: data.CompanyName,
                         CODAmount: data.CODAmount,
                         FreightAmount: data.FreightAmount,
                         ExceptionAmount: data.ExceptionAmount,
@@ -368,7 +375,7 @@ export default {
             }
         },
         onAdHoctance(fromDate, toDate, data) {
-
+            this.notApproved = 1;
             if ((!fromDate || !this.form.oldFromDate[data.ClientId]) || (!toDate || !this.form.oldToDate[data.ClientId])) {
 
                 this.$alertify.error('From date & To / Delivery date should not be empty.');
@@ -442,6 +449,10 @@ export default {
                 })
         },
         changeRadio() {
+            this.Client = [];
+            this.Search = 0;
+            this.newClientId = '';
+
             this.isLoading = true;
             this.input = ({
                 username: this.localuserid
@@ -458,10 +469,21 @@ export default {
                     if (result.data.code == 200) {
                         this.overdueFilter = this.selected;
                         if (this.selected === "AdHoc") {
+                            this.notApproved = 1;
+                            this.listPendingRemittanceData = [];
+                            this.resultCount = 0;
                             this.isLoading = false;
                         } else if (this.selected === "payApproved") {
+                            this.listPendingRemittanceData = [];
+                            this.listPendingRemittanceDatas = [];
                             this.isLoading = false;
+                            this.newClientId = '';
+                            this.notApproved = 2;
+                            this.payApproved();
+
+
                         } else {
+                            this.notApproved = 1;
                             this.manualCODRemittance();
                         }
                     }
@@ -470,13 +492,93 @@ export default {
                 })
 
         },
+        payApproved() {
+
+            // this.Client = [];
+            // this.Search = 0;
+            this.resultCount = 0;
+            this.isLoading = true;
+
+            this.input = ({
+                username: this.localuserid
+            });
+
+            if (this.newClientId) {
+                this.input.ClientId = this.newClientId
+            }
+
+            if (this.TransactionFromDate) {
+                this.input.TransactionFromDate = this.TransactionFromDate;
+            }
+
+            if (this.TransactionToDate) {
+                this.input.TransactionToDate = this.TransactionToDate;
+            }
+
+            axios({
+                    method: 'POST',
+                    'url': apiUrl.api_url + 'getRemittedClientData',
+                    'data': this.input,
+                    headers: {
+                        'Authorization': 'Bearer ' + this.myStr
+                    }
+                })
+                .then(result => {
+                    if (result.data.code == 200) {
+
+                        this.isLoading = false;
+                        this.recordType = 'payApproved';
+                        this.notApproved = 2;
+                        this.listPendingRemittanceDatas = result.data.remittanceArr;
+                        this.resultCounts = result.data.remittanceArr.length;
+
+                        // if (totalRows < 20) {
+                        //     this.pagecount = 1
+                        // } else {
+                        //     this.pagecount = Math.ceil(totalRows / 20)
+                        // }
+
+                        // this.listPendingRemittanceData.forEach((val, key) => {
+                        //     this.form.toDate[val.ClientId] = val.ToDate;
+                        //     this.form.FromDate[val.ClientId] = val.FromDate;
+
+                        //     this.form.oldToDate[val.ClientId] = null;
+                        //     this.form.oldFromDate[val.ClientId] = null;
+
+                        //     if (this.form.oldFromDate[val.ClientId] == null) {
+                        //         this.form.oldFromDate[val.ClientId] = val.FromDate;
+                        //     }
+                        //     if (this.form.oldToDate[val.ClientId] == null) {
+                        //         this.form.oldToDate[val.ClientId] = val.ToDate;
+                        //     }
+
+                        //     $('#FromDate' + val.ClientId).val(val.FromDate);
+                        //     $('#toDate' + val.ClientId).val(val.ToDate);
+                        // });
+
+                    } else if (result.data.code == 204) {
+                        this.listPendingRemittanceDatas = [];
+                        this.notApproved = 2;
+                        this.resultCounts = 0;
+                        this.isLoading = false;
+                    }
+                });
+
+
+        },
         manualCODRemittance() {
+            this.notApproved = 1;
             this.isLoading = true;
             // url: apiUrl.api_url + 'manualcodremittance?CreatedBy=' + this.localuserid + '&oldFromDate=' + this.fromDate + '&fromDate=' + this.fromDate + '&toDate=' + this.toDate + '&offset=' + this.pageno + '&limit=' + 20,
             this.input = ({
                 username: this.localuserid,
                 overdueremittance: this.overdueFilter
             });
+
+            if (this.newClientId) {
+                this.input.clientid = this.newClientId;
+            }
+
             axios({
                     method: 'POST',
                     url: apiUrl.api_url + 'getmanualremittancedata',
@@ -581,75 +683,90 @@ export default {
             } else {
 
                 this.isLoading = true;
+                if (this.selected === "AdHoc") {
+                    this.input = ({
+                        fromDate: this.fromdates,
+                        toDate: this.todates,
+                        ClientId: ClientId,
+                        ClientName: CompanyName,
+                    });
 
-                this.input = ({
-                    fromDate: this.fromdates,
-                    toDate: this.todates,
-                    ClientId: ClientId,
-                    ClientName: CompanyName,
-                });
-
-                axios({
-                        method: 'POST',
-                        url: apiUrl.api_url + 'adhocCODRemiitance',
-                        headers: {
-                            'Authorization': 'Bearer ' + this.myStr
-                        },
-                        'data': this.input,
-                    })
-                    .then(result => {
-                        if (result.data.code == 200) {
-                            // this.adhocDate(result.data.remittanceObj.FromDate, result.data.remittanceObj.ToDate, ClientId);
-                            let newRemittedArrays = [];
-                            this.recordType = 'adhoc';
-                            newRemittedArrays = [{
-                                'FromDate': result.data.remittanceObj.FromDate,
-                                'ToDate': result.data.remittanceObj.ToDate,
-                                'CODAmount': result.data.remittanceObj.CODAmount,
-                                'ClientId': result.data.remittanceObj.ClientId,
-                                'CompanyName': result.data.remittanceObj.CompanyName,
-                                'ExceptionAWB': result.data.remittanceObj.ExceptionAWB,
-                                'ExceptionAmount': result.data.remittanceObj.ExceptionAmount,
-                                'FreightAmount': result.data.remittanceObj.FreightAmount,
-                                'PayableAmount': result.data.remittanceObj.PayableAmount,
-                                'RemittanceType': result.data.remittanceObj.RemittanceType,
-                                'ShipmentCount': result.data.remittanceObj.ShipmentCount,
-                            }]
+                    axios({
+                            method: 'POST',
+                            url: apiUrl.api_url + 'adhocCODRemiitance',
+                            headers: {
+                                'Authorization': 'Bearer ' + this.myStr
+                            },
+                            'data': this.input,
+                        })
+                        .then(result => {
+                            if (result.data.code == 200) {
+                                // this.adhocDate(result.data.remittanceObj.FromDate, result.data.remittanceObj.ToDate, ClientId);
+                                let newRemittedArrays = [];
+                                this.recordType = 'adhoc';
+                                newRemittedArrays = [{
+                                    'FromDate': result.data.remittanceObj.FromDate,
+                                    'ToDate': result.data.remittanceObj.ToDate,
+                                    'CODAmount': result.data.remittanceObj.CODAmount,
+                                    'ClientId': result.data.remittanceObj.ClientId,
+                                    'CompanyName': result.data.remittanceObj.CompanyName,
+                                    'ExceptionAWB': result.data.remittanceObj.ExceptionAWB,
+                                    'ExceptionAmount': result.data.remittanceObj.ExceptionAmount,
+                                    'FreightAmount': result.data.remittanceObj.FreightAmount,
+                                    'PayableAmount': result.data.remittanceObj.PayableAmount,
+                                    'RemittanceType': result.data.remittanceObj.RemittanceType,
+                                    'ShipmentCount': result.data.remittanceObj.ShipmentCount,
+                                }]
 
 
-                            this.form.toDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.ToDate;
-                            this.form.FromDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.FromDate;
+                                this.form.toDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.ToDate;
+                                this.form.FromDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.FromDate;
 
-                            this.form.oldToDate[result.data.remittanceObj.ClientId] = null;
-                            this.form.oldFromDate[result.data.remittanceObj.ClientId] = null;
+                                this.form.oldToDate[result.data.remittanceObj.ClientId] = null;
+                                this.form.oldFromDate[result.data.remittanceObj.ClientId] = null;
 
-                            if (this.form.oldFromDate[result.data.remittanceObj.ClientId] == null) {
-                                this.form.oldFromDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.FromDate;
+                                if (this.form.oldFromDate[result.data.remittanceObj.ClientId] == null) {
+                                    this.form.oldFromDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.FromDate;
+                                }
+                                if (this.form.oldToDate[result.data.remittanceObj.ClientId] == null) {
+                                    this.form.oldToDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.ToDate;
+                                }
+
+                                $('#FromDate' + result.data.remittanceObj.ClientId).val(result.data.remittanceObj.FromDate);
+                                $('#toDate' + result.data.remittanceObj.ClientId).val(result.data.remittanceObj.ToDate);
+
+
+                                this.listPendingRemittanceData = newRemittedArrays;
+                                this.resultCount = newRemittedArrays.length;
+                                this.isLoading = false;
+
+
+                            } else {
+                                this.resultCount = 0;
+                                this.pageno = 0;
+                                this.listPendingRemittanceData = [];
+                                this.isLoading = false;
                             }
-                            if (this.form.oldToDate[result.data.remittanceObj.ClientId] == null) {
-                                this.form.oldToDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.ToDate;
-                            }
-
-                            $('#FromDate' + result.data.remittanceObj.ClientId).val(result.data.remittanceObj.FromDate);
-                            $('#toDate' + result.data.remittanceObj.ClientId).val(result.data.remittanceObj.ToDate);
-
-
-                            this.listPendingRemittanceData = newRemittedArrays;
-                            this.resultCount = newRemittedArrays.length;
+                        }, error => {
+                            console.error(error)
                             this.isLoading = false;
+                            this.$alertify.error('Error Occured');
+                        });
 
+                } else if (this.selected === false) {
 
-                        } else {
-                            this.resultCount = 0;
-                            this.pageno = 0;
-                            this.listPendingRemittanceData = [];
-                            this.isLoading = false;
-                        }
-                    }, error => {
-                        console.error(error)
-                        this.isLoading = false;
-                        this.$alertify.error('Error Occured');
-                    })
+                    this.newClientId = ClientId;
+                    this.manualCODRemittance();
+
+                } else if (this.selected === true) {
+
+                    this.newClientId = ClientId;
+                    this.manualCODRemittance();
+                } else if (this.selected === "payApproved") {
+                    this.newClientId = ClientId;
+                    this.payApproved();
+                }
+
             }
         },
         adhocDateChnage(ClientId, CompanyName) {
@@ -781,8 +898,11 @@ export default {
             this.Client = [];
             this.pageno = this.resultCount = 0;
             this.Search = 0;
-            this.manualCODRemittance();
             document.getElementById("clienterr").innerHTML = "";
+            this.newClientId = '';
+        },
+        exportData() {
+
         }
     }
 }
