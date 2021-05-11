@@ -45,6 +45,7 @@ export default {
             DisputeArr: [],
             newformdate: '',
             newtodate: '',
+            todatesChanged: '',
             newdata: [],
             total: 0,
             ofd: '',
@@ -175,6 +176,7 @@ export default {
 
                 this.isLoading = true;
 
+                this.newtodate = toDate;
 
                 if (this.selected === "AdHoc") {
 
@@ -221,7 +223,8 @@ export default {
                                     $(".scrolltb").find("[data-foregi='foregi" + ClientId + "']").html(val.FreightAmount);
                                     $(".scrolltb").find("[data-excep='excep" + ClientId + "']").html(val.ExceptionAmount);
                                     $(".scrolltb").find("[data-pay='pay" + ClientId + "']").html(val.PayableAmount);
-                                    this.DisputeArr = va.remittanceArr.ExceptionAWB;
+                                    $(".scrolltb").find("[data-toids='toids" + ClientId + "']").attr('data-dates', val.ToDate);
+                                    this.DisputeArr = val.remittanceArr.ExceptionAWB;
                                 });
 
                             } else {
@@ -305,11 +308,13 @@ export default {
 
                 this.closeModal();
                 this.recordType = this.selected;
+                this.todatesChanged = $(".scrolltb").find("[data-toids='toids" + data.ClientId + "']").attr("data-dates");
+
                 if (this.recordType == 'adhoc') {
 
                     this.input = ({
                         FromDate: this.form.oldFromDate[data.ClientId],
-                        ToDate: data.ToDate,
+                        ToDate: this.todatesChanged,
                         ShipmentCount: data.ShipmentCount,
                         ClientId: data.ClientId,
                         CompanyName: data.CompanyName,
@@ -346,7 +351,7 @@ export default {
                 } else {
                     this.input = ({
                         FromDate: this.form.oldFromDate[data.ClientId],
-                        ToDate: data.ToDate,
+                        ToDate: this.todatesChanged,
                         ShipmentCount: data.ShipmentCount,
                         CompanyName: data.CompanyName,
                         ClientId: data.ClientId,
