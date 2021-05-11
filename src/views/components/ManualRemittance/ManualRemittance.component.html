@@ -126,14 +126,15 @@
                             <th class="text-center tableheader"><b>#</b></th>
                             <th class="text-center tableheader"><b>Company Name</b></th>
                             <th class="text-center tableheader"><b>Remittance Type</b></th>
+                            <th class="text-center tableheader"><b>Remittance Id</b></th>
                             <th class="text-center tableheader"><b>Cycle</b></th>
                             <th class="text-center tableheader"><b>Shipment Count</b></th>
                             <th class="text-center tableheader"><b>COD Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                             <th class="text-center tableheader"><b>Freight Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
-                            <th class="text-center tableheader"><b>Paid Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
 
                             <th class="text-center tableheader"><b>Exception Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
-                            <th class="text-center tableheader"><b>Payable Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+                            <th class="text-center tableheader"><b>Paid Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+                            <th class="text-center tableheader"><b>Transaction<br> Date</b></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -145,18 +146,19 @@
 
                             <td>{{data.CompanyName}}</td>
                             <td>{{data.RemittanceType}}</td>
+                            <td>{{data.clientremittedid}}</td>
                             <td>{{data.Cycle}}</td>
                             <td>{{data.ShipmentCount}}</td>
                             <td>{{data.CODAmount}}</td>
                             <td>{{data.FreightAmount}}</td>
-                            <td>{{data.PaidAmount}}</td>
+
                             <td class="text-center">
                                 <span v-if="data.ExceptionAmount >0" @click="showReasonAWBNo(data.ExceptionAWB)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{data.ExceptionAmount}}</span>
                                 <span v-if="data.ExceptionAmount <=0">{{data.ExceptionAmount}}</span>
                             </td>
 
-                            <td :data-pay="'pay'+data.ClientId">{{data.PayableAmount}}</td>
-
+                            <td>{{data.PaidAmount}}</td>
+                            <td>{{format_date(data.transactiondate)}}</td>
                         </tr>
                     </tbody>
                 </table>

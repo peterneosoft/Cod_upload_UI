@@ -8,7 +8,7 @@ import Paginate from 'vuejs-paginate'
 import VueElementLoading from 'vue-element-loading';
 import Multiselect from 'vue-multiselect'
 import 'vue-multiselect/dist/vue-multiselect.min.css';
-
+import moment from 'moment';
 export default {
     name: 'ManualRemittance',
     components: {
@@ -107,6 +107,11 @@ export default {
     },
 
     methods: {
+        format_date(value) {
+            if (value) {
+                return moment(String(value)).format('DD/MM/YYYY')
+            }
+        },
         showModal() {
             this.modalShow = true;
         },
@@ -135,6 +140,7 @@ export default {
         },
 
         onChangeDate(fromDate, toDate, ClientId, CompanyName, RemittanceType) {
+
             this.notApproved = 1;
             if (!toDate || !fromDate) {
 
@@ -298,7 +304,8 @@ export default {
             } else {
 
                 this.closeModal();
-                if (this.recordType = 'adhoc') {
+                this.recordType = this.selected;
+                if (this.recordType == 'adhoc') {
 
                     this.input = ({
                         FromDate: this.form.oldFromDate[data.ClientId],
@@ -341,6 +348,7 @@ export default {
                         FromDate: this.form.oldFromDate[data.ClientId],
                         ToDate: data.ToDate,
                         ShipmentCount: data.ShipmentCount,
+                        CompanyName: data.CompanyName,
                         ClientId: data.ClientId,
                         CODAmount: data.CODAmount,
                         FreightAmount: data.FreightAmount,
@@ -439,6 +447,7 @@ export default {
                     }
                 })
                 .then(result => {
+                    this.isLoading = false;
                     if (result.data.code == 200) {
                         this.overdueFilter = this.selected;
                         this.manualCODRemittance();
@@ -735,7 +744,7 @@ export default {
                                 $('#FromDate' + result.data.remittanceObj.ClientId).val(result.data.remittanceObj.FromDate);
                                 $('#toDate' + result.data.remittanceObj.ClientId).val(result.data.remittanceObj.ToDate);
 
-
+                                this.listPendingRemittanceData = [];
                                 this.listPendingRemittanceData = newRemittedArrays;
                                 this.resultCount = newRemittedArrays.length;
                                 this.isLoading = false;
@@ -816,19 +825,20 @@ export default {
                             this.form.toDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.ToDate;
                             this.form.FromDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.FromDate;
 
-                            this.form.oldToDate[result.data.remittanceObj.ClientId] = null;
-                            this.form.oldFromDate[result.data.remittanceObj.ClientId] = null;
+                            // this.form.oldToDate[result.data.remittanceObj.ClientId] = null;
+                            // this.form.oldFromDate[result.data.remittanceObj.ClientId] = null;
 
-                            if (this.form.oldFromDate[result.data.remittanceObj.ClientId] == null) {
-                                this.form.oldFromDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.FromDate;
-                            }
-                            if (this.form.oldToDate[result.data.remittanceObj.ClientId] == null) {
-                                this.form.oldToDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.ToDate;
-                            }
+                            // if (this.form.oldFromDate[result.data.remittanceObj.ClientId] == null) {
+                            //     this.form.oldFromDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.FromDate;
+                            // }
+                            // if (this.form.oldToDate[result.data.remittanceObj.ClientId] == null) {
+                            //     this.form.oldToDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.ToDate;
+                            // }
 
                             $('#FromDate' + result.data.remittanceObj.ClientId).val(result.data.remittanceObj.FromDate);
                             $('#toDate' + result.data.remittanceObj.ClientId).val(result.data.remittanceObj.ToDate);
-
+                            this.listPendingRemittanceData = [];
+                            this.listPendingRemittanceDatas = [];
                             this.listPendingRemittanceData = newRemittedArrays;
                             this.resultCount = newRemittedArrays.length;
                             this.isLoading = false;
