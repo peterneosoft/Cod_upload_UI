@@ -920,8 +920,91 @@ export default {
             document.getElementById("clienterr").innerHTML = "";
             this.newClientId = '';
         },
-        exportData() {
+        exportData(fromdates, ClientId, CompanyName) {
+            this.isLoading = true;
+            this.todatesChanged = $(".scrolltb").find("[data-toids='toids" + ClientId + "']").attr("data-dates");
 
-        }
+            this.input = ({
+                FromDate: fromdates,
+                ToDate: this.todatesChanged,
+                ClientId: ClientId,
+                CompanyName: CompanyName,
+                username: this.localuserid,
+            });
+
+            axios({
+                    method: 'POST',
+                    url: apiUrl.api_url + 'exportShipmentData',
+                    data: this.input,
+                    headers: {
+                        'Authorization': 'Bearer ' + this.myStr
+                    }
+                })
+                .then(result => {
+                    this.isLoading = false;
+                    if (result.data.code == 200) {
+                        if (result.data.shipmentArr.length > 0) {
+                            this.getDownloadCsvObject(result.data.shipmentArr);
+                        } else {
+                            this.$alertify.error('Sorry..! no record found for excel download.');
+                        }
+                    }
+
+                }, error => {
+                    console.error(error)
+                    this.isLoading = false;
+                    this.$alertify.error('Error Occured');
+                })
+        },
+        getDownloadCsvObject(csvData) {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1;
+            var yyyy = today.getFullYear();
+            var today = dd + "" + mm + "" + yyyy;
+            var data, filename, link;
+            filename = "Manual_COD" + today + ".csv";
+            var csv = this.convertArrayOfObjectsToCSV({
+                data: csvData
+            });
+            if (csv == null) return;
+            filename = filename || "export.csv";
+            if (!csv.match(/^data:text\/csv/i)) {
+                csv = "data:text/csv;charset=utf-8," + csv;
+            }
+            data = encodeURI(csv);
+            link = document.createElement("a");
+            link.setAttribute("href", data);
+            link.setAttribute("download", filename);
+            document.body.appendChild(link);
+            link.click();
+            // link.removeChild(link);
+        },
+        convertArrayOfObjectsToCSV: function(args) {
+            var result, ctr, keys, columnDelimiter, lineDelimiter, data;
+            data = args.data || null;
+            if (data == null || !data.length) {
+                return null;
+            }
+            columnDelimiter = args.columnDelimiter || ",";
+            lineDelimiter = args.lineDelimiter || "\n";
+            keys = Object.keys(data[0]).slice(0);
+            result = "";
+            result += keys.join(columnDelimiter);
+            result += lineDelimiter;
+            data.forEach(function(item) {
+                ctr = 0;
+                keys.forEach(function(key) {
+                    if (ctr > 0) result += columnDelimiter;
+                    if (item[key] != null) {
+                        result += '"' + item[key] + '"';
+                    }
+                    ctr++;
+                });
+                result += lineDelimiter;
+            });
+            this.excelLoading = false;
+            return result;
+        },
     }
 }
