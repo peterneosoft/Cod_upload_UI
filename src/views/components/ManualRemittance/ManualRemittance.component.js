@@ -224,7 +224,11 @@ export default {
                                     $(".scrolltb").find("[data-excep='excep" + ClientId + "']").html(val.ExceptionAmount);
                                     $(".scrolltb").find("[data-pay='pay" + ClientId + "']").html(val.PayableAmount);
                                     $(".scrolltb").find("[data-toids='toids" + ClientId + "']").attr('data-dates', val.ToDate);
-                                    this.DisputeArr = val.remittanceArr.ExceptionAWB;
+                                    $("#toDate" + ClientId).val(val.ToDate);
+                                    // this.toDate = val.ToDate;
+                                    if (val.remittanceArr !== undefined && val.remittanceArr !== 'undefined' && val.remittanceArr.ExceptionAWB !== undefined && val.remittanceArr.ExceptionAWB !== 'undefined') {
+                                        this.DisputeArr = val.remittanceArr.ExceptionAWB;
+                                    }
                                 });
 
                             } else {
