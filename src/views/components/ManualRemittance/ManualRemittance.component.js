@@ -587,6 +587,8 @@ export default {
         manualCODRemittance() {
             this.notApproved = 1;
             this.isLoading = true;
+            this.listPendingRemittanceData = [];
+            this.listPendingRemittanceDatas = [];
             // url: apiUrl.api_url + 'manualcodremittance?CreatedBy=' + this.localuserid + '&oldFromDate=' + this.fromDate + '&fromDate=' + this.fromDate + '&toDate=' + this.toDate + '&offset=' + this.pageno + '&limit=' + 20,
             this.input = ({
                 username: this.localuserid,
