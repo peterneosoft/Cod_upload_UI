@@ -65,14 +65,16 @@
                     <thead>
                         <tr class="text-primary">
                             <th class="text-center tableheader"><b>#</b></th>
+                              <th class="tableheader"><b>Remittance Id	</b></th>
                             <th class="text-center tableheader"><b>Company Name</b></th>
                             <th class=" tableheader"><b>Remittance Type</b></th>
                             <th class="tableheader"><b>Cycle</b></th>
-                            <th class="tableheader"><b>Remittance Id	</b></th>
                             <th class="text-center tableheader"><b>Shipment Count</b></th>
                             <th class="text-center tableheader"><b>COD Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+                            <th class="text-center tableheader"><b>Freight Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                             <th class="text-center tableheader"><b>Exception Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                             <th class="text-center tableheader"><b>Paid Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+                            <th class="text-center tableheader"><b>Download</b></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -81,14 +83,18 @@
                         </tr>
                         <tr v-for="(data,index) in listCODRemitanceData">
                             <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
+                            <td>{{data.clientremittedid}}</td>
                             <td>{{data.CompanyName}}</td>
                             <td>{{data.RemittanceType}}</td>
                             <td>{{data.Cycle}}</td>
-                            <td>{{data.clientremittedid}}</td>
                             <td class="text-center">{{data.ShipmentCount}}</td>
                             <td class="text-center">{{data.CODAmount}}</td>
+                              <td class="text-center">{{data.FreightAmount}}</td>
                             <td class="text-center">{{data.ExceptionAmount}}</td>
                             <td class="text-center">{{data.PaidAmount}}</td>
+                            <td class="text-center">
+                              <span><a v-bind:title='`${data.CompanyName}`' v-bind:href='`${data.filepath}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a></span>
+                            </td>
                         </tr>
                     </tbody>
                 </table><br>

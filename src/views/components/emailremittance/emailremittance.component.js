@@ -50,7 +50,6 @@ export default {
 
     var date = new Date();
     this.currentdate = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
-
     //this.getEmailRemittanceClients();
   },
 
@@ -66,33 +65,68 @@ export default {
     },
 
     showModal(){
+
+      if(this.newCheckRecord.length==0){
+        this.$alertify.error('Select at least one checkbox.');
+      }else {
       this.modalShow = true;
+    }
+
     },
 
     closeModal(elem) {
       this.modalShow = false;
 
       if(elem===true){
-        this.emailRemittance();
+
+        if(this.newCheckRecord.length===0){
+              this.$alertify.error('Select at least one checkbox.');
+        }else {
+          this.emailRemittance();
+        }
+
       }else{
         return false;
       }
     },
 
     check() {
+
       this.checkAll = !this.checkAll;
 			this.ClientArr = [];
+      this.newCheckRecord=[];
+
 			if (this.checkAll) {
+
 				for (let i in this.listEmailRemittanceData) {
+
           this.ClientArr.push(this.listEmailRemittanceData[i].ClientId);
+
+          let tempArray={};
+
+          tempArray={
+            ClientId:this.listEmailRemittanceData[i].ClientId,
+            CompanyName:this.listEmailRemittanceData[i].CompanyName,
+            RemittanceDate:this.listEmailRemittanceData[i].transactiondate,
+            Cycle:this.listEmailRemittanceData[i].Cycle,
+            RemittanceAmount:this.listEmailRemittanceData[i].PaidAmount,
+            EmailId:this.listEmailRemittanceData[i].EmailId,
+            filepath:this.listEmailRemittanceData[i].filepath,
+          }
+
+          this.newCheckRecord.push(tempArray);
+
 				}
+
         this.disableButton = false;
 			}else{
+        this.newCheckRecord=[];
         this.disableButton = true;
       }
 		},
 
     updateCheck(data){
+
       if(this.listEmailRemittanceData.length == this.ClientArr.length){
          this.checkAll = true;
       }else{
@@ -108,9 +142,9 @@ export default {
             tempArray={
               ClientId:data.ClientId,
               CompanyName:data.CompanyName,
-              RemittanceDate:data.RemittanceDate,
+              RemittanceDate:data.transactiondate,
               Cycle:data.Cycle,
-              RemittanceAmount:data.RemittanceAmount,
+              RemittanceAmount:data.PaidAmount,
               EmailId:data.EmailId,
               filepath:data.filepath,
             }
@@ -120,8 +154,10 @@ export default {
           if($("#ClientId"+data.ClientId).prop('checked') == false){
             this.deleteRow(this.newCheckRecord,data.ClientId);
           }
+
        }
         this.disableButton = false;
+
       }else{
         this.newCheckRecord=[];
         this.disableButton = true;
@@ -137,9 +173,9 @@ export default {
           let tempArray={
             ClientId:items[i]['ClientId'],
             CompanyName:items[i]['CompanyName'],
-            RemittanceDate:items[i]['RemittanceDate'],
+            RemittanceDate:items[i]['transactiondate'],
             Cycle:items[i]['Cycle'],
-            RemittanceAmount:items[i]['RemittanceAmount'],
+            RemittanceAmount:items[i]['PaidAmount'],
             EmailId:items[i]['EmailId'],
             filepath:items[i]['filepath'],
           }
@@ -205,7 +241,7 @@ export default {
 
       this.newCheckRecord;
       this.input = ({
-          emailArray: this.ClientArr,
+          emailArray: this.newCheckRecord,
           username: this.localuserid
       });
 

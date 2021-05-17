@@ -342,7 +342,7 @@ export default {
                         if (result.data.code == 200) {
                             this.$alertify.success(result.data.msg);
                             this.manualCODRemittance();
-                            this.insertEmailRemittance();
+                            // this.insertEmailRemittance();
                         } else {
                             this.isLoading = false;
                             this.$alertify.error(result.data.msg)
@@ -378,7 +378,7 @@ export default {
                         if (result.data.code == 200) {
                             this.$alertify.success(result.data.msg);
                             this.manualCODRemittance();
-                            this.insertEmailRemittance();
+                            // this.insertEmailRemittance();
                         } else {
                             this.isLoading = false;
                             this.$alertify.error(result.data.msg)
@@ -522,7 +522,7 @@ export default {
             });
 
             if (this.newClientId) {
-                this.input.ClientId = this.newClientId
+                this.input.ClientId = [this.newClientId];
             }
 
             if (this.TransactionFromDate) {
