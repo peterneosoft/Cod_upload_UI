@@ -23,6 +23,44 @@
         </div>
       </b-modal>
     </div>
+    <div class="col-md-12 mb-2">
+                <div class="card">
+                    <div class="card-header filter_main">
+                        <i class=" fa fa-filter filter"></i>E-Mail Remittance</div>
+                    <div class="card-body">
+                        <form v-on:submit.prevent="onSubmit">
+                            <b-form-fieldset>
+                                <b-form-radio name="radioInline" id="radioInline" :plain="true" :options="options" v-model="selected"></b-form-radio>
+                                <span id="opt" class="text-danger"></span>
+                                <hr style="margin-top: 0rem; margin-bottom: 0rem;">
+                            </b-form-fieldset>
+                            <div class="form-group row">
+
+                                <div class="col-md-4">
+                                    <label>From Date <font color="red">*</font></label>
+                                    <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
+                                        <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}" v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
+                                    </b-input-group>
+                                    <span v-show="errors.has('fromDate')" class="text-danger">From date is required.</span>
+                                    <span id="fdate" class="text-danger"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>To Date <font color="red">*</font></label>
+                                    <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
+                                        <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}" v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
+                                    </b-input-group>
+                                    <span v-show="errors.has('toDate')" class="text-danger">To date is required.</span>
+                                </div>
+
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+                                <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
     <div class="col-12">
       <div class="card-headerfrm" style="margin-bottom: 15px;">
@@ -35,31 +73,35 @@
         <table class="table-bordered table-hover tbl datatables" style="width:100%;">
           <thead>
             <tr class="text-primary">
-              <th class="text-center tableheader"><b>#</b></th>
-              <th class="text-center tableheader">
-                <input type="checkbox" v-model="checkAll" @click="check" style="margin-left: -10px;"> All
+              <th class="text-center tableheader" style="width:5%;"><b>#</b></th>
+              <th class="text-center tableheader" style="width:7%;">
+                <input type="checkbox" v-model="checkAll" @click="check" style="margin-left: -7px;"> All
               </th>
-              <th class="text-center tableheader"><b>Company Name</b></th>
-              <th class="text-center tableheader"><b>Company E-Mail</b></th>
-              <th class="text-center tableheader"><b>Remittance Date</b></th>
+              <th class="text-center tableheader" style="width:20%;"><b>Company Name</b></th>
+              <th class="text-center tableheader" style="width:15%;"><b>Company E-Mail</b></th>
+              <th class="text-center tableheader" style="width:10%;"><b>Paid Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader" style="width:15%;"><b>Cycle</b></th>
+              <th class="text-center tableheader"><b>Transaction<br> Date</b></th>
               <th class="text-center tableheader"><b>Report</b></th>
-              <th class="text-center tableheader"><b>E-Mail Status</b></th>
+              <th class="text-center tableheader"><b>Status</b></th>
             </tr>
           </thead>
           <tbody>
-            <tr v-if="resultCount==0"><td colspan="7" align="center">No record found</td></tr>
+            <tr v-if="resultCount==0"><td colspan="9" align="center"><b>No record found..!</b></td></tr>
             <tr v-if="resultCount>0" v-for="(data,index) in listEmailRemittanceData">
               <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
-              <td><input type="checkbox" @change='updateCheck()' v-bind:name="setid('ClientId', data.ClientId)" v-bind:id="setid('ClientId', data.ClientId)" :value="data.ClientId" v-model="ClientArr"></td>
+              <td class="text-center"><input type="checkbox" @change='updateCheck(data)' v-bind:name="setid('ClientId', data.ClientId)" v-bind:id="setid('ClientId', data.ClientId)" :value="data.ClientId" v-model="ClientArr"></td>
               <td class="text-center">{{data.CompanyName}}</td>
               <td class="text-center">{{data.EmailId}}</td>
-              <td class="text-center">{{data.RemittanceDate}}</td>
+                <td class="text-center">{{data.PaidAmount}}</td>
+              <td class="text-center">{{data.Cycle}}</td>
+              <td class="text-center">{{format_date(data.transactiondate)}}</td>
               <td class="text-center">
-                <span><a v-bind:title='`${data.FileName}`' v-bind:href='`${data.FileUrl}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a></span>
+                <span><a v-bind:title='`${data.CompanyName}`' v-bind:href='`${data.filepath}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a></span>
               </td>
               <td class="text-center">
-                <span style="font-size: 11px; border-radius: 5px;" v-if="data.IsActive == true" class="badge badge-danger"><i class="fa fa-circle-o" aria-hidden="true"></i> Pending</span>
-                <span style="font-size: 12px; border-radius: 5px;" v-if="data.IsActive == false" class="badge badge-success"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Sent</span>
+                <span style="font-size: 11px; border-radius: 5px;" v-if="data.EmailStatus == 'Pending'" class="badge badge-danger"><i class="fa fa-circle-o" aria-hidden="true"></i> Pending</span>
+                <span style="font-size: 12px; border-radius: 5px;" v-if="data.EmailStatus == 'Sent'" class="badge badge-success"><i class="fa fa-check-circle-o" aria-hidden="true"></i> Send</span>
               </td>
             </tr>
           </tbody>

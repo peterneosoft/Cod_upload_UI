@@ -4,6 +4,7 @@ import CryptoJS from 'crypto-js';
 import { Validator } from 'vee-validate'
 import Paginate from 'vuejs-paginate'
 import VueElementLoading from 'vue-element-loading';
+import moment from 'moment';
 
 export default {
   name: 'E-MailRemittance',
@@ -26,7 +27,12 @@ export default {
       currentdate: '',
       modalShow:false,
       isSent:false,
-      disableButton: true
+      disableButton: true,
+      fromDate:'',
+      toDate:'',
+      options:[],
+      selected:'',
+      newCheckRecord:[]
     }
   },
 
@@ -45,10 +51,16 @@ export default {
     var date = new Date();
     this.currentdate = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
 
-    this.getEmailRemittanceClients();
+    //this.getEmailRemittanceClients();
   },
 
   methods: {
+    format_date(value) {
+           if (value) {
+               return moment(String(value)).format('DD/MM/YYYY')
+           }
+       },
+
     setid(name, key){
       return name+key;
     },
@@ -80,7 +92,7 @@ export default {
       }
 		},
 
-    updateCheck(){
+    updateCheck(data){
       if(this.listEmailRemittanceData.length == this.ClientArr.length){
          this.checkAll = true;
       }else{
@@ -88,17 +100,77 @@ export default {
       }
 
       if(this.ClientArr.length>0){
+        let tempArray={};
+
+        if(this.checkAll==false){
+          if($("#ClientId"+data.ClientId).prop('checked') == true){
+
+            tempArray={
+              ClientId:data.ClientId,
+              CompanyName:data.CompanyName,
+              RemittanceDate:data.RemittanceDate,
+              Cycle:data.Cycle,
+              RemittanceAmount:data.RemittanceAmount,
+              EmailId:data.EmailId,
+              filepath:data.filepath,
+            }
+            this.newCheckRecord.push(tempArray);
+          }
+
+          if($("#ClientId"+data.ClientId).prop('checked') == false){
+            this.deleteRow(this.newCheckRecord,data.ClientId);
+          }
+       }
         this.disableButton = false;
       }else{
+        this.newCheckRecord=[];
         this.disableButton = true;
       }
     },
+    deleteRow(items, match) {
+      let arr=[];
+      this.newCheckRecord=[];
 
+      for (var i = 0; i < items.length; i++) {
+        if (items[i]['ClientId'] !== match) {
+
+          let tempArray={
+            ClientId:items[i]['ClientId'],
+            CompanyName:items[i]['CompanyName'],
+            RemittanceDate:items[i]['RemittanceDate'],
+            Cycle:items[i]['Cycle'],
+            RemittanceAmount:items[i]['RemittanceAmount'],
+            EmailId:items[i]['EmailId'],
+            filepath:items[i]['filepath'],
+          }
+          this.newCheckRecord.push(tempArray);
+        }
+      }
+      return 1;
+   },
     getEmailRemittanceClients(){
       this.isLoading = true; this.isSent = false;
+      //url: apiUrl.api_url + 'emailremittanceclients?CreatedBy='+this.localuserid+'&RemittanceDate='+this.currentdate+'&offset='+this.pageno+'&limit='+20,
+      //emailremittanceclients
+
+      this.input = ({
+             username: this.localuserid
+      });
+
+      if (this.fromDate) {
+            this.input.TransactionFromDate = this.fromDate;
+      }
+     if (this.toDate) {
+         this.input.TransactionToDate = this.toDate;
+     }
+
+     this.input.offset=this.pageno;
+     this.input.limit=10;
+
       axios({
-          method: 'GET',
-          url: apiUrl.api_url + 'emailremittanceclients?CreatedBy='+this.localuserid+'&RemittanceDate='+this.currentdate+'&offset='+this.pageno+'&limit='+20,
+          method: 'POST',
+          url: apiUrl.api_url + 'emailremittanceclients',
+          data:this.input,
           headers: {
             'Authorization': 'Bearer '+this.myStr
           }
@@ -131,11 +203,12 @@ export default {
     emailRemittance(){
       this.isLoading = true;
 
+      this.newCheckRecord;
       this.input = ({
-          RemittanceDate: this.currentdate,
-          Clients: this.ClientArr,
-          CreatedBy: this.localuserid
-      })
+          emailArray: this.ClientArr,
+          username: this.localuserid
+      });
+
       axios({
         method: 'POST',
         'url': apiUrl.api_url + 'SendMailRemittanceReport',
@@ -144,11 +217,14 @@ export default {
             'Authorization': 'Bearer '+this.myStr
         }
       }).then(result => {
+
         if (result.data.code == 200) {
+
           this.$alertify.success(result.data.msg);
           this.ClientArr=[]; this.checkAll = false;
           this.getEmailRemittanceClients();
         } else {
+
           this.isLoading = false;
           this.$alertify.error(result.data.msg)
         }
@@ -164,6 +240,25 @@ export default {
         this.listEmailRemittanceData=[]; this.ClientArr=[];
         this.checkAll = false; this.disableButton = true;
         this.getEmailRemittanceClients();
-    }
+    },
+    onSubmit: function(event) {
+        this.$validator.validateAll().then(() => {
+            this.pageno = 0;
+            this.exportf = false;
+            if (this.fromDate && this.toDate) {
+                this.getEmailRemittanceClients(event);
+            }
+        }).catch(() => {
+            console.log('errors exist', this.errors)
+        });
+    },
+    resetForm() {
+          this.fromDate = this.toDate = '';
+          this.ClientId = "";
+          this.pageno = this.resultCount = 0;
+          this.listEmailRemittanceData = [];
+          this.$validator.reset();
+          this.errors.clear();
+    },
   }
 }

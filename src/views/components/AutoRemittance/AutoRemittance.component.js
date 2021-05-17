@@ -1,7 +1,9 @@
 import apiUrl from '../../../constants'
 import axios from 'axios'
 import CryptoJS from 'crypto-js';
-import { Validator } from 'vee-validate'
+import {
+    Validator
+} from 'vee-validate'
 import Paginate from 'vuejs-paginate'
 import VueElementLoading from 'vue-element-loading';
 import Multiselect from 'vue-multiselect'
@@ -71,7 +73,10 @@ export default {
             }
         },
         getUpdateInScanData() {
+            this.success = 0;
+            this.failed = 0;
             this.isLoading = true;
+
             this.input = ({
                 username: this.localuserid
             });
@@ -86,7 +91,8 @@ export default {
                 .then(result => {
                     this.isLoading = false;
                     if (result.data.code == 200) {
-
+                        this.success = 0;
+                        this.failed = 0;
                     }
                 }, error => {
                     console.error(error)
@@ -122,6 +128,10 @@ export default {
             }
         },
         uploadFile() {
+
+            this.success = 0;
+            this.failed = 0;
+
             this.input = ({
                 filename: this.filename,
                 username: this.localuserid,
@@ -139,11 +149,16 @@ export default {
                     this.failed = result.data.failed;
                     this.success = result.data.success;
                     this.s3link = result.data.s3link;
+                    this.Loading = false;
+
                     if (result.data.code == 200) {
-                        this.Loading = false;
                         this.$alertify.success(result.data.message);
-                        this.filename = ""
+                        this.filename = '';
                         this.insertEmailRemittance();
+                    }
+
+                    if (result.data.statusCode == 417) {
+                        this.$alertify.error(result.data.message);
                     }
 
                 }, error => {
@@ -195,6 +210,9 @@ export default {
         },
 
         onSubmit: function(res) {
+            this.success = 0;
+            this.failed = 0;
+
             this.$validator.validateAll().then((result) => {
                 if (result) {
                     this.uploadFile()
