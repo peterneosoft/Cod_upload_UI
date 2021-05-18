@@ -1,6 +1,8 @@
 import apiUrl from '../../../constants'
 import axios from 'axios'
-import {Validator} from 'vee-validate'
+import {
+  Validator
+} from 'vee-validate'
 import Multiselect from 'vue-multiselect'
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import CryptoJS from 'crypto-js';
@@ -18,20 +20,21 @@ export default {
 
   data() {
     return {
-      myStr:'',
-      trDate:'',
-      ClientId:'',
-      ClientList:[],
-      listCODPaymentData:[],
+      myStr: '',
+      fromDate: '',
+      toDate: '',
+      ClientId: '',
+      ClientList: [],
+      listCODPaymentData: [],
       pageno: 0,
       pagecount: 0,
       isLoading: false,
       resultCount: '',
       createdby: '',
-      exportf:false,
+      exportf: false,
       excelLoading: false,
       clientLoading: false,
-      reportlink:''
+      reportlink: ''
     }
   },
 
@@ -41,16 +44,16 @@ export default {
 
   mounted() {
     var date = new Date();
-    trDate.max = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
+
 
     var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');
 
     var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
-    var bytes             = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
-    var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
-    var userdetail        = JSON.parse(plaintext);
-    this.createdby        = userdetail.username;
+    var bytes = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
+    var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+    var userdetail = JSON.parse(plaintext);
+    this.createdby = userdetail.username;
 
     this.GetClientData()
   },
@@ -63,7 +66,7 @@ export default {
         url: apiUrl.api_url + 'external/getclientlist',
         data: {},
         headers: {
-          'Authorization': 'Bearer '+this.myStr
+          'Authorization': 'Bearer ' + this.myStr
         }
       }).then(result => {
         this.clientLoading = false;
@@ -75,8 +78,8 @@ export default {
     },
 
     getPaginationData(pageNum) {
-        this.pageno = (pageNum - 1) * 10
-        this.GetCODPaymentData();
+      this.pageno = (pageNum - 1) * 10
+      this.GetCODPaymentData();
     },
 
     GetCODPaymentData(event) {
@@ -85,65 +88,67 @@ export default {
 
       axios({
           method: 'GET',
-          'url': apiUrl.api_url + 'codpaymentdetailsmaster?ClientId='+this.ClientId.ClientMasterID+'&Company='+this.ClientId.CompanyName+'&offset='+this.pageno+'&limit=10&trDate='+this.trDate+'&createdby='+this.createdby,
+          'url': apiUrl.api_url + 'codpaymentdetailsmaster?ClientId=' + this.ClientId.ClientMasterID + '&Company=' + this.ClientId.CompanyName + '&offset=' + this.pageno + '&limit=10&fromDate=' + this.fromDate + '&toDate=' + this.toDate + '&createdby=' + this.createdby,
           headers: {
-              'Authorization': 'Bearer '+this.myStr
+            'Authorization': 'Bearer ' + this.myStr
           }
-      })
-      .then(result => {
-        if(result.data.code == 200){
-          this.listCODPaymentData = result.data.data;
-          this.isLoading = false;
+        })
+        .then(result => {
+          if (result.data.code == 200) {
+            this.listCODPaymentData = result.data.data;
+            this.isLoading = false;
 
-          let totalRows     = result.data.count;
-          this.resultCount  = result.data.count;
-          if (totalRows < 10) {
+            let totalRows = result.data.count;
+            this.resultCount = result.data.count;
+            if (totalRows < 10) {
               this.pagecount = 1
-          } else {
+            } else {
               this.pagecount = Math.ceil(totalRows / 10)
+            }
+            this.exportCODPaymentData();
+          } else {
+            this.listCODPaymentData = [];
+            this.resultCount = 0;
+            this.isLoading = false;
           }
-          this.exportCODPaymentData();
-        }else{
-          this.listCODPaymentData=[];
-          this.resultCount  = 0;
-          this.isLoading = false;
-        }
-      }, error => {
+        }, error => {
           console.error(error)
           this.$alertify.error('Error Occured');
-      })
+        })
     },
 
-    exportCODPaymentData(){
+    exportCODPaymentData() {
       this.reportlink = '';
 
       axios({
           method: 'GET',
-          'url': apiUrl.api_url + 'exportcodpaymentreport?ClientId='+this.ClientId.ClientMasterID+'&Company='+this.ClientId.CompanyName+'&trDate='+this.trDate+'&createdby='+this.createdby,
+          'url': apiUrl.api_url + 'exportcodpaymentreport?ClientId=' + this.ClientId.ClientMasterID + '&Company=' + this.ClientId.CompanyName + '&fromDate=' + this.fromDate + '&toDate=' + this.toDate + '&createdby=' + this.createdby,
           headers: {
-              'Authorization': 'Bearer '+this.myStr
+            'Authorization': 'Bearer ' + this.myStr
           }
-      })
-      .then(result => {
-        if(result.data.code == 200){
-          // this.getDownloadCsvObject(result.data.data);
-          this.exportf=true;
-          this.reportlink = result.data.data;
-        }else{
-          this.exportf=false; this.reportlink = '';
-        }
-      }, error => {
-        this.exportf=false; this.reportlink = '';
-        console.error(error)
-      })
+        })
+        .then(result => {
+          if (result.data.code == 200) {
+            // this.getDownloadCsvObject(result.data.data);
+            this.exportf = true;
+            this.reportlink = result.data.data;
+          } else {
+            this.exportf = false;
+            this.reportlink = '';
+          }
+        }, error => {
+          this.exportf = false;
+          this.reportlink = '';
+          console.error(error)
+        })
     },
 
-    exportreport(){
+    exportreport() {
       this.excelLoading = true;
-      if(this.reportlink){
+      if (this.reportlink) {
         window.open(this.reportlink);
         this.excelLoading = false;
-      }else{
+      } else {
         this.excelLoading = false;
       }
     },
@@ -202,9 +207,21 @@ export default {
 
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
-        if(result){
-          this.pageno = 0; this.exportf = false;
-          this.GetCODPaymentData(event);
+        if (result) {
+          let diffTime = Math.abs(new Date(this.toDate) - new Date(this.fromDate));
+          let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+          this.pageno = 0;
+          this.exportf = false;
+          if (this.fromDate > this.toDate) {
+            document.getElementById("fdate").innerHTML = "From date should not be greater than To date.";
+            return false;
+          } else if (diffDays > 30) {
+            document.getElementById("fdate").innerHTML = "Difference between From date & To date should not be greater than 30 days.";
+            return false;
+          } else {
+            this.GetCODPaymentData(event);
+          }
         }
       }).catch(() => {
         console.log('errors exist', this.errors)
@@ -212,7 +229,11 @@ export default {
     },
 
     resetForm() {
-      this.ClientId = ""; this.pageno = this.resultCount = 0; this.listCODPaymentData = []; this.trDate = ''; this.exportf = false;
+      this.ClientId = "";
+      this.pageno = this.resultCount = 0;
+      this.listCODPaymentData = [];
+      this.fromDate = this.toDate = '';
+      this.exportf = false;
       this.$validator.reset();
       this.errors.clear();
     },

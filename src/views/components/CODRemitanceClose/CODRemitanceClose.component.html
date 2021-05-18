@@ -8,7 +8,7 @@
         <div class="card-body">
           <form v-on:submit.prevent="onSubmit">
             <b-form-fieldset>
-              <b-form-radio name="radioInline" id="radioInline" :plain="true" :options="options" v-model="selected"></b-form-radio>
+              <b-form-radio name="radioInline" id="radioInline" @input="changeRadio(selected)" :plain="true" :options="options" v-model="selected"></b-form-radio>
               <span id="opt" class="text-danger"></span>
               <hr style="margin-top: 0rem; margin-bottom: 0rem;">
             </b-form-fieldset>
@@ -63,7 +63,7 @@
           </span>
         </h4>
         <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
-        <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+        <table v-if="isActiveNow==1" class="table-bordered table-hover tbl datatables" style="width:100%;">
           <thead>
             <tr class="text-primary">
               <th class="text-center tableheader"><b>#</b></th>
@@ -81,7 +81,7 @@
           </thead>
           <tbody>
             <tr v-if="resultCount==0">
-              <td colspan="15" align="center">No record found</td>
+              <td colspan="15" align="center"><b>No record found</b></td>
             </tr>
             <tr v-for="(data,index) in listCODRemitanceData">
               <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
@@ -105,6 +105,53 @@
         </table><br>
         <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
         </paginate>
+
+        <!-- Start :: delivary date  -->
+        <table v-if="isActiveNow==2" class="table-bordered table-hover tbl datatables" style="width:100%;">
+          <thead>
+            <tr class="text-primary">
+              <th class="text-center tableheader"><b>#</b></th>
+              <th class="tableheader"><b>Remittance Id </b></th>
+              <th class="text-center tableheader"><b>Company Name</b></th>
+              <th class=" tableheader"><b>Remittance Type</b></th>
+              <th class="text-center tableheader"><b>Delivary Date</b></th>
+              <th class="text-center tableheader"><b>Cycle</b></th>
+              <th class="text-center tableheader"><b>Shipment Count</b></th>
+              <th class="text-center tableheader"><b>COD Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>Freight Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>Exception Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>Paid Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>Download</b></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="resultCountDate==0">
+              <td colspan="15" align="center"><b>No record found</b></td>
+            </tr>
+            <tr v-for="(data,index) in listCODRemitanceDataDate">
+              <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
+              <td>{{data.clientremittedid}}</td>
+              <td>{{data.CompanyName}}</td>
+              <td>{{data.RemittanceType}}</td>
+              <td class="text-center">{{format_date(data.deliverydate)}}</td>
+              <td>{{data.Cycle}}</td>
+              <td class="text-center">{{data.ShipmentCount}}</td>
+              <td class="text-center">{{data.CODAmount}}</td>
+              <td class="text-center">{{data.FreightAmount}}</td>
+              <td class="text-center">
+                <span v-if="data.ExceptionAmount >0" @click="showReasonAWBNo(data.ExceptionAWB)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{data.ExceptionAmount}}</span>
+                <span v-if="data.ExceptionAmount <=0">{{data.ExceptionAmount}}</span>
+              </td>
+              <td class="text-center">{{data.PaidAmount}}</td>
+              <td class="text-center">
+                <span><a v-bind:title='`${data.CompanyName}`' v-bind:href='`${data.filepath}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a></span>
+              </td>
+            </tr>
+          </tbody>
+        </table><br>
+        <paginate v-if="resultCountDate>0" :page-count="pagecount" :page-range="3" :margin-pages="3" :click-handler="getPaginationDataDate" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+        </paginate>
+        <!-- End ::  delivary date -->
       </div>
     </div>
   </div>

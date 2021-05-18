@@ -8,6 +8,7 @@ import 'vue-multiselect/dist/vue-multiselect.min.css';
 import CryptoJS from 'crypto-js';
 import Paginate from 'vuejs-paginate'
 import VueElementLoading from 'vue-element-loading';
+import moment from 'moment';
 
 export default {
   name: 'CODRemitanceClose',
@@ -39,7 +40,9 @@ export default {
       value: null,
       optionss: ['list', 'of', 'options'],
       listCODRemitanceData: [],
+      listCODRemitanceDataDate: [],
       pageno: 0,
+      resultCountDate: 0,
       pagecount: 0,
       isLoading: false,
       DisputeArr: [],
@@ -50,6 +53,7 @@ export default {
       excelLoading: false,
       clientLoading: false,
       ReasonModalShow: false,
+      isActiveNow: 1,
       reportlink: '',
       totalSum: 0,
       total: 0
@@ -80,6 +84,22 @@ export default {
   },
 
   methods: {
+    format_date(value) {
+      if (value) {
+        return moment(String(value)).format('DD/MM/YYYY')
+      }
+    },
+    changeRadio() {
+
+      if (this.selected === "TransactionDate") {
+        this.isActiveNow = 1;
+      } else if (this.selected === "DeliveryDate") {
+        this.isActiveNow = 2;
+      }
+
+      this.pageno = this.resultCount = this.resultCountDate = 0;
+      this.listCODRemitanceData = this.listCODRemitanceDataDate = [];
+    },
     closeModal() {
       this.ReasonModalShow = false;
     },
@@ -177,12 +197,6 @@ export default {
         });
       }
 
-      /**
-       *
-       *'url': apiUrl.api_url + 'codremittancedetailsmaster?ClientId=' + cData + '&offset=' + this.pageno + '&limit=10&fromDate=' + this.fromDate + '&toDate=' + this.toDate + '&search=' + this.selected,
-       */
-
-
       this.input = ({
         username: this.localuserid
       });
@@ -211,12 +225,16 @@ export default {
           }
         })
         .then(result => {
+          this.resultCountDate = 0;
+          this.listCODRemitanceDataDate = [];
+          this.listCODRemitanceData = [];
+
           if (result.data.code == 200) {
             this.listCODRemitanceData = result.data.remittanceArr;
             this.isLoading = false;
 
-            let totalRows = result.data.remittanceArr.length;
-            this.resultCount = result.data.remittanceArr.length;
+            let totalRows = result.data.count;
+            this.resultCount = result.data.count;
             if (totalRows < 10) {
               this.pagecount = 1
             } else {
@@ -224,7 +242,97 @@ export default {
             }
             // this.exportCODRemittanceDetailsData();
           } else {
-            this.listCODRemitanceData = [];
+            this.resultCount = 0;
+            this.isLoading = false;
+          }
+        }, error => {
+          console.error(error)
+          this.$alertify.error('Error Occured');
+        })
+    },
+    getPaginationDataDate(pageNum) {
+
+      this.pageno = (pageNum - 1) * 10
+      this.GetCODRemittanceDetailsDataDate();
+
+    },
+
+    GetCODRemittanceDetailsDataDate(event) {
+
+      if (this.selected) {
+        if (this.fromDate > this.toDate) {
+          document.getElementById("fdate").innerHTML = "From date should not be greater than To date.";
+          return false;
+        } else {
+          document.getElementById("fdate").innerHTML = "";
+        }
+        document.getElementById("opt").innerHTML = "";
+      } else {
+        document.getElementById("opt").innerHTML = "Please choose atleast one option ( Delivery Date OR Transaction Date ).";
+        return false;
+      }
+
+      let cData = [];
+      if (this.SearchClientIds.length > 0) {
+        cData = this.SearchClientIds;
+      } else {
+        if ($.isArray(this.ClientId) === false) {
+          this.ClientId = new Array(this.ClientId);
+        }
+
+        this.ClientId.forEach(function(val) {
+          cData.push(val.ClientMasterID);
+        });
+      }
+
+      this.input = ({
+        username: this.localuserid
+      });
+
+      if (cData) {
+        this.input.ClientId = cData
+      }
+
+
+      if (this.fromDate) {
+        this.input.DeliveryFromDate = this.fromDate;
+      }
+
+      if (this.toDate) {
+        this.input.DeliveryToDate = this.toDate;
+      }
+      this.input.offset = this.pageno;
+      this.input.limit = 10;
+
+      this.isLoading = true;
+      axios({
+          method: 'POST',
+          'url': apiUrl.api_url + 'getRemittedClientDateWise',
+          'data': this.input,
+          headers: {
+            'Authorization': 'Bearer ' + this.myStr
+          }
+        })
+        .then(result => {
+
+          if (result.data.code === 200) {
+            this.resultCountDate = 0;
+            this.listCODRemitanceDataDate = result.data.remittanceArr;
+            this.isLoading = false;
+
+            let totalRows = result.data.count;
+            this.resultCountDate = result.data.count;
+
+            if (totalRows < 10) {
+              this.pagecount = 1
+            } else {
+              this.pagecount = Math.ceil(totalRows / 10)
+            }
+
+            // this.exportCODRemittanceDetailsData();
+          } else {
+            this.listCODRemitanceDataDate = [];
+            this.resultCountDate = 0;
             this.resultCount = 0;
             this.isLoading = false;
           }
@@ -339,7 +447,21 @@ export default {
         this.pageno = 0;
         this.exportf = false;
         if (this.fromDate && this.toDate) {
-          this.GetCODRemittanceDetailsData(event);
+          // this.pagecount = 1;
+          // this.limit = 10;
+          if (this.selected === "TransactionDate") {
+            this.isActiveNow = 1;
+            /**
+             * Delivary date search call
+             */
+            this.GetCODRemittanceDetailsData(event);
+          } else if (this.selected === "DeliveryDate") {
+            this.isActiveNow = 2;
+            /**
+             * Delivary date search call
+             */
+            this.GetCODRemittanceDetailsDataDate(event);
+          }
         }
       }).catch(() => {
         console.log('errors exist', this.errors)
@@ -348,10 +470,11 @@ export default {
 
     resetForm() {
       this.fromDate = this.toDate = '';
-      this.selected = "";
       this.ClientId = "";
+      $("input[value='TransactionDate']").attr("checked", true);
       this.pageno = this.resultCount = 0;
       this.listCODRemitanceData = [];
+      this.listCODRemitanceDataDate = [];
       this.exportf = false;
       this.$validator.reset();
       this.errors.clear();

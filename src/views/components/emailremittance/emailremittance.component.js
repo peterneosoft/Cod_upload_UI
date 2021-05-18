@@ -1,7 +1,9 @@
 import apiUrl from '../../../constants'
 import axios from 'axios'
 import CryptoJS from 'crypto-js';
-import { Validator } from 'vee-validate'
+import {
+  Validator
+} from 'vee-validate'
 import Paginate from 'vuejs-paginate'
 import VueElementLoading from 'vue-element-loading';
 import moment from 'moment';
@@ -9,8 +11,8 @@ import moment from 'moment';
 export default {
   name: 'E-MailRemittance',
   components: {
-      Paginate,
-      VueElementLoading
+    Paginate,
+    VueElementLoading
   },
 
   data() {
@@ -21,211 +23,225 @@ export default {
       pageno: 0,
       count: 0,
       isLoading: false,
-      listEmailRemittanceData:[],
+      listEmailRemittanceData: [],
       ClientArr: [],
-		  checkAll: false,
+      checkAll: false,
       currentdate: '',
-      modalShow:false,
-      isSent:false,
+      modalShow: false,
+      isSent: false,
       disableButton: true,
-      fromDate:'',
-      toDate:'',
-      options:[],
-      selected:'',
-      newCheckRecord:[]
+      fromDate: '',
+      toDate: '',
+      options: [],
+      selected: '',
+      newCheckRecord: []
     }
   },
 
   computed: {},
 
   mounted() {
+    this.checkAll = false;
     var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
-    var bytes             = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
-    var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
-    var userdetail        = JSON.parse(plaintext);
-    this.localuserid      = userdetail.username;
-
-    var userToken         = window.localStorage.getItem('accessuserToken');
-    this.myStr            = userToken.replace(/"/g, '');
+    var bytes = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
+    var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+    var userdetail = JSON.parse(plaintext);
+    this.localuserid = userdetail.username;
+    var userToken = window.localStorage.getItem('accessuserToken');
+    this.myStr = userToken.replace(/"/g, '');
 
     var date = new Date();
-    this.currentdate = date.toLocaleDateString('fr-CA', {year: 'numeric', month: '2-digit', day: '2-digit'});
+    this.currentdate = date.toLocaleDateString('fr-CA', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
     //this.getEmailRemittanceClients();
   },
 
   methods: {
     format_date(value) {
-           if (value) {
-               return moment(String(value)).format('DD/MM/YYYY')
-           }
-       },
-
-    setid(name, key){
-      return name+key;
+      if (value) {
+        return moment(String(value)).format('DD/MM/YYYY')
+      }
     },
 
-    showModal(){
+    setid(name, key) {
+      return name + key;
+    },
 
-      if(this.newCheckRecord.length==0){
-        this.$alertify.error('Select at least one checkbox.');
-      }else {
+    showModal() {
+
       this.modalShow = true;
-    }
+
 
     },
 
     closeModal(elem) {
       this.modalShow = false;
 
-      if(elem===true){
+      if (elem === true) {
 
-        if(this.newCheckRecord.length===0){
-              this.$alertify.error('Select at least one checkbox.');
-        }else {
+        if (this.newCheckRecord.length === 0) {
+          this.$alertify.error('Select at least one checkbox.');
+        } else {
           this.emailRemittance();
         }
 
-      }else{
+      } else {
         return false;
       }
     },
+    checks() {
 
+      this.ClientArr = [];
+      if ($("#checkall").prop('checked') == true) {
+        // if (this.checkAll) {
+        for (let i in this.listEmailRemittanceData) {
+          this.ClientArr.push(this.listEmailRemittanceData[i].ClientId);
+        }
+        this.disableButton = false;
+      } else {
+        this.disableButton = true;
+      }
+    },
     check() {
 
-      this.checkAll = !this.checkAll;
-			this.ClientArr = [];
-      this.newCheckRecord=[];
-
-			if (this.checkAll) {
-
-				for (let i in this.listEmailRemittanceData) {
+      // this.checkAll = !this.checkAll;
+      this.ClientArr = [];
+      this.newCheckRecord = [];
+      // if (this.checkAll) {
+      if ($("#checkall").prop('checked') == true) {
+        this.checkAll = true;
+        for (let i in this.listEmailRemittanceData) {
 
           this.ClientArr.push(this.listEmailRemittanceData[i].ClientId);
 
-          let tempArray={};
+          let tempArray = {};
 
-          tempArray={
-            ClientId:this.listEmailRemittanceData[i].ClientId,
-            CompanyName:this.listEmailRemittanceData[i].CompanyName,
-            RemittanceDate:this.listEmailRemittanceData[i].transactiondate,
-            Cycle:this.listEmailRemittanceData[i].Cycle,
-            RemittanceAmount:this.listEmailRemittanceData[i].PaidAmount,
-            EmailId:this.listEmailRemittanceData[i].EmailId,
-            filepath:this.listEmailRemittanceData[i].filepath,
+          tempArray = {
+            ClientId: this.listEmailRemittanceData[i].ClientId,
+            CompanyName: this.listEmailRemittanceData[i].CompanyName,
+            RemittanceDate: this.listEmailRemittanceData[i].transactiondate,
+            Cycle: this.listEmailRemittanceData[i].Cycle,
+            RemittanceAmount: this.listEmailRemittanceData[i].PaidAmount,
+            EmailId: this.listEmailRemittanceData[i].EmailId,
+            filepath: this.listEmailRemittanceData[i].filepath,
           }
 
           this.newCheckRecord.push(tempArray);
 
-				}
+        }
 
         this.disableButton = false;
-			}else{
-        this.newCheckRecord=[];
+      } else {
+        this.checkAll = false;
+        this.newCheckRecord = [];
         this.disableButton = true;
       }
-		},
+    },
+    updateCheck(data) {
 
-    updateCheck(data){
-
-      if(this.listEmailRemittanceData.length == this.ClientArr.length){
-         this.checkAll = true;
-      }else{
-         this.checkAll = false;
+      if (this.listEmailRemittanceData.length == this.ClientArr.length) {
+        this.checkAll = true;
+      } else {
+        this.checkAll = false;
       }
 
-      if(this.ClientArr.length>0){
-        let tempArray={};
+      if (this.ClientArr.length > 0) {
+        let tempArray = {};
 
-        if(this.checkAll==false){
-          if($("#ClientId"+data.ClientId).prop('checked') == true){
+        if (this.checkAll == false) {
+          if ($("#ClientId" + data.ClientId).prop('checked') == true) {
 
-            tempArray={
-              ClientId:data.ClientId,
-              CompanyName:data.CompanyName,
-              RemittanceDate:data.transactiondate,
-              Cycle:data.Cycle,
-              RemittanceAmount:data.PaidAmount,
-              EmailId:data.EmailId,
-              filepath:data.filepath,
+            tempArray = {
+              ClientId: data.ClientId,
+              CompanyName: data.CompanyName,
+              RemittanceDate: data.transactiondate,
+              Cycle: data.Cycle,
+              RemittanceAmount: data.PaidAmount,
+              EmailId: data.EmailId,
+              filepath: data.filepath,
             }
             this.newCheckRecord.push(tempArray);
           }
 
-          if($("#ClientId"+data.ClientId).prop('checked') == false){
-            this.deleteRow(this.newCheckRecord,data.ClientId);
+          if ($("#ClientId" + data.ClientId).prop('checked') == false) {
+            this.deleteRow(this.newCheckRecord, data.ClientId);
           }
 
-       }
+        }
         this.disableButton = false;
 
-      }else{
-        this.newCheckRecord=[];
+      } else {
+        this.newCheckRecord = [];
         this.disableButton = true;
       }
     },
     deleteRow(items, match) {
-      let arr=[];
-      this.newCheckRecord=[];
+      let arr = [];
+      this.newCheckRecord = [];
 
       for (var i = 0; i < items.length; i++) {
         if (items[i]['ClientId'] !== match) {
 
-          let tempArray={
-            ClientId:items[i]['ClientId'],
-            CompanyName:items[i]['CompanyName'],
-            RemittanceDate:items[i]['transactiondate'],
-            Cycle:items[i]['Cycle'],
-            RemittanceAmount:items[i]['PaidAmount'],
-            EmailId:items[i]['EmailId'],
-            filepath:items[i]['filepath'],
+          let tempArray = {
+            ClientId: items[i]['ClientId'],
+            CompanyName: items[i]['CompanyName'],
+            RemittanceDate: items[i]['transactiondate'],
+            Cycle: items[i]['Cycle'],
+            RemittanceAmount: items[i]['PaidAmount'],
+            EmailId: items[i]['EmailId'],
+            filepath: items[i]['filepath'],
           }
           this.newCheckRecord.push(tempArray);
         }
       }
       return 1;
-   },
-    getEmailRemittanceClients(){
-      this.isLoading = true; this.isSent = false;
+    },
+    getEmailRemittanceClients() {
+      this.isLoading = true;
+      this.isSent = false;
       //url: apiUrl.api_url + 'emailremittanceclients?CreatedBy='+this.localuserid+'&RemittanceDate='+this.currentdate+'&offset='+this.pageno+'&limit='+20,
       //emailremittanceclients
 
       this.input = ({
-             username: this.localuserid
+        username: this.localuserid
       });
 
       if (this.fromDate) {
-            this.input.TransactionFromDate = this.fromDate;
+        this.input.TransactionFromDate = this.fromDate;
       }
-     if (this.toDate) {
-         this.input.TransactionToDate = this.toDate;
-     }
+      if (this.toDate) {
+        this.input.TransactionToDate = this.toDate;
+      }
 
-     this.input.offset=this.pageno;
-     this.input.limit=10;
+      this.input.offset = this.pageno;
+      this.input.limit = 10;
 
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'emailremittanceclients',
-          data:this.input,
+          data: this.input,
           headers: {
-            'Authorization': 'Bearer '+this.myStr
+            'Authorization': 'Bearer ' + this.myStr
           }
         })
         .then(result => {
-          if(result.data.code == 200){
+          if (result.data.code == 200) {
             this.isLoading = false;
             this.isSent = true;
-            this.listEmailRemittanceData  = result.data.data;
-            this.resultCount  = result.data.count;
-            let totalRows     = result.data.count;
+            this.listEmailRemittanceData = result.data.data;
+            this.resultCount = result.data.count;
+            let totalRows = result.data.count;
             if (totalRows < 20) {
-                this.pagecount = 1
+              this.pagecount = 1
             } else {
-                this.pagecount = Math.ceil(totalRows / 20)
+              this.pagecount = Math.ceil(totalRows / 20)
             }
-          }else{
-            this.listEmailRemittanceData=[];
-            this.resultCount  = 0;
+          } else {
+            this.listEmailRemittanceData = [];
+            this.resultCount = 0;
             this.isLoading = false;
             this.isSent = false;
           }
@@ -236,13 +252,13 @@ export default {
         })
     },
 
-    emailRemittance(){
+    emailRemittance() {
       this.isLoading = true;
 
       this.newCheckRecord;
       this.input = ({
-          emailArray: this.newCheckRecord,
-          username: this.localuserid
+        emailArray: this.newCheckRecord,
+        username: this.localuserid
       });
 
       axios({
@@ -250,14 +266,15 @@ export default {
         'url': apiUrl.api_url + 'SendMailRemittanceReport',
         'data': this.input,
         headers: {
-            'Authorization': 'Bearer '+this.myStr
+          'Authorization': 'Bearer ' + this.myStr
         }
       }).then(result => {
 
         if (result.data.code == 200) {
 
           this.$alertify.success(result.data.msg);
-          this.ClientArr=[]; this.checkAll = false;
+          this.ClientArr = [];
+          this.checkAll = false;
           this.getEmailRemittanceClients();
         } else {
 
@@ -272,29 +289,36 @@ export default {
 
     //to get pagination
     getPaginationData(pageNum) {
-        this.pageno = (pageNum - 1) * 20;
-        this.listEmailRemittanceData=[]; this.ClientArr=[];
-        this.checkAll = false; this.disableButton = true;
-        this.getEmailRemittanceClients();
+      this.pageno = (pageNum - 1) * 20;
+      this.listEmailRemittanceData = [];
+      this.ClientArr = [];
+      this.checkAll = false;
+      this.disableButton = true;
+      this.getEmailRemittanceClients();
     },
     onSubmit: function(event) {
-        this.$validator.validateAll().then(() => {
-            this.pageno = 0;
-            this.exportf = false;
-            if (this.fromDate && this.toDate) {
-                this.getEmailRemittanceClients(event);
-            }
-        }).catch(() => {
-            console.log('errors exist', this.errors)
-        });
+      this.checkAll = false;
+      this.listEmailRemittanceData = this.newCheckRecord = [];
+      this.ClientArr = [];
+      this.disableButton = true;
+      $('.checkedChild').removeAttr('checked');
+      this.$validator.validateAll().then(() => {
+        this.pageno = 0;
+        this.exportf = false;
+        if (this.fromDate && this.toDate) {
+          this.getEmailRemittanceClients(event);
+        }
+      }).catch(() => {
+        console.log('errors exist', this.errors)
+      });
     },
     resetForm() {
-          this.fromDate = this.toDate = '';
-          this.ClientId = "";
-          this.pageno = this.resultCount = 0;
-          this.listEmailRemittanceData = [];
-          this.$validator.reset();
-          this.errors.clear();
+      this.fromDate = this.toDate = '';
+      this.ClientId = "";
+      this.pageno = this.resultCount = 0;
+      this.listEmailRemittanceData = [];
+      this.$validator.reset();
+      this.errors.clear();
     },
   }
 }

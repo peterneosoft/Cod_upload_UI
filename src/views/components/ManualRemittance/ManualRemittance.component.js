@@ -314,7 +314,7 @@ export default {
                 this.recordType = this.selected;
                 this.todatesChanged = $(".scrolltb").find("[data-toids='toids" + data.ClientId + "']").attr("data-dates");
 
-                if (this.recordType == 'adhoc') {
+                if (this.recordType == 'AdHoc') {
 
                     this.input = ({
                         FromDate: this.form.oldFromDate[data.ClientId],
@@ -341,7 +341,9 @@ export default {
                     }).then(result => {
                         if (result.data.code == 200) {
                             this.$alertify.success(result.data.message);
-                            this.manualCODRemittance();
+
+                            this.onClientSearch(this.Client.ClientMasterID, this.Client.CompanyName);
+
                             // this.insertEmailRemittance();
                         } else {
                             this.isLoading = false;
@@ -378,7 +380,7 @@ export default {
                         if (result.data.code == 200) {
                             this.$alertify.success(result.data.message);
                             this.manualCODRemittance();
-                            // this.insertEmailRemittance();
+                            // this.insertEmailReittance();
                         } else {
                             this.isLoading = false;
                             this.$alertify.error(result.data.message)
