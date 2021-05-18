@@ -1,106 +1,149 @@
 <section class="user">
-    <div class="animated fadeIn">
-        <div class="col-md-12 mb-2">
-            <div class="card">
-                <div class="card-header filter_main">
-                    <i class=" fa fa-filter filter"></i> Remittance Closed Details
-                </div>
-                <div class="card-body">
-                    <form v-on:submit.prevent="onSubmit">
-                        <b-form-fieldset>
-                            <b-form-radio name="radioInline" id="radioInline" :plain="true" :options="options" v-model="selected"></b-form-radio>
-                            <span id="opt" class="text-danger"></span>
-                            <hr style="margin-top: 0rem; margin-bottom: 0rem;">
-                        </b-form-fieldset>
-                        <div class="form-group row">
-                            <div class="col-md-4">
-                                <label>Client Name <font color="red">*</font></label>
-                                <b-input-group left="<i class='fa fa-list'></i>">
-                                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="clientLoading" />
-                                    <Multiselect :options="ClientList" v-bind:multiple="multiple()" name="ClientId" id="ClientId" v-model="ClientId" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID" v-validate="{required: true}" v-bind:class="{'error': errors.has('ClientId') }"
-                                        :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
-                                        <template slot="noResult"><p>No Record Found.</p></template>
-                                    </Multiselect>
-                                </b-input-group>
-                                <span v-show="errors.has('ClientId')" class="text-danger">Client is required.</span>
-                            </div>
-                            <div class="col-md-4">
-                                <label>From Date <font color="red">*</font></label>
-                                <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
-                                    <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}" v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
-                                </b-input-group>
-                                <span v-show="errors.has('fromDate')" class="text-danger">From date is required.</span>
-                                <span id="fdate" class="text-danger"></span>
-                            </div>
-                            <div class="col-md-4">
-                                <label>To Date <font color="red">*</font></label>
-                                <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
-                                    <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}" v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
-                                </b-input-group>
-                                <span v-show="errors.has('toDate')" class="text-danger">To date is required.</span>
-                            </div>
-
-                        </div>
-                        <div class="card-footer">
-                            <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
-                            <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+  <div class="animated fadeIn">
+    <div class="col-md-12 mb-2">
+      <div class="card">
+        <div class="card-header filter_main">
+          <i class=" fa fa-filter filter"></i> Remittance Closed Details
         </div>
+        <div class="card-body">
+          <form v-on:submit.prevent="onSubmit">
+            <b-form-fieldset>
+              <b-form-radio name="radioInline" id="radioInline" :plain="true" :options="options" v-model="selected"></b-form-radio>
+              <span id="opt" class="text-danger"></span>
+              <hr style="margin-top: 0rem; margin-bottom: 0rem;">
+            </b-form-fieldset>
+            <div class="form-group row">
+              <div class="col-md-4">
+                <label>Client Name <font color="red">*</font></label>
+                <b-input-group left="<i class='fa fa-list'></i>">
+                  <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="clientLoading" />
+                  <Multiselect :options="ClientList" v-bind:multiple="multiple()" name="ClientId" id="ClientId" v-model="ClientId" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID" v-validate="{required: true}"
+                    v-bind:class="{'error': errors.has('ClientId') }" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                    <template slot="noResult">
+                      <p>No Record Found.</p>
+                    </template>
+                  </Multiselect>
+                </b-input-group>
+                <span v-show="errors.has('ClientId')" class="text-danger">Client is required.</span>
+              </div>
+              <div class="col-md-4">
+                <label>From Date <font color="red">*</font></label>
+                <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
+                  <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}" v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
+                </b-input-group>
+                <span v-show="errors.has('fromDate')" class="text-danger">From date is required.</span>
+                <span id="fdate" class="text-danger"></span>
+              </div>
+              <div class="col-md-4">
+                <label>To Date <font color="red">*</font></label>
+                <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
+                  <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}" v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
+                </b-input-group>
+                <span v-show="errors.has('toDate')" class="text-danger">To date is required.</span>
+              </div>
 
-        <div class="col-12">
-            <div class="card-headerfrm" style="margin-bottom: 15px;">
-                <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result
-                    <span v-show="exportf" style="margin-left: 85%; cursor: pointer;" @click="exportreport()">
+            </div>
+            <div class="card-footer">
+              <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+              <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="card-headerfrm" style="margin-bottom: 15px;">
+        <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result
+          <span v-show="exportf" style="margin-left: 85%; cursor: pointer;" @click="exportreport()">
             <button class="btn btn-sm btn-success" type="button">
               <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="excelLoading" />
               <i class="fa fa-download"></i> Export
             </button>
           </span>
-                </h4>
-                <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
-                <table class="table-bordered table-hover tbl datatables" style="width:100%;">
-                    <thead>
-                        <tr class="text-primary">
-                            <th class="text-center tableheader"><b>#</b></th>
-                              <th class="tableheader"><b>Remittance Id	</b></th>
-                            <th class="text-center tableheader"><b>Company Name</b></th>
-                            <th class=" tableheader"><b>Remittance Type</b></th>
-                            <th class="tableheader"><b>Cycle</b></th>
-                            <th class="text-center tableheader"><b>Shipment Count</b></th>
-                            <th class="text-center tableheader"><b>COD Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
-                            <th class="text-center tableheader"><b>Freight Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
-                            <th class="text-center tableheader"><b>Exception Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
-                            <th class="text-center tableheader"><b>Paid Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
-                            <th class="text-center tableheader"><b>Download</b></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-if="resultCount==0">
-                            <td colspan="15" align="center">No record found</td>
-                        </tr>
-                        <tr v-for="(data,index) in listCODRemitanceData">
-                            <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
-                            <td>{{data.clientremittedid}}</td>
-                            <td>{{data.CompanyName}}</td>
-                            <td>{{data.RemittanceType}}</td>
-                            <td>{{data.Cycle}}</td>
-                            <td class="text-center">{{data.ShipmentCount}}</td>
-                            <td class="text-center">{{data.CODAmount}}</td>
-                              <td class="text-center">{{data.FreightAmount}}</td>
-                            <td class="text-center">{{data.ExceptionAmount}}</td>
-                            <td class="text-center">{{data.PaidAmount}}</td>
-                            <td class="text-center">
-                              <span><a v-bind:title='`${data.CompanyName}`' v-bind:href='`${data.filepath}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a></span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table><br>
-                <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
-                </paginate>
-            </div>
-        </div>
+        </h4>
+        <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+        <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+          <thead>
+            <tr class="text-primary">
+              <th class="text-center tableheader"><b>#</b></th>
+              <th class="tableheader"><b>Remittance Id </b></th>
+              <th class="text-center tableheader"><b>Company Name</b></th>
+              <th class=" tableheader"><b>Remittance Type</b></th>
+              <th class="tableheader"><b>Cycle</b></th>
+              <th class="text-center tableheader"><b>Shipment Count</b></th>
+              <th class="text-center tableheader"><b>COD Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>Freight Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>Exception Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>Paid Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>Download</b></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="resultCount==0">
+              <td colspan="15" align="center">No record found</td>
+            </tr>
+            <tr v-for="(data,index) in listCODRemitanceData">
+              <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
+              <td>{{data.clientremittedid}}</td>
+              <td>{{data.CompanyName}}</td>
+              <td>{{data.RemittanceType}}</td>
+              <td>{{data.Cycle}}</td>
+              <td class="text-center">{{data.ShipmentCount}}</td>
+              <td class="text-center">{{data.CODAmount}}</td>
+              <td class="text-center">{{data.FreightAmount}}</td>
+              <td class="text-center">
+                <span v-if="data.ExceptionAmount >0" @click="showReasonAWBNo(data.ExceptionAWB)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;">{{data.ExceptionAmount}}</span>
+                <span v-if="data.ExceptionAmount <=0">{{data.ExceptionAmount}}</span>
+              </td>
+              <td class="text-center">{{data.PaidAmount}}</td>
+              <td class="text-center">
+                <span><a v-bind:title='`${data.CompanyName}`' v-bind:href='`${data.filepath}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a></span>
+              </td>
+            </tr>
+          </tbody>
+        </table><br>
+        <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+        </paginate>
+      </div>
     </div>
+  </div>
+  <b-modal ref="myReasonModalRef" v-model="ReasonModalShow" id=#confirmationmodal2 title="Confirmation">
+    <div role="document">
+      <div class="modal-content" style="width: 150%;">
+        <div class="modal-headerfrm">
+          <h5 class="modal-title" style="font-size: 1rem;">AWB No/Amount</h5>
+          <button type="button" class="close" @click="closeModal" aria-label="Close">
+            <span aria-hidden="true" style="color: white;">×</span>
+          </button>
+        </div>
+        <div class="modal-bodyfrm">
+          <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+            <thead>
+              <tr class="text-primary">
+                <th class="text-center tableheader" style="width: 1%"><b>#</b></th>
+                <th class="text-center tableheader" style="width:50%"><b>AWB Number</b></th>
+                <th class="text-center tableheader" style="width:40%"><b>Amount ( <i class="fa fa-rupee"></i> )</b></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-if="DisputeArr.length<=0">
+                <td colspan="3" align="center">No record found</td>
+              </tr>
+              <tr v-for="(val,index) in DisputeArr">
+                <td class="text-center" style="width: 1%">{{index+1}}</td>
+                <td class="text-center" style="width: 50%">{{val.awb}}</td>
+                <td class="text-center" style="width: 40%">{{val.Amount}}</td>
+              </tr>
+              <tr>
+                <td class="text-center" style="width: 1%"></td>
+                <td class="text-center" style="width: 50%"><b>Total</b></td>
+                <td class="text-center" style="width: 40%"><b>{{totalSum}}</b></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </b-modal>
 </section>

@@ -340,12 +340,12 @@ export default {
                         }
                     }).then(result => {
                         if (result.data.code == 200) {
-                            this.$alertify.success(result.data.msg);
+                            this.$alertify.success(result.data.message);
                             this.manualCODRemittance();
                             // this.insertEmailRemittance();
                         } else {
                             this.isLoading = false;
-                            this.$alertify.error(result.data.msg)
+                            this.$alertify.error(result.data.message)
                         }
                     }, error => {
                         console.error(error)
@@ -376,12 +376,12 @@ export default {
                         }
                     }).then(result => {
                         if (result.data.code == 200) {
-                            this.$alertify.success(result.data.msg);
+                            this.$alertify.success(result.data.message);
                             this.manualCODRemittance();
                             // this.insertEmailRemittance();
                         } else {
                             this.isLoading = false;
-                            this.$alertify.error(result.data.msg)
+                            this.$alertify.error(result.data.message)
                         }
                     }, error => {
                         console.error(error)
