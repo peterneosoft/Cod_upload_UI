@@ -272,8 +272,30 @@ export default {
              * @return {[type]}      [description]
              */
             if (this.isexport === true) {
+              this.isLoading = true;
               if (result.data.remittanceArr.length > 0) {
-                this.getDownloadCsvObject(result.data.remittanceArr);
+                let fetchResult = result.data.remittanceArr;
+                let newResult = [];
+                fetchResult.forEach((item, i) => {
+                  let testTemp = {};
+
+                  testTemp.ClientId = item.ClientId;
+                  testTemp.clientremittedid = item.clientremittedid;
+                  testTemp.CompanyName = item.CompanyName;
+                  testTemp.RemittanceType = item.RemittanceType;
+                  testTemp.Cycle = item.Cycle;
+                  testTemp.ShipmentCount = item.ShipmentCount;
+                  testTemp.CODAmount = item.CODAmount;
+                  testTemp.FreightAmount = item.FreightAmount;
+                  testTemp.ExceptionAmount = item.ExceptionAmount;
+                  testTemp.PaidAmount = item.PaidAmount;
+                  testTemp.UTRNo = item.UTRNo;
+                  testTemp.filepath = item.filepath;
+
+                  newResult.push(testTemp);
+                });
+
+                this.getDownloadCsvObject(newResult);
               } else {
                 this.$alertify.error('Sorry..! no record found for excel download.');
               }
@@ -318,6 +340,7 @@ export default {
       // link.removeChild(link);
     },
     convertArrayOfObjectsToCSV: function(args) {
+      this.isLoading = false;
       var result, ctr, keys, columnDelimiter, lineDelimiter, data;
       data = args.data || null;
       if (data == null || !data.length) {
