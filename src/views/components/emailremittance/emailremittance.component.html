@@ -34,19 +34,19 @@
             <div class="form-group row">
 
               <div class="col-md-4">
-                <label>From Date <font color="red">*</font></label>
+                <label>Transaction From Date <font color="red">*</font></label>
                 <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
                   <b-form-input id="fromDate" type="date" name="fromDate" v-validate="{required: true}" v-model="fromDate" v-bind:class="{'form-control': true, 'error': errors.has('fromDate') }"></b-form-input>
                 </b-input-group>
-                <span v-show="errors.has('fromDate')" class="text-danger">From date is required.</span>
+                <span v-show="errors.has('fromDate')" class="text-danger">Transaction from date is required.</span>
                 <span id="fdate" class="text-danger"></span>
               </div>
               <div class="col-md-4">
-                <label>To Date <font color="red">*</font></label>
+                <label>Transaction To Date <font color="red">*</font></label>
                 <b-input-group left="<i class='fa fa-calendar'></i>" style="height: 45px;">
                   <b-form-input id="toDate" type="date" name="toDate" v-validate="{required: true}" v-model="toDate" v-bind:class="{'form-control': true, 'error': errors.has('toDate') }"></b-form-input>
                 </b-input-group>
-                <span v-show="errors.has('toDate')" class="text-danger">To date is required.</span>
+                <span v-show="errors.has('toDate')" class="text-danger">Transaction to date is required.</span>
               </div>
 
             </div>

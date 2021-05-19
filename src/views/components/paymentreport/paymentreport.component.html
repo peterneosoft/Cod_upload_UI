@@ -22,20 +22,20 @@
             </div>
 
             <div class="col-md-3">
-              <label>From Date <font color="red">*</font></label>
+              <label>Transaction From Date <font color="red">*</font></label>
               <b-input-group left="<i class='fa fa-calendar'></i>">
                 <b-form-input id="fromDate" type="date" name="fromDate" v-model="fromDate" v-bind:class="{'form-control': true}" style="height: 42px;" v-validate="{required: true}"></b-form-input>
               </b-input-group>
-              <span v-show="errors.has('fromDate')" class="text-danger">From date is required.</span>
+              <span v-show="errors.has('fromDate')" class="text-danger">Transaction from date is required.</span>
               <span id="fdate" class="text-danger"></span>
             </div>
 
             <div class="col-md-3">
-              <label>To Date <font color="red">*</font></label>
+              <label>Transaction To Date <font color="red">*</font></label>
               <b-input-group left="<i class='fa fa-calendar'></i>">
                 <b-form-input id="toDate" type="date" name="toDate" v-model="toDate" v-bind:class="{'form-control': true}" style="height: 42px;" v-validate="{required: true}"></b-form-input>
               </b-input-group>
-              <span v-show="errors.has('toDate')" class="text-danger">To date is required.</span>
+              <span v-show="errors.has('toDate')" class="text-danger">Transaction to date is required.</span>
 
             </div>
 
