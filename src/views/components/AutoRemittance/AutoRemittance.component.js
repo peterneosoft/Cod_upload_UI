@@ -128,6 +128,15 @@ export default {
     },
     uploadFile() {
 
+      if (this.selected === false) {
+        $("input[value='false']").attr("checked", true);
+        $("input[value='true']").attr("checked", false);
+      }
+      if (this.selected === true) {
+        $("input[value='true']").attr("checked", true);
+        $("input[value='false']").attr("checked", false);
+      }
+
       this.success = 0;
       this.failed = 0;
 
@@ -153,6 +162,7 @@ export default {
           if (result.data.code == 200) {
             this.$alertify.success(result.data.message);
             this.filename = '';
+
             // this.insertEmailRemittance();
           }
 
@@ -243,6 +253,7 @@ export default {
     },
 
     resetData(event) {
+      location.reload();
       this.success = 0;
       $(".failedcls").removeAttr('href');
       $(".failedcls").css('color', 'black !important');

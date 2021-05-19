@@ -47,11 +47,14 @@ export default {
             newtodate: '',
             todatesChanged: '',
             newdata: [],
+            FCModal: false,
             total: 0,
             ofd: '',
             fromdates: '',
             todates: '',
             newClientId: '',
+            utrno: '',
+            updatedData: [],
             form: {
                 toDate: [],
                 FromDate: [],
@@ -135,9 +138,62 @@ export default {
         closeModal() {
             this.modalShow = false;
             this.ReasonModalShow = false;
+            this.FCModal = false;
         },
         setid(name, key) {
             return name + key;
+        },
+        PopUp(elem) {
+            this.FCModal = true;
+            this.updatedData = elem;
+            this.utrno = elem.UTRNo;
+            this.$refs.myClosureModalRef.show();
+
+        },
+        onUpdate: function() {
+            this.$validator.validateAll().then((result) => {
+                if (!result) {
+                    document.getElementById("utrnoerr").style.display = "block";
+                    // this.$alertify.error('Update Error');
+                } else {
+                    this.urlSubmitCall();
+                }
+            }).catch(() => {
+                console.log('errors exist', this.errors);
+                this.$alertify.error('Error Occured');
+            });
+        },
+        urlSubmitCall() {
+            this.input = {};
+            this.input = {
+                RemittanceId: this.updatedData.clientremittedid,
+                UTRNo: this.utrno,
+                username: this.localuserid,
+            }
+            axios({
+                    method: 'POST',
+                    url: apiUrl.api_url + 'updateremittanceUTR',
+                    headers: {
+                        'Authorization': 'Bearer ' + this.myStr
+                    },
+                    data: this.input,
+                })
+                .then(result => {
+
+                    if (result.data.code === 200) {
+                        this.isLoading = false;
+                        this.closeModal();
+                        this.payApproved();
+
+                    } else {
+                        this.listPendingRemittanceDataToDate = [];
+                        this.isLoading = false;
+                    }
+                }, error => {
+                    console.error(error)
+                    this.isLoading = false;
+                    this.$alertify.error('Error Occured');
+                })
         },
 
         onChangeDate(fromDate, toDate, ClientId, CompanyName, RemittanceType) {

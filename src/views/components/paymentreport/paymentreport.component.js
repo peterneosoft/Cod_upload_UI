@@ -105,7 +105,8 @@ export default {
             } else {
               this.pagecount = Math.ceil(totalRows / 10)
             }
-            this.exportCODPaymentData();
+            // this.exportCODPaymentData();
+            this.exportf = true;
           } else {
             this.listCODPaymentData = [];
             this.resultCount = 0;
@@ -132,6 +133,7 @@ export default {
             // this.getDownloadCsvObject(result.data.data);
             this.exportf = true;
             this.reportlink = result.data.data;
+            this.exportreport();
           } else {
             this.exportf = false;
             this.reportlink = '';

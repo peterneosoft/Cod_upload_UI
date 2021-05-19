@@ -54,7 +54,7 @@
   <div class="col-md-12 mb-2">
     <div class="card-headerfrm" style="margin-bottom: 15px;">
       <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result
-        <span v-show="exportf" style="margin-left: 85%; cursor: pointer;" @click="exportreport()">
+        <span v-show="exportf" style="margin-left: 85%; cursor: pointer;" @click="exportCODPaymentData()">
           <button class="btn btn-sm btn-success" type="button">
             <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="excelLoading" />
             <i class="fa fa-download"></i> Export
