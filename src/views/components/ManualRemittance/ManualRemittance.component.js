@@ -568,6 +568,10 @@ export default {
                 })
 
         },
+        getPaginationDelivaryData(pageNum) {
+            this.pageno = (pageNum - 1) * 10;
+            this.payApproved();
+        },
         payApproved() {
 
             // this.Client = [];
@@ -590,7 +594,8 @@ export default {
             if (this.TransactionToDate) {
                 this.input.TransactionToDate = this.TransactionToDate;
             }
-
+            this.input.offset = this.pageno;
+            this.input.limit = 10;
             axios({
                     method: 'POST',
                     'url': apiUrl.api_url + 'getRemittedClientData',
@@ -606,31 +611,13 @@ export default {
                         this.recordType = 'payApproved';
                         this.notApproved = 2;
                         this.listPendingRemittanceDatas = result.data.remittanceArr;
-                        this.resultCounts = result.data.remittanceArr.length;
-
-                        // if (totalRows < 20) {
-                        //     this.pagecount = 1
-                        // } else {
-                        //     this.pagecount = Math.ceil(totalRows / 20)
-                        // }
-
-                        // this.listPendingRemittanceData.forEach((val, key) => {
-                        //     this.form.toDate[val.ClientId] = val.ToDate;
-                        //     this.form.FromDate[val.ClientId] = val.FromDate;
-
-                        //     this.form.oldToDate[val.ClientId] = null;
-                        //     this.form.oldFromDate[val.ClientId] = null;
-
-                        //     if (this.form.oldFromDate[val.ClientId] == null) {
-                        //         this.form.oldFromDate[val.ClientId] = val.FromDate;
-                        //     }
-                        //     if (this.form.oldToDate[val.ClientId] == null) {
-                        //         this.form.oldToDate[val.ClientId] = val.ToDate;
-                        //     }
-
-                        //     $('#FromDate' + val.ClientId).val(val.FromDate);
-                        //     $('#toDate' + val.ClientId).val(val.ToDate);
-                        // });
+                        this.resultCounts = result.data.count;
+                        let totalRows = result.data.count;
+                        if (totalRows < 10) {
+                            this.pagecount = 1
+                        } else {
+                            this.pagecount = Math.ceil(totalRows / 10)
+                        }
 
                     } else if (result.data.code == 204) {
                         this.listPendingRemittanceDatas = [];

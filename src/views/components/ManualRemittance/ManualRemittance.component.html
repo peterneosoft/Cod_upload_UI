@@ -169,8 +169,8 @@
                     </tbody>
                 </table>
                 <br>
-                <!-- <paginate v-if="notApproved==2 && resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
-                </paginate> -->
+                <paginate v-if="notApproved==2 && resultCounts>0" :page-count="pagecount" :page-range="3" :margin-pages="3" :click-handler="getPaginationDelivaryData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+                </paginate>
             </div>
         </div>
         <b-modal v-model="FCModal" @ok="FCModal = false" ref="myClosureModalRef">

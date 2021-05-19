@@ -57,7 +57,8 @@ export default {
       reportlink: '',
       totalSum: 0,
       total: 0,
-      isexport: false
+      isexport: false,
+      filename: '',
     }
   },
 
@@ -87,11 +88,11 @@ export default {
   methods: {
     format_date(value) {
       if (value) {
-        return moment(String(value)).format('DD/MM/YYYY')
+        return moment(String(value)).format('DD/MM/YYYY');
       }
     },
     changeRadio() {
-
+      this.exportf = false;
       if (this.selected === "TransactionDate") {
         this.isActiveNow = 1;
       } else if (this.selected === "DeliveryDate") {
@@ -294,7 +295,7 @@ export default {
 
                   newResult.push(testTemp);
                 });
-
+                this.filename = 'COD_Transaction_Remitance';
                 this.getDownloadCsvObject(newResult);
               } else {
                 this.$alertify.error('Sorry..! no record found for excel download.');
@@ -322,7 +323,7 @@ export default {
       var yyyy = today.getFullYear();
       var today = dd + "" + mm + "" + yyyy;
       var data, filename, link;
-      filename = "COD_Close_Remitance" + today + ".csv";
+      filename = this.filename + today + ".csv";
       var csv = this.convertArrayOfObjectsToCSV({
         data: csvData
       });
@@ -372,8 +373,18 @@ export default {
       this.GetCODRemittanceDetailsDataDate();
 
     },
-
     GetCODRemittanceDetailsDataDate(event) {
+      this.isexport = false;
+      this.GetCODRemittanceDetailsDataDateTemp();
+    },
+
+    exportDelivaryDate() {
+      this.isexport = true;
+      this.GetCODRemittanceDetailsDataDateTemp();
+
+    },
+
+    GetCODRemittanceDetailsDataDateTemp(event) {
 
       if (this.selected) {
         if (this.fromDate > this.toDate) {
@@ -444,7 +455,42 @@ export default {
             } else {
               this.pagecount = Math.ceil(totalRows / 10)
             }
+            this.exportf = true;
+            /**
+             * excel download
+             * @param  {[type]} this [description]
+             * @return {[type]}      [description]
+             */
+            if (this.isexport === true) {
+              this.isLoading = true;
+              if (result.data.remittanceArr.length > 0) {
+                let fetchResult = result.data.remittanceArr;
+                let newResult = [];
+                fetchResult.forEach((item, i) => {
+                  let testTemp = {};
 
+                  testTemp.ClientId = item.ClientId;
+                  testTemp.clientremittedid = item.clientremittedid;
+                  testTemp.CompanyName = item.CompanyName;
+                  testTemp.RemittanceType = item.RemittanceType;
+                  testTemp.deliverydate = item.deliverydate;
+                  testTemp.Cycle = item.Cycle;
+                  testTemp.ShipmentCount = item.ShipmentCount;
+                  testTemp.CODAmount = item.CODAmount;
+                  testTemp.FreightAmount = item.FreightAmount;
+                  testTemp.ExceptionAmount = item.ExceptionAmount;
+                  testTemp.PaidAmount = item.PaidAmount;
+                  testTemp.UTRNo = item.UTRNo;
+                  testTemp.filepath = item.filepath;
+
+                  newResult.push(testTemp);
+                });
+                this.filename = 'COD_Delivary_Remitance';
+                this.getDownloadCsvObject(newResult);
+              } else {
+                this.$alertify.error('Sorry..! no record found for excel download.');
+              }
+            }
             // this.exportCODRemittanceDetailsData();
           } else {
             this.listCODRemitanceDataDate = [];
