@@ -45,7 +45,7 @@ import EPaymentReco from '@/views/components/epaymentreco'
 import SVCReset from '@/views/components/svcreset'
 import SRReset from '@/views/components/srreset'
 import maintenance from '@/views/components/maintenance'
-
+import bulkremittancequery from '@/views/components/bulkremittancequery'
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -453,6 +453,23 @@ const router = new Router({
           },
         },
         {
+          path: 'bulkremittancequery',
+          name: 'Bulk Remittance Query',
+          component: bulkremittancequery,
+          meta: {
+            requiresAuth: true,
+            adminAuth: true,
+            breadcrumb: [{
+                name: 'Home',
+                link: '/dashboard'
+              },
+              {
+                name: 'Bulk Remittance Query'
+              }
+            ]
+          },
+        },
+        {
           path: 'srledger',
           name: 'SR Ledger',
           component: SRReset,
@@ -471,7 +488,7 @@ const router = new Router({
         },
         {
           path: 'AddEditClientTAT',
-          name: 'Add Edit Client TAT',
+          name: 'Add/Edit Remittance TAT',
           component: AddEditClientTAT,
           meta: {
             requiresAuth: true,
@@ -481,7 +498,7 @@ const router = new Router({
                 link: '/dashboard'
               },
               {
-                name: 'Add Edit Client TAT'
+                name: 'Add/Edit Remittance TAT'
               }
             ]
           },
@@ -730,10 +747,10 @@ const router = new Router({
       component: Login
     },
     {
-			path: '/maintenance',
-			name: 'maintenance',
-			component: maintenance
-		},
+      path: '/maintenance',
+      name: 'maintenance',
+      component: maintenance
+    },
     {
       path: '/pages',
       redirect: '/pages/p404',
@@ -766,20 +783,20 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
 
-  var isLoggedIn        = window.localStorage.getItem('isLoggedIn');
-  var accessuserToken   = window.localStorage.getItem('accessuserToken') ? window.localStorage.getItem('accessuserToken').replace(/"/g, '') : null;
+  var isLoggedIn = window.localStorage.getItem('isLoggedIn');
+  var accessuserToken = window.localStorage.getItem('accessuserToken') ? window.localStorage.getItem('accessuserToken').replace(/"/g, '') : null;
 
   if (isLoggedIn == null) {
     isLoggedIn = false;
   } else {
-    if(accessuserToken==null){
+    if (accessuserToken == null) {
       localStorage.removeItem('accesshubdata')
       localStorage.removeItem('accesspermissiondata')
       localStorage.removeItem('accessuserdata')
       localStorage.removeItem('accessuserToken')
       localStorage.removeItem('isLoggedIn')
       isLoggedIn = false;
-    }else{
+    } else {
       isLoggedIn = true;
     }
   }
@@ -787,48 +804,48 @@ router.beforeEach((to, from, next) => {
   if (isLoggedIn == true) {
 
     var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
-    var bytes             = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
-    var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
-    var userdetail        = JSON.parse(plaintext);
+    var bytes = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
+    var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+    var userdetail = JSON.parse(plaintext);
 
     axios.post(process.env.NODE_ENV == 'production' ? 'http://track.xbees.in/api/UserTracker' : 'http://stageautoallocation-app.xbees.in/api/UserTracker', {
-      projectname:"COD Management",
-      type:"web",
-      userid:userdetail.userid,
-      username:userdetail.username,
+      projectname: "COD Management",
+      type: "web",
+      userid: userdetail.userid,
+      username: userdetail.username,
       routeurl: to.path
     });
 
     axios({
-      method: 'POST',
-      'url': apiUrl.api_url + 'appvalidatetoken',
-      'data': {},
-      headers: {
-        'Authorization': 'Bearer '+accessuserToken
-      }
-    })
-   .then((response) => {
-		 /*--maintenance page call start--*/
-		 if(response && response.data.ReturnCode=='104'){
-			 next({
-			 	path: "/maintenance"
-			 });
-		 }
-		 /*--maintenance page call end--*/
-    },(error)=>{
-      if(error.response.status===401){
-        localStorage.removeItem('accesshubdata')
-        localStorage.removeItem('accesspermissiondata')
-        localStorage.removeItem('accessuserdata')
-        localStorage.removeItem('accessuserToken')
-        localStorage.removeItem('isLoggedIn')
-        localStorage.removeItem('logoutTime')
-        localStorage.removeItem('accessrole')
-        next({
-          path: "/login",
-        });
-      }
-    });
+        method: 'POST',
+        'url': apiUrl.api_url + 'appvalidatetoken',
+        'data': {},
+        headers: {
+          'Authorization': 'Bearer ' + accessuserToken
+        }
+      })
+      .then((response) => {
+        /*--maintenance page call start--*/
+        if (response && response.data.ReturnCode == '104') {
+          next({
+            path: "/maintenance"
+          });
+        }
+        /*--maintenance page call end--*/
+      }, (error) => {
+        if (error.response.status === 401) {
+          localStorage.removeItem('accesshubdata')
+          localStorage.removeItem('accesspermissiondata')
+          localStorage.removeItem('accessuserdata')
+          localStorage.removeItem('accessuserToken')
+          localStorage.removeItem('isLoggedIn')
+          localStorage.removeItem('logoutTime')
+          localStorage.removeItem('accessrole')
+          next({
+            path: "/login",
+          });
+        }
+      });
   }
 
   //next();
@@ -846,15 +863,16 @@ router.beforeEach((to, from, next) => {
       const permissiondata = JSON.parse(plaintext);
 
       function isBigEnough(findURL) {
-        if(findURL.children.length>0){
+        if (findURL.children.length > 0) {
           for (var j = 0; j < findURL.children.length; j++) {
-            if(findURL.children[j].ismenu===true){
+            if (findURL.children[j].ismenu === true) {
               return findURL.children.some(isBigChildEnough);
             }
           }
         }
         return findURL.name == to.name;
       }
+
       function isBigChildEnough(findURL) {
         return findURL.name == to.name;
       }
