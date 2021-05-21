@@ -35,12 +35,19 @@ export default {
         {
           text: 'Delivery Date',
           value: 'DeliveryDate'
+        },
+        {
+          text: 'Exception Report',
+          value: 'ExceptionReport'
         }
       ],
       value: null,
       optionss: ['list', 'of', 'options'],
       listCODRemitanceData: [],
       listCODRemitanceDataDate: [],
+      listCODRemitanceDataException: [],
+      listCODPaymentData: [],
+      resultCountException: 0,
       pageno: 0,
       resultCountDate: 0,
       pagecount: 0,
@@ -92,15 +99,18 @@ export default {
       }
     },
     changeRadio() {
+
       this.exportf = false;
       if (this.selected === "TransactionDate") {
         this.isActiveNow = 1;
       } else if (this.selected === "DeliveryDate") {
         this.isActiveNow = 2;
+      } else if (this.selected === "ExceptionReport") {
+        this.isActiveNow = 3;
       }
 
       this.pageno = this.resultCount = this.resultCountDate = 0;
-      this.listCODRemitanceData = this.listCODRemitanceDataDate = [];
+      this.listCODRemitanceData = this.listCODRemitanceDataDate = this.listCODRemitanceDataException = [];
     },
     closeModal() {
       this.ReasonModalShow = false;
@@ -367,11 +377,156 @@ export default {
       this.excelLoading = false;
       return result;
     },
+    /**
+     * exception report  page number
+     * @param  {[type]} pageNum [description]
+     * @return {[type]}         [description]
+     */
+    exportDelivaryException() {
+      this.isexport = true;
+      this.GetCODRemittanceDetailsDataExceptionTemp();
+
+    },
+    getPaginationDataException(pageNum) {
+      this.pageno = (pageNum - 1) * 10;
+      this.isexport = false;
+      this.GetCODRemittanceDetailsDataException();
+
+    },
+    GetCODRemittanceDetailsDataException(event) {
+      this.isexport = false;
+      this.GetCODRemittanceDetailsDataExceptionTemp();
+    },
+    GetCODRemittanceDetailsDataExceptionTemp(event) {
+
+      if (this.selected) {
+        if (this.fromDate > this.toDate) {
+          document.getElementById("fdate").innerHTML = "From date should not be greater than To date.";
+          return false;
+        } else {
+          document.getElementById("fdate").innerHTML = "";
+        }
+        document.getElementById("opt").innerHTML = "";
+      } else {
+        document.getElementById("opt").innerHTML = "Please choose atleast one option ( Delivery Date OR Transaction Date ).";
+        return false;
+      }
+
+      let cData = [];
+      if (this.SearchClientIds.length > 0) {
+        cData = this.SearchClientIds;
+      } else {
+        if ($.isArray(this.ClientId) === false) {
+          this.ClientId = new Array(this.ClientId);
+        }
+
+        this.ClientId.forEach(function(val) {
+          cData.push(val.ClientMasterID);
+        });
+      }
+
+      this.input = ({
+        username: this.localuserid
+      });
+
+      if (cData) {
+        this.input.ClientId = cData
+      }
+      this.input.isexport = this.isexport;
+
+      if (this.fromDate) {
+        this.input.DeliveryFromDate = this.fromDate;
+      }
+
+      if (this.toDate) {
+        this.input.DeliveryToDate = this.toDate;
+      }
+      this.input.offset = this.pageno;
+      this.input.limit = 10;
+
+      this.isLoading = true;
+      axios({
+          method: 'POST',
+          'url': apiUrl.api_url + 'get-exception-report',
+          'data': this.input,
+          headers: {
+            'Authorization': 'Bearer ' + this.myStr
+          }
+        })
+        .then(result => {
+
+          if (result.data.code === 200) {
+
+            this.resultCountException = 0;
+            this.listCODPaymentData = result.data.shipmentArr;
+            this.isLoading = false;
+
+            let totalRows = result.data.count;
+            this.resultCountException = result.data.count;
+
+            if (totalRows < 10) {
+              this.pagecount = 1
+            } else {
+              this.pagecount = Math.ceil(totalRows / 10)
+            }
+            this.exportf = true;
+
+            /**
+             * excel download
+             * @param  {[type]} this [description]
+             * @return {[type]}      [description]
+             */
+            if (this.isexport === true) {
+
+              this.isLoading = true;
+              if (result.data.shipmentArr.length > 0) {
+                let fetchResult = result.data.shipmentArr;
+                let newResult = [];
+                fetchResult.forEach((item, i) => {
+                  let testTemp = {};
+
+                  testTemp.ShippingDate = this.format_date(item.ShippingDate);
+                  testTemp.POID = item.POID;
+                  testTemp.ShippingID = item.ShippingID;
+                  testTemp.CompanyName = item.CompanyName;
+                  testTemp.HubName = item.HubName;
+                  testTemp.COD = 'COD';
+                  testTemp.Delivered = 'Delivered';
+                  testTemp.DeliveryDate = this.format_date(item.DeliveryDate);
+                  testTemp.NetPayment = item.NetPayment;
+                  testTemp.RemittanceDate = this.format_date(item.RemittanceDate);
+
+                  newResult.push(testTemp);
+                });
+                this.filename = 'COD_ExceptionReport';
+                this.getDownloadCsvObject(newResult);
+              } else {
+                this.$alertify.error('Sorry..! no record found for excel download.');
+              }
+            }
+            // this.exportCODRemittanceDetailsData();
+          } else {
+            this.listCODRemitanceDataDate = [];
+            this.listCODPaymentData = [];
+            this.resultCountDate = 0;
+            this.resultCount = 0;
+            this.isLoading = false;
+          }
+        }, error => {
+          console.error(error)
+          this.$alertify.error('Error Occured');
+        })
+    },
+
+    /**
+     * Cod remitance data
+     * @param  {[type]} pageNum [description]
+     * @return {[type]}         [description]
+     */
     getPaginationDataDate(pageNum) {
       this.pageno = (pageNum - 1) * 10;
       this.isexport = false;
       this.GetCODRemittanceDetailsDataDate();
-
     },
     GetCODRemittanceDetailsDataDate(event) {
       this.isexport = false;
@@ -420,7 +575,7 @@ export default {
         this.input.ClientId = cData
       }
 
-
+      this.input.isexport = this.isexport;
       if (this.fromDate) {
         this.input.DeliveryFromDate = this.fromDate;
       }
@@ -615,7 +770,15 @@ export default {
              * Delivary date search call
              */
             this.GetCODRemittanceDetailsDataDate(event);
+          } else if (this.selected === "ExceptionReport") {
+            this.isActiveNow = 3;
+            /**
+             * DelivaryException Report search call
+             */
+            this.GetCODRemittanceDetailsDataException(event);
           }
+
+
         }
       }).catch(() => {
         console.log('errors exist', this.errors)
@@ -623,6 +786,7 @@ export default {
     },
 
     resetForm() {
+      this.isActiveNow = 1;
       this.fromDate = this.toDate = '';
       this.ClientId = "";
       document.getElementById("fdate").innerHTML = "";
@@ -630,6 +794,7 @@ export default {
       this.pageno = this.resultCount = 0;
       this.listCODRemitanceData = [];
       this.listCODRemitanceDataDate = [];
+      this.listCODRemitanceDataException = [];
       this.exportf = false;
       this.isexport = false;
       this.$validator.reset();

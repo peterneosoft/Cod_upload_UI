@@ -1,0 +1,88 @@
+<section class="user">
+  <div class="col-md-12 mb-2">
+    <b-card>
+      <div slot="header">
+        <i class=" fa fa-filter filter"></i> Bulk Remittance Query
+      </div>
+
+      <div class="card-body1">
+        <form v-on:submit.prevent="onSubmit">
+          <div class="form-group row">
+            <div class="col-md-12">
+              <label>Shipment Id <font color="red">*</font></label>
+              <b-input-group>
+                <textarea rows="4" name="shipmentid" id="shipmentid" ref="textarea" v-model="shipmentid" v-validate="{required: true}" placeholder="Enter Shipment Ids..."
+                  v-bind:class="{'form-control': true, 'error': errors.has('shipmentid') }"></textarea>
+              </b-input-group>
+              <small class="text-muted">
+                <font color="red">Note: * Only accept comma (,) seperated shipment ids.</font>
+              </small>
+              <br>
+              <span v-show="errors.has('shipmentid')" class="text-danger">Shipment Id is required.</span>
+            </div>
+
+
+          </div>
+          <div class="form-group row">
+          </div>
+          <div class="card-footer">
+            <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="submitLoading" />
+            <button class="btn btn-sm btn-primary" title="Check Shipment Status" type="submit"><i class="fa fa-search"></i> Search</button>
+            <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
+          </div>
+        </form>
+      </div>
+    </b-card>
+  </div>
+
+  <div class="col-md-12 mb-2">
+    <div class="card-headerfrm" style="margin-bottom: 15px;">
+      <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result
+        <span v-show="exportf" style="margin-left: 85%; cursor: pointer;" @click="exportCODPaymentData()">
+          <button class="btn btn-sm btn-success" type="button">
+            <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="excelLoading" />
+            <i class="fa fa-download"></i> Export
+          </button>
+        </span>
+      </h4>
+      <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+      <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+        <thead>
+          <tr class="text-primary">
+            <th class="text-center tableheader"><b>#</b></th>
+            <th class="text-center tableheader"><b>Shipping Date</b></th>
+            <th class="text-center tableheader"><b>POID</b></th>
+            <th class="text-center tableheader"><b>Shipping Id</b></th>
+            <th class="text-center tableheader"><b>Company Name</b></th>
+            <th class="text-center tableheader"><b>Hub Name</b></th>
+            <th class="text-center tableheader"><b>Service Type</b></th>
+            <th class="text-center tableheader"><b>Shipment Status</b></th>
+            <th class="text-center tableheader"><b>Delivery Date</b></th>
+            <th class="text-center tableheader"><b>Net Payment ( <i class="fa fa-rupee"></i> )</b></th>
+            <th class="text-center tableheader"><b>Transaction Date</b></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-if="resultCount==0">
+            <td colspan="11" align="center">No record found</td>
+          </tr>
+          <tr v-for="(data,index) in listCODPaymentData">
+            <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
+            <td>{{format_date(data.ShippingDate)}}</td>
+            <td>{{data.POID}}</td>
+            <td>{{data.ShippingID}}</td>
+            <td>{{data.CompanyName}}</td>
+            <td>{{data.HubName}}</td>
+            <td>COD</td>
+            <td>Delivered</td>
+            <td>{{format_date(data.DeliveryDate)}}</td>
+            <td>{{data.NetPayment}}</td>
+            <td>{{format_date(data.RemittanceDate)}}</td>
+          </tr>
+        </tbody>
+      </table><br>
+      <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+      </paginate>
+    </div>
+  </div>
+</section>

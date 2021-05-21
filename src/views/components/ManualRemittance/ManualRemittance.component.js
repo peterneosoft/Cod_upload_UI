@@ -962,7 +962,7 @@ export default {
 
         resetSearch() {
             this.Client = [];
-            this.pageno = this.resultCount = 0;
+            this.pageno = 0;
             this.Search = 0;
             document.getElementById("clienterr").innerHTML = "";
             this.newClientId = '';

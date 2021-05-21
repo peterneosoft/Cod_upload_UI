@@ -67,8 +67,13 @@
               <i class="fa fa-download"></i> Export
             </button>
           </span>
+          <span v-if="isActiveNow==3" v-show="exportf" style="margin-left: 85%; cursor: pointer;" @click="exportDelivaryException()">
+            <button class="btn btn-sm btn-success" type="button">
+              <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="excelLoading" />
+              <i class="fa fa-download"></i> Export
+            </button>
+          </span>
         </h4>
-
         <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
         <table v-if="isActiveNow==1" class="table-bordered table-hover tbl datatables" style="width:100%;">
           <thead>
@@ -111,8 +116,8 @@
               </td>
             </tr>
           </tbody>
-        </table><br>
-        <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+        </table><br v-if="isActiveNow==1 && resultCount>0">
+        <paginate v-if="isActiveNow==1 &&  resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
         </paginate>
 
         <!-- Start :: delivary date  -->
@@ -159,10 +164,50 @@
               </td>
             </tr>
           </tbody>
-        </table><br>
-        <paginate v-if="resultCountDate>0" :page-count="pagecount" :page-range="3" :margin-pages="3" :click-handler="getPaginationDataDate" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+        </table><br v-if="isActiveNow==2 && resultCountDate>0">
+        <paginate v-if="isActiveNow==2 && resultCountDate>0" :page-count="pagecount" :page-range="3" :margin-pages="3" :click-handler="getPaginationDataDate" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
         </paginate>
         <!-- End ::  delivary date -->
+        <!-- start : expection report  -->
+
+        <table v-if="isActiveNow==3" class="table-bordered table-hover tbl datatables" style="width:100%;">
+          <thead>
+            <tr class="text-primary">
+              <th class="text-center tableheader"><b>#</b></th>
+              <th class="text-center tableheader"><b>Shipping Date</b></th>
+              <th class="text-center tableheader"><b>POID</b></th>
+              <th class="text-center tableheader"><b>Shipping Id</b></th>
+              <th class="text-center tableheader"><b>Company Name</b></th>
+              <th class="text-center tableheader"><b>Hub Name</b></th>
+              <th class="text-center tableheader"><b>Service Type</b></th>
+              <th class="text-center tableheader"><b>Shipment Status</b></th>
+              <th class="text-center tableheader"><b>Delivery Date</b></th>
+              <th class="text-center tableheader"><b>Net Payment ( <i class="fa fa-rupee"></i> )</b></th>
+              <th class="text-center tableheader"><b>Transaction Date</b></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="resultCountException==0">
+              <td colspan="11" align="center">No record found</td>
+            </tr>
+            <tr v-for="(data,index) in listCODPaymentData">
+              <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
+              <td>{{format_date(data.ShippingDate)}}</td>
+              <td>{{data.POID}}</td>
+              <td>{{data.ShippingID}}</td>
+              <td>{{data.CompanyName}}</td>
+              <td>{{data.HubName}}</td>
+              <td>COD</td>
+              <td>Delivered</td>
+              <td>{{format_date(data.DeliveryDate)}}</td>
+              <td>{{data.NetPayment}}</td>
+              <td>{{format_date(data.RemittanceDate)}}</td>
+            </tr>
+          </tbody>
+        </table><br v-if="isActiveNow==3 && resultCountException>0">
+        <paginate v-if="isActiveNow==3 && resultCountException>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationDataException" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+        </paginate>
+        <!-- end : exception report  -->
       </div>
     </div>
   </div>

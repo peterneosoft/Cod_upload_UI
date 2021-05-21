@@ -1,12 +1,12 @@
 <section class="user">
   <div class="animated fadeIn">
     <div class="col-md-12 mb-2">
-      <div class="card" >
-        <div v-if="AddEditClientTAT==0" @click = "AddEditClientTAT = '1'" class="card-header filter_main" style="cursor: pointer;">
-          <i class="fa fa-plus plus"></i>Add / Edit Client TAT
+      <div class="card">
+        <div v-if="AddEditClientTAT==0" @click="AddEditClientTAT = '1'" class="card-header filter_main" style="cursor: pointer;">
+          <i class="fa fa-plus plus"></i>Add / Edit Remittance TAT
         </div>
-        <div v-if="AddEditClientTAT==1" @click = "AddEditClientTAT = '0'" class="card-header filter_main" style="cursor: pointer;">
-          <i class="fa fa-minus minus"></i>Add / Edit Client TAT
+        <div v-if="AddEditClientTAT==1" @click="AddEditClientTAT = '0'" class="card-header filter_main" style="cursor: pointer;">
+          <i class="fa fa-minus minus"></i>Add / Edit Remittance TAT
         </div>
         <b-collapse v-bind:class="`${AddEditClientTAT == '1' ? 'show' : 'hide'}`" id="collapse1">
           <div class="card-body">
@@ -16,8 +16,11 @@
                   <label>Client Name <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="clientLoading" />
-                    <Multiselect :options="ClientList" name="ClientId" id="ClientId" @input="GetClientBusinessConfigList()" v-model="ClientId" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID"  v-validate="{required: true}" v-bind:class="{'error': errors.has('ClientId') }" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:1000">
-                     <template slot="noResult"><p>No Record Found.</p></template>
+                    <Multiselect :options="ClientList" name="ClientId" id="ClientId" @input="GetClientBusinessConfigList()" v-model="ClientId" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID" v-validate="{required: true}"
+                      v-bind:class="{'error': errors.has('ClientId') }" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:1000">
+                      <template slot="noResult">
+                        <p>No Record Found.</p>
+                      </template>
                     </Multiselect>
                   </b-input-group>
                   <span v-show="errors.has('ClientId')" class="text-danger">Client is required.</span>
@@ -26,9 +29,10 @@
                   <label>Bussiness Service Type <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="businessLoading" />
-                    <select style="height:45px;" name="Bussinesstype" id="Bussinesstype" class="form-control" v-on:change = "GetClientBusinessAccounts" v-model="Bussinesstype"  v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('Bussinesstype') }">
+                    <select style="height:45px;" name="Bussinesstype" id="Bussinesstype" class="form-control" v-on:change="GetClientBusinessAccounts" v-model="Bussinesstype" v-validate="'required'"
+                      v-bind:class="{'form-control': true, 'error': errors.has('Bussinesstype') }">
                       <option value="">--Select--</option>
-                      <option v-for="Client_obj in ClientBusinessList" v-bind:value="Client_obj.ClientBusinessDetailID" >{{Client_obj.BusinessConfig}}</option>
+                      <option v-for="Client_obj in ClientBusinessList" v-bind:value="Client_obj.ClientBusinessDetailID">{{Client_obj.BusinessConfig}}</option>
                     </select>
                   </b-input-group>
                   <span v-show="errors.has('Bussinesstype')" class="text-danger">Bussiness type is required.</span>
@@ -38,10 +42,11 @@
                   <label>Account Name <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="accountLoading" />
-                    <select style="height:45px;" name="AccountName" id="AccountName" class="form-control" v-model="AccountName" v-on:change="getAccountDetails" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('AccountName') }">
+                    <select style="height:45px;" name="AccountName" id="AccountName" class="form-control" v-model="AccountName" v-on:change="getAccountDetails" v-validate="'required'"
+                      v-bind:class="{'form-control': true, 'error': errors.has('AccountName') }">
                       <option value="">--Select--</option>
-                      <option v-for="Client_obj in ClientAccountsList"  v-bind:value="Client_obj.ClientBusinessAccountId" >{{Client_obj.AccountName}}</option>
-                  </select>
+                      <option v-for="Client_obj in ClientAccountsList" v-bind:value="Client_obj.ClientBusinessAccountId">{{Client_obj.AccountName}}</option>
+                    </select>
                   </b-input-group>
                   <span v-show="errors.has('AccountName')" class="text-danger">Account name is required.</span>
                 </div>
@@ -51,23 +56,26 @@
                 <div class="col-md-4">
                   <label>Remittance Day <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
-                  <Multiselect :options="RemittanceDayList" name="RemittanceDay" id="RemittanceDay" v-model="RemittanceDay" placeholder="Select Remittance Day" label="day" track-by="day" :preselect-first="false" v-bind:multiple="multiple()" @select="handleSelect" v-validate="{required: true}" v-bind:class="{'error': errors.has('RemittanceDay') }" :max-height="150" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
-                   <template slot="noResult"><p>No Record Found.</p></template>
-                  </Multiselect>
+                    <Multiselect :options="RemittanceDayList" name="RemittanceDay" id="RemittanceDay" v-model="RemittanceDay" placeholder="Select Remittance Day" label="day" track-by="day" :preselect-first="false" v-bind:multiple="multiple()"
+                      @select="handleSelect" v-validate="{required: true}" v-bind:class="{'error': errors.has('RemittanceDay') }" :max-height="150" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                      <template slot="noResult">
+                        <p>No Record Found.</p>
+                      </template>
+                    </Multiselect>
                   </b-input-group>
                   <span v-show="errors.has('RemittanceDay')" class="text-danger">Remittance day is required.</span>
                 </div>
 
                 <div class="col-md-4">
-                  <label>TAT <font color="red">*</font></label>
+                  <label>Remittance TAT <font color="red">*</font></label>
                   <b-input-group left="<i class='fa fa-list'></i>">
                     <select style="height:45px;" name="tat" id="tat" class="form-control" v-model="tat" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('tat') }">
                       <option value="">--Select--</option>
                       <option value="2">T+2</option>
                       <option value="3">T+3</option>
-                  </select>
+                    </select>
                   </b-input-group>
-                  <span v-show="errors.has('tat')" class="text-danger">TAT is required.</span>
+                  <span v-show="errors.has('tat')" class="text-danger">Remittance TAT is required.</span>
                 </div>
 
                 <div class="col-md-4">
@@ -77,7 +85,7 @@
                       <option value="">--Select--</option>
                       <option value="Hybrid">Hybrid</option>
                       <option value="Non-Hybrid">Non-Hybrid</option>
-                  </select>
+                    </select>
                   </b-input-group>
                   <span v-show="errors.has('type')" class="text-danger">Client type is required.</span>
                 </div>
@@ -145,14 +153,17 @@
               <div class="col-md-5">
                 <label>Client <font color="red">*</font></label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                  <Multiselect :options="ClientList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
-                    <template slot="noResult"><p>No Record Found.</p></template>
+                  <Multiselect :options="ClientList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID" :optionHeight="100" :hide-selected="true"
+                    style="border: 1px solid #c2cfd6;z-index:999">
+                    <template slot="noResult">
+                      <p>No Record Found.</p>
+                    </template>
                   </Multiselect>
                 </b-input-group>
                 <span id="clienterr" class="text-danger"></span>
               </div>
             </div>
-            <div class="card-footer" @click = "AddEditClientTAT = '0'">
+            <div class="card-footer" @click="AddEditClientTAT = '0'">
               <button @click="onSearch" class="btn btn-sm btn-primary" type="button"><i class="fa fa-search"></i> Search</button>
               <button class="btn btn-sm btn-danger" @click="resetSearch" type="reset"><i class="fa fa-ban"></i> Clear</button>
             </div>
@@ -179,7 +190,7 @@
               <th class="text-center tableheader"><b>Contact Mail Id</b></th>
               <th class="text-center tableheader"><b>NEFT No</b></th>
               <th class="text-center tableheader"><b>Cancel Cheque</b></th>
-                <th class="text-center tableheader"><b>Action</b></th>
+              <th class="text-center tableheader"><b>Action</b></th>
             </tr>
           </thead>
           <tbody>
@@ -198,14 +209,14 @@
               <td>{{data.CustomerMailId}}</td>
               <td>{{data.NEFTNo}}</td>
               <td>
-                <a :href="data.cancelCheque" style="cursor: pointer; color: rgb(25, 25, 112); text-decoration: underline;"  v-if="data.cancelCheque && data.cancelCheque!=0">view</a>
+                <a :href="data.cancelCheque" style="cursor: pointer; color: rgb(25, 25, 112); text-decoration: underline;" v-if="data.cancelCheque && data.cancelCheque!=0">view</a>
               </td>
 
               <td class="text-center"><i @click.prevent="getClientCODRemittanceRowData(data, resultCount), AddEditClientTAT = '1', scrollWin()" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></td>
             </tr>
           </tbody>
         </table><br>
-        <paginate  v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'"  :container-class="'pagination'"></paginate>
+        <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'"></paginate>
       </div>
     </div>
   </div>
