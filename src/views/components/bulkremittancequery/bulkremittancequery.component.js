@@ -37,7 +37,7 @@ export default {
       clientLoading: false,
       submitLoading: false,
       reportlink: '',
-      shipmentid: '',
+      shipmentid: ''
     }
   },
 
@@ -77,8 +77,6 @@ export default {
 
       this.isLoading = true;
 
-      this.pageno = 0;
-
       if (/\s/g.test(this.shipmentid) == true || this.shipmentid.indexOf(',') > -1) {
         this.shipmentid = this.shipmentid.replace(/"|'| |,\s*$/g, '').split(',');
       }
@@ -87,12 +85,14 @@ export default {
         this.shipmentid = new Array(this.shipmentid);
       }
 
+      this.input.ShippingID = this.shipmentid;
+      this.input.offset = this.pageno;
+      this.input.limit = 10;
+
       axios({
           method: 'POST',
           'url': apiUrl.api_url + 'get-bulk-remittance-query',
-          'data': ({
-            ShippingID: this.shipmentid
-          }),
+          'data': this.input,
           headers: {
             'Authorization': 'Bearer ' + this.myStr
           }
@@ -104,8 +104,8 @@ export default {
               this.listCODPaymentData = result.data.shipmentArr;
               this.isLoading = false;
 
-              let totalRows = result.data.shipmentArr.length;
-              this.resultCount = result.data.shipmentArr.length;
+              let totalRows = result.data.count;
+              this.resultCount = result.data.count;
 
               if (totalRows < 10) {
                 this.pagecount = 1;
@@ -130,16 +130,16 @@ export default {
                   fetchResult.forEach((item, i) => {
                     let testTemp = {};
 
-                    testTemp.ShippingDate = this.format_date(item.ShippingDate);
+                    testTemp.ShippingDate = item.ShippingDate;
                     testTemp.POID = item.POID;
                     testTemp.ShippingID = item.ShippingID;
                     testTemp.CompanyName = item.CompanyName;
                     testTemp.HubName = item.HubName;
                     testTemp.COD = 'COD';
-                    testTemp.Delivered = 'Delivered';
-                    testTemp.DeliveryDate = this.format_date(item.DeliveryDate);
+                    testTemp.Delivered = item.newStatus;
+                    testTemp.DeliveryDate = item.DeliveryDate;
                     testTemp.NetPayment = item.NetPayment;
-                    testTemp.RemittanceDate = (item.RemittanceDate) ? this.format_date(item.RemittanceDate) : 'NA';
+                    testTemp.RemittanceDate = item.RemittanceDate;
 
                     newResult.push(testTemp);
                   });
