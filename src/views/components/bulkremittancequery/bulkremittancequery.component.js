@@ -37,7 +37,8 @@ export default {
       clientLoading: false,
       submitLoading: false,
       reportlink: '',
-      shipmentid: ''
+      shipmentid: '',
+      input:{}
     }
   },
 
