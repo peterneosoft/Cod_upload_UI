@@ -65,13 +65,15 @@ export default {
         return moment(String(value)).format('DD/MM/YYYY');
       }
     },
-
     getPaginationData(pageNum) {
       this.pageno = (pageNum - 1) * 10
       this.GetCODPaymentData();
     },
-
     GetCODPaymentData(event) {
+      this.isexport = false;
+      this.GetCODPaymentDataTemp(event);
+    },
+    GetCODPaymentDataTemp(event) {
 
       this.isLoading = true;
 
@@ -96,58 +98,74 @@ export default {
           }
         })
         .then(result => {
-          this.isLoading = false;
-
-          if (result.data.code == 200) {
-            this.listCODPaymentData = result.data.shipmentArr;
             this.isLoading = false;
 
-            let totalRows = result.data.shipmentArr.length;
-            this.resultCount = result.data.shipmentArr.length;
+            if (result.data.code == 200) {
+              this.listCODPaymentData = result.data.shipmentArr;
+              this.isLoading = false;
 
-            if (totalRows < 10) {
-              this.pagecount = 1;
+              let totalRows = result.data.shipmentArr.length;
+              this.resultCount = result.data.shipmentArr.length;
+
+              if (totalRows < 10) {
+                this.pagecount = 1;
+              } else {
+                this.pagecount = Math.ceil(totalRows / 10);
+              }
+
+              this.exportf = true;
+
+
+              /**
+               * excel download
+               * @param  {[type]} this [description]
+               * @return {[type]}      [description]
+               */
+              if (this.isexport === true) {
+
+                this.isLoading = true;
+                if (result.data.shipmentArr.length > 0) {
+                  let fetchResult = result.data.shipmentArr;
+                  let newResult = [];
+                  fetchResult.forEach((item, i) => {
+                    let testTemp = {};
+
+                    testTemp.ShippingDate = this.format_date(item.ShippingDate);
+                    testTemp.POID = item.POID;
+                    testTemp.ShippingID = item.ShippingID;
+                    testTemp.CompanyName = item.CompanyName;
+                    testTemp.HubName = item.HubName;
+                    testTemp.COD = 'COD';
+                    testTemp.Delivered = 'Delivered';
+                    testTemp.DeliveryDate = this.format_date(item.DeliveryDate);
+                    testTemp.NetPayment = item.NetPayment;
+                    testTemp.RemittanceDate = (item.RemittanceDate) ? this.format_date(item.RemittanceDate) : 'NA';
+
+                    newResult.push(testTemp);
+                  });
+                  this.filename = 'Bulk_Remittance_Query';
+                  this.getDownloadCsvObject(newResult);
+                } else {
+                  this.$alertify.error('Sorry..! no record found for excel download.');
+                }
+              }
+
             } else {
-              this.pagecount = Math.ceil(totalRows / 10);
+              this.listCODPaymentData = [];
+              this.resultCount = 0;
+              this.isLoading = false;
             }
-
-            this.exportf = false;
-          } else {
-            this.listCODPaymentData = [];
-            this.resultCount = 0;
-            this.isLoading = false;
-          }
-        }, error => {
-          console.error(error);
-          this.$alertify.error('Error Occured');
-        })
+          },
+          error => {
+            console.error(error);
+            this.$alertify.error('Error Occured');
+          })
     },
 
     exportCODPaymentData() {
-      this.reportlink = '';
+      this.isexport = true;
+      this.GetCODPaymentDataTemp();
 
-      axios({
-          method: 'GET',
-          'url': apiUrl.api_url + 'exportcodpaymentreport?ClientId=' + this.ClientId.ClientMasterID + '&Company=' + this.ClientId.CompanyName + '&fromDate=' + this.fromDate + '&toDate=' + this.toDate + '&createdby=' + this.createdby,
-          headers: {
-            'Authorization': 'Bearer ' + this.myStr
-          }
-        })
-        .then(result => {
-          if (result.data.code == 200) {
-            // this.getDownloadCsvObject(result.data.data);
-            this.exportf = true;
-            this.reportlink = result.data.data;
-            this.exportreport();
-          } else {
-            this.exportf = false;
-            this.reportlink = '';
-          }
-        }, error => {
-          this.exportf = false;
-          this.reportlink = '';
-          console.error(error)
-        })
     },
 
     exportreport() {
@@ -160,14 +178,19 @@ export default {
       }
     },
 
-    /** getDownloadCsvObject(csvData) {
-      var today   = new Date();
-      var dd      = today.getDate();
-      var mm      = today.getMonth() + 1;
-      var yyyy    = today.getFullYear();
-      var today   = dd + "" + mm + "" + yyyy;
+    /**
+     * download csv file
+     * @param  {[type]} csvData [description]
+     * @return {[type]}         [description]
+     */
+    getDownloadCsvObject(csvData) {
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth() + 1;
+      var yyyy = today.getFullYear();
+      var today = dd + "" + mm + "" + yyyy;
       var data, filename, link;
-      filename = "CODPaymentReport_" + today + ".csv";
+      filename = this.filename + today + ".csv";
       var csv = this.convertArrayOfObjectsToCSV({
         data: csvData
       });
@@ -182,10 +205,10 @@ export default {
       link.setAttribute("download", filename);
       document.body.appendChild(link);
       link.click();
-      link.removeChild(link);
+      // link.removeChild(link);
     },
-
     convertArrayOfObjectsToCSV: function(args) {
+      this.isLoading = false;
       var result, ctr, keys, columnDelimiter, lineDelimiter, data;
       data = args.data || null;
       if (data == null || !data.length) {
@@ -210,7 +233,7 @@ export default {
       });
       this.excelLoading = false;
       return result;
-    }, **/
+    },
 
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
