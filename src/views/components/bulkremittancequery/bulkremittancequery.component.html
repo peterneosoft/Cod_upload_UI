@@ -68,16 +68,16 @@
           </tr>
           <tr v-for="(data,index) in listCODPaymentData">
             <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
-            <td>{{format_date(data.ShippingDate)}}</td>
+            <td>{{data.ShippingDate}}</td>
             <td>{{data.POID}}</td>
             <td>{{data.ShippingID}}</td>
             <td>{{data.CompanyName}}</td>
             <td>{{data.HubName}}</td>
             <td>COD</td>
             <td>{{data.newStatus}}</td>
-            <td>{{format_date(data.DeliveryDate)}}</td>
+            <td>{{data.DeliveryDate}}</td>
             <td>{{data.NetPayment}}</td>
-            <td>{{format_date(data.RemittanceDate)}}</td>
+            <td>{{data.RemittanceDate}}</td>
           </tr>
         </tbody>
       </table><br>
