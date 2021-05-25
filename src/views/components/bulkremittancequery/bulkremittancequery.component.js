@@ -102,20 +102,21 @@ export default {
             this.isLoading = false;
 
             if (result.data.code == 200) {
-              this.listCODPaymentData = result.data.shipmentArr;
-              this.isLoading = false;
+              if (this.isexport === false) {
+                this.listCODPaymentData = result.data.shipmentArr;
+                this.isLoading = false;
 
-              let totalRows = result.data.count;
-              this.resultCount = result.data.count;
+                let totalRows = result.data.count;
+                this.resultCount = result.data.count;
 
-              if (totalRows < 10) {
-                this.pagecount = 1;
-              } else {
-                this.pagecount = Math.ceil(totalRows / 10);
+                if (totalRows < 10) {
+                  this.pagecount = 1;
+                } else {
+                  this.pagecount = Math.ceil(totalRows / 10);
+                }
+
+                this.exportf = true;
               }
-
-              this.exportf = true;
-
 
               /**
                * excel download
@@ -257,6 +258,7 @@ export default {
 
     resetForm() {
       this.ClientId = "";
+      this.shipmentid = "";
       this.pageno = this.resultCount = 0;
       this.listCODPaymentData = [];
       this.fromDate = this.toDate = '';

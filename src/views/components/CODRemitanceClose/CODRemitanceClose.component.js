@@ -261,22 +261,22 @@ export default {
         })
         .then(result => {
           this.resultCountDate = 0;
-          this.listCODRemitanceDataDate = [];
-          this.listCODRemitanceData = [];
-
           if (result.data.code == 200) {
+            if (this.isexport === false) {
+              this.listCODRemitanceDataDate = [];
+              this.listCODRemitanceData = [];
+              this.listCODRemitanceData = result.data.remittanceArr;
+              this.isLoading = false;
 
-            this.listCODRemitanceData = result.data.remittanceArr;
-            this.isLoading = false;
-
-            let totalRows = result.data.count;
-            this.resultCount = result.data.count;
-            if (totalRows < 10) {
-              this.pagecount = 1
-            } else {
-              this.pagecount = Math.ceil(totalRows / 10)
+              let totalRows = result.data.count;
+              this.resultCount = result.data.count;
+              if (totalRows < 10) {
+                this.pagecount = 1
+              } else {
+                this.pagecount = Math.ceil(totalRows / 10)
+              }
+              this.exportf = true;
             }
-            this.exportf = true;
             /**
              * excel download
              * @param  {[type]} this [description]
@@ -456,21 +456,21 @@ export default {
         .then(result => {
 
           if (result.data.code === 200) {
+            if (this.isexport === false) {
+              this.resultCountException = 0;
+              this.listCODPaymentData = result.data.shipmentArr;
+              this.isLoading = false;
 
-            this.resultCountException = 0;
-            this.listCODPaymentData = result.data.shipmentArr;
-            this.isLoading = false;
+              let totalRows = result.data.count;
+              this.resultCountException = result.data.count;
 
-            let totalRows = result.data.count;
-            this.resultCountException = result.data.count;
-
-            if (totalRows < 10) {
-              this.pagecount = 1
-            } else {
-              this.pagecount = Math.ceil(totalRows / 10)
+              if (totalRows < 10) {
+                this.pagecount = 1
+              } else {
+                this.pagecount = Math.ceil(totalRows / 10)
+              }
+              this.exportf = true;
             }
-            this.exportf = true;
-
             /**
              * excel download
              * @param  {[type]} this [description]
@@ -491,7 +491,7 @@ export default {
                   testTemp.CompanyName = item.CompanyName;
                   testTemp.HubName = item.HubName;
                   testTemp.COD = 'COD';
-                  testTemp.Delivered = 'Delivered';
+                  testTemp.Delivered = item.newStatus;
                   testTemp.DeliveryDate = this.format_date(item.DeliveryDate);
                   testTemp.NetPayment = item.NetPayment;
                   testTemp.RemittanceDate = this.format_date(item.RemittanceDate);
@@ -598,19 +598,21 @@ export default {
         .then(result => {
 
           if (result.data.code === 200) {
-            this.resultCountDate = 0;
-            this.listCODRemitanceDataDate = result.data.remittanceArr;
-            this.isLoading = false;
+            if (this.isexport === false) {
+              this.resultCountDate = 0;
+              this.listCODRemitanceDataDate = result.data.remittanceArr;
+              this.isLoading = false;
 
-            let totalRows = result.data.count;
-            this.resultCountDate = result.data.count;
+              let totalRows = result.data.count;
+              this.resultCountDate = result.data.count;
 
-            if (totalRows < 10) {
-              this.pagecount = 1
-            } else {
-              this.pagecount = Math.ceil(totalRows / 10)
+              if (totalRows < 10) {
+                this.pagecount = 1
+              } else {
+                this.pagecount = Math.ceil(totalRows / 10)
+              }
+              this.exportf = true;
             }
-            this.exportf = true;
             /**
              * excel download
              * @param  {[type]} this [description]
