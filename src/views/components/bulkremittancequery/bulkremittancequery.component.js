@@ -38,7 +38,7 @@ export default {
       submitLoading: false,
       reportlink: '',
       shipmentid: '',
-      input:{}
+      input: {}
     }
   },
 
@@ -89,7 +89,7 @@ export default {
       this.input.ShippingID = this.shipmentid;
       this.input.offset = this.pageno;
       this.input.limit = 10;
-
+      this.input.isexport = this.isexport;
       axios({
           method: 'POST',
           'url': apiUrl.api_url + 'get-bulk-remittance-query',
@@ -171,6 +171,7 @@ export default {
 
     exportreport() {
       this.excelLoading = true;
+      this.isexport = true;
       if (this.reportlink) {
         window.open(this.reportlink);
         this.excelLoading = false;
