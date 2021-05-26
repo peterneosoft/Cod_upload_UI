@@ -98,7 +98,7 @@ export default {
       if ($("#checkall").prop('checked') == true) {
         // if (this.checkAll) {
         for (let i in this.listEmailRemittanceData) {
-          this.ClientArr.push(this.listEmailRemittanceData[i].ClientId);
+          this.ClientArr.push(this.listEmailRemittanceData[i].clientremittedid);
         }
         this.disableButton = false;
       } else {
@@ -115,7 +115,7 @@ export default {
         this.checkAll = true;
         for (let i in this.listEmailRemittanceData) {
 
-          this.ClientArr.push(this.listEmailRemittanceData[i].ClientId);
+          this.ClientArr.push(this.listEmailRemittanceData[i].clientremittedid);
 
           let tempArray = {};
 
@@ -153,7 +153,7 @@ export default {
         let tempArray = {};
 
         if (this.checkAll == false) {
-          if ($("#ClientId" + data.ClientId).prop('checked') == true) {
+          if ($("#ClientId" + data.clientremittedid).prop('checked') == true) {
 
             tempArray = {
               ClientId: data.ClientId,
@@ -168,8 +168,8 @@ export default {
             this.newCheckRecord.push(tempArray);
           }
 
-          if ($("#ClientId" + data.ClientId).prop('checked') == false) {
-            this.deleteRow(this.newCheckRecord, data.ClientId);
+          if ($("#ClientId" + data.clientremittedid).prop('checked') == false) {
+            this.deleteRow(this.newCheckRecord, data.clientremittedid);
           }
 
         }
@@ -303,6 +303,8 @@ export default {
       this.checkAll = false;
       this.listEmailRemittanceData = this.newCheckRecord = [];
       this.ClientArr = [];
+      this.resultCount = 0;
+      this.pagecount = 1;
       this.disableButton = true;
       $('.checkedChild').removeAttr('checked');
       this.$validator.validateAll().then(() => {
@@ -316,6 +318,8 @@ export default {
       });
     },
     resetForm() {
+      this.resultCount = 0;
+      this.pagecount = 1;
       this.fromDate = this.toDate = '';
       this.ClientId = "";
       this.pageno = this.resultCount = 0;

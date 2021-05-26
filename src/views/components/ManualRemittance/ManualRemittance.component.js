@@ -952,6 +952,8 @@ export default {
         },
 
         onSearch() {
+            this.resultCount = 0;
+            this.pagecount = 1;
             if (this.Client.ClientMasterID == null || this.Client.ClientMasterID == 'undefined') {
                 document.getElementById("clienterr").innerHTML = "Client is required.";
                 return false;
@@ -964,6 +966,8 @@ export default {
             this.Client = [];
             this.pageno = 0;
             this.Search = 0;
+            this.resultCount = 0;
+            this.pagecount = 1;
             document.getElementById("clienterr").innerHTML = "";
             this.newClientId = '';
         },

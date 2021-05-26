@@ -213,6 +213,8 @@ export default {
           let diffTime = Math.abs(new Date(this.toDate) - new Date(this.fromDate));
           let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
+          this.resultCount = 0;
+          this.pagecount = 1;
           this.pageno = 0;
           this.exportf = false;
           if (this.fromDate > this.toDate) {
@@ -232,6 +234,7 @@ export default {
 
     resetForm() {
       this.ClientId = "";
+      this.pagecount = 1;
       this.pageno = this.resultCount = 0;
       this.listCODPaymentData = [];
       this.fromDate = this.toDate = '';

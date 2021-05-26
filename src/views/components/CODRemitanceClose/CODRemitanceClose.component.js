@@ -193,6 +193,7 @@ export default {
     },
     GetCODRemittanceDetailsData(event) {
       this.isexport = false;
+
       this.GetCODRemittanceDetailsDataTemp(event);
     },
 
@@ -757,6 +758,8 @@ export default {
       this.$validator.validateAll().then(() => {
         this.pageno = 0;
         this.exportf = false;
+        this.resultCount = this.resultCountDate = this.resultCountException = 0;
+        this.pagecount = 1;
         if (this.fromDate && this.toDate) {
           // this.pagecount = 1;
           // this.limit = 10;

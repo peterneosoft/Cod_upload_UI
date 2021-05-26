@@ -241,7 +241,8 @@ export default {
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if (result) {
-
+          this.resultCount = 0;
+          this.pagecount = 1;
           if (/\s/g.test(this.shipmentid) == true || this.shipmentid.indexOf(',') > -1) {
             this.shipmentid = this.shipmentid.replace(/"|'| |,\s*$/g, '').split(',');
           }
@@ -259,6 +260,7 @@ export default {
     resetForm() {
       this.ClientId = "";
       this.shipmentid = "";
+      this.pagecount = 1;
       this.pageno = this.resultCount = 0;
       this.listCODPaymentData = [];
       this.fromDate = this.toDate = '';
