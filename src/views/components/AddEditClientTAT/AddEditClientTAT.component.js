@@ -246,7 +246,7 @@ export default {
         AccountId: this.AccountName,
         ContactEmailid: this.ContactEmailid,
         CreatedBy: this.localuserid,
-        AccountName: this.AccountName,
+        AccountName: $("#AccountName option:selected").text(),
       })
       axios({
           method: 'POST',
@@ -300,7 +300,7 @@ export default {
         AccountId: this.AccountName,
         ContactEmailid: this.ContactEmailid,
         LastModifiedBy: this.localuserid,
-        AccountName: this.AccountName
+        AccountName: $("#AccountName option:selected").text(),
       })
       axios({
           method: 'POST',
@@ -332,7 +332,6 @@ export default {
       this.isLoading = true;
       this.AddEditClientTAT = false;
       let clientid = this.Client.ClientMasterID ? this.Client.ClientMasterID : 0;
-      let AccountName = this.AccountName;
       axios({
           method: 'GET',
           'url': apiUrl.api_url + 'clientcodremittancemaster?ClientId=' + clientid + '&&offset=' + this.pageno + '&limit=10',
