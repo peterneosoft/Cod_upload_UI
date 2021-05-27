@@ -19,35 +19,35 @@ export default {
   },
   data() {
     return {
-      ClientList:[],
-      ClientBusinessList:[],
-      ClientAccountsList:[],
-      AccountsDeatilsList:[],
-      ClientId:"",
-      Bussinesstype:"",
-      Client:"",
-      tat:"",
-      type:"",
-      cycle:"",
-      emailid:"",
-      Beneficiary:"",
-      BankName:"",
-      BankAccount:"",
-      rtgs:"",
-      ContactEmailid:"",
-      AccountName:"",
-      BeneficiaryName:"",
-      BankName:"",
-      myStr:"",
-      BankAccount:"",
-      AddEditClientTAT:0,
-      RemittanceDay:[],
+      ClientList: [],
+      ClientBusinessList: [],
+      ClientAccountsList: [],
+      AccountsDeatilsList: [],
+      ClientId: "",
+      Bussinesstype: "",
+      Client: "",
+      tat: "",
+      type: "",
+      cycle: "",
+      emailid: "",
+      Beneficiary: "",
+      BankName: "",
+      BankAccount: "",
+      rtgs: "",
+      ContactEmailid: "",
+      AccountName: "",
+      BeneficiaryName: "",
+      BankName: "",
+      myStr: "",
+      BankAccount: "",
+      AddEditClientTAT: 0,
+      RemittanceDay: [],
       RemittanceDayList: [],
       pageno: 0,
       pagecount: 0,
       isLoading: false,
       resultCount: 0,
-      listClientCODRemittanceData:[],
+      listClientCODRemittanceData: [],
       submitLoading: false,
       clientLoading: false,
       businessLoading: false,
@@ -62,25 +62,40 @@ export default {
 
   mounted() {
     var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
-    var bytes             = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
-    var plaintext         = bytes.toString(CryptoJS.enc.Utf8);
-    var userdetail        = JSON.parse(plaintext);
-    this.localuserid      = userdetail.username;
+    var bytes = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
+    var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+    var userdetail = JSON.parse(plaintext);
+    this.localuserid = userdetail.username;
 
     var userToken = window.localStorage.getItem('accessuserToken')
     this.myStr = userToken.replace(/"/g, '');
     this.GetClientData();
     this.searchClientCODRemittanceData();
 
-    this.RemittanceDayList = [
-      {day:"Daily"},
-      {day:"Sunday"},
-      {day:"Monday"},
-      {day:"Tuesday"},
-      {day:"Wednesday"},
-      {day:"Thursday"},
-      {day:"Friday"},
-      {day:"Saturday"}
+    this.RemittanceDayList = [{
+        day: "Daily"
+      },
+      {
+        day: "Sunday"
+      },
+      {
+        day: "Monday"
+      },
+      {
+        day: "Tuesday"
+      },
+      {
+        day: "Wednesday"
+      },
+      {
+        day: "Thursday"
+      },
+      {
+        day: "Friday"
+      },
+      {
+        day: "Saturday"
+      }
     ];
   },
 
@@ -88,23 +103,23 @@ export default {
     handleSelect(event) {
       if (event.day == 'Daily') {
         for (let item of this.RemittanceDayList) {
-          if (item.day != 'Daily'  && this.RemittanceDay.some(obj => obj.day === item.day) === false) {
+          if (item.day != 'Daily' && this.RemittanceDay.some(obj => obj.day === item.day) === false) {
             this.RemittanceDay.push(item);
           }
         }
       }
     },
 
-    multiple(){
+    multiple() {
       return true;
     },
 
-    GetClientBusinessConfigList(){
-      if(this.ClientId.ClientMasterID != this.CId){
+    GetClientBusinessConfigList() {
+      if (this.ClientId.ClientMasterID != this.CId) {
         this.Bussinesstype = this.AccountName = this.Beneficiary = this.BankName = this.BankAccount = this.rtgs = '';
       }
 
-      if(this.ClientId.ClientMasterID == ""){
+      if (this.ClientId.ClientMasterID == "") {
         return false;
       }
       this.businessLoading = true;
@@ -116,7 +131,7 @@ export default {
           url: apiUrl.api_url + 'external/GetClientBusinessConfigList',
           data: this.input,
           headers: {
-             'Authorization': 'Bearer '+this.myStr
+            'Authorization': 'Bearer ' + this.myStr
           }
         })
         .then(result => {
@@ -128,25 +143,25 @@ export default {
         })
     },
 
-    GetClientBusinessAccounts(){
-      if(this.Bussinesstype != this.BType){
+    GetClientBusinessAccounts() {
+      if (this.Bussinesstype != this.BType) {
         this.AccountName = this.Beneficiary = this.BankName = this.BankAccount = this.rtgs = '';
       }
 
-      if(this.Bussinesstype == ""){
+      if (this.Bussinesstype == "") {
         return false;
       }
       this.accountLoading = true;
       this.input = ({
         clientid: this.ClientId.ClientMasterID,
-        businessid:parseInt(this.Bussinesstype)
+        businessid: parseInt(this.Bussinesstype)
       })
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/GetClientBusinessAccountsList',
           data: this.input,
           headers: {
-             'Authorization': 'Bearer '+this.myStr
+            'Authorization': 'Bearer ' + this.myStr
           }
         })
         .then(result => {
@@ -158,8 +173,8 @@ export default {
         })
     },
 
-    getAccountDetails(){
-      if(this.AccountName){
+    getAccountDetails() {
+      if (this.AccountName) {
         this.bankDLoading = true;
       }
       this.input = ({
@@ -170,16 +185,16 @@ export default {
           url: apiUrl.api_url + 'external/getAccountDetails',
           data: this.input,
           headers: {
-             'Authorization': 'Bearer '+this.myStr
+            'Authorization': 'Bearer ' + this.myStr
           }
         })
         .then(result => {
-          if(result.data.code == 200){
+          if (result.data.code == 200) {
             this.bankDLoading = false;
-            this.Beneficiary    = result.data.data.BeneficiaryName
-            this.BankName       =  result.data.data.ClientBankName
-            this.BankAccount    = result.data.data.ClientAccountNo
-            this.rtgs           = result.data.data.ClientBankNeftIFSC
+            this.Beneficiary = result.data.data.BeneficiaryName
+            this.BankName = result.data.data.ClientBankName
+            this.BankAccount = result.data.data.ClientAccountNo
+            this.rtgs = result.data.data.ClientBankNeftIFSC
             this.ContactEmailid = result.data.data.SecondaryEmailid
           }
         }, error => {
@@ -195,7 +210,7 @@ export default {
         url: apiUrl.api_url + 'external/getclientlist',
         data: {},
         headers: {
-          'Authorization': 'Bearer '+this.myStr
+          'Authorization': 'Bearer ' + this.myStr
         }
       }).then(result => {
         this.clientLoading = false;
@@ -209,140 +224,143 @@ export default {
     saveClientCODRemittanceData(event) {
 
       let dData = [];
-      this.RemittanceDay.forEach(function (val) {
-        if(val.day!='Daily'){
+      this.RemittanceDay.forEach(function(val) {
+        if (val.day != 'Daily') {
           dData.push(val.day);
         }
       });
       this.submitLoading = true;
 
-      if(this.ContactEmailid==null){
+      if (this.ContactEmailid == null) {
         this.ContactEmailid = "";
       }
 
       this.input = ({
-          ClientId: this.ClientId.ClientMasterID,
-          RemittanceType: this.type,
-          RemittanceDay: dData,
-          TAT: this.tat,
-          IsActive: true,
-          HoldingAmount: 0,
-          BussinessType: this.Bussinesstype,
-          AccountId: this.AccountName,
-          ContactEmailid: this.ContactEmailid,
-          CreatedBy: this.localuserid
+        ClientId: this.ClientId.ClientMasterID,
+        RemittanceType: this.type,
+        RemittanceDay: dData,
+        TAT: this.tat,
+        IsActive: true,
+        HoldingAmount: 0,
+        BussinessType: this.Bussinesstype,
+        AccountId: this.AccountName,
+        ContactEmailid: this.ContactEmailid,
+        CreatedBy: this.localuserid,
+        AccountName: this.AccountName,
       })
       axios({
           method: 'POST',
           'url': apiUrl.api_url + 'saveclientcodremittancedetail',
           'data': this.input,
           headers: {
-              'Authorization': 'Bearer '+this.myStr
+            'Authorization': 'Bearer ' + this.myStr
           }
-      })
-      .then((response) => {
-        if (response.data.errorCode == 0) {
-          this.submitLoading = false;
-          this.AddEditClientTAT=0;
-          this.$alertify.success(response.data.msg);
-          this.resetForm(event);
-        } else if (response.data.errorCode == -1) {
-          this.submitLoading = false;
-          this.$alertify.error(response.data.msg)
-        }
-      })
-      .catch((httpException) => {
+        })
+        .then((response) => {
+          if (response.data.errorCode == 0) {
+            this.submitLoading = false;
+            this.AddEditClientTAT = 0;
+            this.$alertify.success(response.data.msg);
+            this.resetForm(event);
+          } else if (response.data.errorCode == -1) {
+            this.submitLoading = false;
+            this.$alertify.error(response.data.msg)
+          }
+        })
+        .catch((httpException) => {
           this.submitLoading = false;
           console.error('exception is:::::::::', httpException)
           this.$alertify.error('Error Occured');
-      });
+        });
     },
 
     editClientCODRemittanceData(event) {
 
       let dData = [];
-      this.RemittanceDay.forEach(function (val) {
-        if(val.day!='Daily'){
+      this.RemittanceDay.forEach(function(val) {
+        if (val.day != 'Daily') {
           dData.push(val.day);
         }
       });
       this.submitLoading = true;
 
-      if(this.ContactEmailid==null){
+      if (this.ContactEmailid == null) {
         this.ContactEmailid = "";
       }
 
       this.input = ({
-          ClientCODRemmitanceId: this.ClientCODRemmitanceId,
-          ClientId: this.ClientId.ClientMasterID,
-          RemittanceType: this.type,
-          RemittanceDay: dData,
-          TAT: this.tat,
-          IsActive: true,
-          HoldingAmount: 0,
-          BussinessType: this.Bussinesstype,
-          AccountId: this.AccountName,
-          ContactEmailid: this.ContactEmailid,
-          LastModifiedBy: this.localuserid
+        ClientCODRemmitanceId: this.ClientCODRemmitanceId,
+        ClientId: this.ClientId.ClientMasterID,
+        RemittanceType: this.type,
+        RemittanceDay: dData,
+        TAT: this.tat,
+        IsActive: true,
+        HoldingAmount: 0,
+        BussinessType: this.Bussinesstype,
+        AccountId: this.AccountName,
+        ContactEmailid: this.ContactEmailid,
+        LastModifiedBy: this.localuserid,
+        AccountName: this.AccountName
       })
       axios({
           method: 'POST',
           'url': apiUrl.api_url + 'editclientcodremittancedetail',
           'data': this.input,
           headers: {
-              'Authorization': 'Bearer '+this.myStr
+            'Authorization': 'Bearer ' + this.myStr
           }
-      })
-      .then((response) => {
-        if (response.data.errorCode == 0) {
-          this.submitLoading = false;
-          this.AddEditClientTAT=0;
-          this.$alertify.success(response.data.msg);
-          this.resetForm(event);
-        } else if (response.data.errorCode == -1) {
-          this.submitLoading = false;
-          this.$alertify.error(response.data.msg)
-        }
-      })
-      .catch((httpException) => {
+        })
+        .then((response) => {
+          if (response.data.errorCode == 0) {
+            this.submitLoading = false;
+            this.AddEditClientTAT = 0;
+            this.$alertify.success(response.data.msg);
+            this.resetForm(event);
+          } else if (response.data.errorCode == -1) {
+            this.submitLoading = false;
+            this.$alertify.error(response.data.msg)
+          }
+        })
+        .catch((httpException) => {
           this.submitLoading = false;
           console.error('exception is:::::::::', httpException)
           this.$alertify.error('Error Occured');
-      });
+        });
     },
 
-    searchClientCODRemittanceData(event){
+    searchClientCODRemittanceData(event) {
       this.isLoading = true;
       this.AddEditClientTAT = false;
-      let clientid = this.Client.ClientMasterID ? this.Client.ClientMasterID :0;
+      let clientid = this.Client.ClientMasterID ? this.Client.ClientMasterID : 0;
+      let AccountName = this.AccountName;
       axios({
           method: 'GET',
-          'url': apiUrl.api_url + 'clientcodremittancemaster?ClientId='+clientid+'&offset='+this.pageno+'&limit=10',
+          'url': apiUrl.api_url + 'clientcodremittancemaster?ClientId=' + clientid + '&&offset=' + this.pageno + '&limit=10',
           headers: {
-              'Authorization': 'Bearer '+this.myStr
+            'Authorization': 'Bearer ' + this.myStr
           }
-      })
-      .then(result => {
-        if(result.data.code == 200){
-          this.listClientCODRemittanceData = result.data.data;
-          this.isLoading    = false;
-          let totalRows     = result.data.count;
-          this.resultCount  = result.data.count;
+        })
+        .then(result => {
+          if (result.data.code == 200) {
+            this.listClientCODRemittanceData = result.data.data;
+            this.isLoading = false;
+            let totalRows = result.data.count;
+            this.resultCount = result.data.count;
 
-          if (totalRows < 10) {
+            if (totalRows < 10) {
               this.pagecount = 1
-          } else {
+            } else {
               this.pagecount = Math.ceil(totalRows / 10)
+            }
+          } else {
+            this.listClientCODRemittanceData = [];
+            this.resultCount = 0;
+            this.isLoading = false;
           }
-        }else{
-          this.listClientCODRemittanceData = [];
-          this.resultCount  = 0;
-          this.isLoading    = false;
-        }
-      }, error => {
+        }, error => {
           console.error(error)
           this.$alertify.error('Error Occured');
-      })
+        })
     },
 
     getClientCODRemittanceRowData(data) {
@@ -350,32 +368,37 @@ export default {
       this.errors.clear();
 
       let clientarr = [];
-      if(data.ClientId!=""){
-        clientarr.push({"ClientMasterId":data.ClientId, "CompanyName":data.CompanyName});
+      if (data.ClientId != "") {
+        clientarr.push({
+          "ClientMasterId": data.ClientId,
+          "CompanyName": data.CompanyName
+        });
       }
 
       let dayarr = [];
-      data.RemittanceDay.forEach((d)=>{
-        if(d!=""){
-          dayarr.push({"day":d});
+      data.RemittanceDay.forEach((d) => {
+        if (d != "") {
+          dayarr.push({
+            "day": d
+          });
         }
       });
 
-      this.ClientCODRemmitanceId    = data.ClientCODRemmitanceId;
-      this.ClientId                 = clientarr;
-      this.RemittanceDay            = dayarr;
-      this.type                     = data.RemittanceType;
-      this.tat                      = data.tatno;
-      this.Beneficiary              = data.BeneficiaryName;
-      this.BankName                 = data.ClientBankName;
-      this.BankAccount              = data.ClientAccountNo;
-      this.rtgs                     = data.NEFTNo;
-      this.ClientId.ClientMasterID  = data.ClientId;
-      this.CId                      = data.ClientId;
-      this.Bussinesstype            = data.BussinessType;
-      this.BType                    = data.BussinessType;
-      this.AccountName              = data.AccountId;
-      this.ContactEmailid           = data.CustomerMailId;
+      this.ClientCODRemmitanceId = data.ClientCODRemmitanceId;
+      this.ClientId = clientarr;
+      this.RemittanceDay = dayarr;
+      this.type = data.RemittanceType;
+      this.tat = data.tatno;
+      this.Beneficiary = data.BeneficiaryName;
+      this.BankName = data.ClientBankName;
+      this.BankAccount = data.ClientAccountNo;
+      this.rtgs = data.NEFTNo;
+      this.ClientId.ClientMasterID = data.ClientId;
+      this.CId = data.ClientId;
+      this.Bussinesstype = data.BussinessType;
+      this.BType = data.BussinessType;
+      this.AccountName = data.AccountId;
+      this.ContactEmailid = data.CustomerMailId;
 
       this.GetClientBusinessConfigList();
       this.GetClientBusinessAccounts();
@@ -383,10 +406,10 @@ export default {
 
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
-        if(result){
-          if(this.ClientCODRemmitanceId!=undefined && this.ClientCODRemmitanceId!=""){
+        if (result) {
+          if (this.ClientCODRemmitanceId != undefined && this.ClientCODRemmitanceId != "") {
             this.editClientCODRemittanceData(event);
-          }else{
+          } else {
             this.saveClientCODRemittanceData(event);
           }
         }
@@ -396,25 +419,25 @@ export default {
     },
 
     onSearch: function(event) {
-      if(this.Client.ClientMasterID==null || this.Client.ClientMasterID=='undefined'){
-        document.getElementById("clienterr").innerHTML="Client is required.";
+      if (this.Client.ClientMasterID == null || this.Client.ClientMasterID == 'undefined') {
+        document.getElementById("clienterr").innerHTML = "Client is required.";
         return false;
       }
-      document.getElementById("clienterr").innerHTML="";
+      document.getElementById("clienterr").innerHTML = "";
       this.searchClientCODRemittanceData(event);
     },
 
     getPaginationData(pageNum) {
-        this.pageno = (pageNum - 1) * 10
-        this.searchClientCODRemittanceData()
+      this.pageno = (pageNum - 1) * 10
+      this.searchClientCODRemittanceData()
     },
 
     resetForm(event) {
-      this.RemittanceDay=[];
+      this.RemittanceDay = [];
       this.ClientId = this.Bussinesstype = this.AccountName = this.tat = this.type = this.Beneficiary = this.BankName = this.BankAccount = this.rtgs = '';
       this.$validator.reset();
       this.errors.clear();
-      this.ClientCODRemmitanceId="";
+      this.ClientCODRemmitanceId = "";
       this.searchClientCODRemittanceData(event);
     },
 
@@ -422,10 +445,10 @@ export default {
       this.Client = '';
       this.$validator.reset();
       this.errors.clear();
-      this.ClientCODRemmitanceId="";
+      this.ClientCODRemmitanceId = "";
       this.pageno = this.resultCount = 0;
       this.searchClientCODRemittanceData(event);
-      document.getElementById("clienterr").innerHTML="";
+      document.getElementById("clienterr").innerHTML = "";
     },
 
     scrollWin() {
