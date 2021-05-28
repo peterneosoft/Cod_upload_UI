@@ -89,15 +89,15 @@
                             <td>
                                 <b-form-input type="hidden" v-model="form.oldFromDate[data.ClientId]" v-bind:name="setid('oldFromDate', data.ClientId)" v-bind:id="setid('oldFromDate', data.ClientId)"></b-form-input>
                                 <b-input-group left="<i class='fa fa-calendar'></i>" title="Change From Date">
-                                    <b-form-input disabled @change="onChangeDate(form.FromDate[data.ClientId], form.toDate[data.ClientId], data.ClientId,data.CompanyName,data.RemittanceType)" type="date" v-model="form.FromDate[data.ClientId]" v-bind:name="setid('FromDate', data.ClientId)"
+                                    <b-form-input disabled @change="onChangeDate(form.FromDate[data.ClientId], form.toDate[data.ClientId], data.ClientId,data.AccountId,data.CompanyName,data.RemittanceType)" type="date" v-model="form.FromDate[data.ClientId]" v-bind:name="setid('FromDate', data.ClientId)"
                                         v-bind:id="setid('FromDate', data.ClientId)" class="form-control"></b-form-input>
                                 </b-input-group>
                                 <span v-bind:id="setid('fdate', data.ClientId)" class="text-danger"></span>
                             </td>
                             <td>
                                 <b-input-group :data-toids="'toids'+data.ClientId" :data-dates="data.ToDate" left="<i class='fa fa-calendar'></i>" title="Change To / Delivery Date">
-                                    <b-form-input @change="onChangeDate(form.FromDate[data.ClientId], form.toDate[data.ClientId], data.ClientId,data.CompanyName,data.RemittanceType)" type="date" v-model="form.toDate[data.ClientId]" v-bind:name="setid('toDate', data.ClientId)" v-bind:id="setid('toDate', data.ClientId)"
-                                        class="form-control"></b-form-input>
+                                    <b-form-input @change="onChangeDate(form.FromDate[data.ClientId], form.toDate[data.ClientId], data.ClientId,data.AccountId,data.CompanyName,data.RemittanceType)" type="date" v-model="form.toDate[data.ClientId]" v-bind:name="setid('toDate', data.ClientId)"
+                                        v-bind:id="setid('toDate', data.ClientId)" class="form-control"></b-form-input>
                                 </b-input-group>
                                 <span v-bind:id="setid('tdate', data.ClientId)" class="text-danger"></span>
                             </td>

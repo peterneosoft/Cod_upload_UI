@@ -197,7 +197,7 @@ export default {
                 })
         },
 
-        onChangeDate(fromDate, toDate, ClientId, CompanyName, RemittanceType) {
+        onChangeDate(fromDate, toDate, ClientId, AccountId, CompanyName, RemittanceType) {
 
             this.notApproved = 1;
             if (!toDate || !fromDate) {
@@ -244,13 +244,14 @@ export default {
                     document.getElementById("clienterr").innerHTML = "";
                     this.fromdates = fromDate;
                     this.todates = toDate;
+                    this.ClientId = ClientId;
                     this.adhocDateChnage(this.Client.AccountId, this.Client.AccountName);
                 } else {
 
                     // url: apiUrl.api_url + 'manualcodremittance?CreatedBy=' + this.localuserid + '&ClientId=' + ClientId + '&oldFromDate=' + this.form.oldFromDate[ClientId] + '&fromDate=' + fromDate + '&toDate=' + toDate + '&offset=' + this.pageno + '&limit=' + 20,
                     this.input = {
                         ClientId,
-                        AccountId: ClientId,
+                        AccountId,
                         fromDate,
                         toDate,
                         username: this.localuserid,
@@ -767,12 +768,12 @@ export default {
             })
         },
 
-        onClientSearch(ClientId, CompanyName) {
+        onClientSearch(AccountId, CompanyName) {
 
             this.fromdates = "";
             this.todates = "";
 
-            if (!ClientId) {
+            if (!AccountId) {
 
                 this.$alertify.error('Client Name is mandatory.');
                 return false;
@@ -783,8 +784,8 @@ export default {
                     this.input = ({
                         fromDate: this.fromdates,
                         toDate: this.todates,
-                        AccountId: ClientId,
-                        ClientId,
+                        AccountId: AccountId,
+                        ClientId: 0,
                         ClientName: CompanyName,
                     });
 
@@ -866,9 +867,9 @@ export default {
 
             }
         },
-        adhocDateChnage(ClientId, CompanyName) {
+        adhocDateChnage(AccountId, CompanyName) {
             this.listPendingRemittanceData = [];
-            if (!ClientId) {
+            if (!AccountId) {
 
                 this.$alertify.error('Client Name is mandatory.');
                 return false;
@@ -879,9 +880,9 @@ export default {
                 this.input = ({
                     fromDate: this.fromdates,
                     toDate: this.todates,
-                    ClientId: ClientId,
+                    ClientId: this.ClientId,
                     ClientName: CompanyName,
-                    AccountId: ClientId
+                    AccountId: AccountId
                 });
 
                 axios({
@@ -1012,7 +1013,7 @@ export default {
                 FromDate: fromdates,
                 ToDate: this.todatesChanged,
                 ClientId: ClientId,
-                AccountId: ClientId,
+                AccountId: this.Client.AccountId,
                 CompanyName: CompanyName,
                 username: this.localuserid,
             });
