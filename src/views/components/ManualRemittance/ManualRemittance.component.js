@@ -55,6 +55,7 @@ export default {
             newClientId: '',
             utrno: '',
             updatedData: [],
+            ClientAccountList: [],
             form: {
                 toDate: [],
                 FromDate: [],
@@ -236,19 +237,20 @@ export default {
 
                 if (this.selected === "AdHoc") {
 
-                    if (this.Client.ClientMasterID == null || this.Client.ClientMasterID == 'undefined') {
+                    if (this.Client.AccountId == null || this.Client.AccountId == 'undefined') {
                         document.getElementById("clienterr").innerHTML = "Client is required.";
                         return false;
                     }
                     document.getElementById("clienterr").innerHTML = "";
                     this.fromdates = fromDate;
                     this.todates = toDate;
-                    this.adhocDateChnage(this.Client.ClientMasterID, this.Client.CompanyName);
+                    this.adhocDateChnage(this.Client.AccountId, this.Client.AccountName);
                 } else {
 
                     // url: apiUrl.api_url + 'manualcodremittance?CreatedBy=' + this.localuserid + '&ClientId=' + ClientId + '&oldFromDate=' + this.form.oldFromDate[ClientId] + '&fromDate=' + fromDate + '&toDate=' + toDate + '&offset=' + this.pageno + '&limit=' + 20,
                     this.input = {
                         ClientId,
+                        AccountId: ClientId,
                         fromDate,
                         toDate,
                         username: this.localuserid,
@@ -376,6 +378,7 @@ export default {
                         FromDate: this.form.oldFromDate[data.ClientId],
                         ToDate: this.todatesChanged,
                         ShipmentCount: data.ShipmentCount,
+                        AccountId: data.AccountId,
                         ClientId: data.ClientId,
                         CompanyName: data.CompanyName,
                         CODAmount: data.CODAmount,
@@ -417,6 +420,7 @@ export default {
                         ShipmentCount: data.ShipmentCount,
                         CompanyName: data.CompanyName,
                         ClientId: data.ClientId,
+                        AccountId: data.AccountId,
                         CODAmount: data.CODAmount,
                         FreightAmount: data.FreightAmount,
                         ExceptionAmount: data.ExceptionAmount,
@@ -877,6 +881,7 @@ export default {
                     toDate: this.todates,
                     ClientId: ClientId,
                     ClientName: CompanyName,
+                    AccountId: ClientId
                 });
 
                 axios({
@@ -1007,6 +1012,7 @@ export default {
                 FromDate: fromdates,
                 ToDate: this.todatesChanged,
                 ClientId: ClientId,
+                AccountId: ClientId,
                 CompanyName: CompanyName,
                 username: this.localuserid,
             });
