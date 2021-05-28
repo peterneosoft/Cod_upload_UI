@@ -52,7 +52,8 @@ export default {
       clientLoading: false,
       businessLoading: false,
       accountLoading: false,
-      bankDLoading: false
+      bankDLoading: false,
+      editparams: '',
     }
   },
 
@@ -114,7 +115,7 @@ export default {
       return true;
     },
 
-    GetClientBusinessConfigList() {
+    async GetClientBusinessConfigList() {
       if (this.ClientId.ClientMasterID != this.CId) {
         this.Bussinesstype = this.AccountName = this.Beneficiary = this.BankName = this.BankAccount = this.rtgs = '';
       }
@@ -126,7 +127,7 @@ export default {
       this.input = ({
         clientid: this.ClientId.ClientMasterID
       })
-      axios({
+      await axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/GetClientBusinessConfigList',
           data: this.input,
@@ -143,7 +144,7 @@ export default {
         })
     },
 
-    GetClientBusinessAccounts() {
+    async GetClientBusinessAccounts() {
       if (this.Bussinesstype != this.BType) {
         this.AccountName = this.Beneficiary = this.BankName = this.BankAccount = this.rtgs = '';
       }
@@ -156,7 +157,7 @@ export default {
         clientid: this.ClientId.ClientMasterID,
         businessid: parseInt(this.Bussinesstype)
       })
-      axios({
+      await axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/GetClientBusinessAccountsList',
           data: this.input,
@@ -172,15 +173,18 @@ export default {
           console.error(error)
         })
     },
-
-    getAccountDetails() {
+    async getAccountDetails() {
+      this.editparams = "";
+      await this.getAccountDetailsTemp();
+    },
+    async getAccountDetailsTemp() {
       if (this.AccountName) {
         this.bankDLoading = true;
       }
       this.input = ({
         ClientBusinessAccountId: this.AccountName
       })
-      axios({
+      await axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/getAccountDetails',
           data: this.input,
@@ -195,7 +199,12 @@ export default {
             this.BankName = result.data.data.ClientBankName
             this.BankAccount = result.data.data.ClientAccountNo
             this.rtgs = result.data.data.ClientBankNeftIFSC
-            this.ContactEmailid = result.data.data.SecondaryEmailid
+            if (this.editparams == "") {
+              this.ContactEmailid = result.data.data.SecondaryEmailid
+            } else
+            if (this.editparams !== "") {
+              this.ContactEmilid = this.editparams;
+            }
           }
         }, error => {
           this.bankDLoading = false;
@@ -362,7 +371,7 @@ export default {
         })
     },
 
-    getClientCODRemittanceRowData(data) {
+    async getClientCODRemittanceRowData(data) {
       this.$validator.reset();
       this.errors.clear();
 
@@ -397,10 +406,12 @@ export default {
       this.Bussinesstype = data.BussinessType;
       this.BType = data.BussinessType;
       this.AccountName = data.AccountId;
+      this.ContactEmailid = "";
+      await this.GetClientBusinessConfigList();
+      await this.GetClientBusinessAccounts();
       this.ContactEmailid = data.CustomerMailId;
+      this.editparams = data.CustomerMailId;
 
-      this.GetClientBusinessConfigList();
-      this.GetClientBusinessAccounts();
     },
 
     onSubmit: function(event) {
