@@ -34,7 +34,8 @@ export default {
       exportf: false,
       excelLoading: false,
       clientLoading: false,
-      reportlink: ''
+      reportlink: '',
+      ClientAccountList: [],
     }
   },
 
@@ -55,10 +56,52 @@ export default {
     var userdetail = JSON.parse(plaintext);
     this.createdby = userdetail.username;
 
-    this.GetClientData()
+    this.GetClientData();
+    this.getCleintWithAccountName();
   },
 
   methods: {
+    getCleintWithAccountName() {
+      this.clientLoading = true;
+      this.ClientAccountList = [];
+
+      this.input = ({
+        username: this.createdby
+      })
+
+      axios({
+        method: 'POST',
+        url: `${apiUrl.api_url}getclientaccountlist`,
+        data: this.input,
+        headers: {
+          Authorization: `Bearer ${this.myStr}`
+        }
+      }).then(result => {
+        this.isLoading = false;
+        this.clientLoading = false;
+
+        if (result.data.code == 200) {
+          let clientAccountList = result.data.clientArr;
+
+          let newTempArray = [];
+          clientAccountList.forEach((list, k) => {
+            let temp = {};
+            if (list.AccountName && list.AccountName !== undefined && list.AccountName !== "undefined") {
+              temp.AccountId = list.AccountId;
+              temp.AccountName = list.AccountName;
+              newTempArray.push(temp);
+            }
+          });
+
+          this.ClientAccountList = newTempArray;
+        } else {
+          this.ClientAccountList = [];
+        }
+      }, error => {
+        this.clientLoading = false;
+        console.error(error)
+      })
+    },
     GetClientData() {
       this.clientLoading = true;
       axios({
@@ -88,7 +131,7 @@ export default {
 
       axios({
           method: 'GET',
-          'url': apiUrl.api_url + 'codpaymentdetailsmaster?ClientId=' + this.ClientId.ClientMasterID + '&Company=' + this.ClientId.CompanyName + '&offset=' + this.pageno + '&limit=10&fromDate=' + this.fromDate + '&toDate=' + this.toDate + '&createdby=' + this.createdby,
+          'url': apiUrl.api_url + 'codpaymentdetailsmaster?ClientId=' + this.ClientId.AccountId + '&AccountId=' + this.ClientId.AccountId + '&Company=' + this.ClientId.AccountName + '&offset=' + this.pageno + '&limit=10&fromDate=' + this.fromDate + '&toDate=' + this.toDate + '&createdby=' + this.createdby,
           headers: {
             'Authorization': 'Bearer ' + this.myStr
           }

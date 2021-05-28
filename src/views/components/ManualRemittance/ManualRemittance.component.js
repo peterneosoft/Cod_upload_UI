@@ -98,7 +98,7 @@ export default {
         var userToken = window.localStorage.getItem('accessuserToken');
         this.myStr = userToken.replace(/"/g, '');
 
-        this.GetClientData();
+        this.getCleintWithAccountName();
         this.getUpdateInScanData();
         //this.manualCODRemittance();
 
@@ -398,7 +398,7 @@ export default {
                         if (result.data.code == 200) {
                             this.$alertify.success(result.data.message);
 
-                            this.onClientSearch(this.Client.ClientMasterID, this.Client.CompanyName);
+                            this.onClientSearch(this.Client.AccountId, this.Client.AccountName);
 
                             // this.insertEmailRemittance();
                         } else {
@@ -584,7 +584,7 @@ export default {
             });
 
             if (this.newClientId) {
-                this.input.ClientId = [this.newClientId];
+                this.input.AccountId = [this.newClientId];
             }
 
             if (this.TransactionFromDate) {
@@ -640,8 +640,9 @@ export default {
                 overdueremittance: this.overdueFilter
             });
 
+
             if (this.newClientId) {
-                this.input.clientid = this.newClientId;
+                this.input.AccountId = this.newClientId;
             }
 
             axios({
@@ -717,19 +718,45 @@ export default {
                     console.error(error)
                 })
         },
-
-        GetClientData() {
+        /**
+         * get cleint with account wise info::-
+         */
+        getCleintWithAccountName() {
             this.clientLoading = true;
+            this.ClientAccountList = [];
+
+            this.input = ({
+                username: this.localuserid
+            })
+
             axios({
-                method: 'GET',
-                url: apiUrl.api_url + 'external/getclientlist',
-                data: {},
+                method: 'POST',
+                url: `${apiUrl.api_url}getclientaccountlist`,
+                data: this.input,
                 headers: {
-                    'Authorization': 'Bearer ' + this.myStr
+                    Authorization: `Bearer ${this.myStr}`
                 }
             }).then(result => {
+                this.isLoading = false;
                 this.clientLoading = false;
-                this.ClientList = result.data.clients.data;
+
+                if (result.data.code == 200) {
+                    let clientAccountList = result.data.clientArr;
+
+                    let newTempArray = [];
+                    clientAccountList.forEach((list, k) => {
+                        let temp = {};
+                        if (list.AccountName && list.AccountName !== undefined && list.AccountName !== "undefined") {
+                            temp.AccountId = list.AccountId;
+                            temp.AccountName = list.AccountName;
+                            newTempArray.push(temp);
+                        }
+                    });
+
+                    this.ClientAccountList = newTempArray;
+                } else {
+                    this.ClientAccountList = [];
+                }
             }, error => {
                 this.clientLoading = false;
                 console.error(error)
@@ -752,7 +779,8 @@ export default {
                     this.input = ({
                         fromDate: this.fromdates,
                         toDate: this.todates,
-                        ClientId: ClientId,
+                        AccountId: ClientId,
+                        ClientId,
                         ClientName: CompanyName,
                     });
 
@@ -954,12 +982,12 @@ export default {
         onSearch() {
             this.resultCount = 0;
             this.pagecount = 1;
-            if (this.Client.ClientMasterID == null || this.Client.ClientMasterID == 'undefined') {
+            if (this.Client.AccountId == null || this.Client.AccountId == 'undefined') {
                 document.getElementById("clienterr").innerHTML = "Client is required.";
                 return false;
             }
             document.getElementById("clienterr").innerHTML = "";
-            this.onClientSearch(this.Client.ClientMasterID, this.Client.CompanyName);
+            this.onClientSearch(this.Client.AccountId, this.Client.AccountName);
         },
 
         resetSearch() {

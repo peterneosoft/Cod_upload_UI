@@ -53,6 +53,7 @@ export default {
       businessLoading: false,
       accountLoading: false,
       bankDLoading: false,
+      ClientAccountList: [],
       editparams: '',
     }
   },
@@ -72,7 +73,7 @@ export default {
     this.myStr = userToken.replace(/"/g, '');
     this.GetClientData();
     this.searchClientCODRemittanceData();
-
+    this.getCleintWithAccountName();
     this.RemittanceDayList = [{
         day: "Daily"
       },
@@ -184,7 +185,7 @@ export default {
       this.input = ({
         ClientBusinessAccountId: this.AccountName
       })
-      await axios({
+      axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/getAccountDetails',
           data: this.input,
@@ -229,7 +230,51 @@ export default {
         console.error(error)
       })
     },
+    /**
+     * new client name with account list data
+     */
 
+    getCleintWithAccountName() {
+      this.clientLoading = true;
+      this.ClientAccountList = [];
+
+      this.input = ({
+        username: this.localuserid
+      })
+
+      axios({
+        method: 'POST',
+        url: `${apiUrl.api_url}getclientaccountlist`,
+        data: this.input,
+        headers: {
+          Authorization: `Bearer ${this.myStr}`
+        }
+      }).then(result => {
+        this.isLoading = false;
+        this.clientLoading = false;
+
+        if (result.data.code == 200) {
+          let clientAccountList = result.data.clientArr;
+
+          let newTempArray = [];
+          clientAccountList.forEach((list, k) => {
+            let temp = {};
+            if (list.AccountName && list.AccountName !== undefined && list.AccountName !== "undefined") {
+              temp.AccountId = list.AccountId;
+              temp.AccountName = list.AccountName;
+              newTempArray.push(temp);
+            }
+          });
+
+          this.ClientAccountList = newTempArray;
+        } else {
+          this.ClientAccountList = [];
+        }
+      }, error => {
+        this.clientLoading = false;
+        console.error(error)
+      })
+    },
     saveClientCODRemittanceData(event) {
 
       let dData = [];
@@ -340,10 +385,11 @@ export default {
     searchClientCODRemittanceData(event) {
       this.isLoading = true;
       this.AddEditClientTAT = false;
-      let clientid = this.Client.ClientMasterID ? this.Client.ClientMasterID : 0;
+      let clientid = 0;
+      let AccountId = this.Client.AccountId ? this.Client.AccountId : 0;
       axios({
           method: 'GET',
-          'url': apiUrl.api_url + 'clientcodremittancemaster?ClientId=' + clientid + '&&offset=' + this.pageno + '&limit=10',
+          'url': apiUrl.api_url + 'clientcodremittancemaster?ClientId=' + clientid + '&AccountId=' + AccountId + '&offset=' + this.pageno + '&limit=10',
           headers: {
             'Authorization': 'Bearer ' + this.myStr
           }
@@ -411,7 +457,6 @@ export default {
       await this.GetClientBusinessAccounts();
       this.ContactEmailid = data.CustomerMailId;
       this.editparams = data.CustomerMailId;
-
     },
 
     onSubmit: function(event) {
@@ -429,7 +474,7 @@ export default {
     },
 
     onSearch: function(event) {
-      if (this.Client.ClientMasterID == null || this.Client.ClientMasterID == 'undefined') {
+      if (this.Client.AccountId == null || this.Client.AccountId == 'undefined') {
         document.getElementById("clienterr").innerHTML = "Client is required.";
         return false;
       }

@@ -120,6 +120,7 @@ export default {
           let tempArray = {};
 
           tempArray = {
+            AccountId: this.listEmailRemittanceData[i].AccountId,
             ClientId: this.listEmailRemittanceData[i].ClientId,
             CompanyName: this.listEmailRemittanceData[i].CompanyName,
             RemittanceDate: this.listEmailRemittanceData[i].transactiondate,
@@ -156,6 +157,7 @@ export default {
           if ($("#ClientId" + data.clientremittedid).prop('checked') == true) {
 
             tempArray = {
+              AccountId: data.AccountId,
               ClientId: data.ClientId,
               CompanyName: data.CompanyName,
               RemittanceDate: data.transactiondate,
@@ -188,6 +190,7 @@ export default {
         if (items[i]['ClientId'] !== match) {
 
           let tempArray = {
+            AccountId: items[i]['AccountId'],
             ClientId: items[i]['ClientId'],
             CompanyName: items[i]['CompanyName'],
             RemittanceDate: items[i]['transactiondate'],

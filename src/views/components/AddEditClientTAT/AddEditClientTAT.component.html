@@ -153,7 +153,7 @@
               <div class="col-md-5">
                 <label>Client <font color="red">*</font></label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                  <Multiselect :options="ClientList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID" :optionHeight="100" :hide-selected="true"
+                  <Multiselect :options="ClientAccountList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="AccountName" track-by="AccountId" :optionHeight="100" :hide-selected="true"
                     style="border: 1px solid #c2cfd6;z-index:999">
                     <template slot="noResult">
                       <p>No Record Found.</p>
@@ -195,11 +195,11 @@
           </thead>
           <tbody>
             <tr v-if="resultCount==0">
-              <td colspan="11" align="center">No record found</td>
+              <td colspan="12" align="center">No record found</td>
             </tr>
             <tr v-for="(data,index) in listClientCODRemittanceData">
               <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
-              <td>{{data.CompanyName}}</td>
+              <td>{{data.AccountName}}</td>
               <td>{{data.TAT}}</td>
               <td>{{data.RemittanceDayString}}</td>
               <td>{{data.RemittanceType}}</td>

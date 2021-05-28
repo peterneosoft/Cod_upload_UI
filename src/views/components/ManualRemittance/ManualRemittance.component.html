@@ -22,10 +22,10 @@
                             <label>Client Name <font color="red">*</font></label>
                             <b-input-group left="<i class='fa fa-list'></i>">
                                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="clientLoading" />
-                                <Multiselect :options="ClientList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;">
+                                <Multiselect :options="ClientAccountList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="AccountName" track-by="AccountId" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;">
                                     <template slot="noResult">
-                    <p>No Record Found.</p>
-                  </template>
+                                    <p>No Record Found.</p>
+                                </template>
                                 </Multiselect>
                             </b-input-group>
                             <span id="clienterr" class="text-danger"></span>

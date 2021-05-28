@@ -11,7 +11,7 @@
               <label>Client / Company Name <font color="red">*</font></label>
               <b-input-group left="<i class='fa fa-list'></i>">
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="clientLoading" />
-                <Multiselect :options="ClientList" name="ClientId" id="ClientId" v-model="ClientId" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID" v-validate="{required: true}"
+                <Multiselect :options="ClientAccountList" name="ClientId" id="ClientId" v-model="ClientId" placeholder="Select Client" label="AccountName" track-by="AccountId" v-validate="{required: true}"
                   v-bind:class="{'error': errors.has('ClientId') }" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
                   <template slot="noResult">
                     <p>No Record Found.</p>
