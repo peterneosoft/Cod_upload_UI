@@ -88,6 +88,7 @@ export default {
             let temp = {};
             if (list.AccountName && list.AccountName !== undefined && list.AccountName !== "undefined") {
               temp.AccountId = list.AccountId;
+              temp.ClientId = list.ClientId;
               temp.AccountName = list.AccountName;
               newTempArray.push(temp);
             }
@@ -131,7 +132,7 @@ export default {
 
       axios({
           method: 'GET',
-          'url': apiUrl.api_url + 'codpaymentdetailsmaster?ClientId=' + this.ClientId.AccountId + '&AccountId=' + this.ClientId.AccountId + '&Company=' + this.ClientId.AccountName + '&offset=' + this.pageno + '&limit=10&fromDate=' + this.fromDate + '&toDate=' + this.toDate + '&createdby=' + this.createdby,
+          'url': apiUrl.api_url + 'codpaymentdetailsmaster?ClientId=' + this.ClientId.ClientId + '&AccountId=' + this.ClientId.AccountId + '&Company=' + this.ClientId.AccountName + '&offset=' + this.pageno + '&limit=10&fromDate=' + this.fromDate + '&toDate=' + this.toDate + '&createdby=' + this.createdby,
           headers: {
             'Authorization': 'Bearer ' + this.myStr
           }
@@ -166,7 +167,7 @@ export default {
 
       axios({
           method: 'GET',
-          'url': apiUrl.api_url + 'exportcodpaymentreport?ClientId=' + this.ClientId.ClientMasterID + '&Company=' + this.ClientId.CompanyName + '&fromDate=' + this.fromDate + '&toDate=' + this.toDate + '&createdby=' + this.createdby,
+          'url': apiUrl.api_url + 'exportcodpaymentreport?ClientId=' + this.ClientId.ClientId + '&AccountId=' + this.ClientId.AccountId + '&Company=' + this.ClientId.AccountName + '&fromDate=' + this.fromDate + '&toDate=' + this.toDate + '&createdby=' + this.createdby,
           headers: {
             'Authorization': 'Bearer ' + this.myStr
           }
@@ -187,7 +188,6 @@ export default {
           console.error(error)
         })
     },
-
     exportreport() {
       this.excelLoading = true;
       if (this.reportlink) {

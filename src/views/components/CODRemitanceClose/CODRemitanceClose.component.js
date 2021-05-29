@@ -27,6 +27,7 @@ export default {
             ClientId: [],
             ClientList: [],
             SearchClientIds: [],
+            SearchClientAccountIds: [],
             selected: 'TransactionDate',
             options: [{
                     text: 'Transaction Date',
@@ -139,12 +140,14 @@ export default {
             if (this.ClientId.length > 0 && this.ClientId[key].AccountId == 0) {
 
                 this.SearchClientIds = [];
+                this.SearchClientAccountIds = [];
                 this.ClientId = this.ClientId[key];
 
                 for (let item of this.ClientAccountList) {
 
                     if (item.AccountId != 0) {
-                        this.SearchClientIds.push(item.AccountId);
+                        this.SearchClientAccountIds.push(item.AccountId);
+                        this.SearchClientIds.push(item.ClientId);
                     }
                 }
 
@@ -189,6 +192,7 @@ export default {
                         let temp = {};
                         if (list.AccountName && list.AccountName !== undefined && list.AccountName !== "undefined") {
                             temp.AccountId = list.AccountId;
+                            temp.ClientId = list.ClientId;
                             temp.AccountName = list.AccountName;
                             newTempArray.push(temp);
                         }
@@ -271,15 +275,18 @@ export default {
             }
 
             let cData = [];
+            let accountData = [];
             if (this.SearchClientIds.length > 0) {
                 cData = this.SearchClientIds;
+                accountData = this.SearchClientAccountIds;
             } else {
                 if ($.isArray(this.ClientId) === false) {
                     this.ClientId = new Array(this.ClientId);
                 }
 
                 this.ClientId.forEach(function(val) {
-                    cData.push(val.AccountId);
+                    accountData.push(val.AccountId);
+                    cData.push(val.ClientId);
                 });
             }
 
@@ -287,8 +294,11 @@ export default {
                 username: this.localuserid
             });
 
+            if (accountData) {
+                this.input.AccountId = accountData
+            }
             if (cData) {
-                this.input.AccountId = cData
+                this.input.ClientId = cData
             }
 
             this.input.isexport = this.isexport;
@@ -345,7 +355,7 @@ export default {
 
                                     testTemp.ClientId = item.ClientId;
                                     testTemp.clientremittedid = item.clientremittedid;
-                                    testTemp.CompanyName = item.AccountName;
+                                    testTemp.CompanyName = item.CompanyName;
                                     testTemp.RemittanceType = item.RemittanceType;
                                     testTemp.Cycle = item.Cycle;
                                     testTemp.ShipmentCount = item.ShipmentCount;
@@ -466,15 +476,18 @@ export default {
             }
 
             let cData = [];
+            let accountData = [];
             if (this.SearchClientIds.length > 0) {
                 cData = this.SearchClientIds;
+                accountData = this.SearchClientAccountIds;
             } else {
                 if ($.isArray(this.ClientId) === false) {
                     this.ClientId = new Array(this.ClientId);
                 }
 
                 this.ClientId.forEach(function(val) {
-                    cData.push(val.AccountId);
+                    accountData.push(val.AccountId);
+                    cData.push(val.ClientId);
                 });
             }
 
@@ -482,8 +495,12 @@ export default {
                 username: this.localuserid
             });
 
+            if (accountData) {
+                this.input.AccountId = accountData
+            }
+
             if (cData) {
-                this.input.AccountId = cData
+                this.input.ClientId = cData
             }
             this.input.isexport = this.isexport;
 
@@ -607,16 +624,20 @@ export default {
                 return false;
             }
 
+
             let cData = [];
+            let accountData = [];
             if (this.SearchClientIds.length > 0) {
                 cData = this.SearchClientIds;
+                accountData = this.SearchClientAccountIds;
             } else {
                 if ($.isArray(this.ClientId) === false) {
                     this.ClientId = new Array(this.ClientId);
                 }
 
                 this.ClientId.forEach(function(val) {
-                    cData.push(val.AccountId);
+                    accountData.push(val.AccountId);
+                    cData.push(val.ClientId);
                 });
             }
 
@@ -624,8 +645,13 @@ export default {
                 username: this.localuserid
             });
 
+            if (accountData) {
+                this.input.AccountId = accountData
+            }
+
+
             if (cData) {
-                this.input.AccountId = cData
+                this.input.ClientId = cData
             }
 
             this.input.isexport = this.isexport;
@@ -726,6 +752,7 @@ export default {
 
                 this.ClientId.forEach(function(val) {
                     cData.push(val.AccountId);
+                    cData.push(val.ClientId);
                 });
             }
 

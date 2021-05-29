@@ -53,9 +53,11 @@ export default {
             fromdates: '',
             todates: '',
             newClientId: '',
+            ClientId: "",
             utrno: '',
             updatedData: [],
             ClientAccountList: [],
+            AccountId: '',
             form: {
                 toDate: [],
                 FromDate: [],
@@ -402,7 +404,7 @@ export default {
                         if (result.data.code == 200) {
                             this.$alertify.success(result.data.message);
 
-                            this.onClientSearch(this.Client.AccountId, this.Client.AccountName);
+                            this.onClientSearch(this.Client.AccountId, this.Client.ClientId, this.Client.AccountName);
 
                             // this.insertEmailRemittance();
                         } else {
@@ -533,7 +535,7 @@ export default {
             this.Client = [];
             this.Search = 0;
             this.newClientId = '';
-
+            this.AccountId = '';
             this.isLoading = true;
             this.input = ({
                 username: this.localuserid
@@ -589,7 +591,11 @@ export default {
             });
 
             if (this.newClientId) {
-                this.input.AccountId = [this.newClientId];
+                this.input.ClientId = [this.newClientId];
+            }
+
+            if (this.AccountId) {
+                this.input.AccountId = [this.AccountId];
             }
 
             if (this.TransactionFromDate) {
@@ -647,9 +653,12 @@ export default {
 
 
             if (this.newClientId) {
-                this.input.AccountId = this.newClientId;
+                this.input.clientid = this.newClientId;
             }
 
+            if (this.AccountId) {
+                this.input.AccountId = this.AccountId;
+            }
             axios({
                     method: 'POST',
                     url: apiUrl.api_url + 'getmanualremittancedata',
@@ -753,6 +762,7 @@ export default {
                         let temp = {};
                         if (list.AccountName && list.AccountName !== undefined && list.AccountName !== "undefined") {
                             temp.AccountId = list.AccountId;
+                            temp.ClientId = list.ClientId;
                             temp.AccountName = list.AccountName;
                             newTempArray.push(temp);
                         }
@@ -768,11 +778,10 @@ export default {
             })
         },
 
-        onClientSearch(AccountId, CompanyName) {
-
+        onClientSearch(AccountId, ClientId, CompanyName) {
             this.fromdates = "";
+            this.AccountId = AccountId;
             this.todates = "";
-
             if (!AccountId) {
 
                 this.$alertify.error('Client Name is mandatory.');
@@ -785,7 +794,7 @@ export default {
                         fromDate: this.fromdates,
                         toDate: this.todates,
                         AccountId: AccountId,
-                        ClientId: 0,
+                        ClientId: ClientId,
                         ClientName: CompanyName,
                     });
 
@@ -993,7 +1002,7 @@ export default {
                 return false;
             }
             document.getElementById("clienterr").innerHTML = "";
-            this.onClientSearch(this.Client.AccountId, this.Client.AccountName);
+            this.onClientSearch(this.Client.AccountId, this.Client.ClientId, this.Client.AccountName);
         },
 
         resetSearch() {
@@ -1004,16 +1013,23 @@ export default {
             this.pagecount = 1;
             document.getElementById("clienterr").innerHTML = "";
             this.newClientId = '';
+
+            this.changeRadio();
+
+
         },
-        exportData(fromdates, ClientId, CompanyName) {
+        exportData(fromdates, ClientId, AccountId, CompanyName) {
             this.isLoading = true;
             this.todatesChanged = $(".scrolltb").find("[data-toids='toids" + ClientId + "']").attr("data-dates");
 
+            if (this.selected === "AdHoc") {
+                AccountId = this.Client.AccountId;
+            }
             this.input = ({
                 FromDate: fromdates,
                 ToDate: this.todatesChanged,
                 ClientId: ClientId,
-                AccountId: this.Client.AccountId,
+                AccountId: AccountId,
                 CompanyName: CompanyName,
                 username: this.localuserid,
             });

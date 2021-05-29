@@ -261,6 +261,7 @@ export default {
             let temp = {};
             if (list.AccountName && list.AccountName !== undefined && list.AccountName !== "undefined") {
               temp.AccountId = list.AccountId;
+              temp.ClientId = list.ClientId;
               temp.AccountName = list.AccountName;
               newTempArray.push(temp);
             }
@@ -385,7 +386,7 @@ export default {
     searchClientCODRemittanceData(event) {
       this.isLoading = true;
       this.AddEditClientTAT = false;
-      let clientid = 0;
+      let clientid = this.Client.ClientId ? this.Client.ClientId : 0;
       let AccountId = this.Client.AccountId ? this.Client.AccountId : 0;
       axios({
           method: 'GET',

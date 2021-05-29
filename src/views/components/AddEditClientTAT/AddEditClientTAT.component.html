@@ -153,7 +153,7 @@
               <div class="col-md-5">
                 <label>Client <font color="red">*</font></label>
                 <b-input-group left="<i class='fa fa-list'></i>">
-                  <Multiselect :options="ClientAccountList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="AccountName" track-by="AccountId" :optionHeight="100" :hide-selected="true"
+                  <Multiselect :options="ClientAccountList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="AccountName" :data-ClientId="ClientId" track-by="AccountId" :optionHeight="100" :hide-selected="true"
                     style="border: 1px solid #c2cfd6;z-index:999">
                     <template slot="noResult">
                       <p>No Record Found.</p>

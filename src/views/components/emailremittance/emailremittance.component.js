@@ -260,8 +260,6 @@ export default {
 
     emailRemittance() {
       this.isLoading = true;
-
-      this.newCheckRecord;
       this.input = ({
         emailArray: this.newCheckRecord,
         username: this.localuserid
