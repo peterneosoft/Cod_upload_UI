@@ -259,6 +259,7 @@ export default {
     },
 
     emailRemittance() {
+      this.disableButton = true;
       this.isLoading = true;
       this.input = ({
         emailArray: this.newCheckRecord,
