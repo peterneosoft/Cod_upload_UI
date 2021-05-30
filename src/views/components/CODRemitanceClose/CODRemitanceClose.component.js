@@ -250,6 +250,8 @@ export default {
         GetCODRemittanceDetailsData(event) {
             this.isexport = false;
 
+            this.listCODRemitanceDataDate = [];
+            this.listCODRemitanceDataException = this.listCODPaymentData = [];
             this.GetCODRemittanceDetailsDataTemp(event);
         },
 
@@ -396,7 +398,7 @@ export default {
             var yyyy = today.getFullYear();
             var today = dd + "" + mm + "" + yyyy;
             var data, filename, link;
-            filename = this.filename + today + ".csv";
+            filename = this.filename + today + ".cRemitsv";
             var csv = this.convertArrayOfObjectsToCSV({
                 data: csvData
             });
@@ -837,7 +839,11 @@ export default {
             this.$validator.validateAll().then(() => {
                 this.pageno = 0;
                 this.exportf = false;
+
+                this.listCODRemitanceDataDate = [];
+                this.listCODRemitanceDataException = this.listCODPaymentData = [];
                 this.resultCount = this.resultCountDate = this.resultCountException = 0;
+
                 this.pagecount = 1;
                 if (this.fromDate && this.toDate) {
                     // this.pagecount = 1;
@@ -870,19 +876,23 @@ export default {
         },
 
         resetForm() {
-            this.isActiveNow = 1;
+
+            this.resultCountDate = this.resultCount = this.resultCountException = 0;
             this.fromDate = this.toDate = '';
             this.ClientId = "";
             document.getElementById("fdate").innerHTML = "";
             $("input[value='TransactionDate']").attr("checked", true);
-            this.pageno = this.resultCount = 0;
+            this.pageno = this.resultCount = this.resultCountException = 0;
             this.listCODRemitanceData = [];
             this.listCODRemitanceDataDate = [];
-            this.listCODRemitanceDataException = [];
+            this.listCODRemitanceDataException = this.listCODPaymentData = [];
             this.exportf = false;
             this.isexport = false;
             this.$validator.reset();
             this.errors.clear();
+            this.isActiveNow = 1;
+            this.changeRadio();
+            this.selected = "TransactionDate";
         },
     }
 }

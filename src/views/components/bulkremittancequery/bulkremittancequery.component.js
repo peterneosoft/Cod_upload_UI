@@ -30,7 +30,7 @@ export default {
       pageno: 0,
       pagecount: 0,
       isLoading: false,
-      resultCount: '',
+      resultCount: 0,
       createdby: '',
       exportf: false,
       excelLoading: false,
@@ -72,6 +72,7 @@ export default {
     },
     GetCODPaymentData(event) {
       this.isexport = false;
+
       this.GetCODPaymentDataTemp(event);
     },
     GetCODPaymentDataTemp(event) {
@@ -241,7 +242,7 @@ export default {
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if (result) {
-          this.resultCount = 0;
+          this.pageno = this.resultCount = 0;
           this.pagecount = 1;
           if (/\s/g.test(this.shipmentid) == true || this.shipmentid.indexOf(',') > -1) {
             this.shipmentid = this.shipmentid.replace(/"|'| |,\s*$/g, '').split(',');
@@ -258,6 +259,7 @@ export default {
     },
 
     resetForm() {
+      this.pageno = this.resultCount = 0;
       this.ClientId = "";
       this.shipmentid = "";
       this.pagecount = 1;
