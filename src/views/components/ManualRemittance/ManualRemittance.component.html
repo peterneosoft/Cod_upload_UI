@@ -84,7 +84,7 @@
                         <tr v-if="resultCount==0">
                             <td colspan="12" align="center">No record found</td>
                         </tr>
-                        <tr v-if="resultCount>0" v-for="(data,index) in listPendingRemittanceData" v-bind:data-clientids="data.ClientId">
+                        <tr v-if="resultCount>0" v-for="(data,index) in listPendingRemittanceData" v-bind:data-clientids="data.AccountId">
                             <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
                             <td>
                                 <b-form-input type="hidden" v-model="form.oldFromDate[data.ClientId]" v-bind:name="setid('oldFromDate', data.ClientId)" v-bind:id="setid('oldFromDate', data.ClientId)"></b-form-input>
@@ -95,22 +95,22 @@
                                 <span v-bind:id="setid('fdate', data.ClientId)" class="text-danger"></span>
                             </td>
                             <td>
-                                <b-input-group :data-toids="'toids'+data.ClientId" :data-dates="data.ToDate" left="<i class='fa fa-calendar'></i>" title="Change To / Delivery Date">
+                                <b-input-group :data-toids="'toids'+data.AccountId" :data-dates="data.ToDate" left="<i class='fa fa-calendar'></i>" title="Change To / Delivery Date">
                                     <b-form-input @change="onChangeDate(form.FromDate[data.ClientId], form.toDate[data.ClientId], data.ClientId,data.AccountId,data.CompanyName,data.RemittanceType)" type="date" v-model="form.toDate[data.ClientId]" v-bind:name="setid('toDate', data.ClientId)"
                                         v-bind:id="setid('toDate', data.ClientId)" class="form-control"></b-form-input>
                                 </b-input-group>
                                 <span v-bind:id="setid('tdate', data.ClientId)" class="text-danger"></span>
                             </td>
-                            <td :data-comp="'comp'+data.ClientId">{{data.CompanyName}}</td>
-                            <td :data-remi="'remi'+data.ClientId">{{data.RemittanceType}}</td>
-                            <td :data-ship="'ship'+data.ClientId">{{data.ShipmentCount}}</td>
-                            <td :data-cod="'cod'+data.ClientId">{{data.CODAmount}}</td>
-                            <td :data-foregi="'foregi'+data.ClientId">{{data.FreightAmount}}</td>
+                            <td :data-comp="'comp'+data.AccountId">{{data.CompanyName}}</td>
+                            <td :data-remi="'remi'+data.AccountId">{{data.RemittanceType}}</td>
+                            <td :data-ship="'ship'+data.AccountId">{{data.ShipmentCount}}</td>
+                            <td :data-cod="'cod'+data.AccountId">{{data.CODAmount}}</td>
+                            <td :data-foregi="'foregi'+data.AccountId">{{data.FreightAmount}}</td>
                             <td class="text-center">
-                                <span :data-excep="'excep'+data.ClientId" @click="showReasonAWBNo(data.ExceptionAWB)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.ExceptionAWB.length>0">{{data.ExceptionAmount}}</span>
+                                <span :data-excep="'excep'+data.AccountId" @click="showReasonAWBNo(data.ExceptionAWB)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.ExceptionAWB.length>0">{{data.ExceptionAmount}}</span>
                                 <span v-if="data.ExceptionAWB.length<=0">{{data.ExceptionAmount}}</span>
                             </td>
-                            <td :data-pay="'pay'+data.ClientId">{{data.PayableAmount}}</td>
+                            <td :data-pay="'pay'+data.AccountId">{{data.PayableAmount}}</td>
                             <td>
                                 <button v-if="recordType=='tatoverdue' && data.PayableAmount>0" class="btn btn-sm btn-primary" @click="onRemittance(form.FromDate[data.ClientId], form.toDate[data.ClientId], data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button>
                                 <button v-if="recordType=='adhoc' && data.PayableAmount>0" class="btn btn-sm btn-primary" @click="onAdHoctance(form.FromDate[data.ClientId], form.toDate[data.ClientId], data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button>

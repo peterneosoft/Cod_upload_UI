@@ -398,7 +398,7 @@ export default {
             var yyyy = today.getFullYear();
             var today = dd + "" + mm + "" + yyyy;
             var data, filename, link;
-            filename = this.filename + today + ".cRemitsv";
+            filename = this.filename + today + ".csv";
             var csv = this.convertArrayOfObjectsToCSV({
                 data: csvData
             });

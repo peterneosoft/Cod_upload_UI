@@ -277,15 +277,15 @@ export default {
 
                                 alldata = result.data.remittanceArr;
                                 alldata.forEach((val, key) => {
-                                    $(".scrolltb").find("[data-comp='comp" + ClientId + "']").html(val.CompanyName);
-                                    $(".scrolltb").find("[data-remi='remi" + ClientId + "']").html(val.RemittanceType);
-                                    $(".scrolltb").find("[data-ship='ship" + ClientId + "']").html(val.ShipmentCount);
-                                    $(".scrolltb").find("[data-cod='cod" + ClientId + "']").html(val.CODAmount);
-                                    $(".scrolltb").find("[data-foregi='foregi" + ClientId + "']").html(val.FreightAmount);
-                                    $(".scrolltb").find("[data-excep='excep" + ClientId + "']").html(val.ExceptionAmount);
-                                    $(".scrolltb").find("[data-pay='pay" + ClientId + "']").html(val.PayableAmount);
-                                    $(".scrolltb").find("[data-toids='toids" + ClientId + "']").attr('data-dates', val.ToDate);
-                                    $("#toDate" + ClientId).val(val.ToDate);
+                                    $(".scrolltb").find("[data-comp='comp" + AccountId + "']").html(val.CompanyName);
+                                    $(".scrolltb").find("[data-remi='remi" + AccountId + "']").html(val.RemittanceType);
+                                    $(".scrolltb").find("[data-ship='ship" + AccountId + "']").html(val.ShipmentCount);
+                                    $(".scrolltb").find("[data-cod='cod" + AccountId + "']").html(val.CODAmount);
+                                    $(".scrolltb").find("[data-foregi='foregi" + AccountId + "']").html(val.FreightAmount);
+                                    $(".scrolltb").find("[data-excep='excep" + AccountId + "']").html(val.ExceptionAmount);
+                                    $(".scrolltb").find("[data-pay='pay" + AccountId + "']").html(val.PayableAmount);
+                                    $(".scrolltb").find("[data-toids='toids" + AccountId + "']").attr('data-dates', val.ToDate);
+                                    $("#toDate" + AccountId).val(val.ToDate);
                                     // this.toDate = val.ToDate;
                                     if (val.remittanceArr !== undefined && val.remittanceArr !== 'undefined' && val.remittanceArr.ExceptionAWB !== undefined && val.remittanceArr.ExceptionAWB !== 'undefined') {
                                         this.DisputeArr = val.remittanceArr.ExceptionAWB;
@@ -373,7 +373,7 @@ export default {
 
                 this.closeModal();
                 this.recordType = this.selected;
-                this.todatesChanged = $(".scrolltb").find("[data-toids='toids" + data.ClientId + "']").attr("data-dates");
+                this.todatesChanged = $(".scrolltb").find("[data-toids='toids" + data.AccountId + "']").attr("data-dates");
 
                 if (this.recordType == 'AdHoc') {
 
@@ -671,9 +671,11 @@ export default {
                     if (result.data.code == 200) {
                         this.isLoading = false;
                         this.recordType = 'tatoverdue';
+
                         this.listPendingRemittanceData = result.data.remittanceArr;
                         this.resultCount = result.data.remittanceArr.length;
                         let totalRows = result.data.remittanceArr.length;
+
                         if (totalRows < 20) {
                             this.pagecount = 1
                         } else {
@@ -1022,11 +1024,12 @@ export default {
         },
         exportData(fromdates, ClientId, AccountId, CompanyName) {
             this.isLoading = true;
-            this.todatesChanged = $(".scrolltb").find("[data-toids='toids" + ClientId + "']").attr("data-dates");
-
             if (this.selected === "AdHoc") {
                 AccountId = this.Client.AccountId;
             }
+
+            this.todatesChanged = $(".scrolltb").find("[data-toids='toids" + AccountId + "']").attr("data-dates");
+
             this.input = ({
                 FromDate: fromdates,
                 ToDate: this.todatesChanged,
