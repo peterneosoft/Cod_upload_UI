@@ -640,6 +640,11 @@ export default {
 
 
         },
+        getPaginationManulaData(pageNum) {
+            this.pageno = (pageNum - 1) * 10;
+            this.isexport = false;
+            this.manualCODRemittance();
+        },
         manualCODRemittance() {
             this.notApproved = 1;
             this.isLoading = true;
@@ -659,6 +664,9 @@ export default {
             if (this.AccountId) {
                 this.input.AccountId = this.AccountId;
             }
+            this.input.offset = this.pageno;
+            this.input.limit = 10;
+
             axios({
                     method: 'POST',
                     url: apiUrl.api_url + 'getmanualremittancedata',
@@ -673,13 +681,13 @@ export default {
                         this.recordType = 'tatoverdue';
 
                         this.listPendingRemittanceData = result.data.remittanceArr;
-                        this.resultCount = result.data.remittanceArr.length;
-                        let totalRows = result.data.remittanceArr.length;
+                        this.resultCount = result.data.count;
+                        let totalRows = result.data.count;
 
-                        if (totalRows < 20) {
+                        if (totalRows < 10) {
                             this.pagecount = 1
                         } else {
-                            this.pagecount = Math.ceil(totalRows / 20)
+                            this.pagecount = Math.ceil(totalRows / 10)
                         }
                         this.listPendingRemittanceData.forEach((val, key) => {
                             this.form.toDate[val.ClientId] = val.ToDate;

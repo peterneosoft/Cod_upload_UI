@@ -119,6 +119,9 @@
                         </tr>
                     </tbody>
                 </table>
+                <br v-if="notApproved==1 && resultCount>0">
+                <paginate v-if="notApproved==1 && resultCount>0" :page-count="pagecount" :page-range="3" :margin-pages="3" :click-handler="getPaginationManulaData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+                </paginate>
 
                 <table v-if="notApproved==2" class="table-bordered table-hover tbl datatables " style="width:100%;">
                     <thead>
@@ -168,8 +171,8 @@
                         </tr>
                     </tbody>
                 </table>
-                <br>
-                <paginate v-if="notApproved==2 && resultCounts>0" :page-count="pagecount" :page-range="3" :margin-pages="3" :click-handler="getPaginationDelivaryData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+                <br v-if="notApproved==2 && resultCounts>0">
+                <paginate v-if="notApproved==2 && resultCounts>0" :page-count="pagecount" :page-range="3" :margin-pages="3" :click-handler="getPaginationManulaData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
                 </paginate>
             </div>
         </div>
