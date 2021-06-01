@@ -186,10 +186,10 @@
               <th class="text-center tableheader"><b>Remittance Day</b></th>
               <th class="text-center tableheader"><b>Remittance Type</b></th>
               <th class="text-center tableheader"><b>Beneficiary Name</b></th>
-              <th class="text-center tableheader"><b>Client Bank Name</b></th>
-              <th class="text-center tableheader"><b>Client Account No</b></th>
-              <th class="text-center tableheader"><b>Contact Mail Id</b></th>
-              <th class="text-center tableheader"><b>NEFT No</b></th>
+              <th class="text-center tableheader"><b>Bank Name</b></th>
+              <th class="text-center tableheader"><b>Account No</b></th>
+              <th class="text-center tableheader"><b>IFSC</b></th>
+              <th class="text-center tableheader"><b>Mail Id</b></th>
               <th class="text-center tableheader"><b>Cancel Cheque</b></th>
               <th class="text-center tableheader"><b>Action</b></th>
             </tr>
@@ -207,12 +207,11 @@
               <td>{{data.BeneficiaryName}}</td>
               <td>{{data.ClientBankName}}</td>
               <td>{{data.ClientAccountNo}}</td>
-              <td>{{data.CustomerMailId}}</td>
               <td>{{data.NEFTNo}}</td>
+              <td>{{data.CustomerMailId}}</td>
               <td>
                 <a :href="data.cancelCheque" style="cursor: pointer; color: rgb(25, 25, 112); text-decoration: underline;" v-if="data.cancelCheque && data.cancelCheque!=0">view</a>
               </td>
-
               <td class="text-center"><i @click.prevent="getClientCODRemittanceRowData(data, resultCount), AddEditClientTAT = '1', scrollWin()" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></td>
             </tr>
           </tbody>
