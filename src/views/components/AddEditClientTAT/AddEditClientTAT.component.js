@@ -205,6 +205,10 @@ export default {
             } else
             if (this.editparams !== "") {
               this.ContactEmilid = this.editparams;
+              this.BeneficiaryName = this.BeneficiaryName;
+              this.BankName = this.BankName;
+              this.BankAccountNo = this.BankAccountNo;
+              this.rtgs = this.BankIFSC;
             }
           }
         }, error => {
@@ -301,6 +305,10 @@ export default {
         AccountId: this.AccountName,
         ContactEmailid: this.ContactEmailid,
         CreatedBy: this.localuserid,
+        BeneficiaryName: this.Beneficiary,
+        BankName: this.BankName,
+        BankAccountNo: this.BankAccount,
+        BankIFSC: this.rtgs,
         AccountName: $("#AccountName option:selected").text(),
       })
       axios({
@@ -355,6 +363,10 @@ export default {
         AccountId: this.AccountName,
         ContactEmailid: this.ContactEmailid,
         LastModifiedBy: this.localuserid,
+        BeneficiaryName: this.Beneficiary,
+        BankName: this.BankName,
+        BankAccountNo: this.BankAccount,
+        BankIFSC: this.rtgs,
         AccountName: $("#AccountName option:selected").text(),
       })
       axios({
@@ -458,6 +470,13 @@ export default {
       await this.GetClientBusinessAccounts();
       this.ContactEmailid = data.CustomerMailId;
       this.editparams = data.CustomerMailId;
+
+      this.BeneficiaryName = data.BeneficiaryName;
+      this.BankName = data.ClientBankName;
+      this.BankAccountNo = data.ClientAccountNo;
+      this.rtgs = data.NEFTNo;
+
+
     },
 
     onSubmit: function(event) {
