@@ -95,39 +95,44 @@
               <div class="form-group row">
                 <div class="col-md-4">
                   <b-form-fieldset>
-                    <label>Beneficiary Name</label>
+                    <label>Beneficiary Name </label>
                     <b-input-group left="<i class='fa fa-user'></i>">
                       <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
-                      <b-form-input type="text" placeholder="Enter Beneficiary Name" name="Beneficiary" id="Beneficiary" v-model="Beneficiary" v-validate="'required'"></b-form-input>
+                      <b-form-input type="text" placeholder="Enter Beneficiary Name" name="Beneficiary" id="Beneficiary" v-model="Beneficiary"></b-form-input>
                     </b-input-group>
+                    <span v-show="errors.has('Beneficiary')" class="text-danger">Beneficiary Name is required.</span>
+
                   </b-form-fieldset>
                 </div>
                 <div class="col-md-4">
                   <b-form-fieldset>
-                    <label>Bank Name</label>
+                    <label>Bank Name </label>
                     <b-input-group left="<i class='fa fa-bank'></i>">
                       <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
-                      <b-form-input type="text" placeholder="Enter Bank Name" name="BankName" id="BankName" v-model="BankName" v-validate="'required'"></b-form-input>
+                      <b-form-input type="text" placeholder="Enter Bank Name" name="BankName" id="BankName" v-model="BankName"></b-form-input>
                     </b-input-group>
+                    <span v-show="errors.has('BankName')" class="text-danger">Bank Name is required.</span>
                   </b-form-fieldset>
                 </div>
                 <div class="col-md-4">
                   <b-form-fieldset>
-                    <label>Bank Account No</label>
+                    <label>Bank Account No </label>
                     <b-input-group left="<i class='fa fa-bank'></i>">
                       <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
-                      <b-form-input type="text" placeholder="Enter Bank Account No" name="BankAccount" id="BankAccount" v-model="BankAccount" v-validate="'required'"></b-form-input>
+                      <b-form-input type="text" placeholder="Enter Bank Account No" name="BankAccount" id="BankAccount" v-model="BankAccount"></b-form-input>
                     </b-input-group>
+                    <span v-show="errors.has('BankAccount')" class="text-danger">Bank Account No is required.</span>
                   </b-form-fieldset>
                 </div>
               </div>
               <div class="form-group row">
                 <div class="col-md-4">
-                  <label>RTGS / IFSC</label>
+                  <label>RTGS / IFSC </label>
                   <b-input-group left="<i class='fa fa-bank'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
                     <b-form-input id="rtgs" type="text" placeholder="Enter RTGS/IFSC" name="rtgs" v-model="rtgs"></b-form-input>
                   </b-input-group>
+                  <span v-show="errors.has('rtgs')" class="text-danger">RTGS / IFSC is required.</span>
                 </div>
                 <div class="col-md-4">
                   <label>Contact Email Id</label>

@@ -196,20 +196,37 @@ export default {
         .then(result => {
           if (result.data.code == 200) {
             this.bankDLoading = false;
-            this.Beneficiary = result.data.data.BeneficiaryName
-            this.BankName = result.data.data.ClientBankName
-            this.BankAccount = result.data.data.ClientAccountNo
-            this.rtgs = result.data.data.ClientBankNeftIFSC
+
             if (this.editparams == "") {
               this.ContactEmailid = result.data.data.SecondaryEmailid
-            } else
-            if (this.editparams !== "") {
+            } else if (this.editparams !== "") {
               this.ContactEmilid = this.editparams;
+            }
+
+            if (this.BeneficiaryName == "") {
+              this.Beneficiary = result.data.data.BeneficiaryName;
+            } else if (this.BeneficiaryName !== "") {
               this.BeneficiaryName = this.BeneficiaryName;
+            }
+
+            if (this.BankName == "") {
+              this.BankName = result.data.data.ClientBankName;
+            } else if (this.BankName !== "") {
               this.BankName = this.BankName;
+            }
+
+            if (this.BankAccountNo == "") {
+              this.BankAccount = result.data.data.ClientAccountNo
+            } else if (this.BankAccountNo !== "") {
               this.BankAccountNo = this.BankAccountNo;
+            }
+
+            if (this.BankIFSC == "") {
+              this.rtgs = result.data.data.ClientBankNeftIFSC
+            } else if (this.BankIFSC !== "") {
               this.rtgs = this.BankIFSC;
             }
+
           }
         }, error => {
           this.bankDLoading = false;
@@ -433,6 +450,11 @@ export default {
     async getClientCODRemittanceRowData(data) {
       this.$validator.reset();
       this.errors.clear();
+      this.editparams = '';
+      this.BeneficiaryName = '';
+      this.BankName = '';
+      this.BankAccountNo = '';
+      this.rtgs = '';
 
       let clientarr = [];
       if (data.ClientId != "") {
@@ -494,6 +516,11 @@ export default {
     },
 
     onSearch: function(event) {
+      this.editparams = '';
+      this.BeneficiaryName = '';
+      this.BankName = '';
+      this.BankAccountNo = '';
+      this.rtgs = '';
       if (this.Client.AccountId == null || this.Client.AccountId == 'undefined') {
         document.getElementById("clienterr").innerHTML = "Client is required.";
         return false;
@@ -512,6 +539,11 @@ export default {
       this.ClientId = this.Bussinesstype = this.AccountName = this.tat = this.type = this.Beneficiary = this.BankName = this.BankAccount = this.rtgs = '';
       this.$validator.reset();
       this.errors.clear();
+      this.editparams = '';
+      this.BeneficiaryName = '';
+      this.BankName = '';
+      this.BankAccountNo = '';
+      this.rtgs = '';
       this.ClientCODRemmitanceId = "";
       this.searchClientCODRemittanceData(event);
     },
@@ -522,6 +554,11 @@ export default {
       this.errors.clear();
       this.ClientCODRemmitanceId = "";
       this.pageno = this.resultCount = 0;
+      this.editparams = '';
+      this.BeneficiaryName = '';
+      this.BankName = '';
+      this.BankAccountNo = '';
+      this.rtgs = '';
       this.searchClientCODRemittanceData(event);
       document.getElementById("clienterr").innerHTML = "";
     },
