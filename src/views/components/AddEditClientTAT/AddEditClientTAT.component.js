@@ -55,7 +55,7 @@ export default {
       bankDLoading: false,
       ClientAccountList: [],
       editparams: '',
-      editsection: 2
+      editsection: 2,
     }
   },
 
@@ -118,6 +118,13 @@ export default {
     },
 
     async GetClientBusinessConfigList() {
+      this.editparams = '';
+      this.BankName = '';
+      this.BankAccountNo = '';
+      this.rtgs = '';
+      this.Beneficiary = '';
+      this.ContactEmailid = this.BankAccount = '';
+
       if (this.ClientId.ClientMasterID != this.CId) {
         this.Bussinesstype = this.AccountName = this.Beneficiary = this.BankName = this.BankAccount = this.rtgs = '';
       }
@@ -182,11 +189,6 @@ export default {
     },
     async getAccountDetailsTemp() {
 
-      this.ContactEmailid = '';
-      this.Beneficiary = '';
-      this.BankName = '';
-      this.BankAccount = '';
-      this.rtgs = '';
 
       if (this.AccountName) {
         this.bankDLoading = true;
@@ -194,7 +196,7 @@ export default {
       this.input = ({
         ClientBusinessAccountId: this.AccountName
       })
-      axios({
+      await axios({
           method: 'POST',
           url: apiUrl.api_url + 'external/getAccountDetails',
           data: this.input,
@@ -205,15 +207,21 @@ export default {
         .then(result => {
           if (result.data.code == 200) {
             this.bankDLoading = false;
-
-            if (this.editsection == 2) {
+            if (this.editparams == '') {
               this.ContactEmailid = result.data.data.SecondaryEmailid;
-              this.Beneficiary = result.data.data.BeneficiaryName;
-              this.BankName = result.data.data.ClientBankName;
-              this.BankAccount = result.data.data.ClientAccountNo;
-              this.rtgs = result.data.data.ClientBankNeftIFSC;
+            } else {
+              this.ContactEmailid = this.editparams;
             }
-
+            this.Beneficiary = result.data.data.BeneficiaryName;
+            this.BankName = result.data.data.ClientBankName;
+            this.BankAccount = result.data.data.ClientAccountNo;
+            this.rtgs = result.data.data.ClientBankNeftIFSC;
+          }
+          if (result.data.code == 204) {
+            this.Beneficiary = this.Beneficiary;
+            this.BankName = this.BankName;
+            this.BankAccount = this.BankAccount;
+            this.rtgs = this.rtgs;
           }
         }, error => {
           this.bankDLoading = false;
@@ -382,11 +390,15 @@ export default {
           }
         })
         .then((response) => {
+          this.resetForm(event);
+
           if (response.data.errorCode == 0) {
+
+            this.$alertify.success(response.data.msg);
+
             this.submitLoading = false;
             this.AddEditClientTAT = 0;
-            this.$alertify.success(response.data.msg);
-            this.resetForm(event);
+            this.searchClientCODRemittanceData(event);
           } else if (response.data.errorCode == -1) {
             this.submitLoading = false;
             this.$alertify.error(response.data.msg)
@@ -436,12 +448,11 @@ export default {
 
     async getClientCODRemittanceRowData(data) {
       this.$validator.reset();
+      this.editsection = 1;
       this.errors.clear();
       this.editparams = '';
-      this.BeneficiaryName = '';
-      this.BankName = '';
-      this.BankAccountNo = '';
-      this.rtgs = '';
+
+      this.Beneficiary = this.BankName = this.BankAccount = this.rtgs = '';
 
       let clientarr = [];
       if (data.ClientId != "") {
@@ -465,29 +476,25 @@ export default {
       this.RemittanceDay = dayarr;
       this.type = data.RemittanceType;
       this.tat = data.tatno;
-      this.Beneficiary = data.BeneficiaryName;
-      this.BankName = data.ClientBankName;
-      this.BankAccount = data.ClientAccountNo;
-      this.rtgs = data.NEFTNo;
+
       this.ClientId.ClientMasterID = data.ClientId;
+
       this.CId = data.ClientId;
       this.Bussinesstype = data.BussinessType;
+      await this.GetClientBusinessConfigList();
+      await this.GetClientBusinessAccounts();
       this.BType = data.BussinessType;
       this.AccountName = data.AccountId;
       this.ContactEmailid = "";
-      await this.GetClientBusinessConfigList();
-      await this.GetClientBusinessAccounts();
       this.ContactEmailid = data.CustomerMailId;
       this.editparams = data.CustomerMailId;
 
-      this.BeneficiaryName = data.BeneficiaryName;
-      this.Beneficiary = data.BeneficiaryName;
-      this.BankName = data.ClientBankName;
-      this.BankAccountNo = data.ClientAccountNo;
-      this.rtgs = data.NEFTNo;
-      this.editsection = 1;
-    },
+      this.BankAccount = data.ClientAccountNo ? data.ClientAccountNo : '';
+      this.Beneficiary = data.BeneficiaryName ? data.BeneficiaryName : '';
+      this.BankName = data.ClientBankName ? data.ClientBankName : '';
+      this.rtgs = data.NEFTNo ? data.NEFTNo : '';
 
+    },
     onSubmit: function(event) {
       this.$validator.validateAll().then((result) => {
         if (result) {
@@ -505,7 +512,6 @@ export default {
     onSearch: function(event) {
       this.editsection = 2;
       this.editparams = '';
-      this.BeneficiaryName = '';
       this.BankName = '';
       this.BankAccountNo = '';
       this.rtgs = '';
@@ -529,12 +535,9 @@ export default {
       this.$validator.reset();
       this.errors.clear();
       this.editparams = '';
-      this.BeneficiaryName = '';
-      this.BankName = '';
       this.BankAccountNo = '';
-      this.rtgs = '';
       this.ClientCODRemmitanceId = "";
-      this.searchClientCODRemittanceData(event);
+      console.log('bank name', this.BankName);
     },
 
     resetSearch(event) {
@@ -545,7 +548,6 @@ export default {
       this.ClientCODRemmitanceId = "";
       this.pageno = this.resultCount = 0;
       this.editparams = '';
-      this.BeneficiaryName = '';
       this.BankName = '';
       this.BankAccountNo = '';
       this.rtgs = '';

@@ -109,7 +109,7 @@
                     <label>Bank Name </label>
                     <b-input-group left="<i class='fa fa-bank'></i>">
                       <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
-                      <b-form-input type="text" placeholder="Enter Bank Name" name="BankName" id="BankName" v-model="BankName"></b-form-input>
+                      <input type="text" placeholder="Enter Bank Name" name="BankName" id="BankName" v-model="BankName" autocomplete="off" class="form-control" />
                     </b-input-group>
                     <span v-show="errors.has('BankName')" class="text-danger">Bank Name is required.</span>
                   </b-form-fieldset>
@@ -119,7 +119,7 @@
                     <label>Bank Account No </label>
                     <b-input-group left="<i class='fa fa-bank'></i>">
                       <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
-                      <b-form-input type="text" placeholder="Enter Bank Account No" name="BankAccount" id="BankAccount" v-model="BankAccount"></b-form-input>
+                      <input type="text" placeholder="Enter Bank Account No" name="BankAccount" id="BankAccount" v-model="BankAccount" autocomplete="off" class="form-control" />
                     </b-input-group>
                     <span v-show="errors.has('BankAccount')" class="text-danger">Bank Account No is required.</span>
                   </b-form-fieldset>
@@ -130,7 +130,7 @@
                   <label>RTGS / IFSC </label>
                   <b-input-group left="<i class='fa fa-bank'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
-                    <b-form-input id="rtgs" type="text" placeholder="Enter RTGS/IFSC" name="rtgs" v-model="rtgs"></b-form-input>
+                    <input id="rtgs" type="text" placeholder="Enter RTGS/IFSC" name="rtgs" v-model="rtgs" autocomplete="off" class="form-control" />
                   </b-input-group>
                   <span v-show="errors.has('rtgs')" class="text-danger">RTGS / IFSC is required.</span>
                 </div>
@@ -138,7 +138,7 @@
                   <label>Contact Email Id</label>
                   <b-input-group left="<i class='fa fa-bank'></i>">
                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
-                    <b-form-input id="ContactEmailid" type="text" placeholder="Enter Contact Email Id" name="ContactEmailid" v-model="ContactEmailid"></b-form-input>
+                    <input id="ContactEmailid" type="text" placeholder="Enter Contact Email Id" name="ContactEmailid" v-model="ContactEmailid" autocomplete="off" class="form-control" />
                   </b-input-group>
                 </div>
               </div>
@@ -218,6 +218,7 @@
                 <a :href="data.cancelCheque" style="cursor: pointer; color: rgb(25, 25, 112); text-decoration: underline;" v-if="data.cancelCheque && data.cancelCheque!=0">view</a>
               </td>
               <td class="text-center"><i @click.prevent="getClientCODRemittanceRowData(data, resultCount), AddEditClientTAT = '1', scrollWin()" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></td>
+
             </tr>
           </tbody>
         </table><br>
