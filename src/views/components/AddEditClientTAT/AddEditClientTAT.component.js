@@ -55,6 +55,7 @@ export default {
       bankDLoading: false,
       ClientAccountList: [],
       editparams: '',
+      editsection: 2
     }
   },
 
@@ -176,9 +177,17 @@ export default {
     },
     async getAccountDetails() {
       this.editparams = "";
+      this.editsection = 2;
       await this.getAccountDetailsTemp();
     },
     async getAccountDetailsTemp() {
+
+      this.ContactEmailid = '';
+      this.Beneficiary = '';
+      this.BankName = '';
+      this.BankAccount = '';
+      this.rtgs = '';
+
       if (this.AccountName) {
         this.bankDLoading = true;
       }
@@ -197,34 +206,12 @@ export default {
           if (result.data.code == 200) {
             this.bankDLoading = false;
 
-            if (this.editparams == "") {
-              this.ContactEmailid = result.data.data.SecondaryEmailid
-            } else if (this.editparams !== "") {
-              this.ContactEmilid = this.editparams;
-            }
-
-            if (this.BeneficiaryName == "") {
+            if (this.editsection == 2) {
+              this.ContactEmailid = result.data.data.SecondaryEmailid;
               this.Beneficiary = result.data.data.BeneficiaryName;
-            } else if (this.BeneficiaryName !== "") {
-              this.BeneficiaryName = this.BeneficiaryName;
-            }
-
-            if (this.BankName == "") {
               this.BankName = result.data.data.ClientBankName;
-            } else if (this.BankName !== "") {
-              this.BankName = this.BankName;
-            }
-
-            if (this.BankAccountNo == "") {
-              this.BankAccount = result.data.data.ClientAccountNo
-            } else if (this.BankAccountNo !== "") {
-              this.BankAccountNo = this.BankAccountNo;
-            }
-
-            if (this.BankIFSC == "") {
-              this.rtgs = result.data.data.ClientBankNeftIFSC
-            } else if (this.BankIFSC !== "") {
-              this.rtgs = this.BankIFSC;
+              this.BankAccount = result.data.data.ClientAccountNo;
+              this.rtgs = result.data.data.ClientBankNeftIFSC;
             }
 
           }
@@ -494,11 +481,11 @@ export default {
       this.editparams = data.CustomerMailId;
 
       this.BeneficiaryName = data.BeneficiaryName;
+      this.Beneficiary = data.BeneficiaryName;
       this.BankName = data.ClientBankName;
       this.BankAccountNo = data.ClientAccountNo;
       this.rtgs = data.NEFTNo;
-
-
+      this.editsection = 1;
     },
 
     onSubmit: function(event) {
@@ -516,6 +503,7 @@ export default {
     },
 
     onSearch: function(event) {
+      this.editsection = 2;
       this.editparams = '';
       this.BeneficiaryName = '';
       this.BankName = '';
@@ -536,6 +524,7 @@ export default {
 
     resetForm(event) {
       this.RemittanceDay = [];
+      this.editsection = 2;
       this.ClientId = this.Bussinesstype = this.AccountName = this.tat = this.type = this.Beneficiary = this.BankName = this.BankAccount = this.rtgs = '';
       this.$validator.reset();
       this.errors.clear();
@@ -549,6 +538,7 @@ export default {
     },
 
     resetSearch(event) {
+      this.editsection = 2;
       this.Client = '';
       this.$validator.reset();
       this.errors.clear();
