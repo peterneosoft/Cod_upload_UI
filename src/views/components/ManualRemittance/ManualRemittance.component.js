@@ -521,9 +521,10 @@ export default {
                     }
                 })
                 .then(result => {
-                    this.isLoading = false;
+                    // this.isLoading = false;
                     if (result.data.code == 200) {
                         this.overdueFilter = this.selected;
+                        this.isLoading = true;
                         this.manualCODRemittance();
 
                     }
@@ -534,6 +535,7 @@ export default {
         changeRadio() {
             this.Client = [];
             this.Search = 0;
+            this.pageno = 0;
             this.newClientId = '';
             this.AccountId = '';
             this.isLoading = true;
@@ -648,8 +650,7 @@ export default {
         manualCODRemittance() {
             this.notApproved = 1;
             this.isLoading = true;
-            this.listPendingRemittanceData = [];
-            this.listPendingRemittanceDatas = [];
+
             // url: apiUrl.api_url + 'manualcodremittance?CreatedBy=' + this.localuserid + '&oldFromDate=' + this.fromDate + '&fromDate=' + this.fromDate + '&toDate=' + this.toDate + '&offset=' + this.pageno + '&limit=' + 20,
             this.input = ({
                 username: this.localuserid,
@@ -676,6 +677,8 @@ export default {
                     'data': this.input,
                 })
                 .then(result => {
+                    this.listPendingRemittanceData = [];
+                    this.listPendingRemittanceDatas = [];
                     if (result.data.code == 200) {
                         this.isLoading = false;
                         this.recordType = 'tatoverdue';
@@ -872,12 +875,12 @@ export default {
                         });
 
                 } else if (this.selected === false) {
-
+                    this.isLoading = true;
                     this.newClientId = ClientId;
                     this.manualCODRemittance();
 
                 } else if (this.selected === true) {
-
+                    this.isLoading = true;
                     this.newClientId = ClientId;
                     this.manualCODRemittance();
                 } else if (this.selected === "payApproved") {
