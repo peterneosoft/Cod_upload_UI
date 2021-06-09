@@ -677,9 +677,10 @@ export default {
                     'data': this.input,
                 })
                 .then(result => {
-                    this.listPendingRemittanceData = [];
-                    this.listPendingRemittanceDatas = [];
+
                     if (result.data.code == 200) {
+                        this.listPendingRemittanceData = [];
+                        this.listPendingRemittanceDatas = [];
                         this.isLoading = false;
                         this.recordType = 'tatoverdue';
 
@@ -712,6 +713,7 @@ export default {
 
                     } else {
                         this.listPendingRemittanceData = [];
+                        this.listPendingRemittanceDatas = [];
                         this.resultCount = 0;
                         this.isLoading = false;
                     }
