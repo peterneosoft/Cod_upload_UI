@@ -1,229 +1,331 @@
 <section class="user">
-  <div class="animated fadeIn">
-    <div class="col-md-12 mb-2">
-      <div class="card">
-        <div v-if="AddEditClientTAT==0" @click="AddEditClientTAT = '1'" class="card-header filter_main" style="cursor: pointer;">
-          <i class="fa fa-plus plus"></i>Add / Edit Remittance TAT
-        </div>
-        <div v-if="AddEditClientTAT==1" @click="AddEditClientTAT = '0'" class="card-header filter_main" style="cursor: pointer;">
-          <i class="fa fa-minus minus"></i>Add / Edit Remittance TAT
-        </div>
-        <b-collapse v-bind:class="`${AddEditClientTAT == '1' ? 'show' : 'hide'}`" id="collapse1">
-          <div class="card-body">
-            <form v-on:submit.prevent="onSubmit" id="formSubmit" name="formSubmit">
-              <div class="form-group row">
-                <div class="col-md-4">
-                  <label>Client Name <font color="red">*</font></label>
-                  <b-input-group left="<i class='fa fa-list'></i>">
-                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="clientLoading" />
-                    <Multiselect :options="ClientList" name="ClientId" id="ClientId" @input="GetClientBusinessConfigList()" v-model="ClientId" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID" v-validate="{required: true}"
-                      v-bind:class="{'error': errors.has('ClientId') }" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:1000">
-                      <template slot="noResult">
-                        <p>No Record Found.</p>
-                      </template>
-                    </Multiselect>
-                  </b-input-group>
-                  <span v-show="errors.has('ClientId')" class="text-danger">Client is required.</span>
+    <div class="animated fadeIn">
+        <div class="col-md-12 mb-2">
+            <div class="card">
+                <div v-if="AddEditClientTAT==0" @click="AddEditClientTAT = '1'" class="card-header filter_main" style="cursor: pointer;">
+                    <i class="fa fa-plus plus"></i>Add Remittance TAT
                 </div>
-                <div class="col-md-4">
-                  <label>Bussiness Service Type <font color="red">*</font></label>
-                  <b-input-group left="<i class='fa fa-list'></i>">
-                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="businessLoading" />
-                    <select style="height:45px;" name="Bussinesstype" id="Bussinesstype" class="form-control" v-on:change="GetClientBusinessAccounts" v-model="Bussinesstype" v-validate="'required'"
-                      v-bind:class="{'form-control': true, 'error': errors.has('Bussinesstype') }">
-                      <option value="">--Select--</option>
-                      <option v-for="Client_obj in ClientBusinessList" v-bind:value="Client_obj.ClientBusinessDetailID">{{Client_obj.BusinessConfig}}</option>
-                    </select>
-                  </b-input-group>
-                  <span v-show="errors.has('Bussinesstype')" class="text-danger">Bussiness type is required.</span>
+                <div v-if="AddEditClientTAT==1" @click="AddEditClientTAT = '0'" class="card-header filter_main" style="cursor: pointer;">
+                    <i class="fa fa-minus minus"></i>Add Remittance TAT
                 </div>
+                <b-collapse v-bind:class="`${AddEditClientTAT == '1' ? 'show' : 'hide'}`" id="collapse1">
+                    <div class="card-body" v-if="addformshow==1">
+                        <form v-on:submit.prevent="onSubmit" id="formSubmit" name="formSubmit">
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <label>Client Name <font color="red">*</font></label>
+                                    <b-input-group left="<i class='fa fa-list'></i>">
+                                        <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="clientLoading" />
+                                        <Multiselect :options="ClientList" name="ClientId" id="ClientId" @input="GetClientBusinessConfigList()" v-model="ClientId" placeholder="Select Client" label="CompanyName" track-by="ClientMasterID" v-validate="{required: true}" v-bind:class="{'error': errors.has('ClientId') }"
+                                            :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:1000">
+                                            <template slot="noResult">
+                                          <p>No Record Found.</p>
+                                        </template>
+                                        </Multiselect>
+                                    </b-input-group>
+                                    <span v-show="errors.has('ClientId')" class="text-danger">Client is required.</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Bussiness Service Type <font color="red">*</font></label>
+                                    <b-input-group left="<i class='fa fa-list'></i>">
+                                        <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="businessLoading" />
+                                        <select style="height:45px;" name="Bussinesstype" id="Bussinesstype" class="form-control" v-on:change="GetClientBusinessAccounts" v-model="Bussinesstype" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('Bussinesstype') }">
+                                      <option value="">--Select--</option>
+                                      <option v-for="Client_obj in ClientBusinessList" v-bind:value="Client_obj.ClientBusinessDetailID">{{Client_obj.BusinessConfig}}</option>
+                                    </select>
+                                    </b-input-group>
+                                    <span v-show="errors.has('Bussinesstype')" class="text-danger">Bussiness type is required.</span>
+                                </div>
 
-                <div class="col-md-4">
-                  <label>Account Name <font color="red">*</font></label>
-                  <b-input-group left="<i class='fa fa-list'></i>">
-                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="accountLoading" />
-                    <select style="height:45px;" name="AccountName" id="AccountName" class="form-control" v-model="AccountName" v-on:change="getAccountDetails" v-validate="'required'"
-                      v-bind:class="{'form-control': true, 'error': errors.has('AccountName') }">
-                      <option value="">--Select--</option>
-                      <option v-for="Client_obj in ClientAccountsList" v-bind:value="Client_obj.ClientBusinessAccountId">{{Client_obj.AccountName}}</option>
-                    </select>
-                  </b-input-group>
-                  <span v-show="errors.has('AccountName')" class="text-danger">Account name is required.</span>
-                </div>
-              </div>
+                                <div class="col-md-4">
+                                    <label>Account Name <font color="red">*</font></label>
+                                    <b-input-group left="<i class='fa fa-list'></i>">
+                                        <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="accountLoading" />
+                                        <select style="height:45px;" name="AccountName" id="AccountName" class="form-control" v-model="AccountName" v-on:change="getAccountDetails" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('AccountName') }">
+                                      <option value="">--Select--</option>
+                                      <option v-for="Client_obj in ClientAccountsList" v-bind:value="Client_obj.ClientBusinessAccountId">{{Client_obj.AccountName}}</option>
+                                    </select>
+                                    </b-input-group>
+                                    <span v-show="errors.has('AccountName')" class="text-danger">Account name is required.</span>
+                                </div>
+                            </div>
 
-              <div class="form-group row">
-                <div class="col-md-4">
-                  <label>Remittance Day <font color="red">*</font></label>
-                  <b-input-group left="<i class='fa fa-list'></i>">
-                    <Multiselect :options="RemittanceDayList" name="RemittanceDay" id="RemittanceDay" v-model="RemittanceDay" placeholder="Select Remittance Day" label="day" track-by="day" :preselect-first="false" v-bind:multiple="multiple()"
-                      @select="handleSelect" v-validate="{required: true}" v-bind:class="{'error': errors.has('RemittanceDay') }" :max-height="150" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
-                      <template slot="noResult">
-                        <p>No Record Found.</p>
-                      </template>
-                    </Multiselect>
-                  </b-input-group>
-                  <span v-show="errors.has('RemittanceDay')" class="text-danger">Remittance day is required.</span>
-                </div>
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <label>Remittance Day <font color="red">*</font></label>
+                                    <b-input-group left="<i class='fa fa-list'></i>">
+                                        <Multiselect :options="RemittanceDayList" name="RemittanceDay" id="RemittanceDay" v-model="RemittanceDay" placeholder="Select Remittance Day" label="day" track-by="day" :preselect-first="false" v-bind:multiple="multiple()" @select="handleSelect" v-validate="{required: true}"
+                                            v-bind:class="{'error': errors.has('RemittanceDay') }" :max-height="150" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                                            <template slot="noResult">
+                                      <p>No Record Found.</p>
+                                    </template>
+                                        </Multiselect>
+                                    </b-input-group>
+                                    <span v-show="errors.has('RemittanceDay')" class="text-danger">Remittance day is required.</span>
+                                </div>
 
-                <div class="col-md-4">
-                  <label>Remittance TAT <font color="red">*</font></label>
-                  <b-input-group left="<i class='fa fa-list'></i>">
-                    <select style="height:45px;" name="tat" id="tat" class="form-control" v-model="tat" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('tat') }">
-                      <option value="">--Select--</option>
-                      <option value="2">T+2</option>
-                      <option value="3">T+3</option>
-                      <option value="4">T+4</option>
-                    </select>
-                  </b-input-group>
-                  <span v-show="errors.has('tat')" class="text-danger">Remittance TAT is required.</span>
-                </div>
+                                <div class="col-md-4">
+                                    <label>Remittance TAT <font color="red">*</font></label>
+                                    <b-input-group left="<i class='fa fa-list'></i>">
+                                        <select style="height:45px;" name="tat" id="tat" class="form-control" v-model="tat" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('tat') }">
+                                          <option value="">--Select--</option>
+                                          <option value="2">T+2</option>
+                                          <option value="3">T+3</option>
+                                          <option value="4">T+4</option>
+                                        </select>
+                                    </b-input-group>
+                                    <span v-show="errors.has('tat')" class="text-danger">Remittance TAT is required.</span>
+                                </div>
 
-                <div class="col-md-4">
-                  <label>Client Type <font color="red">*</font></label>
-                  <b-input-group left="<i class='fa fa-list'></i>">
-                    <select style="height:45px;" name="type" id="type" class="form-control" v-model="type" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('type') }">
-                      <option value="">--Select--</option>
-                      <option value="Hybrid">Hybrid</option>
-                      <option value="Non-Hybrid">Non-Hybrid</option>
-                    </select>
-                  </b-input-group>
-                  <span v-show="errors.has('type')" class="text-danger">Client type is required.</span>
-                </div>
-              </div>
+                                <div class="col-md-4">
+                                    <label>Client Type <font color="red">*</font></label>
+                                    <b-input-group left="<i class='fa fa-list'></i>">
+                                        <select style="height:45px;" name="type" id="type" class="form-control" v-model="type" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('type') }">
+                                          <option value="">--Select--</option>
+                                          <option value="Hybrid">Hybrid</option>
+                                          <option value="Non-Hybrid">Non-Hybrid</option>
+                                        </select>
+                                    </b-input-group>
+                                    <span v-show="errors.has('type')" class="text-danger">Client type is required.</span>
+                                </div>
+                            </div>
 
-              <div class="form-group row">
-                <div class="col-md-4">
-                  <b-form-fieldset>
-                    <label>Beneficiary Name </label>
-                    <b-input-group left="<i class='fa fa-user'></i>">
-                      <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
-                      <b-form-input type="text" placeholder="Enter Beneficiary Name" name="Beneficiary" id="Beneficiary" v-model="Beneficiary"></b-form-input>
-                    </b-input-group>
-                    <span v-show="errors.has('Beneficiary')" class="text-danger">Beneficiary Name is required.</span>
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <b-form-fieldset>
+                                        <label>Beneficiary Name </label>
+                                        <b-input-group left="<i class='fa fa-user'></i>">
+                                            <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
+                                            <b-form-input type="text" placeholder="Enter Beneficiary Name" name="Beneficiary" id="Beneficiary" v-model="Beneficiary"></b-form-input>
+                                        </b-input-group>
+                                        <span v-show="errors.has('Beneficiary')" class="text-danger">Beneficiary Name is required.</span>
 
-                  </b-form-fieldset>
-                </div>
-                <div class="col-md-4">
-                  <b-form-fieldset>
-                    <label>Bank Name </label>
-                    <b-input-group left="<i class='fa fa-bank'></i>">
-                      <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
-                      <input type="text" placeholder="Enter Bank Name" name="BankName" id="BankName" v-model="BankName" autocomplete="off" class="form-control" />
-                    </b-input-group>
-                    <span v-show="errors.has('BankName')" class="text-danger">Bank Name is required.</span>
-                  </b-form-fieldset>
-                </div>
-                <div class="col-md-4">
-                  <b-form-fieldset>
-                    <label>Bank Account No </label>
-                    <b-input-group left="<i class='fa fa-bank'></i>">
-                      <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
-                      <input type="text" placeholder="Enter Bank Account No" name="BankAccount" id="BankAccount" v-model="BankAccount" autocomplete="off" class="form-control" />
-                    </b-input-group>
-                    <span v-show="errors.has('BankAccount')" class="text-danger">Bank Account No is required.</span>
-                  </b-form-fieldset>
-                </div>
-              </div>
-              <div class="form-group row">
-                <div class="col-md-4">
-                  <label>RTGS / IFSC </label>
-                  <b-input-group left="<i class='fa fa-bank'></i>">
-                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
-                    <input id="rtgs" type="text" placeholder="Enter RTGS/IFSC" name="rtgs" v-model="rtgs" autocomplete="off" class="form-control" />
-                  </b-input-group>
-                  <span v-show="errors.has('rtgs')" class="text-danger">RTGS / IFSC is required.</span>
-                </div>
-                <div class="col-md-4">
-                  <label>Contact Email Id</label>
-                  <b-input-group left="<i class='fa fa-bank'></i>">
-                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
-                    <input id="ContactEmailid" type="text" placeholder="Enter Contact Email Id" name="ContactEmailid" v-model="ContactEmailid" autocomplete="off" class="form-control" />
-                  </b-input-group>
-                </div>
-              </div>
-              <div class="card-footer">
-                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="submitLoading" />
-                <button class="btn btn-sm btn-primary" name="submit" id="submit" type="submit"><i class="fa fa-dot-circle-o"></i> Submit</button>
-                <button class="btn btn-sm btn-danger" @click="resetForm" type="reset"><i class="fa fa-ban"></i> Clear</button>
-              </div>
-            </form>
-          </div>
-        </b-collapse>
-      </div>
-
-      <div class="card">
-        <div class="card-body">
-          <form>
-            <div class="form-group row">
-              <div class="col-md-5">
-                <label>Client <font color="red">*</font></label>
-                <b-input-group left="<i class='fa fa-list'></i>">
-                  <Multiselect :options="ClientAccountList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="AccountName" :data-ClientId="ClientId" track-by="AccountId" :optionHeight="100" :hide-selected="true"
-                    style="border: 1px solid #c2cfd6;z-index:999">
-                    <template slot="noResult">
-                      <p>No Record Found.</p>
-                    </template>
-                  </Multiselect>
-                </b-input-group>
-                <span id="clienterr" class="text-danger"></span>
-              </div>
+                                    </b-form-fieldset>
+                                </div>
+                                <div class="col-md-4">
+                                    <b-form-fieldset>
+                                        <label>Bank Name </label>
+                                        <b-input-group left="<i class='fa fa-bank'></i>">
+                                            <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
+                                            <input type="text" placeholder="Enter Bank Name" name="BankName" id="BankName" v-model="BankName" autocomplete="off" class="form-control" />
+                                        </b-input-group>
+                                        <span v-show="errors.has('BankName')" class="text-danger">Bank Name is required.</span>
+                                    </b-form-fieldset>
+                                </div>
+                                <div class="col-md-4">
+                                    <b-form-fieldset>
+                                        <label>Bank Account No </label>
+                                        <b-input-group left="<i class='fa fa-bank'></i>">
+                                            <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
+                                            <input type="text" placeholder="Enter Bank Account No" name="BankAccount" id="BankAccount" v-model="BankAccount" autocomplete="off" class="form-control" />
+                                        </b-input-group>
+                                        <span v-show="errors.has('BankAccount')" class="text-danger">Bank Account No is required.</span>
+                                    </b-form-fieldset>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-4">
+                                    <label>RTGS / IFSC </label>
+                                    <b-input-group left="<i class='fa fa-bank'></i>">
+                                        <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
+                                        <input id="rtgs" type="text" placeholder="Enter RTGS/IFSC" name="rtgs" v-model="rtgs" autocomplete="off" class="form-control" />
+                                    </b-input-group>
+                                    <span v-show="errors.has('rtgs')" class="text-danger">RTGS / IFSC is required.</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Contact Email Id</label>
+                                    <b-input-group left="<i class='fa fa-bank'></i>">
+                                        <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
+                                        <input id="ContactEmailid" type="text" placeholder="Enter Contact Email Id" name="ContactEmailid" v-model="ContactEmailid" autocomplete="off" class="form-control" />
+                                    </b-input-group>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="submitLoading" />
+                                <button class="btn btn-sm btn-primary" name="submit" id="submit" type="submit"><i class="fa fa-dot-circle-o"></i> Submit</button>
+                                <button class="btn btn-sm btn-danger" @click="resetForm" type="reset"><i class="fa fa-ban"></i> Clear</button>
+                            </div>
+                        </form>
+                    </div>
+                </b-collapse>
             </div>
-            <div class="card-footer" @click="AddEditClientTAT = '0'">
-              <button @click="onSearch" class="btn btn-sm btn-primary" type="button"><i class="fa fa-search"></i> Search</button>
-              <button class="btn btn-sm btn-danger" @click="resetSearch" type="reset"><i class="fa fa-ban"></i> Clear</button>
-            </div>
-          </form>
         </div>
-      </div>
-    </div>
 
-    <div class="col-12">
-      <div class="card-headerfrm" style="margin-bottom: 15px;">
-        <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
-        <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
-        <table class="table-bordered table-hover tbl datatables" v-bind:class="`${resultCount==0 ? 'scrolltbl' : 'scrolltb'}`">
-          <thead>
-            <tr class="text-primary">
-              <th class="text-center tableheader"><b>#</b></th>
-              <th class="text-center tableheader"><b>Company Name</b></th>
-              <th class="text-center tableheader"><b>TAT</b></th>
-              <th class="text-center tableheader"><b>Remittance Day</b></th>
-              <th class="text-center tableheader"><b>Remittance Type</b></th>
-              <th class="text-center tableheader"><b>Beneficiary Name</b></th>
-              <th class="text-center tableheader"><b>Bank Name</b></th>
-              <th class="text-center tableheader"><b>Account No</b></th>
-              <th class="text-center tableheader"><b>IFSC</b></th>
-              <th class="text-center tableheader"><b>Mail Id</b></th>
-              <th class="text-center tableheader"><b>Cancel Cheque</b></th>
-              <th class="text-center tableheader"><b>Action</b></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="resultCount==0">
-              <td colspan="12" align="center">No record found</td>
-            </tr>
-            <tr v-for="(data,index) in listClientCODRemittanceData">
-              <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
-              <td>{{data.AccountName}}</td>
-              <td>{{data.TAT}}</td>
-              <td>{{data.RemittanceDayString}}</td>
-              <td>{{data.RemittanceType}}</td>
-              <td>{{data.BeneficiaryName}}</td>
-              <td>{{data.ClientBankName}}</td>
-              <td>{{data.ClientAccountNo}}</td>
-              <td>{{data.NEFTNo}}</td>
-              <td>{{data.CustomerMailId}}</td>
-              <td>
-                <a :href="data.cancelCheque" style="cursor: pointer; color: rgb(25, 25, 112); text-decoration: underline;" v-if="data.cancelCheque && data.cancelCheque!=0">view</a>
-              </td>
-              <td class="text-center"><i @click.prevent="getClientCODRemittanceRowData(data, resultCount), AddEditClientTAT = '1', scrollWin()" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i></td>
+        <div class="col-12">
+            <div class="card-headerfrm" style="margin-bottom: 15px;">
+                <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
+                <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+                <table class="table-bordered table-hover tbl datatables" v-bind:class="`${resultCount==0 ? 'scrolltbl' : 'scrolltb'}`">
+                    <thead>
+                        <tr class="text-primary">
+                            <th class="text-center tableheader"><b>#</b></th>
+                            <th class="text-center tableheader"><b>Company Name</b></th>
+                            <th class="text-center tableheader"><b>TAT</b></th>
+                            <th class="text-center tableheader"><b>Remittance Day</b></th>
+                            <th class="text-center tableheader"><b>Remittance Type</b></th>
+                            <th class="text-center tableheader"><b>Beneficiary Name</b></th>
+                            <th class="text-center tableheader"><b>Bank Name</b></th>
+                            <th class="text-center tableheader"><b>Account No</b></th>
+                            <th class="text-center tableheader"><b>IFSC</b></th>
+                            <th class="text-center tableheader"><b>Mail Id</b></th>
+                            <th class="text-center tableheader"><b>Cancel Cheque</b></th>
+                            <th class="text-center tableheader"><b>Action</b></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-if="resultCount==0">
+                            <td colspan="12" align="center">No record found</td>
+                        </tr>
+                        <tr v-for="(data,index) in listClientCODRemittanceData">
+                            <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
+                            <td>{{data.AccountName}}</td>
+                            <td>{{data.TAT}}</td>
+                            <td>{{data.RemittanceDayString}}</td>
+                            <td>{{data.RemittanceType}}</td>
+                            <td>{{data.BeneficiaryName}}</td>
+                            <td>{{data.ClientBankName}}</td>
+                            <td>{{data.ClientAccountNo}}</td>
+                            <td>{{data.NEFTNo}}</td>
+                            <td>{{data.CustomerMailId}}</td>
+                            <td>
+                                <a :href="data.cancelCheque" style="cursor: pointer; color: rgb(25, 25, 112); text-decoration: underline;" v-if="data.cancelCheque && data.cancelCheque!=0">view</a>
+                            </td>
+                            <td class="text-center">
+                                <i @click.prevent="getSVCRowData(data,resultCount)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
+                                <!-- <i @click.prevent="getClientCODRemittanceRowData(data, resultCount), AddEditClientTAT = '1', scrollWin()" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i> -->
 
-            </tr>
-          </tbody>
-        </table><br>
-        <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'"></paginate>
-      </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table><br>
+                <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'"></paginate>
+            </div>
+        </div>
+        <b-modal v-model="updateModal" id="myModal" @hidden="closeStatusRoleModal" ref="myClosureModalRef">
+            <div role="document">
+                <div class="modal-content" style="width: 185%;margin-left: -25%;">
+                    <div class="modal-bodyfrm">
+                        <div class="form-group">
+                            <form v-on:submit.prevent="onUpdate()">
+                                <b-card>
+                                    <div slot="header">
+                                        <span class="mdltitle"> Edit Remittance TAT</span>
+                                        <button type="button" aria-label="Close" @click="closeStatusRoleModal" class="close">×</button>
+                                    </div>
+                                    <fieldset>
+
+                                        <div class="form-group row">
+
+                                            <div class="col-md-4">
+                                                <label>Client Name </label><br />
+                                                <b><label>{{clientname}}</label></b>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label>Account Name </label><br />
+                                                <b><label>{{accountname}}</label></b>
+                                            </div>
+
+                                            <div class="col-md-4"></div>
+                                            <div class="clearfix"></div>
+
+                                            <div class="col-md-4">
+                                                <label>Remittance Day <font color="red">*</font></label>
+                                                <b-input-group left="<i class='fa fa-list'></i>">
+                                                    <Multiselect :options="RemittanceDayListedit" name="RemittanceDayedit" id="RemittanceDayedit" v-model="RemittanceDayedit" placeholder="Select Remittance Day" label="day" track-by="day" :preselect-first="false" v-bind:multiple="multiple()" @select="handleSelectedit"
+                                                        v-validate="{required: true}" v-bind:class="{'error': errors.has('RemittanceDayedit') }" :max-height="150" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                                                        <template slot="noResult">
+                                                            <p>No Record Found.</p>
+                                                          </template>
+                                                    </Multiselect>
+                                                </b-input-group>
+                                                <span v-show="errors.has('RemittanceDayedit')" class="text-danger">Remittance day is required.</span>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label>Remittance TAT <font color="red">*</font></label>
+                                                <b-input-group left="<i class='fa fa-list'></i>">
+                                                    <select style="height:45px;" name="tatedit" id="tatedit" class="form-control" v-model="tatedit" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('tat') }">
+                                                          <option value="">--Select--</option>
+                                                          <option value="2">T+2</option>
+                                                          <option value="3">T+3</option>
+                                                          <option value="4">T+4</option>
+                                                        </select>
+                                                </b-input-group>
+                                                <span v-show="errors.has('tatedit')" class="text-danger">Remittance TAT is required.</span>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <label>Client Type <font color="red">*</font></label>
+                                                <b-input-group left="<i class='fa fa-list'></i>">
+                                                    <select style="height:45px;" name="typeedit" id="typeedit" class="form-control" v-model="typeedit" v-validate="'required'" v-bind:class="{'form-control': true, 'error': errors.has('type') }">
+                                                        <option value="">--Select--</option>
+                                                        <option value="Hybrid">Hybrid</option>
+                                                        <option value="Non-Hybrid">Non-Hybrid</option>
+                                                      </select>
+                                                </b-input-group>
+                                                <span v-show="errors.has('typeedit')" class="text-danger">Client type is required.</span>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <b-form-fieldset>
+                                                    <label>Beneficiary Name </label>
+                                                    <b-input-group left="<i class='fa fa-user'></i>">
+                                                        <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
+                                                        <b-form-input type="text" placeholder="Enter Beneficiary Name" name="Beneficiaryedit" id="Beneficiaryedit" v-model="Beneficiaryedit"></b-form-input>
+                                                    </b-input-group>
+                                                    <span v-show="errors.has('Beneficiaryedit')" class="text-danger">Beneficiary Name is required.</span>
+
+                                                </b-form-fieldset>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <b-form-fieldset>
+                                                    <label>Bank Name </label>
+                                                    <b-input-group left="<i class='fa fa-bank'></i>">
+                                                        <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
+                                                        <input type="text" placeholder="Enter Bank Name" name="BankNameedit" id="BankNameedit" v-model="BankNameedit" autocomplete="off" class="form-control" />
+                                                    </b-input-group>
+                                                    <span v-show="errors.has('BankNameedit')" class="text-danger">Bank Name is required.</span>
+                                                </b-form-fieldset>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <b-form-fieldset>
+                                                    <label>Bank Account No </label>
+                                                    <b-input-group left="<i class='fa fa-bank'></i>">
+                                                        <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
+                                                        <input type="text" placeholder="Enter Bank Account No" name="BankAccountedit" id="BankAccountedit" v-model="BankAccountedit" autocomplete="off" class="form-control" />
+                                                    </b-input-group>
+                                                    <span v-show="errors.has('BankAccountedit')" class="text-danger">Bank Account No is required.</span>
+                                                </b-form-fieldset>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>RTGS / IFSC </label>
+                                                <b-input-group left="<i class='fa fa-bank'></i>">
+                                                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
+                                                    <input id="rtgs" type="text" placeholder="Enter RTGS/IFSC" name="rtgsedit" v-model="rtgsedit" autocomplete="off" class="form-control" />
+                                                </b-input-group>
+                                                <span v-show="errors.has('rtgsedit')" class="text-danger">RTGS / IFSC is required.</span>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>Contact Email Id</label>
+                                                <b-input-group left="<i class='fa fa-bank'></i>">
+                                                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="bankDLoading" />
+                                                    <input id="ContactEmailidedit" type="text" placeholder="Enter Contact Email Id" name="ContactEmailidedit" v-model="ContactEmailidedit" autocomplete="off" class="form-control " />
+                                                </b-input-group>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer text-center">
+                                            <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="submitLoading" />
+                                            <button class="btn btn-success btn-sm" type="submit"><i class="fa fa-dot-circle-o"></i> Submit</button>
+                                            <button class="btn btn-sm btn-danger" @click="closeStatusRoleModal" type="reset"><i class="fa fa-ban"></i> Clear</button>
+                                        </div>
+                                    </fieldset>
+                                </b-card>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </b-modal>
     </div>
-  </div>
 </section>
