@@ -535,6 +535,7 @@ export default {
         searchClientCODRemittanceData(event) {
             this.isLoading = true;
             this.AddEditClientTAT = false;
+
             let clientid = this.Client.ClientId ? this.Client.ClientId : 0;
             let AccountId = this.Client.AccountId ? this.Client.AccountId : 0;
             axios({
@@ -644,12 +645,21 @@ export default {
             this.BankName = '';
             this.BankAccountNo = '';
             this.rtgs = '';
-            if (this.Client.AccountId == null || this.Client.AccountId == 'undefined') {
-                document.getElementById("clienterr").innerHTML = "Client is required.";
-                return false;
-            }
+            this.isLoading = true;
+            this.AddEditClientTAT = false;
+            this.pageno = 0;
+
+            let clientid = this.Client.ClientId ? this.Client.ClientId : 0;
+            let AccountId = this.Client.AccountId ? this.Client.AccountId : 0;
             document.getElementById("clienterr").innerHTML = "";
-            this.searchClientCODRemittanceData(event);
+            if (clientid == null || AccountId == 'undefined' || clientid == 0 || AccountId == 0) {
+
+                this.isLoading = false;
+                $("#clienterr").html("Client is required.");
+                return false;
+            } else {
+                this.searchClientCODRemittanceData(event);
+            }
         },
 
         getPaginationData(pageNum) {

@@ -126,12 +126,13 @@ export default {
             this.$refs.myConfModalRef.show();
         },
         hideConfModal(ele) {
+            this.isLoading = true;
             if (ele == 0) {
                 this.$refs.myConfModalRef.hide();
-
                 this.okButtonClicked(this.newformdate, this.newtodate, this.newdata)
 
             } else {
+                this.isLoading = false;
                 this.$refs.myConfModalRef.hide();
             }
         },
@@ -347,6 +348,7 @@ export default {
         },
 
         okButtonClicked(fromDate, toDate, data) {
+            this.isLoading = true;
             this.notApproved = 1;
             if ((!fromDate || !this.form.oldFromDate[data.ClientId]) || (!toDate || !this.form.oldToDate[data.ClientId])) {
 
@@ -408,7 +410,7 @@ export default {
                     }).then(result => {
                         if (result.data.code == 200) {
                             this.$alertify.success(result.data.message);
-
+                            this.isLoading = false;
                             this.onClientSearch(this.Client.AccountId, this.Client.ClientId, this.Client.AccountName);
 
                             // this.insertEmailRemittance();
@@ -806,6 +808,7 @@ export default {
             this.fromdates = "";
             this.AccountId = AccountId;
             this.todates = "";
+            this.isLoading = true;
             if (!AccountId) {
 
                 this.$alertify.error('Client Name is mandatory.');
@@ -831,6 +834,7 @@ export default {
                             'data': this.input,
                         })
                         .then(result => {
+                            this.isLoading = false;
                             if (result.data.code == 200) {
                                 // this.adhocDate(result.data.remittanceObj.FromDate, result.data.remittanceObj.ToDate, ClientId);
                                 let newRemittedArrays = [];
