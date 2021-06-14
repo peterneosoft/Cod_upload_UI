@@ -14,7 +14,7 @@ export default {
     components: {
         Paginate,
         VueElementLoading,
-        Multiselect
+        Multiselect,
     },
 
     data() {
@@ -58,6 +58,7 @@ export default {
             updatedData: [],
             ClientAccountList: [],
             AccountId: '',
+            data: [],
             form: {
                 toDate: [],
                 FromDate: [],
@@ -100,7 +101,7 @@ export default {
 
         var userToken = window.localStorage.getItem('accessuserToken');
         this.myStr = userToken.replace(/"/g, '');
-
+        this.isLoading = true;
         this.getCleintWithAccountName();
         this.getUpdateInScanData();
         //this.manualCODRemittance();
@@ -112,7 +113,6 @@ export default {
             day: '2-digit'
         });
     },
-
     methods: {
         format_date(value) {
             if (value) {
@@ -199,7 +199,7 @@ export default {
                 })
         },
 
-        onChangeDate(fromDate, toDate, ClientId, AccountId, CompanyName, RemittanceType) {
+        onChangeDate(fromDate, toDate, ClientId, AccountId, CompanyName, RemittanceType, index) {
 
             this.notApproved = 1;
             if (!toDate || !fromDate) {
@@ -276,6 +276,9 @@ export default {
                                 this.isLoading = false;
 
                                 alldata = result.data.remittanceArr;
+
+                                // this.isexport = false;
+                                // this.manualCODRemittance();
                                 alldata.forEach((val, key) => {
                                     $(".scrolltb").find("[data-comp='comp" + AccountId + "']").html(val.CompanyName);
                                     $(".scrolltb").find("[data-remi='remi" + AccountId + "']").html(val.RemittanceType);
@@ -286,11 +289,13 @@ export default {
                                     $(".scrolltb").find("[data-pay='pay" + AccountId + "']").html(val.PayableAmount);
                                     $(".scrolltb").find("[data-toids='toids" + AccountId + "']").attr('data-dates', val.ToDate);
                                     $("#toDate" + AccountId).val(val.ToDate);
+
                                     // this.toDate = val.ToDate;
                                     if (val.remittanceArr !== undefined && val.remittanceArr !== 'undefined' && val.remittanceArr.ExceptionAWB !== undefined && val.remittanceArr.ExceptionAWB !== 'undefined') {
                                         this.DisputeArr = val.remittanceArr.ExceptionAWB;
                                     }
                                 });
+
 
                             } else {
                                 this.listPendingRemittanceDataToDate = [];
@@ -645,9 +650,12 @@ export default {
         getPaginationManulaData(pageNum) {
             this.pageno = (pageNum - 1) * 10;
             this.isexport = false;
+            this.listPendingRemittanceData = [];
+            this.listPendingRemittanceDatas = [];
             this.manualCODRemittance();
         },
         manualCODRemittance() {
+
             this.notApproved = 1;
             this.isLoading = true;
 
@@ -667,6 +675,7 @@ export default {
             }
             this.input.offset = this.pageno;
             this.input.limit = 10;
+
 
             axios({
                     method: 'POST',
@@ -1014,6 +1023,7 @@ export default {
         onSearch() {
             this.resultCount = 0;
             this.pagecount = 1;
+            this.pageno = 0;
             if (this.Client.AccountId == null || this.Client.AccountId == 'undefined') {
                 document.getElementById("clienterr").innerHTML = "Client is required.";
                 return false;

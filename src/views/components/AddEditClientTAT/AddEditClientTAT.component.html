@@ -149,6 +149,29 @@
                     </div>
                 </b-collapse>
             </div>
+            <div class="card">
+                <div class="card-body">
+                    <form>
+                        <div class="form-group row">
+                            <div class="col-md-5">
+                                <label>Client <font color="red">*</font></label>
+                                <b-input-group left="<i class='fa fa-list'></i>">
+                                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="clientLoading" />
+                                    <Multiselect :options="ClientAccountList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="AccountName" track-by="AccountId" :data-ClientId="ClientId" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;">
+                                        <template slot="noResult">
+                                    <p>No Record Found.</p>
+                                </template>
+                                    </Multiselect>
+                                </b-input-group <span id="clienterr" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="card-footer" @click="AddEditClientTAT = '0'">
+                            <button @click="searchClientCODRemittanceData" class="btn btn-sm btn-primary" type="button"><i class="fa fa-search"></i> Search</button>
+                            <button class="btn btn-sm btn-danger" @click="resetSearch" type="reset"><i class="fa fa-ban"></i> Clear</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <div class="col-12">
