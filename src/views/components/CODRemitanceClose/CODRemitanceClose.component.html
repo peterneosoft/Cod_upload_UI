@@ -125,12 +125,13 @@
                             <td class="text-center">{{data.PaidAmount}}</td>
                             <td class="text-center">{{data.UTRNo}}</td>
                             <td class="text-center">
-                                <span><a v-bind:title='`${data.CompanyName}`' v-bind:href='`${data.filepath}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a></span>
+                                <span v-if='data.filepath!=null'><a v-bind:title='`${data.CompanyName}`'  v-bind:href='`${data.filepath}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a></span>
+                                <span v-if='data.filepath==null'><a v-bind:title='`${data.CompanyName}`'>NA</a></span>
                             </td>
                         </tr>
                     </tbody>
-                </table><br v-if="isActiveNow==1 && resultCount>0">
-                <paginate v-if="isActiveNow==1 &&  resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+                </table><br v-if="isActiveNow==1 && resultCount>1">
+                <paginate v-if="isActiveNow==1 &&  resultCount>1" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
                 </paginate>
 
                 <!-- Start :: delivary date  -->
@@ -173,12 +174,14 @@
                             <td class="text-center">{{data.PaidAmount}}</td>
                             <td class="text-center">{{data.UTRNo}}</td>
                             <td class="text-center">
-                                <span><a v-bind:title='`${data.CompanyName}`' v-bind:href='`${data.filepath}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a></span>
+                                <span v-if='data.filepath!=null'><a v-bind:title='`${data.CompanyName}`' v-bind:href='`${data.filepath}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a></span>
+                                <span v-if='data.filepath==null'><a v-bind:title='`${data.CompanyName}`'>NA</a></span>
+
                             </td>
                         </tr>
                     </tbody>
-                </table><br v-if="isActiveNow==2 && resultCountDate>0">
-                <paginate v-if="isActiveNow==2 && resultCountDate>0" :page-count="pagecount" :page-range="3" :margin-pages="3" :click-handler="getPaginationDataDate" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+                </table><br v-if="isActiveNow==2 && resultCountDate>1">
+                <paginate v-if="isActiveNow==2 && resultCountDate>1" :page-count="pagecount" :page-range="3" :margin-pages="3" :click-handler="getPaginationDataDate" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
                 </paginate>
                 <!-- End ::  delivary date -->
                 <!-- start : expection report  -->
@@ -218,7 +221,7 @@
                         </tr>
                     </tbody>
                 </table><br v-if="isActiveNow==3 && resultCountException>0">
-                <paginate v-if="isActiveNow==3 && resultCountException>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationDataException" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+                <paginate v-if="isActiveNow==3 && resultCountException>1" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationDataException" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
                 </paginate>
                 <!-- end : exception report  -->
             </div>

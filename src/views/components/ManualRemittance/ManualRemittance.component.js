@@ -515,6 +515,8 @@ export default {
             this.$refs.myReasonModalRef.show();
         },
         getUpdateInScanData() {
+            $(".text-danger").html("");
+
             this.isLoading = true;
             this.input = ({
                 username: this.localuserid
@@ -540,6 +542,7 @@ export default {
                 })
         },
         changeRadio() {
+            $(".text-danger").html("");
             this.Client = [];
             this.Search = 0;
             this.pageno = 0;
