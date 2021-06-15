@@ -92,14 +92,14 @@
                                     <b-form-input disabled @change="onChangeDate(form.FromDate[data.ClientId], form.toDate[data.ClientId], data.ClientId,data.AccountId,data.CompanyName,data.RemittanceType)" type="date" v-model="form.FromDate[data.ClientId]" v-bind:name="setid('FromDate', data.ClientId)"
                                         v-bind:id="setid('FromDate', data.ClientId)" class="form-control"></b-form-input>
                                 </b-input-group>
-                                <span v-bind:id="setid('fdate', data.ClientId)" class="text-danger"></span>
+                                <span v-bind:id="setid('fdate', data.AccountId)" class="text-danger"></span>
                             </td>
                             <td>
                                 <b-input-group :data-toids="'toids'+data.AccountId" :data-dates="data.ToDate" left="<i class='fa fa-calendar'></i>" title="Change To / Delivery Date">
                                     <b-form-input @change="onChangeDate(form.FromDate[data.ClientId], form.toDate[data.ClientId], data.ClientId,data.AccountId,data.CompanyName,data.RemittanceType)" type="date" v-model="form.toDate[data.ClientId]" v-bind:name="setid('toDate', data.ClientId)"
                                         v-bind:id="setid('toDate', data.ClientId)" class="form-control"></b-form-input>
                                 </b-input-group>
-                                <span v-bind:id="setid('tdate', data.ClientId)" class="text-danger"></span>
+                                <span v-bind:id="setid('tdate', data.AccountId)" class="text-danger"></span>
                             </td>
                             <td :data-comp="'comp'+pageno+index+1">{{data.CompanyName}}</td>
                             <td :data-remi="'remi'+data.AccountId">{{data.RemittanceType}}</td>
@@ -120,7 +120,7 @@
                     </tbody>
                 </table>
                 <br v-if="notApproved==1 && resultCount>0">
-                <paginate v-if="notApproved==1 && resultCount>0" :page-count="pagecount" :page-range="3" :margin-pages="3" :click-handler="getPaginationManulaData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+                <paginate v-if="notApproved==1 && resultCount>1" :page-count="pagecount" :page-range="3" :margin-pages="3" :click-handler="getPaginationManulaData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
                 </paginate>
 
                 <table v-if="notApproved==2" class="table-bordered table-hover tbl datatables " style="width:100%;">
@@ -172,7 +172,7 @@
                     </tbody>
                 </table>
                 <br v-if="notApproved==2 && resultCounts>0">
-                <paginate v-if="notApproved==2 && resultCounts>0" :page-count="pagecount" :page-range="3" :margin-pages="3" :click-handler="getPaginationManulaData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+                <paginate v-if="notApproved==2 && resultCounts>1" :page-count="pagecount" :page-range="3" :margin-pages="3" :click-handler="getPaginationManulaData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
                 </paginate>
             </div>
         </div>

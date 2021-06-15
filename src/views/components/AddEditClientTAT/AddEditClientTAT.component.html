@@ -222,7 +222,7 @@
                         </tr>
                     </tbody>
                 </table><br>
-                <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'"></paginate>
+                <paginate v-if="resultCount>1" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'"></paginate>
             </div>
         </div>
         <b-modal v-model="updateModal" id="myModal" @hidden="closeStatusRoleModal" ref="myClosureModalRef">
