@@ -225,7 +225,7 @@
                 <paginate v-if="resultCount>1" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'"></paginate>
             </div>
         </div>
-        <b-modal v-model="updateModal" id="myModal" @hidden="closeStatusRoleModal" ref="myClosureModalRef">
+        <b-modal v-if="edithide==2" v-model="updateModal" id="myModal" @hidden="closeStatusRoleModal" ref="myClosureModalRef">
             <div role="document">
                 <div class="modal-content" style="width: 185%;margin-left: -25%;">
                     <div class="modal-bodyfrm">

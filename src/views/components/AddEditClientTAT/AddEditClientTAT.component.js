@@ -42,6 +42,7 @@ export default {
             myStr: "",
             BankAccount: "",
             AddEditClientTAT: 0,
+            edithide: 1,
             RemittanceDay: [],
             RemittanceDayList: [],
             pageno: 0,
@@ -147,6 +148,7 @@ export default {
             this.editsection = 1;
             this.errors.clear();
             this.editparams = '';
+            this.edithide = 2;
 
             this.Beneficiary = this.BankName = this.BankAccount = this.rtgs = '';
 
@@ -199,6 +201,7 @@ export default {
             this.updateModal = false;
             this.editRecord = 1;
             this.addformshow = 1;
+            this.edithide = 1;
         },
         multiple() {
             return true;
@@ -618,6 +621,7 @@ export default {
 
         },
         onSubmit: function(event) {
+            this.edithide = 1;
             this.$validator.validateAll().then((result) => {
                 if (result) {
                     if (this.ClientCODRemmitanceId != undefined && this.ClientCODRemmitanceId != "") {
@@ -631,6 +635,7 @@ export default {
             });
         },
         onUpdate: function(event) {
+            this.edithide = 2;
             this.$validator.validateAll().then((result) => {
                 if (result) {
                     this.editClientCODRemittanceData(event);
