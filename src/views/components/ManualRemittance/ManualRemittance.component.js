@@ -657,7 +657,7 @@ export default {
 
         },
         getPaginationManulaData(pageNum) {
-            this.pageno = (pageNum - 1) * 1;
+            this.pageno = (pageNum - 1) * 10;
             this.isexport = false;
             this.listPendingRemittanceData = [];
             this.listPendingRemittanceDatas = [];
@@ -747,7 +747,7 @@ export default {
 
         //to get pagination
         getPaginationData(pageNum) {
-            this.pageno = (pageNum - 1) * 20
+            this.pageno = (pageNum - 1) * 10
             this.manualCODRemittance()
         },
 
