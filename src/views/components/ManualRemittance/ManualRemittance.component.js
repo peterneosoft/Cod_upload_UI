@@ -542,12 +542,16 @@ export default {
                 })
         },
         changeRadio() {
+            this.listPendingRemittanceData = [];
+            this.listPendingRemittanceDatas = [];
             $(".text-danger").html("");
             this.Client = [];
             this.Search = 0;
             this.pageno = 0;
             this.newClientId = '';
             this.AccountId = '';
+            this.resultCount = 0;
+            this.pagecount = 1;
             this.isLoading = true;
             this.input = ({
                 username: this.localuserid
