@@ -87,18 +87,18 @@
                         <tr v-if="resultCount>0" v-for="(data,index) in listPendingRemittanceData" v-bind:data-clientids="data.AccountId">
                             <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
                             <td>
-                                <b-form-input type="hidden" v-model="form.oldFromDate[data.ClientId]" v-bind:name="setid('oldFromDate', data.ClientId)" v-bind:id="setid('oldFromDate', data.ClientId)"></b-form-input>
+                                <b-form-input type="hidden" v-model="form.oldFromDate[data.AccountId]" v-bind:name="setid('oldFromDate', data.AccountId)" v-bind:id="setid('oldFromDate', data.AccountId)"></b-form-input>
 
                                 <b-input-group left="<i class='fa fa-calendar'></i>" title="Change From Date">
                                     <b-form-input :data-fromdates="'fromdates'+data.AccountId" disabled @change="onChangeDate(form.FromDate[data.AccountId], form.toDate[data.AccountId], data.ClientId,data.AccountId,data.CompanyName,data.RemittanceType)" type="date" v-model="form.FromDate[data.AccountId]"
-                                        v-bind:name="setid('FromDate', data.ClientId)" v-bind:id="setid('FromDate', data.ClientId)" class="form-control"></b-form-input>
+                                        v-bind:name="setid('FromDate', data.AccountId)" v-bind:id="setid('FromDate', data.AccountId)" class="form-control"></b-form-input>
                                 </b-input-group>
                                 <span v-bind:id="setid('fdate', data.AccountId)" class="text-danger"></span>
                             </td>
                             <td>
                                 <b-input-group :data-toids="'toids'+data.AccountId" :data-dates="data.ToDate" left="<i class='fa fa-calendar'></i>" title="Change To / Delivery Date">
                                     <b-form-input :data-todates="'todates'+data.AccountId" @change="onChangeDate(form.FromDate[data.AccountId], form.toDate[data.AccountId], data.ClientId,data.AccountId,data.CompanyName,data.RemittanceType)" type="date" v-model="form.toDate[data.AccountId]"
-                                        v-bind:name="setid('toDate', data.ClientId)" v-bind:id="setid('toDate', data.ClientId)" class="form-control"></b-form-input>
+                                        v-bind:name="setid('toDate', data.AccountId)" v-bind:id="setid('toDate', data.AccountId)" class="form-control"></b-form-input>
                                 </b-input-group>
                                 <span v-bind:id="setid('tdate', data.AccountId)" class="text-danger"></span>
                             </td>
@@ -113,8 +113,8 @@
                             </td>
                             <td :data-pay="'pay'+data.AccountId">{{data.PayableAmount}}</td>
                             <td>
-                                <button v-if="recordType=='tatoverdue' && data.PayableAmount>0" class="btn btn-sm btn-primary" @click="onRemittance(form.FromDate[data.ClientId], form.toDate[data.ClientId], data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button>
-                                <button v-if="recordType=='adhoc' && data.PayableAmount>0" class="btn btn-sm btn-primary" @click="onAdHoctance(form.FromDate[data.ClientId], form.toDate[data.ClientId], data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button>
+                                <button v-if="recordType=='tatoverdue' && data.PayableAmount>0" class="btn btn-sm btn-primary" @click="onRemittance(form.FromDate[data.AccountId], form.toDate[data.AccountId], data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button>
+                                <button v-if="recordType=='adhoc' && data.PayableAmount>0" class="btn btn-sm btn-primary" @click="onAdHoctance(form.FromDate[data.AccountId], form.toDate[data.AccountId], data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button>
                                 <button @click="exportData(data.FromDate,data.ClientId,data.AccountId,data.CompanyName)" class="btn btn-sm btn-danger" title="Download Remittance Report" type="button" style="width: 50px;"><i class="fa fa-download"></i></button>
                             </td>
                         </tr>

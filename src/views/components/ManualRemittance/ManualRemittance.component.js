@@ -221,7 +221,7 @@ export default {
                 return false;
             } else if (toDate > this.form.oldToDate[AccountId]) {
 
-                let tdate = new Date(this.form.oldToDate[ClientId]);
+                let tdate = new Date(this.form.oldToDate[AccountId]);
                 document.getElementById("tdate" + AccountId).innerHTML = "To / Delivery date should not be greater than " + (tdate.getDate() <= 9 ? '0' + tdate.getDate() : tdate.getDate()) + "/" + ((tdate.getMonth() + 1) <= 9 ? '0' + (tdate.getMonth() + 1) : (tdate.getMonth() + 1)) + "/" + tdate.getFullYear();
                 return false;
             } else if (fromDate < this.form.oldFromDate[AccountId]) {
@@ -313,19 +313,19 @@ export default {
 
         onRemittance(fromDate, toDate, data) {
             this.notApproved = 1;
-            if ((!fromDate || !this.form.oldFromDate[data.ClientId]) || (!toDate || !this.form.oldToDate[data.ClientId])) {
+            if ((!fromDate || !this.form.oldFromDate[data.AccountId]) || (!toDate || !this.form.oldToDate[data.AccountId])) {
 
                 this.$alertify.error('From date & To / Delivery date should not be empty.');
                 return false;
-            } else if (fromDate != this.form.oldFromDate[data.ClientId]) {
+            } else if (fromDate != this.form.oldFromDate[data.AccountId]) {
 
-                let fdate = new Date(this.form.oldFromDate[data.ClientId]);
+                let fdate = new Date(this.form.oldFromDate[data.AccountId]);
                 this.ofd = 'Remittance for client ' + data.CompanyName + ', From date should be: ' + (fdate.getDate() <= 9 ? '0' + fdate.getDate() : fdate.getDate()) + "/" + ((fdate.getMonth() + 1) <= 9 ? '0' + (fdate.getMonth() + 1) : (fdate.getMonth() + 1)) + "/" + fdate.getFullYear();
                 this.showModal();
                 return false;
-            } else if (toDate > this.form.oldToDate[data.ClientId]) {
+            } else if (toDate > this.form.oldToDate[data.AccountId]) {
 
-                let tdate = new Date(this.form.oldToDate[data.ClientId]);
+                let tdate = new Date(this.form.oldToDate[data.AccountId]);
                 this.ofd = 'Remittance for client ' + data.CompanyName + ', To / Delivery date should be: ' + (tdate.getDate() <= 9 ? '0' + tdate.getDate() : tdate.getDate()) + "/" + ((tdate.getMonth() + 1) <= 9 ? '0' + (tdate.getMonth() + 1) : (tdate.getMonth() + 1)) + "/" + tdate.getFullYear();
                 this.showModal();
                 return false;
@@ -350,19 +350,19 @@ export default {
         okButtonClicked(fromDate, toDate, data) {
             this.isLoading = true;
             this.notApproved = 1;
-            if ((!fromDate || !this.form.oldFromDate[data.ClientId]) || (!toDate || !this.form.oldToDate[data.ClientId])) {
+            if ((!fromDate || !this.form.oldFromDate[data.AccountId]) || (!toDate || !this.form.oldToDate[data.AccountId])) {
 
                 this.$alertify.error('From date & To / Delivery date should not be empty.');
                 return false;
-            } else if (fromDate != this.form.oldFromDate[data.ClientId]) {
+            } else if (fromDate != this.form.oldFromDate[data.AccountId]) {
 
-                let fdate = new Date(this.form.oldFromDate[data.ClientId]);
+                let fdate = new Date(this.form.oldFromDate[data.AccountId]);
                 this.ofd = 'Remittance for client ' + data.CompanyName + ', From date should be: ' + (fdate.getDate() <= 9 ? '0' + fdate.getDate() : fdate.getDate()) + "/" + ((fdate.getMonth() + 1) <= 9 ? '0' + (fdate.getMonth() + 1) : (fdate.getMonth() + 1)) + "/" + fdate.getFullYear();
                 this.showModal();
                 return false;
-            } else if (toDate > this.form.oldToDate[data.ClientId]) {
+            } else if (toDate > this.form.oldToDate[data.AccountId]) {
 
-                let tdate = new Date(this.form.oldToDate[data.ClientId]);
+                let tdate = new Date(this.form.oldToDate[data.AccountId]);
                 this.ofd = 'Remittance for client ' + data.CompanyName + ', To / Delivery date should be: ' + (tdate.getDate() <= 9 ? '0' + tdate.getDate() : tdate.getDate()) + "/" + ((tdate.getMonth() + 1) <= 9 ? '0' + (tdate.getMonth() + 1) : (tdate.getMonth() + 1)) + "/" + tdate.getFullYear();
                 this.showModal();
                 return false;
@@ -385,7 +385,7 @@ export default {
                 if (this.recordType == 'AdHoc') {
 
                     this.input = ({
-                        FromDate: this.form.oldFromDate[data.ClientId],
+                        FromDate: this.form.oldFromDate[data.AccountId],
                         ToDate: this.todatesChanged,
                         ShipmentCount: data.ShipmentCount,
                         AccountId: data.AccountId,
@@ -425,7 +425,7 @@ export default {
                     })
                 } else {
                     this.input = ({
-                        FromDate: this.form.oldFromDate[data.ClientId],
+                        FromDate: this.form.oldFromDate[data.AccountId],
                         ToDate: this.todatesChanged,
                         ShipmentCount: data.ShipmentCount,
                         CompanyName: data.CompanyName,
@@ -465,19 +465,19 @@ export default {
         },
         onAdHoctance(fromDate, toDate, data) {
             this.notApproved = 1;
-            if ((!fromDate || !this.form.oldFromDate[data.ClientId]) || (!toDate || !this.form.oldToDate[data.ClientId])) {
+            if ((!fromDate || !this.form.oldFromDate[data.AccountId]) || (!toDate || !this.form.oldToDate[data.AccountId])) {
 
                 this.$alertify.error('From date & To / Delivery date should not be empty.');
                 return false;
-            } else if (fromDate != this.form.oldFromDate[data.ClientId]) {
+            } else if (fromDate != this.form.oldFromDate[data.AccountId]) {
 
-                let fdate = new Date(this.form.oldFromDate[data.ClientId]);
+                let fdate = new Date(this.form.oldFromDate[data.AccountId]);
                 this.ofd = 'Remittance for client ' + data.CompanyName + ', From date should be: ' + (fdate.getDate() <= 9 ? '0' + fdate.getDate() : fdate.getDate()) + "/" + ((fdate.getMonth() + 1) <= 9 ? '0' + (fdate.getMonth() + 1) : (fdate.getMonth() + 1)) + "/" + fdate.getFullYear();
                 this.showModal();
                 return false;
-            } else if (toDate > this.form.oldToDate[data.ClientId]) {
+            } else if (toDate > this.form.oldToDate[data.AccountId]) {
 
-                let tdate = new Date(this.form.oldToDate[data.ClientId]);
+                let tdate = new Date(this.form.oldToDate[data.AccountId]);
                 this.ofd = 'Remittance for client ' + data.CompanyName + ', To / Delivery date should be: ' + (tdate.getDate() <= 9 ? '0' + tdate.getDate() : tdate.getDate()) + "/" + ((tdate.getMonth() + 1) <= 9 ? '0' + (tdate.getMonth() + 1) : (tdate.getMonth() + 1)) + "/" + tdate.getFullYear();
                 this.showModal();
                 return false;
@@ -717,14 +717,14 @@ export default {
                             this.form.toDate[val.AccountId] = val.ToDate;
                             this.form.FromDate[val.AccountId] = val.FromDate;
 
-                            this.form.oldToDate[val.ClientId] = null;
-                            this.form.oldFromDate[val.ClientId] = null;
+                            this.form.oldToDate[val.AccountId] = null;
+                            this.form.oldFromDate[val.AccountId] = null;
 
-                            if (this.form.oldFromDate[val.ClientId] == null) {
-                                this.form.oldFromDate[val.ClientId] = val.FromDate;
+                            if (this.form.oldFromDate[val.AccountId] == null) {
+                                this.form.oldFromDate[val.AccountId] = val.FromDate;
                             }
-                            if (this.form.oldToDate[val.ClientId] == null) {
-                                this.form.oldToDate[val.ClientId] = val.ToDate;
+                            if (this.form.oldToDate[val.AccountId] == null) {
+                                this.form.oldToDate[val.AccountId] = val.ToDate;
                             }
                             $(".datechecker").find("[data-fromdates='fromdates" + val.AccountId + "']").val(val.FromDate);
                             $(".datechecker").find("[data-todates='toids" + val.AccountId + "']").val(val.ToDate);
@@ -866,21 +866,21 @@ export default {
                                 }]
 
 
-                                this.form.toDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.ToDate;
-                                this.form.FromDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.FromDate;
+                                this.form.toDate[result.data.remittanceObj.AccountId] = result.data.remittanceObj.ToDate;
+                                this.form.FromDate[result.data.remittanceObj.AccountId] = result.data.remittanceObj.FromDate;
 
-                                this.form.oldToDate[result.data.remittanceObj.ClientId] = null;
-                                this.form.oldFromDate[result.data.remittanceObj.ClientId] = null;
+                                this.form.oldToDate[result.data.remittanceObj.AccountId] = null;
+                                this.form.oldFromDate[result.data.remittanceObj.AccountId] = null;
 
-                                if (this.form.oldFromDate[result.data.remittanceObj.ClientId] == null) {
-                                    this.form.oldFromDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.FromDate;
+                                if (this.form.oldFromDate[result.data.remittanceObj.AccountId] == null) {
+                                    this.form.oldFromDate[result.data.remittanceObj.AccountId] = result.data.remittanceObj.FromDate;
                                 }
-                                if (this.form.oldToDate[result.data.remittanceObj.ClientId] == null) {
-                                    this.form.oldToDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.ToDate;
+                                if (this.form.oldToDate[result.data.remittanceObj.AccountId] == null) {
+                                    this.form.oldToDate[result.data.remittanceObj.AccountId] = result.data.remittanceObj.ToDate;
                                 }
 
-                                $('#FromDate' + result.data.remittanceObj.ClientId).val(result.data.remittanceObj.FromDate);
-                                $('#toDate' + result.data.remittanceObj.ClientId).val(result.data.remittanceObj.ToDate);
+                                $('#FromDate' + result.data.remittanceObj.AccountId).val(result.data.remittanceObj.FromDate);
+                                $('#toDate' + result.data.remittanceObj.AccountId).val(result.data.remittanceObj.ToDate);
 
                                 this.listPendingRemittanceData = [];
                                 this.listPendingRemittanceData = newRemittedArrays;
@@ -962,8 +962,8 @@ export default {
                                 'ShipmentCount': result.data.remittanceObj.ShipmentCount,
                             }]
 
-                            this.form.toDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.ToDate;
-                            this.form.FromDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.FromDate;
+                            this.form.toDate[result.data.remittanceObj.AccountId] = result.data.remittanceObj.ToDate;
+                            this.form.FromDate[result.data.remittanceObj.AccountId] = result.data.remittanceObj.FromDate;
 
                             // this.form.oldToDate[result.data.remittanceObj.ClientId] = null;
                             // this.form.oldFromDate[result.data.remittanceObj.ClientId] = null;
@@ -975,8 +975,8 @@ export default {
                             //     this.form.oldToDate[result.data.remittanceObj.ClientId] = result.data.remittanceObj.ToDate;
                             // }
 
-                            $('#FromDate' + result.data.remittanceObj.ClientId).val(result.data.remittanceObj.FromDate);
-                            $('#toDate' + result.data.remittanceObj.ClientId).val(result.data.remittanceObj.ToDate);
+                            $('#FromDate' + result.data.remittanceObj.AccountId).val(result.data.remittanceObj.FromDate);
+                            $('#toDate' + result.data.remittanceObj.AccountId).val(result.data.remittanceObj.ToDate);
                             this.listPendingRemittanceData = [];
                             this.listPendingRemittanceDatas = [];
                             this.listPendingRemittanceData = newRemittedArrays;
@@ -1019,8 +1019,8 @@ export default {
                     })
                     .then(result => {
                         if (result.data.code == 200) {
-                            this.form.oldToDate[ClientId] = this.form.ToDate[ClientId] = result.data.data[0].ToDate;
-                            this.form.oldFromDate[ClientId] = this.form.FromDate[ClientId] = result.data.data[0].FromDate;
+                            this.form.oldToDate[AccountId] = this.form.ToDate[AccountId] = result.data.data[0].ToDate;
+                            this.form.oldFromDate[AccountId] = this.form.FromDate[AccountId] = result.data.data[0].FromDate;
                             this.listPendingRemittanceData = result.data.data;
                             this.resultCount = result.data.data.length;
                             this.isLoading = false;
