@@ -119,6 +119,7 @@ export default {
                 day: "Saturday"
             }
         ];
+
     },
 
     methods: {
@@ -142,6 +143,31 @@ export default {
             }
         },
         async getSVCRowData(data) {
+            this.RemittanceDayListedit = [{
+                    day: "Daily"
+                },
+                {
+                    day: "Sunday"
+                },
+                {
+                    day: "Monday"
+                },
+                {
+                    day: "Tuesday"
+                },
+                {
+                    day: "Wednesday"
+                },
+                {
+                    day: "Thursday"
+                },
+                {
+                    day: "Friday"
+                },
+                {
+                    day: "Saturday"
+                }
+            ];
             this.addformshow = 2;
             this.updateModal = true;
             this.$validator.reset();
@@ -200,8 +226,7 @@ export default {
             this.addformshow = 1;
             this.updateModal = false;
             this.editRecord = 1;
-            this.addformshow = 1;
-            this.edithide = 1;
+            // this.edithide = 1;
         },
         multiple() {
             return true;
@@ -385,7 +410,31 @@ export default {
             })
         },
         saveClientCODRemittanceData(event) {
-
+            this.RemittanceDayList = [{
+                    day: "Daily"
+                },
+                {
+                    day: "Sunday"
+                },
+                {
+                    day: "Monday"
+                },
+                {
+                    day: "Tuesday"
+                },
+                {
+                    day: "Wednesday"
+                },
+                {
+                    day: "Thursday"
+                },
+                {
+                    day: "Friday"
+                },
+                {
+                    day: "Saturday"
+                }
+            ];
             let dData = [];
             this.RemittanceDay.forEach(function(val) {
                 if (val.day != 'Daily') {
@@ -424,6 +473,12 @@ export default {
                     }
                 })
                 .then((response) => {
+                    this.getCleintWithAccountName();
+                    this.ContactEmailid = '';
+                    this.rtgs = '';
+                    this.BankAccount = '';
+                    this.BankName = '';
+                    this.Beneficiary = '';
                     if (response.data.errorCode == 0) {
                         this.submitLoading = false;
                         this.AddEditClientTAT = 0;
@@ -512,6 +567,12 @@ export default {
                 .then((response) => {
                     this.resetForm(event);
                     this.addformshow = 1;
+                    this.getCleintWithAccountName();
+                    this.ContactEmailid = '';
+                    this.rtgs = '';
+                    this.BankAccount = '';
+                    this.BankName = '';
+                    this.Beneficiary = '';
                     if (response.data.errorCode == 0) {
 
                         this.$alertify.success(response.data.msg);
@@ -636,6 +697,7 @@ export default {
         },
         onUpdate: function(event) {
             this.edithide = 2;
+
             this.$validator.validateAll().then((result) => {
                 if (result) {
                     this.editClientCODRemittanceData(event);
