@@ -201,7 +201,7 @@ export default {
         },
 
         onChangeDate(fromDate, toDate, ClientId, AccountId, CompanyName, RemittanceType, index) {
-
+            $(".text-danger").html("");
             this.notApproved = 1;
             if (!toDate || !fromDate) {
 
@@ -219,14 +219,14 @@ export default {
 
                 document.getElementById("tdate" + AccountId).innerHTML = "To / Delivery date should not be less than From date.";
                 return false;
-            } else if (toDate > this.form.oldToDate[ClientId]) {
+            } else if (toDate > this.form.oldToDate[AccountId]) {
 
                 let tdate = new Date(this.form.oldToDate[ClientId]);
                 document.getElementById("tdate" + AccountId).innerHTML = "To / Delivery date should not be greater than " + (tdate.getDate() <= 9 ? '0' + tdate.getDate() : tdate.getDate()) + "/" + ((tdate.getMonth() + 1) <= 9 ? '0' + (tdate.getMonth() + 1) : (tdate.getMonth() + 1)) + "/" + tdate.getFullYear();
                 return false;
-            } else if (fromDate < this.form.oldFromDate[ClientId]) {
+            } else if (fromDate < this.form.oldFromDate[AccountId]) {
 
-                let fdate = new Date(this.form.oldFromDate[ClientId]);
+                let fdate = new Date(this.form.oldFromDate[AccountId]);
                 document.getElementById("fdate" + AccountId).innerHTML = "From date should not be less than " + (fdate.getDate() <= 9 ? '0' + fdate.getDate() : fdate.getDate()) + "/" + ((fdate.getMonth() + 1) <= 9 ? '0' + (fdate.getMonth() + 1) : (fdate.getMonth() + 1)) + "/" + fdate.getFullYear();
                 return false;
             } else {
@@ -596,7 +596,7 @@ export default {
             this.payApproved();
         },
         payApproved() {
-
+            this.notApproved = 2;
             // this.Client = [];
             // this.Search = 0;
             this.resultCount = 0;
@@ -657,7 +657,7 @@ export default {
 
         },
         getPaginationManulaData(pageNum) {
-            this.pageno = (pageNum - 1) * 10;
+            this.pageno = (pageNum - 1) * 1;
             this.isexport = false;
             this.listPendingRemittanceData = [];
             this.listPendingRemittanceDatas = [];
@@ -669,6 +669,8 @@ export default {
             this.isLoading = true;
 
             // url: apiUrl.api_url + 'manualcodremittance?CreatedBy=' + this.localuserid + '&oldFromDate=' + this.fromDate + '&fromDate=' + this.fromDate + '&toDate=' + this.toDate + '&offset=' + this.pageno + '&limit=' + 20,
+
+
             this.input = ({
                 username: this.localuserid,
                 overdueremittance: this.overdueFilter
@@ -712,8 +714,8 @@ export default {
                             this.pagecount = Math.ceil(totalRows / 10)
                         }
                         this.listPendingRemittanceData.forEach((val, key) => {
-                            this.form.toDate[val.ClientId] = val.ToDate;
-                            this.form.FromDate[val.ClientId] = val.FromDate;
+                            this.form.toDate[val.AccountId] = val.ToDate;
+                            this.form.FromDate[val.AccountId] = val.FromDate;
 
                             this.form.oldToDate[val.ClientId] = null;
                             this.form.oldFromDate[val.ClientId] = null;
@@ -724,9 +726,11 @@ export default {
                             if (this.form.oldToDate[val.ClientId] == null) {
                                 this.form.oldToDate[val.ClientId] = val.ToDate;
                             }
+                            $(".datechecker").find("[data-fromdates='fromdates" + val.AccountId + "']").val(val.FromDate);
+                            $(".datechecker").find("[data-todates='toids" + val.AccountId + "']").val(val.ToDate);
 
-                            $('#FromDate' + val.ClientId).val(val.FromDate);
-                            $('#toDate' + val.ClientId).val(val.ToDate);
+                            // $('#FromDate' + val.AccountId).val(val.FromDate);
+                            // $('#toDate' + val.AccountId).val(val.ToDate);
                         });
 
                     } else {
