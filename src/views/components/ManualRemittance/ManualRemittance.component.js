@@ -288,7 +288,10 @@ export default {
                                     $(".scrolltb").find("[data-foregi='foregi" + AccountId + "']").html(val.FreightAmount);
                                     $(".scrolltb").find("[data-excep='excep" + AccountId + "']").html(val.ExceptionAmount);
                                     $(".scrolltb").find("[data-pay='pay" + AccountId + "']").html(val.PayableAmount);
+                                    $(".scrolltb").find("[data-fromids='fromids" + AccountId + "']").attr('data-fromdates', val.FromDate);
                                     $(".scrolltb").find("[data-toids='toids" + AccountId + "']").attr('data-dates', val.ToDate);
+
+                                    $("#FromDate" + AccountId).val(val.FromDate);
                                     $("#toDate" + AccountId).val(val.ToDate);
 
                                     // this.toDate = val.ToDate;
@@ -380,7 +383,7 @@ export default {
 
                 this.closeModal();
                 this.recordType = this.selected;
-                this.todatesChanged = $(".scrolltb").find("[data-toids='toids" + data.AccountId + "']").attr("data-dates");
+                this.todatesChanged = this.newtodate;
 
                 if (this.recordType == 'AdHoc') {
 
@@ -424,6 +427,8 @@ export default {
                         this.$alertify.error('Error Occured');
                     })
                 } else {
+                    this.listPendingRemittanceData = [];
+                    this.listPendingRemittanceDatas = [];
                     this.input = ({
                         FromDate: this.form.oldFromDate[data.AccountId],
                         ToDate: this.todatesChanged,

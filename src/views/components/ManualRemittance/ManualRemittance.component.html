@@ -89,7 +89,7 @@
                             <td>
                                 <b-form-input type="hidden" v-model="form.oldFromDate[data.AccountId]" v-bind:name="setid('oldFromDate', data.AccountId)" v-bind:id="setid('oldFromDate', data.AccountId)"></b-form-input>
 
-                                <b-input-group left="<i class='fa fa-calendar'></i>" title="Change From Date">
+                                <b-input-group :data-fromids="'fromids'+data.AccountId" :data-fromdates="data.FromDate" left="<i class='fa fa-calendar'></i>" title="Change From Date">
                                     <b-form-input :data-fromdates="'fromdates'+data.AccountId" disabled @change="onChangeDate(form.FromDate[data.AccountId], form.toDate[data.AccountId], data.ClientId,data.AccountId,data.CompanyName,data.RemittanceType)" type="date" v-model="form.FromDate[data.AccountId]"
                                         v-bind:name="setid('FromDate', data.AccountId)" v-bind:id="setid('FromDate', data.AccountId)" class="form-control"></b-form-input>
                                 </b-input-group>
