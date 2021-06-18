@@ -256,135 +256,138 @@ export default {
         },
 
         GetCODRemittanceDetailsDataTemp(event) {
+            this.$validator.validateAll().then((result) => {
+                if (result) {
+                    if (this.selected) {
+                        let diffTime = Math.abs(new Date(this.toDate) - new Date(this.fromDate));
+                        let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-            if (this.selected) {
-                let diffTime = Math.abs(new Date(this.toDate) - new Date(this.fromDate));
-                let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                if (diffDays > 30) {
-                    document.getElementById("fdate").innerHTML = "Difference between From date & To date should not be greater than 30 days.";
-                    return false;
-                } else if (this.fromDate > this.toDate) {
-                    document.getElementById("fdate").innerHTML = "From date should not be greater than To date.";
-                    return false;
-                } else {
-                    document.getElementById("fdate").innerHTML = "";
-                }
-                document.getElementById("opt").innerHTML = "";
-            } else {
-                document.getElementById("opt").innerHTML = "Please choose atleast one option ( Delivery Date OR Transaction Date ).";
-                return false;
-            }
-
-            let cData = [];
-            let accountData = [];
-            if (this.SearchClientIds.length > 0) {
-                cData = this.SearchClientIds;
-                accountData = this.SearchClientAccountIds;
-            } else {
-                if ($.isArray(this.ClientId) === false) {
-                    this.ClientId = new Array(this.ClientId);
-                }
-
-                this.ClientId.forEach(function(val) {
-                    accountData.push(val.AccountId);
-                    cData.push(val.ClientId);
-                });
-            }
-
-            this.input = ({
-                username: this.localuserid
-            });
-
-            if (accountData) {
-                this.input.AccountId = accountData
-            }
-            if (cData) {
-                this.input.ClientId = cData
-            }
-
-            this.input.isexport = this.isexport;
-
-            if (this.fromDate) {
-                this.input.TransactionFromDate = this.fromDate;
-            }
-
-            if (this.toDate) {
-                this.input.TransactionToDate = this.toDate;
-            }
-            this.input.offset = this.pageno;
-            this.input.limit = 10;
-
-            this.isLoading = true;
-            axios({
-                    method: 'POST',
-                    'url': apiUrl.api_url + 'getRemittedClientData',
-                    'data': this.input,
-                    headers: {
-                        'Authorization': 'Bearer ' + this.myStr
-                    }
-                })
-                .then(result => {
-                    this.resultCountDate = 0;
-                    if (result.data.code == 200) {
-                        if (this.isexport === false) {
-                            this.listCODRemitanceDataDate = [];
-                            this.listCODRemitanceData = [];
-                            this.listCODRemitanceData = result.data.remittanceArr;
-                            this.isLoading = false;
-
-                            let totalRows = result.data.count;
-                            this.resultCount = result.data.count;
-                            if (totalRows < 10) {
-                                this.pagecount = 1
-                            } else {
-                                this.pagecount = Math.ceil(totalRows / 10)
-                            }
-                            this.exportf = true;
+                        if (diffDays > 30) {
+                            document.getElementById("fdate").innerHTML = "Difference between From date & To date should not be greater than 30 days.";
+                            return false;
+                        } else if (this.fromDate > this.toDate) {
+                            document.getElementById("fdate").innerHTML = "From date should not be greater than To date.";
+                            return false;
+                        } else {
+                            document.getElementById("fdate").innerHTML = "";
                         }
-                        /**
-                         * excel download
-                         * @param  {[type]} this [description]
-                         * @return {[type]}      [description]
-                         */
-                        if (this.isexport === true) {
-                            this.isLoading = true;
-                            if (result.data.remittanceArr.length > 0) {
-                                let fetchResult = result.data.remittanceArr;
-                                let newResult = [];
-                                fetchResult.forEach((item, i) => {
-                                    let testTemp = {};
-
-                                    testTemp.ClientId = item.ClientId;
-                                    testTemp.clientremittedid = item.clientremittedid;
-                                    testTemp.CompanyName = item.CompanyName;
-                                    testTemp.RemittanceType = item.RemittanceType;
-                                    testTemp.Cycle = item.Cycle;
-                                    testTemp.ShipmentCount = item.ShipmentCount;
-                                    testTemp.CODAmount = item.CODAmount;
-                                    testTemp.FreightAmount = item.FreightAmount;
-                                    testTemp.ExceptionAmount = item.ExceptionAmount;
-                                    testTemp.PaidAmount = item.PaidAmount;
-                                    testTemp.UTRNo = item.UTRNo;
-                                    testTemp.filepath = item.filepath;
-
-                                    newResult.push(testTemp);
-                                });
-                                this.filename = 'COD_Transaction_Remitance';
-                                this.getDownloadCsvObject(newResult);
-                            } else {
-                                this.$alertify.error('Sorry..! no record found for excel download.');
-                            }
-                        }
-                        // this.exportCODRemittanceDetailsData();
+                        document.getElementById("opt").innerHTML = "";
                     } else {
-                        this.resultCount = 0;
-                        this.isLoading = false;
+                        document.getElementById("opt").innerHTML = "Please choose atleast one option ( Delivery Date OR Transaction Date ).";
+                        return false;
                     }
-                }, error => {
-                    console.error(error)
-                    this.$alertify.error('Error Occured');
-                })
+
+                    let cData = [];
+                    let accountData = [];
+                    if (this.SearchClientIds.length > 0) {
+                        cData = this.SearchClientIds;
+                        accountData = this.SearchClientAccountIds;
+                    } else {
+                        if ($.isArray(this.ClientId) === false) {
+                            this.ClientId = new Array(this.ClientId);
+                        }
+
+                        this.ClientId.forEach(function(val) {
+                            accountData.push(val.AccountId);
+                            cData.push(val.ClientId);
+                        });
+                    }
+
+                    this.input = ({
+                        username: this.localuserid
+                    });
+
+                    if (accountData) {
+                        this.input.AccountId = accountData
+                    }
+                    if (cData) {
+                        this.input.ClientId = cData
+                    }
+
+                    this.input.isexport = this.isexport;
+
+                    if (this.fromDate) {
+                        this.input.TransactionFromDate = this.fromDate;
+                    }
+
+                    if (this.toDate) {
+                        this.input.TransactionToDate = this.toDate;
+                    }
+                    this.input.offset = this.pageno;
+                    this.input.limit = 10;
+
+                    this.isLoading = true;
+                    axios({
+                            method: 'POST',
+                            'url': apiUrl.api_url + 'getRemittedClientData',
+                            'data': this.input,
+                            headers: {
+                                'Authorization': 'Bearer ' + this.myStr
+                            }
+                        })
+                        .then(result => {
+                            this.resultCountDate = 0;
+                            if (result.data.code == 200) {
+                                if (this.isexport === false) {
+                                    this.listCODRemitanceDataDate = [];
+                                    this.listCODRemitanceData = [];
+                                    this.listCODRemitanceData = result.data.remittanceArr;
+                                    this.isLoading = false;
+
+                                    let totalRows = result.data.count;
+                                    this.resultCount = result.data.count;
+                                    if (totalRows < 10) {
+                                        this.pagecount = 1
+                                    } else {
+                                        this.pagecount = Math.ceil(totalRows / 10)
+                                    }
+                                    this.exportf = true;
+                                }
+                                /**
+                                 * excel download
+                                 * @param  {[type]} this [description]
+                                 * @return {[type]}      [description]
+                                 */
+                                if (this.isexport === true) {
+                                    this.isLoading = true;
+                                    if (result.data.remittanceArr.length > 0) {
+                                        let fetchResult = result.data.remittanceArr;
+                                        let newResult = [];
+                                        fetchResult.forEach((item, i) => {
+                                            let testTemp = {};
+
+                                            testTemp.ClientId = item.ClientId;
+                                            testTemp.clientremittedid = item.clientremittedid;
+                                            testTemp.CompanyName = item.CompanyName;
+                                            testTemp.RemittanceType = item.RemittanceType;
+                                            testTemp.Cycle = item.Cycle;
+                                            testTemp.ShipmentCount = item.ShipmentCount;
+                                            testTemp.CODAmount = item.CODAmount;
+                                            testTemp.FreightAmount = item.FreightAmount;
+                                            testTemp.ExceptionAmount = item.ExceptionAmount;
+                                            testTemp.PaidAmount = item.PaidAmount;
+                                            testTemp.UTRNo = item.UTRNo;
+                                            testTemp.filepath = item.filepath;
+
+                                            newResult.push(testTemp);
+                                        });
+                                        this.filename = 'COD_Transaction_Remitance';
+                                        this.getDownloadCsvObject(newResult);
+                                    } else {
+                                        this.$alertify.error('Sorry..! no record found for excel download.');
+                                    }
+                                }
+                                // this.exportCODRemittanceDetailsData();
+                            } else {
+                                this.resultCount = 0;
+                                this.isLoading = false;
+                            }
+                        }, error => {
+                            console.error(error)
+                            this.$alertify.error('Error Occured');
+                        })
+                }
+            });
         },
         /**
          * download csv file
@@ -463,131 +466,134 @@ export default {
             this.GetCODRemittanceDetailsDataExceptionTemp();
         },
         GetCODRemittanceDetailsDataExceptionTemp(event) {
-
-            if (this.selected) {
-                if (this.fromDate > this.toDate) {
-                    document.getElementById("fdate").innerHTML = "From date should not be greater than To date.";
-                    return false;
-                } else {
-                    document.getElementById("fdate").innerHTML = "";
-                }
-                document.getElementById("opt").innerHTML = "";
-            } else {
-                document.getElementById("opt").innerHTML = "Please choose atleast one option ( Delivery Date OR Transaction Date ).";
-                return false;
-            }
-
-            let cData = [];
-            let accountData = [];
-            if (this.SearchClientIds.length > 0) {
-                cData = this.SearchClientIds;
-                accountData = this.SearchClientAccountIds;
-            } else {
-                if ($.isArray(this.ClientId) === false) {
-                    this.ClientId = new Array(this.ClientId);
-                }
-
-                this.ClientId.forEach(function(val) {
-                    accountData.push(val.AccountId);
-                    cData.push(val.ClientId);
-                });
-            }
-
-            this.input = ({
-                username: this.localuserid
-            });
-
-            if (accountData) {
-                this.input.AccountId = accountData
-            }
-
-            if (cData) {
-                this.input.ClientId = cData
-            }
-            this.input.isexport = this.isexport;
-
-            if (this.fromDate) {
-                this.input.DeliveryFromDate = this.fromDate;
-            }
-
-            if (this.toDate) {
-                this.input.DeliveryToDate = this.toDate;
-            }
-            this.input.offset = this.pageno;
-            this.input.limit = 10;
-
-            this.isLoading = true;
-            axios({
-                    method: 'POST',
-                    'url': apiUrl.api_url + 'get-exception-report',
-                    'data': this.input,
-                    headers: {
-                        'Authorization': 'Bearer ' + this.myStr
-                    }
-                })
-                .then(result => {
-
-                    if (result.data.code === 200) {
-                        if (this.isexport === false) {
-                            this.resultCountException = 0;
-                            this.listCODPaymentData = result.data.shipmentArr;
-                            this.isLoading = false;
-
-                            let totalRows = result.data.count;
-                            this.resultCountException = result.data.count;
-
-                            if (totalRows < 10) {
-                                this.pagecount = 1
-                            } else {
-                                this.pagecount = Math.ceil(totalRows / 10)
-                            }
-                            this.exportf = true;
+            this.$validator.validateAll().then((result) => {
+                if (result) {
+                    if (this.selected) {
+                        if (this.fromDate > this.toDate) {
+                            document.getElementById("fdate").innerHTML = "From date should not be greater than To date.";
+                            return false;
+                        } else {
+                            document.getElementById("fdate").innerHTML = "";
                         }
-                        /**
-                         * excel download
-                         * @param  {[type]} this [description]
-                         * @return {[type]}      [description]
-                         */
-                        if (this.isexport === true) {
-
-                            this.isLoading = true;
-                            if (result.data.shipmentArr.length > 0) {
-                                let fetchResult = result.data.shipmentArr;
-                                let newResult = [];
-                                fetchResult.forEach((item, i) => {
-                                    let testTemp = {};
-
-                                    testTemp.ShippingDate = this.format_date(item.ShippingDate);
-                                    testTemp.POID = item.POID;
-                                    testTemp.ShippingID = item.ShippingID;
-                                    testTemp.CompanyName = item.CompanyName;
-                                    testTemp.HubName = item.HubName;
-                                    testTemp.COD = 'COD';
-                                    testTemp.Delivered = item.newStatus;
-                                    testTemp.DeliveryDate = this.format_date(item.DeliveryDate);
-                                    testTemp.NetPayment = item.NetPayment;
-                                    testTemp.RemittanceDate = this.format_date(item.RemittanceDate);
-
-                                    newResult.push(testTemp);
-                                });
-                                this.filename = 'COD_ExceptionReport';
-                                this.getDownloadCsvObject(newResult);
-                            } else {
-                                this.$alertify.error('Sorry..! no record found for excel download.');
-                            }
-                        }
-                        // this.exportCODRemittanceDetailsData();
+                        document.getElementById("opt").innerHTML = "";
                     } else {
-                        this.listCODRemitanceDataDate = [];
-                        this.listCODPaymentData = [];
-                        this.resultCountDate = 0;
-                        this.resultCount = 0;
-                        this.isLoading = false;
+                        document.getElementById("opt").innerHTML = "Please choose atleast one option ( Delivery Date OR Transaction Date ).";
+                        return false;
                     }
-                }, error => {
-                    console.error(error)
-                    this.$alertify.error('Error Occured');
-                })
+
+                    let cData = [];
+                    let accountData = [];
+                    if (this.SearchClientIds.length > 0) {
+                        cData = this.SearchClientIds;
+                        accountData = this.SearchClientAccountIds;
+                    } else {
+                        if ($.isArray(this.ClientId) === false) {
+                            this.ClientId = new Array(this.ClientId);
+                        }
+
+                        this.ClientId.forEach(function(val) {
+                            accountData.push(val.AccountId);
+                            cData.push(val.ClientId);
+                        });
+                    }
+
+                    this.input = ({
+                        username: this.localuserid
+                    });
+
+                    if (accountData) {
+                        this.input.AccountId = accountData
+                    }
+
+                    if (cData) {
+                        this.input.ClientId = cData
+                    }
+                    this.input.isexport = this.isexport;
+
+                    if (this.fromDate) {
+                        this.input.DeliveryFromDate = this.fromDate;
+                    }
+
+                    if (this.toDate) {
+                        this.input.DeliveryToDate = this.toDate;
+                    }
+                    this.input.offset = this.pageno;
+                    this.input.limit = 10;
+
+                    this.isLoading = true;
+                    axios({
+                            method: 'POST',
+                            'url': apiUrl.api_url + 'get-exception-report',
+                            'data': this.input,
+                            headers: {
+                                'Authorization': 'Bearer ' + this.myStr
+                            }
+                        })
+                        .then(result => {
+
+                            if (result.data.code === 200) {
+                                if (this.isexport === false) {
+                                    this.resultCountException = 0;
+                                    this.listCODPaymentData = result.data.shipmentArr;
+                                    this.isLoading = false;
+
+                                    let totalRows = result.data.count;
+                                    this.resultCountException = result.data.count;
+
+                                    if (totalRows < 10) {
+                                        this.pagecount = 1
+                                    } else {
+                                        this.pagecount = Math.ceil(totalRows / 10)
+                                    }
+                                    this.exportf = true;
+                                }
+                                /**
+                                 * excel download
+                                 * @param  {[type]} this [description]
+                                 * @return {[type]}      [description]
+                                 */
+                                if (this.isexport === true) {
+
+                                    this.isLoading = true;
+                                    if (result.data.shipmentArr.length > 0) {
+                                        let fetchResult = result.data.shipmentArr;
+                                        let newResult = [];
+                                        fetchResult.forEach((item, i) => {
+                                            let testTemp = {};
+
+                                            testTemp.ShippingDate = this.format_date(item.ShippingDate);
+                                            testTemp.POID = item.POID;
+                                            testTemp.ShippingID = item.ShippingID;
+                                            testTemp.CompanyName = item.CompanyName;
+                                            testTemp.HubName = item.HubName;
+                                            testTemp.COD = 'COD';
+                                            testTemp.Delivered = item.newStatus;
+                                            testTemp.DeliveryDate = this.format_date(item.DeliveryDate);
+                                            testTemp.NetPayment = item.NetPayment;
+                                            testTemp.RemittanceDate = this.format_date(item.RemittanceDate);
+
+                                            newResult.push(testTemp);
+                                        });
+                                        this.filename = 'COD_ExceptionReport';
+                                        this.getDownloadCsvObject(newResult);
+                                    } else {
+                                        this.$alertify.error('Sorry..! no record found for excel download.');
+                                    }
+                                }
+                                // this.exportCODRemittanceDetailsData();
+                            } else {
+                                this.listCODRemitanceDataDate = [];
+                                this.listCODPaymentData = [];
+                                this.resultCountDate = 0;
+                                this.resultCount = 0;
+                                this.isLoading = false;
+                            }
+                        }, error => {
+                            console.error(error)
+                            this.$alertify.error('Error Occured');
+                        })
+                }
+            });
         },
 
         /**
@@ -612,134 +618,137 @@ export default {
         },
 
         GetCODRemittanceDetailsDataDateTemp(event) {
-
-            if (this.selected) {
-                if (this.fromDate > this.toDate) {
-                    document.getElementById("fdate").innerHTML = "From date should not be greater than To date.";
-                    return false;
-                } else {
-                    document.getElementById("fdate").innerHTML = "";
-                }
-                document.getElementById("opt").innerHTML = "";
-            } else {
-                document.getElementById("opt").innerHTML = "Please choose atleast one option ( Delivery Date OR Transaction Date ).";
-                return false;
-            }
-
-
-            let cData = [];
-            let accountData = [];
-            if (this.SearchClientIds.length > 0) {
-                cData = this.SearchClientIds;
-                accountData = this.SearchClientAccountIds;
-            } else {
-                if ($.isArray(this.ClientId) === false) {
-                    this.ClientId = new Array(this.ClientId);
-                }
-
-                this.ClientId.forEach(function(val) {
-                    accountData.push(val.AccountId);
-                    cData.push(val.ClientId);
-                });
-            }
-
-            this.input = ({
-                username: this.localuserid
-            });
-
-            if (accountData) {
-                this.input.AccountId = accountData
-            }
-
-
-            if (cData) {
-                this.input.ClientId = cData
-            }
-
-            this.input.isexport = this.isexport;
-            if (this.fromDate) {
-                this.input.DeliveryFromDate = this.fromDate;
-            }
-
-            if (this.toDate) {
-                this.input.DeliveryToDate = this.toDate;
-            }
-            this.input.offset = this.pageno;
-            this.input.limit = 10;
-
-            this.isLoading = true;
-            axios({
-                    method: 'POST',
-                    'url': apiUrl.api_url + 'getRemittedClientDateWise',
-                    'data': this.input,
-                    headers: {
-                        'Authorization': 'Bearer ' + this.myStr
-                    }
-                })
-                .then(result => {
-
-                    if (result.data.code === 200) {
-                        if (this.isexport === false) {
-                            this.resultCountDate = 0;
-                            this.listCODRemitanceDataDate = result.data.remittanceArr;
-                            this.isLoading = false;
-
-                            let totalRows = result.data.count;
-                            this.resultCountDate = result.data.count;
-
-                            if (totalRows < 10) {
-                                this.pagecount = 1
-                            } else {
-                                this.pagecount = Math.ceil(totalRows / 10)
-                            }
-                            this.exportf = true;
+            this.$validator.validateAll().then((result) => {
+                if (result) {
+                    if (this.selected) {
+                        if (this.fromDate > this.toDate) {
+                            document.getElementById("fdate").innerHTML = "From date should not be greater than To date.";
+                            return false;
+                        } else {
+                            document.getElementById("fdate").innerHTML = "";
                         }
-                        /**
-                         * excel download
-                         * @param  {[type]} this [description]
-                         * @return {[type]}      [description]
-                         */
-                        if (this.isexport === true) {
-                            this.isLoading = true;
-                            if (result.data.remittanceArr.length > 0) {
-                                let fetchResult = result.data.remittanceArr;
-                                let newResult = [];
-                                fetchResult.forEach((item, i) => {
-                                    let testTemp = {};
-
-                                    testTemp.ClientId = item.ClientId;
-                                    testTemp.clientremittedid = item.clientremittedid;
-                                    testTemp.CompanyName = item.CompanyName;
-                                    testTemp.RemittanceType = item.RemittanceType;
-                                    testTemp.deliverydate = item.deliverydate;
-                                    testTemp.Cycle = item.Cycle;
-                                    testTemp.ShipmentCount = item.ShipmentCount;
-                                    testTemp.CODAmount = item.CODAmount;
-                                    testTemp.FreightAmount = item.FreightAmount;
-                                    testTemp.ExceptionAmount = item.ExceptionAmount;
-                                    testTemp.PaidAmount = item.PaidAmount;
-                                    testTemp.UTRNo = item.UTRNo;
-                                    testTemp.filepath = item.filepath;
-
-                                    newResult.push(testTemp);
-                                });
-                                this.filename = 'COD_Delivary_Remitance';
-                                this.getDownloadCsvObject(newResult);
-                            } else {
-                                this.$alertify.error('Sorry..! no record found for excel download.');
-                            }
-                        }
-                        // this.exportCODRemittanceDetailsData();
+                        document.getElementById("opt").innerHTML = "";
                     } else {
-                        this.listCODRemitanceDataDate = [];
-                        this.resultCountDate = 0;
-                        this.resultCount = 0;
-                        this.isLoading = false;
+                        document.getElementById("opt").innerHTML = "Please choose atleast one option ( Delivery Date OR Transaction Date ).";
+                        return false;
                     }
-                }, error => {
-                    console.error(error)
-                    this.$alertify.error('Error Occured');
-                })
+
+
+                    let cData = [];
+                    let accountData = [];
+                    if (this.SearchClientIds.length > 0) {
+                        cData = this.SearchClientIds;
+                        accountData = this.SearchClientAccountIds;
+                    } else {
+                        if ($.isArray(this.ClientId) === false) {
+                            this.ClientId = new Array(this.ClientId);
+                        }
+
+                        this.ClientId.forEach(function(val) {
+                            accountData.push(val.AccountId);
+                            cData.push(val.ClientId);
+                        });
+                    }
+
+                    this.input = ({
+                        username: this.localuserid
+                    });
+
+                    if (accountData) {
+                        this.input.AccountId = accountData
+                    }
+
+
+                    if (cData) {
+                        this.input.ClientId = cData
+                    }
+
+                    this.input.isexport = this.isexport;
+                    if (this.fromDate) {
+                        this.input.DeliveryFromDate = this.fromDate;
+                    }
+
+                    if (this.toDate) {
+                        this.input.DeliveryToDate = this.toDate;
+                    }
+                    this.input.offset = this.pageno;
+                    this.input.limit = 10;
+
+                    this.isLoading = true;
+                    axios({
+                            method: 'POST',
+                            'url': apiUrl.api_url + 'getRemittedClientDateWise',
+                            'data': this.input,
+                            headers: {
+                                'Authorization': 'Bearer ' + this.myStr
+                            }
+                        })
+                        .then(result => {
+
+                            if (result.data.code === 200) {
+                                if (this.isexport === false) {
+                                    this.resultCountDate = 0;
+                                    this.listCODRemitanceDataDate = result.data.remittanceArr;
+                                    this.isLoading = false;
+
+                                    let totalRows = result.data.count;
+                                    this.resultCountDate = result.data.count;
+
+                                    if (totalRows < 10) {
+                                        this.pagecount = 1
+                                    } else {
+                                        this.pagecount = Math.ceil(totalRows / 10)
+                                    }
+                                    this.exportf = true;
+                                }
+                                /**
+                                 * excel download
+                                 * @param  {[type]} this [description]
+                                 * @return {[type]}      [description]
+                                 */
+                                if (this.isexport === true) {
+                                    this.isLoading = true;
+                                    if (result.data.remittanceArr.length > 0) {
+                                        let fetchResult = result.data.remittanceArr;
+                                        let newResult = [];
+                                        fetchResult.forEach((item, i) => {
+                                            let testTemp = {};
+
+                                            testTemp.ClientId = item.ClientId;
+                                            testTemp.clientremittedid = item.clientremittedid;
+                                            testTemp.CompanyName = item.CompanyName;
+                                            testTemp.RemittanceType = item.RemittanceType;
+                                            testTemp.deliverydate = item.deliverydate;
+                                            testTemp.Cycle = item.Cycle;
+                                            testTemp.ShipmentCount = item.ShipmentCount;
+                                            testTemp.CODAmount = item.CODAmount;
+                                            testTemp.FreightAmount = item.FreightAmount;
+                                            testTemp.ExceptionAmount = item.ExceptionAmount;
+                                            testTemp.PaidAmount = item.PaidAmount;
+                                            testTemp.UTRNo = item.UTRNo;
+                                            testTemp.filepath = item.filepath;
+
+                                            newResult.push(testTemp);
+                                        });
+                                        this.filename = 'COD_Delivary_Remitance';
+                                        this.getDownloadCsvObject(newResult);
+                                    } else {
+                                        this.$alertify.error('Sorry..! no record found for excel download.');
+                                    }
+                                }
+                                // this.exportCODRemittanceDetailsData();
+                            } else {
+                                this.listCODRemitanceDataDate = [];
+                                this.resultCountDate = 0;
+                                this.resultCount = 0;
+                                this.isLoading = false;
+                            }
+                        }, error => {
+                            console.error(error)
+                            this.$alertify.error('Error Occured');
+                        })
+                }
+            });
         },
 
         exportCODRemittanceDetailsData() {

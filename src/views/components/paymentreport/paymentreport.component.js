@@ -253,7 +253,6 @@ export default {
         }, **/
 
         onSubmit: function(event) {
-            $(".text-danger").html("");
             this.$validator.validateAll().then((result) => {
                 if (result) {
                     let diffTime = Math.abs(new Date(this.toDate) - new Date(this.fromDate));

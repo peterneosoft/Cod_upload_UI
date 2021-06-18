@@ -383,7 +383,7 @@ export default {
 
                 this.closeModal();
                 this.recordType = this.selected;
-                this.todatesChanged = this.newtodate;
+                this.todatesChanged = $(".scrolltb").find("[data-toids='toids" + data.AccountId + "']").attr('data-dates');
 
                 if (this.recordType == 'AdHoc') {
 
