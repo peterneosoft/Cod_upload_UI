@@ -158,8 +158,12 @@ export default {
             this.$validator.validateAll().then((result) => {
                 if (!result) {
                     document.getElementById("utrnoerr").style.display = "block";
+                    document.getElementById("utrnoerr").innerHTML = "UTR number is required.";
+
                     // this.$alertify.error('Update Error');
                 } else {
+                    document.getElementById("utrnoerr").style.display = "none";
+                    document.getElementById("utrnoerr").innerHTML = "";
                     this.urlSubmitCall();
                 }
             }).catch(() => {
