@@ -262,7 +262,7 @@ export default {
                         let diffTime = Math.abs(new Date(this.toDate) - new Date(this.fromDate));
                         let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                        if (diffDays > 31) {
+                        if (diffDays > 30) {
                             document.getElementById("fdate").innerHTML = "Difference between From date & To date should not be greater than 31 days.";
                             return false;
                         } else if (this.fromDate > this.toDate) {
@@ -471,13 +471,7 @@ export default {
             this.$validator.validateAll().then((result) => {
                 if (result) {
                     if (this.selected) {
-                        let diffTime = Math.abs(new Date(this.toDate) - new Date(this.fromDate));
-                        let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                        if (diffDays > 31) {
-                            document.getElementById("fdate").innerHTML = "Difference between From date & To date should not be greater than 31 days.";
-                            return false;
-                        } else if (this.fromDate > this.toDate) {
+                        if (this.fromDate > this.toDate) {
                             document.getElementById("fdate").innerHTML = "From date should not be greater than To date.";
                             return false;
                         } else {
@@ -632,7 +626,7 @@ export default {
                         let diffTime = Math.abs(new Date(this.toDate) - new Date(this.fromDate));
                         let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                        if (diffDays > 31) {
+                        if (diffDays > 30) {
                             document.getElementById("fdate").innerHTML = "Difference between From date & To date should not be greater than 31 days.";
                             return false;
                         } else if (this.fromDate > this.toDate) {
@@ -646,7 +640,6 @@ export default {
                         document.getElementById("opt").innerHTML = "Please choose atleast one option ( Delivery Date OR Transaction Date ).";
                         return false;
                     }
-
 
                     let cData = [];
                     let accountData = [];
