@@ -262,8 +262,8 @@ export default {
                         let diffTime = Math.abs(new Date(this.toDate) - new Date(this.fromDate));
                         let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-                        if (diffDays > 30) {
-                            document.getElementById("fdate").innerHTML = "Difference between From date & To date should not be greater than 30 days.";
+                        if (diffDays > 31) {
+                            document.getElementById("fdate").innerHTML = "Difference between From date & To date should not be greater than 31 days.";
                             return false;
                         } else if (this.fromDate > this.toDate) {
                             document.getElementById("fdate").innerHTML = "From date should not be greater than To date.";
@@ -379,6 +379,8 @@ export default {
                                 }
                                 // this.exportCODRemittanceDetailsData();
                             } else {
+                                this.listCODRemitanceDataDate = [];
+                                this.listCODRemitanceData = [];
                                 this.resultCount = 0;
                                 this.isLoading = false;
                             }
@@ -469,7 +471,13 @@ export default {
             this.$validator.validateAll().then((result) => {
                 if (result) {
                     if (this.selected) {
-                        if (this.fromDate > this.toDate) {
+                        let diffTime = Math.abs(new Date(this.toDate) - new Date(this.fromDate));
+                        let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                        if (diffDays > 31) {
+                            document.getElementById("fdate").innerHTML = "Difference between From date & To date should not be greater than 31 days.";
+                            return false;
+                        } else if (this.fromDate > this.toDate) {
                             document.getElementById("fdate").innerHTML = "From date should not be greater than To date.";
                             return false;
                         } else {
@@ -621,7 +629,13 @@ export default {
             this.$validator.validateAll().then((result) => {
                 if (result) {
                     if (this.selected) {
-                        if (this.fromDate > this.toDate) {
+                        let diffTime = Math.abs(new Date(this.toDate) - new Date(this.fromDate));
+                        let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                        if (diffDays > 31) {
+                            document.getElementById("fdate").innerHTML = "Difference between From date & To date should not be greater than 31 days.";
+                            return false;
+                        } else if (this.fromDate > this.toDate) {
                             document.getElementById("fdate").innerHTML = "From date should not be greater than To date.";
                             return false;
                         } else {
@@ -739,6 +753,7 @@ export default {
                                 // this.exportCODRemittanceDetailsData();
                             } else {
                                 this.listCODRemitanceDataDate = [];
+                                this.listCODRemitanceData = [];
                                 this.resultCountDate = 0;
                                 this.resultCount = 0;
                                 this.isLoading = false;
@@ -852,7 +867,7 @@ export default {
                 this.listCODRemitanceDataDate = [];
                 this.listCODRemitanceDataException = this.listCODPaymentData = [];
                 this.resultCount = this.resultCountDate = this.resultCountException = 0;
-
+                this.listCODRemitanceData = [];
                 this.pagecount = 1;
                 if (this.fromDate && this.toDate) {
                     // this.pagecount = 1;
