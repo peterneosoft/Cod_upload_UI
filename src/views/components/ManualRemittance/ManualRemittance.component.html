@@ -62,7 +62,15 @@
 
         <div class="col-12">
             <div class="card-headerfrm datechecker" style="margin-bottom: 15px;">
-                <h4 class="header col-2"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
+                <h4 class="header col-2"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result
+                    <span v-if="notApproved==2 && resultCounts>0" style="margin-left: 649%; cursor: pointer;" @click="exportDelivaryDate()">
+                    <button class="btn btn-sm btn-success" type="button" style=" margin-top: -22px;">
+                    <vue-element-loading spinner="mini-spinner" color="#FF6700" />
+                    <i class="fa fa-download"></i> Export
+                    </button>
+                 </span>
+                </h4>
+
                 <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
                 <table v-if="notApproved==1" class="table-bordered table-hover tbl datatables scrolltb" style="width:100%;">
                     <thead>
@@ -102,7 +110,7 @@
                                 </b-input-group>
                                 <span v-bind:id="setid('tdate', data.AccountId)" class="text-danger"></span>
                             </td>
-                            <td :data-comp="'comp'+pageno+index+1">{{data.CompanyName}}</td>
+                            <td :data-comp="'comp'+pageno+index+1" :data-comps="'comps'+data.AccountId" :data-compname="data.CompanyName">{{data.CompanyName}}</td>
                             <td :data-remi="'remi'+data.AccountId">{{data.RemittanceType}}</td>
                             <td :data-ship="'ship'+data.AccountId">{{data.ShipmentCount}}</td>
                             <td :data-cod="'cod'+data.AccountId">{{data.CODAmount}}</td>

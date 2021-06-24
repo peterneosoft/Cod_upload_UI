@@ -84,7 +84,8 @@ export default {
                     text: 'Payments Approved',
                     value: 'payApproved'
                 }
-            ]
+            ],
+            isexport: false,
         }
     },
 
@@ -627,7 +628,7 @@ export default {
             if (this.AccountId) {
                 this.input.AccountId = [this.AccountId];
             }
-
+            this.input.isexport = this.isexport;
             if (this.TransactionFromDate) {
                 this.input.TransactionFromDate = this.TransactionFromDate;
             }
@@ -647,18 +648,50 @@ export default {
                 })
                 .then(result => {
                     if (result.data.code == 200) {
-
-                        this.isLoading = false;
-                        this.recordType = 'payApproved';
-                        this.notApproved = 2;
-                        this.listPendingRemittanceDatas = result.data.remittanceArr;
-                        this.resultCounts = result.data.count;
-                        let totalRows = result.data.count;
-                        if (totalRows < 10) {
-                            this.pagecount = 1
-                        } else {
-                            this.pagecount = Math.ceil(totalRows / 10)
+                        if (this.isexport === false) {
+                            this.isLoading = false;
+                            this.recordType = 'payApproved';
+                            this.notApproved = 2;
+                            this.listPendingRemittanceDatas = result.data.remittanceArr;
+                            this.resultCounts = result.data.count;
+                            let totalRows = result.data.count;
+                            if (totalRows < 10) {
+                                this.pagecount = 1
+                            } else {
+                                this.pagecount = Math.ceil(totalRows / 10)
+                            }
                         }
+                        if (this.isexport === true) {
+                            this.isLoading = false;
+
+                            if (result.data.remittanceArr.length > 0) {
+
+                                let fetchResult = result.data.remittanceArr;
+                                let newResult = [];
+                                fetchResult.forEach((item, i) => {
+                                    let testTemp = {};
+
+                                    testTemp.CompanyName = item.CompanyName;
+                                    testTemp.RemittanceType = item.RemittanceType;
+                                    testTemp.clientremittedid = item.clientremittedid;
+                                    testTemp.Cycle = item.Cycle;
+                                    testTemp.ShipmentCount = item.ShipmentCount;
+                                    testTemp.CODAmount = item.CODAmount;
+                                    testTemp.FreightAmount = item.FreightAmount;
+                                    testTemp.ExceptionAmount = item.ExceptionAmount;
+                                    testTemp.PaidAmount = item.PaidAmount;
+                                    testTemp.transactiondate = this.format_date(item.transactiondate);
+                                    testTemp.UTRNo = item.UTRNo;
+                                    newResult.push(testTemp);
+                                });
+                                this.getDownloadCsvObject(newResult);
+                            } else {
+                                this.$alertify.error('Sorry..! no record found for excel download.');
+                            }
+
+                            this.isexport = false;
+                        }
+
 
                     } else if (result.data.code == 204) {
                         this.listPendingRemittanceDatas = [];
@@ -1069,7 +1102,7 @@ export default {
             this.pagecount = 1;
             document.getElementById("clienterr").innerHTML = "";
             this.newClientId = '';
-
+            this.isexport = false;
             this.changeRadio();
 
 
@@ -1081,7 +1114,6 @@ export default {
             }
 
             this.todatesChanged = $(".scrolltb").find("[data-toids='toids" + AccountId + "']").attr("data-dates");
-
             this.input = ({
                 FromDate: fromdates,
                 ToDate: this.todatesChanged,
@@ -1103,6 +1135,7 @@ export default {
                     this.isLoading = false;
                     if (result.data.code == 200) {
                         if (result.data.shipmentArr.length > 0) {
+                            this.AccountId = AccountId;
                             this.getDownloadCsvObject(result.data.shipmentArr);
                         } else {
                             this.$alertify.error('Sorry..! no record found for excel download.');
@@ -1115,14 +1148,30 @@ export default {
                     this.$alertify.error('Error Occured');
                 })
         },
+        exportDelivaryDate() {
+            this.isexport = true;
+            this.payApproved();
+        },
         getDownloadCsvObject(csvData) {
+
+
             var today = new Date();
             var dd = today.getDate();
             var mm = today.getMonth() + 1;
             var yyyy = today.getFullYear();
             var today = dd + "" + mm + "" + yyyy;
             var data, filename, link;
-            filename = "Manual_COD" + today + ".csv";
+
+            if (this.selected !== "payApproved") {
+                let fromdates = $(".scrolltb").find("[data-fromids='fromids" + this.AccountId + "']").attr("data-fromdates");
+                let todates = $(".scrolltb").find("[data-toids='toids" + this.AccountId + "']").attr("data-dates");
+                let compnames = $(".scrolltb").find("[data-comps='comps" + this.AccountId + "']").attr("data-compname");
+                filename = `${compnames}_${this.format_date(fromdates)}_${this.format_date(todates)}.csv`;
+
+            } else {
+                filename = 'PaymentApproved.csv';
+            }
+
             var csv = this.convertArrayOfObjectsToCSV({
                 data: csvData
             });
