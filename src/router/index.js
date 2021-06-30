@@ -46,6 +46,7 @@ import SVCReset from '@/views/components/svcreset'
 import SRReset from '@/views/components/srreset'
 import maintenance from '@/views/components/maintenance'
 import bulkremittancequery from '@/views/components/bulkremittancequery'
+import delivaryStatusReport from '@/views/components/delivaryStatusReport'
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -707,6 +708,23 @@ const router = new Router({
             ]
           },
         },
+        {
+         path: 'delivaryStatusReport',
+         name: 'Delivary Status Report',
+         component: delivaryStatusReport,
+         meta: {
+           requiresAuth: true,
+           adminAuth: true,
+           breadcrumb: [{
+               name: 'Home',
+               link: '/dashboard'
+             },
+             {
+               name: 'Delivary Status Report'
+             }
+           ]
+         },
+       },
         {
           path: 'charts',
           name: 'Charts',
