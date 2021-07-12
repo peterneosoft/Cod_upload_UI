@@ -211,14 +211,18 @@ export default {
                     let diffTime = Math.abs(new Date(this.toDate) - new Date(this.fromDate));
                     let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                     let checkDate = 0;
+                    let newDaysdiff = 0;
                     if (this.ClientId.AccountName !== "All Client") {
                         checkDate = 30;
+                        newDaysdiff = 30;
+
                     } else {
-                        checkDate = 1;
+                        checkDate = 0;
+                        newDaysdiff = 1;
                     }
 
                     if (diffDays > checkDate) {
-                        document.getElementById("fdate").innerHTML = "Difference between From date & To date should not be greater than " + checkDate + " days.";
+                        document.getElementById("fdate").innerHTML = "Difference between From date & To date should not be greater than " + newDaysdiff + " days.";
                         return false;
                     } else if (this.fromDate > this.toDate) {
                         document.getElementById("fdate").innerHTML = "From date should not be greater than To date.";
@@ -361,14 +365,18 @@ export default {
                     let diffTime = Math.abs(new Date(this.toDate) - new Date(this.fromDate));
                     let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
                     let checkDate = 0;
+                    let newDaysdiff = 0;
                     if (this.ClientId.AccountName !== "All Client") {
                         checkDate = 30;
+                        newDaysdiff = 30;
+
                     } else {
-                        checkDate = 1;
+                        checkDate = 0;
+                        newDaysdiff = 1;
                     }
 
                     if (diffDays > checkDate) {
-                        document.getElementById("fdate").innerHTML = "Difference between From date & To date should not be greater than " + checkDate + " days.";
+                        document.getElementById("fdate").innerHTML = "Difference between From date & To date should not be greater than " + newDaysdiff + " days.";
                         return false;
                     } else if (this.fromDate > this.toDate) {
                         document.getElementById("fdate").innerHTML = "From date should not be greater than To date.";
