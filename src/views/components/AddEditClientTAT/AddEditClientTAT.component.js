@@ -74,6 +74,14 @@ export default {
             RemittanceDayListedit: [],
             typeedit: '',
             addformshow: 1,
+            tallycodname: '',
+            tallyfreightname: '',
+            salespersonname: '',
+            IsActive: 0,
+            tallycodnameEdit: '',
+            tallyfreightnameEdit: '',
+            salespersonnameEdit: '',
+            IsActiveEdit: 0
         }
     },
 
@@ -221,6 +229,10 @@ export default {
             this.Beneficiaryedit = data.BeneficiaryName ? data.BeneficiaryName : '';
             this.BankNameedit = data.ClientBankName ? data.ClientBankName : '';
             this.rtgsedit = data.NEFTNo ? data.NEFTNo : '';
+            this.tallycodnameEdit = data.tallycodname ? data.tallycodname : '';
+            this.tallyfreightnameEdit = data.tallyfreightname ? data.tallyfreightname : '';
+            this.salespersonnameEdit = data.salespersonname ? data.salespersonname : '';
+            this.IsActiveEdit = data.IsActive ? data.IsActive : '';
         },
         closeStatusRoleModal() {
             this.addformshow = 1;
@@ -447,12 +459,18 @@ export default {
                 this.ContactEmailid = "";
             }
 
+            if (this.IsActive === "Active") {
+                this.IsActive = true;
+            } else {
+                this.IsActive = false;
+            }
+
             this.input = ({
                 ClientId: this.ClientId.ClientMasterID,
                 RemittanceType: this.type,
                 RemittanceDay: dData,
                 TAT: this.tat,
-                IsActive: true,
+                IsActive: this.IsActive,
                 HoldingAmount: 0,
                 BussinessType: this.Bussinesstype,
                 AccountId: this.AccountName,
@@ -463,6 +481,9 @@ export default {
                 BankAccountNo: this.BankAccount,
                 BankIFSC: this.rtgs,
                 AccountName: $("#AccountName option:selected").text(),
+                tallycodname: this.tallycodname,
+                tallyfreightname: this.tallyfreightname,
+                salespersonname: this.salespersonname
             })
             axios({
                     method: 'POST',
@@ -479,6 +500,10 @@ export default {
                     this.BankAccount = '';
                     this.BankName = '';
                     this.Beneficiary = '';
+                    this.tallycodname = '';
+                    this.tallyfreightname = '';
+                    this.salespersonname = '';
+
                     if (response.data.errorCode == 0) {
                         this.submitLoading = false;
                         this.AddEditClientTAT = 0;
@@ -516,13 +541,19 @@ export default {
                         dData.push(val.day);
                     }
                 });
+
+                if (this.IsActiveEdit === "Active") {
+                    this.IsActiveEdit = true;
+                } else {
+                    this.IsActiveEdit = false;
+                }
                 this.input = ({
                     ClientCODRemmitanceId: this.ClientCODRemmitanceId,
                     ClientId: this.ClientIds.ClientMasterID,
                     RemittanceType: this.typeedit,
                     RemittanceDay: dData,
                     TAT: this.tatedit,
-                    IsActive: true,
+                    IsActive: this.IsActiveEdit,
                     HoldingAmount: 0,
                     BussinessType: this.Bussinesstype,
                     AccountId: this.AccountName,
@@ -533,6 +564,9 @@ export default {
                     BankAccountNo: this.BankAccountedit,
                     BankIFSC: this.rtgsedit,
                     AccountName: this.accountname,
+                    tallycodname: this.tallycodnameEdit,
+                    tallyfreightname: this.tallyfreightnameEdit,
+                    salespersonname: this.salespersonnameEdit
                 });
             } else {
                 this.input = ({
@@ -541,7 +575,7 @@ export default {
                     RemittanceType: this.type,
                     RemittanceDay: dData,
                     TAT: this.tat,
-                    IsActive: true,
+                    IsActive: this.IsActiveEdit,
                     HoldingAmount: 0,
                     BussinessType: this.Bussinesstype,
                     AccountId: this.AccountName,
@@ -552,6 +586,9 @@ export default {
                     BankAccountNo: this.BankAccount,
                     BankIFSC: this.rtgs,
                     AccountName: $("#AccountName option:selected").text(),
+                    tallycodname: this.tallycodnameEdit,
+                    tallyfreightname: this.tallyfreightnameEdit,
+                    salespersonname: this.salespersonnameEdit
                 });
             }
 
@@ -573,6 +610,9 @@ export default {
                     this.BankAccount = '';
                     this.BankName = '';
                     this.Beneficiary = '';
+                    this.tallycodname = '';
+                    this.tallyfreightname = '';
+                    this.salespersonname = '';
                     if (response.data.errorCode == 0) {
 
                         this.$alertify.success(response.data.msg);

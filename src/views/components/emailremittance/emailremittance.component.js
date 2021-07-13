@@ -5,12 +5,14 @@ import {
     Validator
 } from 'vee-validate'
 import Paginate from 'vuejs-paginate'
+import Multiselect from 'vue-multiselect'
 import VueElementLoading from 'vue-element-loading';
 import moment from 'moment';
 
 export default {
     name: 'E-MailRemittance',
     components: {
+        Multiselect,
         Paginate,
         VueElementLoading
     },
@@ -34,7 +36,11 @@ export default {
             toDate: '',
             options: [],
             selected: '',
-            newCheckRecord: []
+            newCheckRecord: [],
+            ClientAccountList: [],
+            ClientId: [],
+            ClientList: [],
+            SearchClientIds: [],
         }
     },
 
@@ -57,6 +63,7 @@ export default {
             day: '2-digit'
         });
         //this.getEmailRemittanceClients();
+        this.getCleintWithAccountName();
     },
 
     methods: {
@@ -208,8 +215,18 @@ export default {
         getEmailRemittanceClients() {
             this.isLoading = true;
             this.isSent = false;
-            //url: apiUrl.api_url + 'emailremittanceclients?CreatedBy='+this.localuserid+'&RemittanceDate='+this.currentdate+'&offset='+this.pageno+'&limit='+20,
-            //emailremittanceclients
+
+            if ($.isArray(this.ClientId) === false) {
+                this.ClientId = new Array(this.ClientId);
+            }
+            let accountData = [];
+            if (this.SearchClientIds.length > 0) {
+                accountData = this.SearchClientAccountIds;
+            } else {
+                this.ClientId.forEach(function(val) {
+                    accountData.push(val.AccountId);
+                });
+            }
 
             this.input = ({
                 username: this.localuserid
@@ -221,7 +238,9 @@ export default {
             if (this.toDate) {
                 this.input.TransactionToDate = this.toDate;
             }
-
+            if (accountData) {
+                this.input.AccountId = accountData
+            }
             this.input.offset = this.pageno;
             this.input.limit = 10;
 
@@ -323,11 +342,90 @@ export default {
             this.resultCount = 0;
             this.pagecount = 1;
             this.fromDate = this.toDate = '';
-            this.ClientId = "";
+            this.ClientId = [];
             this.pageno = this.resultCount = 0;
             this.listEmailRemittanceData = [];
             this.$validator.reset();
             this.errors.clear();
+        },
+        multiple() {
+            let key = this.ClientId.length - 1;
+
+            if (this.ClientId.length > 0 && this.ClientId[key].AccountId == 0) {
+
+                this.SearchClientIds = [];
+                this.SearchClientAccountIds = [];
+                this.ClientId = this.ClientId[key];
+
+                for (let item of this.ClientAccountList) {
+
+                    if (item.AccountId != 0) {
+                        this.SearchClientAccountIds.push(item.AccountId);
+                        this.SearchClientIds.push(item.ClientId);
+                    }
+                }
+
+            }
+
+            if (this.ClientId.AccountId == 0) {
+                return false;
+            } else {
+                this.SearchClientIds = [];
+                return true;
+            }
+        },
+        /**
+         * new client name with account list data
+         */
+
+        getCleintWithAccountName() {
+            this.isLoading = true;
+            this.ClientAccountList = [];
+
+            this.input = ({
+                username: this.localuserid
+            })
+
+            axios({
+                method: 'POST',
+                url: `${apiUrl.api_url}getclientaccountlist`,
+                data: this.input,
+                headers: {
+                    Authorization: `Bearer ${this.myStr}`
+                }
+            }).then(result => {
+
+                this.isLoading = false;
+                if (result.data.code == 200) {
+                    let clientAccountList = result.data.clientArr;
+
+                    let newTempArray = [];
+                    clientAccountList.forEach((list, k) => {
+
+                        let temp = {};
+
+                        if (list.AccountName && list.AccountName !== undefined && list.AccountName !== "undefined") {
+                            temp.AccountId = list.AccountId;
+                            temp.ClientId = list.ClientId;
+                            temp.AccountName = list.AccountName;
+                            newTempArray.push(temp);
+                        }
+
+                    });
+
+                    this.ClientAccountList = [{
+                        AccountId: '0',
+                        AccountName: 'All Client'
+                    }].concat(newTempArray);
+
+                } else {
+                    this.ClientAccountList = [];
+                }
+
+            }, error => {
+                this.isLoading = false;
+                console.error(error)
+            })
         },
     }
 }
