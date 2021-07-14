@@ -165,23 +165,22 @@
                                 <div class="col-md-4">
                                     <label>Status <font color="red">*</font></label>
                                     <b-input-group left="<i class='fa fa-list'></i>">
-                                        <select name="IsActive" id="IsActive" class="form-control" v-validate="'required'" v-model="IsActive">
-                                                        <option value="0" title="Select All">Select Status</option>
-                                                       <option value="Active" title="Active">Active</option>
-                                                        <option value="In Active" title="In Active">In Active</option>
+                                        <select name="IsActive" id="IsActive" class="form-control" v-validate="{required: true}" v-bind:class="{'error': errors.has('IsActive') }" v-model="IsActive">
+                                                       <option value="Active">Active</option>
+                                                        <option value="In Active">In Active</option>
                                                     </select>
                                     </b-input-group>
                                     <span v-show="errors.has('IsActive')" class="text-danger">Status is required.</span>
-
                                 </div>
+
                                 <div class="col-md-4" style="margin-top: 10px;" title="Upload downloaded COD Remittance file">
                                     <label>Require Cancel cheque</label>
                                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
                                     <b-input-group style="height: 36px;" left="<i class='fa fa-file-text'></i>">
-                                        <input type="file" placeholder="Require Cancel cheque" name="paymentfile" id="paymentfile" @change="onUpload()" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('paymentfile') }">
+                                        <input type="file" ref="paymentfile" placeholder="Require Cancel cheque" accept=".jpg, .png" name="paymentfile" id="paymentfile" @change="onUpload()" v-bind:class="{'form-control': true, 'error': errors.has('paymentfile') }">
                                     </b-input-group>
                                     <small class="text-muted">
-                                        <font color="red">Note: * Only .csv files allowed to upload.</font>
+                                        <font color="red">Note: * Only accept .png or .jpg upto 1 MB.</font>
                                         </small>
                                     <label v-show="errors.has('paymentfile')" class="text-danger">Upload file is required.</label>
                                 </div>
@@ -271,7 +270,7 @@
                             <td>{{data.IsActive}}
                             </td>
                             <td>
-                                <a :href="data.cancelCheque" style="cursor: pointer; color: rgb(25, 25, 112); text-decoration: underline;" v-if="data.cancelCheque && data.cancelCheque!=0">view</a>
+                                <a :href="data.cancelCheque" target="_blank" style="cursor: pointer; color: rgb(25, 25, 112); text-decoration: underline;" v-if="data.cancelCheque && data.cancelCheque!=0">view</a>
                             </td>
                             <td class="text-center">
                                 <i @click.prevent="getSVCRowData(data,resultCount)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" style="cursor: pointer;"></i>
@@ -430,6 +429,17 @@
                                                 </b-input-group>
                                                 <span v-show="errors.has('IsActiveEdit')" class="text-danger">Status is required.</span>
 
+                                            </div>
+                                            <div class="col-md-4" style="margin-top: 10px;" title="Upload downloaded COD Remittance file">
+                                                <label>Require Cancel cheque</label>
+                                                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
+                                                <b-input-group style="height: 36px;" left="<i class='fa fa-file-text'></i>">
+                                                    <input type="file" ref="paymentfile" placeholder="Require Cancel cheque" accept=".jpg, .png" name="paymentfile" id="paymentfile" @change="onUploadedit()" v-bind:class="{'form-control': true, 'error': errors.has('paymentfile') }">
+                                                </b-input-group>
+                                                <small class="text-muted">
+                                                <font color="red">Note: * Only accept .png or .jpg upto 1 MB.</font>
+                                                </small>
+                                                <label v-show="errors.has('paymentfile')" class="text-danger">Upload file is required.</label>
                                             </div>
                                         </div>
                                         <div class="card-footer text-center">

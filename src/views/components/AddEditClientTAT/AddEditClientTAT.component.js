@@ -77,11 +77,12 @@ export default {
             tallycodname: '',
             tallyfreightname: '',
             salespersonname: '',
-            IsActive: 0,
+            IsActive: 'Active',
             tallycodnameEdit: '',
             tallyfreightnameEdit: '',
             salespersonnameEdit: '',
-            IsActiveEdit: 0
+            IsActiveEdit: 'In Active',
+            cancelchequepath: ''
         }
     },
 
@@ -484,7 +485,10 @@ export default {
                 tallycodname: this.tallycodname,
                 tallyfreightname: this.tallyfreightname,
                 salespersonname: this.salespersonname
-            })
+            });
+            if (this.cancelchequepath) {
+                this.input.cancelchequepath = this.cancelchequepath;
+            }
             axios({
                     method: 'POST',
                     'url': apiUrl.api_url + 'saveclientcodremittancedetail',
@@ -496,6 +500,8 @@ export default {
                 .then((response) => {
                     this.getCleintWithAccountName();
                     this.ContactEmailid = '';
+                    this.cancelchequepath = '';
+                    this.$refs.paymentfile.value = null;
                     this.rtgs = '';
                     this.BankAccount = '';
                     this.BankName = '';
@@ -592,7 +598,9 @@ export default {
                 });
             }
 
-
+            if (this.cancelchequepath) {
+                this.input.cancelchequepath = this.cancelchequepath;
+            }
             axios({
                     method: 'POST',
                     'url': apiUrl.api_url + 'editclientcodremittancedetail',
@@ -604,6 +612,8 @@ export default {
                 .then((response) => {
                     this.resetForm(event);
                     this.addformshow = 1;
+                    this.$refs.paymentfile.value = null;
+                    this.cancelchequepath = '';
                     this.getCleintWithAccountName();
                     this.ContactEmailid = '';
                     this.rtgs = '';
@@ -831,19 +841,19 @@ export default {
                     fetchResult.forEach((item, i) => {
                         let testTemp = {};
 
-                        testTemp.CompanyName = item.AccountName;
+                        testTemp.CompanyName = item.ClientName;
                         testTemp.TAT = item.TAT;
-                        testTemp.RemittanceDayString = item.RemittanceDayString;
+                        testTemp.RemittanceDay = item.RemittanceDay.toString();
                         testTemp.RemittanceType = item.RemittanceType;
                         testTemp.BeneficiaryName = item.BeneficiaryName;
-                        testTemp.ClientBankName = item.ClientBankName;
-                        testTemp.ClientAccountNo = item.ClientAccountNo;
-                        testTemp.NEFTNo = item.NEFTNo;
+                        testTemp.BankName = item.BankName;
+                        testTemp.BankAccountNo = item.BankAccountNo;
+                        testTemp.BankIFSC = item.BankIFSC;
                         testTemp.CustomerMailId = item.CustomerMailId;
-                        testTemp.tallycodname = item.tallycodname;
-                        testTemp.tallyfreightname = item.tallyfreightname;
-                        testTemp.salespersonname = item.salespersonname;
-                        testTemp.IsActive = item.IsActive;
+                        testTemp.TallyCODName = item.TallyCODName;
+                        testTemp.TallyFreightName = item.TallyFreightName;
+                        testTemp.SalesPersonName = item.SalesPersonName;
+                        testTemp.Status = item.Status;
                         newResult.push(testTemp);
                     });
                     this.getDownloadCsvObject(newResult);
@@ -909,6 +919,20 @@ export default {
 
         //function is used for upload files on AWS s3bucket
         onUpload() {
+
+            if (!this.ClientId.ClientMasterID) {
+                this.$alertify.error('Select client name.');
+                return false;
+            }
+            if (!this.Bussinesstype) {
+                this.$alertify.error('select bussiness service type.');
+                return false;
+            }
+            if (!this.AccountName) {
+                this.$alertify.error('Select account name.');
+                return false;
+            }
+
             this.isLoading = true;
 
             if (event.target.files.length <= 0) {
@@ -946,7 +970,8 @@ export default {
                 .then(res => {
                     this.isLoading = false;
                     if (res.data.errorCode == 0) {
-                        this.$alertify.success('Upload successful.');
+                        this.cancelchequepath = res.data.data;
+                        this.$alertify.success('Upload successfully.');
                     } else {
                         this.$alertify.error('Upload failed, try again.');
                     }
@@ -955,6 +980,130 @@ export default {
                     this.isLoading = false;
                 });
         },
+        onUpload() {
+
+            if (!this.ClientId.ClientMasterID) {
+                this.$alertify.error('Select client name.');
+                return false;
+            }
+            if (!this.Bussinesstype) {
+                this.$alertify.error('select bussiness service type.');
+                return false;
+            }
+            if (!this.AccountName) {
+                this.$alertify.error('Select account name.');
+                return false;
+            }
+
+            this.isLoading = true;
+
+            if (event.target.files.length <= 0) {
+                this.isLoading = false;
+                return false;
+            }
+
+            let selectedFile = event.target.files[0];
+
+            var name = selectedFile.name;
+            if (selectedFile.size > 5242880) {
+                this.$alertify.error(event.srcElement.placeholder + " Failed! Upload Max File Size Should Not Be Greater Than 5 MB");
+                this.isLoading = false;
+                return false;
+            }
+
+            if (/\.(jpe?g|png|gif|bmp|xls|xlsx|csv|doc|docx|rtf|wks|wps|wpd|excel|xlr|pps|pdf|ods|odt)$/i.test(selectedFile.name)) {
+                name = selectedFile.name;
+            } else {
+                this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg, .jpeg, .gif, .bmp, .xls, .xlsx, .pdf, .ods, .csv, .doc, .odt, .docx, .rtf, .wks, .wps, .wpd, .excel, .xlr, .pps");
+                this.isLoading = false;
+                return false;
+            }
+
+            const fd = new FormData();
+            fd.append('file', selectedFile, name);
+            fd.append('clientKey', $("#AccountName option:selected").text() + '-' + this.AccountName)
+                //fd.append('s3bucketKey', 'SVC-' + this.batchid);
+
+            axios.post(apiUrl.api_url + 'uploadcancelcheque', fd, {
+                    headers: {
+                        'Authorization': 'Bearer ' + this.myStr
+                    }
+                })
+                .then(res => {
+                    this.isLoading = false;
+                    if (res.data.errorCode == 0) {
+                        this.cancelchequepath = res.data.data;
+                        this.$alertify.success('Upload successfully.');
+                    } else {
+                        this.$alertify.error('Upload failed, try again.');
+                    }
+                }, error => {
+                    console.error(error);
+                    this.isLoading = false;
+                });
+        },
+        onUploadedit() {
+
+            if (!this.ClientIds.ClientMasterID) {
+                this.$alertify.error('Select client name.');
+                return false;
+            }
+            if (!this.Bussinesstype) {
+                this.$alertify.error('select bussiness service type.');
+                return false;
+            }
+            if (!this.AccountName) {
+                this.$alertify.error('Select account name.');
+                return false;
+            }
+
+            this.isLoading = true;
+
+            if (event.target.files.length <= 0) {
+                this.isLoading = false;
+                return false;
+            }
+
+            let selectedFile = event.target.files[0];
+
+            var name = selectedFile.name;
+            if (selectedFile.size > 5242880) {
+                this.$alertify.error(event.srcElement.placeholder + " Failed! Upload Max File Size Should Not Be Greater Than 5 MB");
+                this.isLoading = false;
+                return false;
+            }
+
+            if (/\.(jpe?g|png|gif|bmp|xls|xlsx|csv|doc|docx|rtf|wks|wps|wpd|excel|xlr|pps|pdf|ods|odt)$/i.test(selectedFile.name)) {
+                name = selectedFile.name;
+            } else {
+                this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg, .jpeg, .gif, .bmp, .xls, .xlsx, .pdf, .ods, .csv, .doc, .odt, .docx, .rtf, .wks, .wps, .wpd, .excel, .xlr, .pps");
+                this.isLoading = false;
+                return false;
+            }
+
+            const fd = new FormData();
+            fd.append('file', selectedFile, name);
+            fd.append('clientKey', this.accountname + '-' + this.AccountName)
+                //fd.append('s3bucketKey', 'SVC-' + this.batchid);
+
+            axios.post(apiUrl.api_url + 'uploadcancelcheque', fd, {
+                    headers: {
+                        'Authorization': 'Bearer ' + this.myStr
+                    }
+                })
+                .then(res => {
+                    this.isLoading = false;
+                    if (res.data.errorCode == 0) {
+                        this.cancelchequepath = res.data.data;
+                        this.$alertify.success('Upload successfully.');
+                    } else {
+                        this.$alertify.error('Upload failed, try again.');
+                    }
+                }, error => {
+                    console.error(error);
+                    this.isLoading = false;
+                });
+        }
 
     }
 }
