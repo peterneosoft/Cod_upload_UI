@@ -174,7 +174,17 @@
                                     <span v-show="errors.has('IsActive')" class="text-danger">Status is required.</span>
 
                                 </div>
-
+                                <div class="col-md-4" style="margin-top: 10px;" title="Upload downloaded COD Remittance file">
+                                    <label>Require Cancel cheque</label>
+                                    <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
+                                    <b-input-group style="height: 36px;" left="<i class='fa fa-file-text'></i>">
+                                        <input type="file" placeholder="Require Cancel cheque" name="paymentfile" id="paymentfile" @change="onUpload()" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('paymentfile') }">
+                                    </b-input-group>
+                                    <small class="text-muted">
+                                        <font color="red">Note: * Only .csv files allowed to upload.</font>
+                                        </small>
+                                    <label v-show="errors.has('paymentfile')" class="text-danger">Upload file is required.</label>
+                                </div>
                             </div>
                             <div class="card-footer">
                                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="submitLoading" />
@@ -213,7 +223,11 @@
 
         <div class="col-12">
             <div class="card-headerfrm" style="margin-bottom: 15px;">
-                <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result</h4>
+                <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result
+                    <button v-if="resultCount!=0" type="button" class="btn btn-sm btn-success " style="float: right;margin-bottom: 10px;" @click="exportToExcel">
+                         <span aria-hidden="true" style="color: white;"><i class="fa fa-file-excel-o"></i> Export Client Master</span>
+                    </button>
+                </h4>
                 <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
                 <table class="table-bordered table-hover tbl datatables" v-bind:class="`${resultCount==0 ? 'scrolltbl' : 'scrolltb'}`">
                     <thead>

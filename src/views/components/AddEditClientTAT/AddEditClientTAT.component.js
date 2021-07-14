@@ -809,6 +809,152 @@ export default {
 
         scrollWin() {
             window.scrollBy(0, -1000);
-        }
+        },
+        exportToExcel() {
+            this.isLoading = true;
+            this.input = ({
+                username: this.localuserid
+            });
+
+            axios({
+                    method: 'POST',
+                    'url': apiUrl.api_url + 'exportclientmaster',
+                    'data': this.input,
+                    headers: {
+                        'Authorization': 'Bearer ' + this.myStr
+                    }
+                })
+                .then((result) => {
+
+                    let fetchResult = result.data.clientArr;
+                    let newResult = [];
+                    fetchResult.forEach((item, i) => {
+                        let testTemp = {};
+
+                        testTemp.CompanyName = item.AccountName;
+                        testTemp.TAT = item.TAT;
+                        testTemp.RemittanceDayString = item.RemittanceDayString;
+                        testTemp.RemittanceType = item.RemittanceType;
+                        testTemp.BeneficiaryName = item.BeneficiaryName;
+                        testTemp.ClientBankName = item.ClientBankName;
+                        testTemp.ClientAccountNo = item.ClientAccountNo;
+                        testTemp.NEFTNo = item.NEFTNo;
+                        testTemp.CustomerMailId = item.CustomerMailId;
+                        testTemp.tallycodname = item.tallycodname;
+                        testTemp.tallyfreightname = item.tallyfreightname;
+                        testTemp.salespersonname = item.salespersonname;
+                        testTemp.IsActive = item.IsActive;
+                        newResult.push(testTemp);
+                    });
+                    this.getDownloadCsvObject(newResult);
+                    this.isLoading = false;
+                })
+                .catch((httpException) => {
+                    this.submitLoading = false;
+                    console.error('exception is:::::::::', httpException)
+                    this.$alertify.error('Error Occured');
+                });
+
+        },
+        getDownloadCsvObject(csvData) {
+            var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1;
+            var yyyy = today.getFullYear();
+            var today = dd + "" + mm + "" + yyyy;
+            var data, filename, link;
+            filename = 'clientMasterReport.csv';
+            var csv = this.convertArrayOfObjectsToCSV({
+                data: csvData
+            });
+            if (csv == null) return;
+            filename = filename || "export.csv";
+            if (!csv.match(/^data:text\/csv/i)) {
+                csv = "data:text/csv;charset=utf-8," + csv;
+            }
+            data = encodeURI(csv);
+            link = document.createElement("a");
+            link.setAttribute("href", data);
+            link.setAttribute("download", filename);
+            document.body.appendChild(link);
+            link.click();
+            // link.removeChild(link);
+        },
+        convertArrayOfObjectsToCSV: function(args) {
+            var result, ctr, keys, columnDelimiter, lineDelimiter, data;
+            data = args.data || null;
+            if (data == null || !data.length) {
+                return null;
+            }
+            columnDelimiter = args.columnDelimiter || ",";
+            lineDelimiter = args.lineDelimiter || "\n";
+            keys = Object.keys(data[0]).slice(0);
+            result = "";
+            result += keys.join(columnDelimiter);
+            result += lineDelimiter;
+            data.forEach(function(item) {
+                ctr = 0;
+                keys.forEach(function(key) {
+                    if (ctr > 0) result += columnDelimiter;
+                    if (item[key] != null) {
+                        result += '"' + item[key] + '"';
+                    }
+                    ctr++;
+                });
+                result += lineDelimiter;
+            });
+            this.excelLoading = false;
+            return result;
+        },
+
+        //function is used for upload files on AWS s3bucket
+        onUpload() {
+            this.isLoading = true;
+
+            if (event.target.files.length <= 0) {
+                this.isLoading = false;
+                return false;
+            }
+
+            let selectedFile = event.target.files[0];
+
+            var name = selectedFile.name;
+            if (selectedFile.size > 5242880) {
+                this.$alertify.error(event.srcElement.placeholder + " Failed! Upload Max File Size Should Not Be Greater Than 5 MB");
+                this.isLoading = false;
+                return false;
+            }
+
+            if (/\.(jpe?g|png|gif|bmp|xls|xlsx|csv|doc|docx|rtf|wks|wps|wpd|excel|xlr|pps|pdf|ods|odt)$/i.test(selectedFile.name)) {
+                name = selectedFile.name;
+            } else {
+                this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg, .jpeg, .gif, .bmp, .xls, .xlsx, .pdf, .ods, .csv, .doc, .odt, .docx, .rtf, .wks, .wps, .wpd, .excel, .xlr, .pps");
+                this.isLoading = false;
+                return false;
+            }
+
+            const fd = new FormData();
+            fd.append('file', selectedFile, name);
+            fd.append('clientKey', $("#AccountName option:selected").text() + '-' + this.AccountName)
+                //fd.append('s3bucketKey', 'SVC-' + this.batchid);
+
+            axios.post(apiUrl.api_url + 'uploadcancelcheque', fd, {
+                    headers: {
+                        'Authorization': 'Bearer ' + this.myStr
+                    }
+                })
+                .then(res => {
+                    this.isLoading = false;
+                    if (res.data.errorCode == 0) {
+                        this.$alertify.success('Upload successful.');
+                    } else {
+                        this.$alertify.error('Upload failed, try again.');
+                    }
+                }, error => {
+                    console.error(error);
+                    this.isLoading = false;
+                });
+        },
+
     }
 }
