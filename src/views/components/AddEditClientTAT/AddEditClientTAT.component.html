@@ -433,7 +433,7 @@
                                                 <label>Require Cancel cheque</label>
                                                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
                                                 <b-input-group style="height: 36px;" left="<i class='fa fa-file-text'></i>">
-                                                    <input type="file" ref="paymentfile" placeholder="Require Cancel cheque" accept=".jpg, .png" name="paymentfile" id="paymentfile" @change="onUploadedit()" v-bind:class="{'form-control': true, 'error': errors.has('paymentfile') }">
+                                                    <input type="file" ref="paymentfiles" placeholder="Require Cancel cheque" accept=".jpg, .png" name="paymentfile" id="paymentfile" @change="onUploadedit()" v-bind:class="{'form-control': true, 'error': errors.has('paymentfile') }">
                                                 </b-input-group>
                                                 <small class="text-muted">
                                                 <font color="red">Note: * Only accept .png or .jpg upto 1 MB.</font>

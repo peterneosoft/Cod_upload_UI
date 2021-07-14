@@ -486,9 +486,11 @@ export default {
                 tallyfreightname: this.tallyfreightname,
                 salespersonname: this.salespersonname
             });
+
             if (this.cancelchequepath) {
                 this.input.cancelchequepath = this.cancelchequepath;
             }
+
             axios({
                     method: 'POST',
                     'url': apiUrl.api_url + 'saveclientcodremittancedetail',
@@ -500,10 +502,11 @@ export default {
                 .then((response) => {
                     this.getCleintWithAccountName();
                     this.ContactEmailid = '';
-                    this.cancelchequepath = '';
+
                     if (this.cancelchequepath) {
-                        this.$refs.paymentfile.value = null;
+                        this.$refs.paymentfile.value = '';
                     }
+                    this.cancelchequepath = '';
                     this.rtgs = '';
                     this.BankAccount = '';
                     this.BankName = '';
@@ -619,8 +622,10 @@ export default {
                 .then((response) => {
                     this.resetForm(event);
                     this.addformshow = 1;
+
                     if (this.cancelchequepath) {
-                        this.$refs.paymentfile.value = null;
+                        this.$refs.paymentfiles.value = '';
+
                     }
                     this.cancelchequepath = '';
                     this.getCleintWithAccountName();
