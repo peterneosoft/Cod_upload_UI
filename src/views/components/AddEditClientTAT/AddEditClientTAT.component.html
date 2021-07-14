@@ -173,7 +173,7 @@
                                     <span v-show="errors.has('IsActive')" class="text-danger">Status is required.</span>
                                 </div>
 
-                                <div class="col-md-4" style="margin-top: 10px;" title="Upload downloaded COD Remittance file">
+                                <div class="col-md-4" style="margin-top: 10px;">
                                     <label>Require Cancel cheque</label>
                                     <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
                                     <b-input-group style="height: 36px;" left="<i class='fa fa-file-text'></i>">
@@ -422,7 +422,6 @@
                                                 <label>Status <font color="red">*</font></label>
                                                 <b-input-group left="<i class='fa fa-list'></i>">
                                                     <select name="IsActiveEdit" id="IsActiveEdit" class="form-control" v-validate="'required'" v-model="IsActiveEdit">
-                                                        <option value="0" title="Select All">Select Status</option>
                                                         <option value="Active" title="Active">Active</option>
                                                         <option value="In Active" title="In Active">In Active</option>
                                                     </select>
@@ -430,7 +429,7 @@
                                                 <span v-show="errors.has('IsActiveEdit')" class="text-danger">Status is required.</span>
 
                                             </div>
-                                            <div class="col-md-4" style="margin-top: 10px;" title="Upload downloaded COD Remittance file">
+                                            <div class="col-md-4" style="margin-top: 10px;">
                                                 <label>Require Cancel cheque</label>
                                                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
                                                 <b-input-group style="height: 36px;" left="<i class='fa fa-file-text'></i>">

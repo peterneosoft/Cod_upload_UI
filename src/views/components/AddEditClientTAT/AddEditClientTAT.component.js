@@ -516,6 +516,11 @@ export default {
                         this.submitLoading = false;
                         this.AddEditClientTAT = 0;
                         this.$alertify.success(response.data.msg);
+
+                        setTimeout(function() {
+                            location.reload();
+                        }, 750);
+
                         this.resetForm(event);
                     } else if (response.data.errorCode == -1) {
                         this.submitLoading = false;
@@ -549,11 +554,11 @@ export default {
                         dData.push(val.day);
                     }
                 });
-
-                if (this.IsActiveEdit === "Active") {
-                    this.IsActiveEdit = true;
+                let IsActiveEdit = true;
+                if (this.IsActiveEdit == "Active") {
+                    IsActiveEdit = true;
                 } else {
-                    this.IsActiveEdit = false;
+                    IsActiveEdit = false;
                 }
                 this.input = ({
                     ClientCODRemmitanceId: this.ClientCODRemmitanceId,
@@ -561,7 +566,7 @@ export default {
                     RemittanceType: this.typeedit,
                     RemittanceDay: dData,
                     TAT: this.tatedit,
-                    IsActive: this.IsActiveEdit,
+                    IsActive: IsActiveEdit,
                     HoldingAmount: 0,
                     BussinessType: this.Bussinesstype,
                     AccountId: this.AccountName,
@@ -953,10 +958,10 @@ export default {
                 return false;
             }
 
-            if (/\.(jpe?g|png|gif|bmp|xls|xlsx|csv|doc|docx|rtf|wks|wps|wpd|excel|xlr|pps|pdf|ods|odt)$/i.test(selectedFile.name)) {
+            if (/\.(jpe?g|png)$/i.test(selectedFile.name)) {
                 name = selectedFile.name;
             } else {
-                this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg, .jpeg, .gif, .bmp, .xls, .xlsx, .pdf, .ods, .csv, .doc, .odt, .docx, .rtf, .wks, .wps, .wpd, .excel, .xlr, .pps");
+                this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg, .jpeg");
                 this.isLoading = false;
                 return false;
             }
@@ -1015,10 +1020,10 @@ export default {
                 return false;
             }
 
-            if (/\.(jpe?g|png|gif|bmp|xls|xlsx|csv|doc|docx|rtf|wks|wps|wpd|excel|xlr|pps|pdf|ods|odt)$/i.test(selectedFile.name)) {
+            if (/\.(jpe?g|png)$/i.test(selectedFile.name)) {
                 name = selectedFile.name;
             } else {
-                this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg, .jpeg, .gif, .bmp, .xls, .xlsx, .pdf, .ods, .csv, .doc, .odt, .docx, .rtf, .wks, .wps, .wpd, .excel, .xlr, .pps");
+                this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg, .jpeg");
                 this.isLoading = false;
                 return false;
             }
@@ -1077,7 +1082,7 @@ export default {
                 return false;
             }
 
-            if (/\.(jpe?g|png|gif|bmp|xls|xlsx|csv|doc|docx|rtf|wks|wps|wpd|excel|xlr|pps|pdf|ods|odt)$/i.test(selectedFile.name)) {
+            if (/\.(jpe?g|png)$/i.test(selectedFile.name)) {
                 name = selectedFile.name;
             } else {
                 this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg, .jpeg, .gif, .bmp, .xls, .xlsx, .pdf, .ods, .csv, .doc, .odt, .docx, .rtf, .wks, .wps, .wpd, .excel, .xlr, .pps");
