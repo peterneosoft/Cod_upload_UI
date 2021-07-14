@@ -501,7 +501,9 @@ export default {
                     this.getCleintWithAccountName();
                     this.ContactEmailid = '';
                     this.cancelchequepath = '';
-                    this.$refs.paymentfile.value = null;
+                    if (this.cancelchequepath) {
+                        this.$refs.paymentfile.value = null;
+                    }
                     this.rtgs = '';
                     this.BankAccount = '';
                     this.BankName = '';
@@ -612,7 +614,9 @@ export default {
                 .then((response) => {
                     this.resetForm(event);
                     this.addformshow = 1;
-                    this.$refs.paymentfile.value = null;
+                    if (this.cancelchequepath) {
+                        this.$refs.paymentfile.value = null;
+                    }
                     this.cancelchequepath = '';
                     this.getCleintWithAccountName();
                     this.ContactEmailid = '';
