@@ -957,8 +957,8 @@ export default {
             let selectedFile = event.target.files[0];
 
             var name = selectedFile.name;
-            if (selectedFile.size > 5242880) {
-                this.$alertify.error(event.srcElement.placeholder + " Failed! Upload Max File Size Should Not Be Greater Than 5 MB");
+            if (selectedFile.size > 1048576) {
+                this.$alertify.error(event.srcElement.placeholder + " Failed! Upload Max File Size Should Not Be Greater Than 1 MB");
                 this.isLoading = false;
                 return false;
             }
@@ -966,69 +966,7 @@ export default {
             if (/\.(jpe?g|png)$/i.test(selectedFile.name)) {
                 name = selectedFile.name;
             } else {
-                this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg, .jpeg");
-                this.isLoading = false;
-                return false;
-            }
-
-            const fd = new FormData();
-            fd.append('file', selectedFile, name);
-            fd.append('clientKey', $("#AccountName option:selected").text() + '-' + this.AccountName)
-                //fd.append('s3bucketKey', 'SVC-' + this.batchid);
-
-            axios.post(apiUrl.api_url + 'uploadcancelcheque', fd, {
-                    headers: {
-                        'Authorization': 'Bearer ' + this.myStr
-                    }
-                })
-                .then(res => {
-                    this.isLoading = false;
-                    if (res.data.errorCode == 0) {
-                        this.cancelchequepath = res.data.data;
-                        this.$alertify.success('Upload successfully.');
-                    } else {
-                        this.$alertify.error('Upload failed, try again.');
-                    }
-                }, error => {
-                    console.error(error);
-                    this.isLoading = false;
-                });
-        },
-        onUpload() {
-
-            if (!this.ClientId.ClientMasterID) {
-                this.$alertify.error('Select client name.');
-                return false;
-            }
-            if (!this.Bussinesstype) {
-                this.$alertify.error('select bussiness service type.');
-                return false;
-            }
-            if (!this.AccountName) {
-                this.$alertify.error('Select account name.');
-                return false;
-            }
-
-            this.isLoading = true;
-
-            if (event.target.files.length <= 0) {
-                this.isLoading = false;
-                return false;
-            }
-
-            let selectedFile = event.target.files[0];
-
-            var name = selectedFile.name;
-            if (selectedFile.size > 5242880) {
-                this.$alertify.error(event.srcElement.placeholder + " Failed! Upload Max File Size Should Not Be Greater Than 5 MB");
-                this.isLoading = false;
-                return false;
-            }
-
-            if (/\.(jpe?g|png)$/i.test(selectedFile.name)) {
-                name = selectedFile.name;
-            } else {
-                this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg, .jpeg");
+                this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg");
                 this.isLoading = false;
                 return false;
             }
@@ -1081,8 +1019,8 @@ export default {
             let selectedFile = event.target.files[0];
 
             var name = selectedFile.name;
-            if (selectedFile.size > 5242880) {
-                this.$alertify.error(event.srcElement.placeholder + " Failed! Upload Max File Size Should Not Be Greater Than 5 MB");
+            if (selectedFile.size > 1048576) {
+                this.$alertify.error(event.srcElement.placeholder + " Failed! Upload Max File Size Should Not Be Greater Than 1 MB");
                 this.isLoading = false;
                 return false;
             }
@@ -1090,7 +1028,7 @@ export default {
             if (/\.(jpe?g|png)$/i.test(selectedFile.name)) {
                 name = selectedFile.name;
             } else {
-                this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg, .jpeg, .gif, .bmp, .xls, .xlsx, .pdf, .ods, .csv, .doc, .odt, .docx, .rtf, .wks, .wps, .wpd, .excel, .xlr, .pps");
+                this.$alertify.error(event.srcElement.placeholder + " Failed! Please Upload Only Valid Format: .png, .jpg");
                 this.isLoading = false;
                 return false;
             }
