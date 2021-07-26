@@ -242,7 +242,7 @@ export default {
                 this.input.AccountId = accountData
             }
             this.input.offset = this.pageno;
-            this.input.limit = 10;
+            this.input.limit = 500;
 
             axios({
                     method: 'POST',
@@ -259,10 +259,10 @@ export default {
                         this.listEmailRemittanceData = result.data.data;
                         this.resultCount = result.data.count;
                         let totalRows = result.data.count;
-                        if (totalRows < 10) {
+                        if (totalRows < 500) {
                             this.pagecount = 1
                         } else {
-                            this.pagecount = Math.ceil(totalRows / 10)
+                            this.pagecount = Math.ceil(totalRows / 500)
                         }
                     } else {
                         this.listEmailRemittanceData = [];
