@@ -125,20 +125,21 @@ export default {
                     this.ClientArr.push(this.listEmailRemittanceData[i].clientremittedid);
 
                     let tempArray = {};
+                    if (this.listEmailRemittanceData[i].filepath) {
+                        tempArray = {
+                            AccountId: this.listEmailRemittanceData[i].AccountId,
+                            ClientId: this.listEmailRemittanceData[i].ClientId,
+                            CompanyName: this.listEmailRemittanceData[i].CompanyName,
+                            RemittanceDate: this.listEmailRemittanceData[i].transactiondate,
+                            Cycle: (this.listEmailRemittanceData[i].Cycle ? this.listEmailRemittanceData[i].Cycle : ''),
+                            UTRNo: (this.listEmailRemittanceData[i].UTRNo ? this.listEmailRemittanceData[i].UTRNo : ''),
+                            RemittanceAmount: (this.listEmailRemittanceData[i].PaidAmount ? this.listEmailRemittanceData[i].PaidAmount : ''),
+                            EmailId: (this.listEmailRemittanceData[i].EmailId ? this.listEmailRemittanceData[i].EmailId : ''),
+                            filepath: (this.listEmailRemittanceData[i].filepath ? this.listEmailRemittanceData[i].filepath : ''),
+                        }
 
-                    tempArray = {
-                        AccountId: this.listEmailRemittanceData[i].AccountId,
-                        ClientId: this.listEmailRemittanceData[i].ClientId,
-                        CompanyName: this.listEmailRemittanceData[i].CompanyName,
-                        RemittanceDate: this.listEmailRemittanceData[i].transactiondate,
-                        Cycle: this.listEmailRemittanceData[i].Cycle,
-                        UTRNo: this.listEmailRemittanceData[i].UTRNo,
-                        RemittanceAmount: this.listEmailRemittanceData[i].PaidAmount,
-                        EmailId: this.listEmailRemittanceData[i].EmailId,
-                        filepath: this.listEmailRemittanceData[i].filepath,
+                        this.newCheckRecord.push(tempArray);
                     }
-
-                    this.newCheckRecord.push(tempArray);
 
                 }
 
@@ -162,19 +163,20 @@ export default {
 
                 if (this.checkAll == false) {
                     if ($("#ClientId" + data.clientremittedid).prop('checked') == true) {
-
-                        tempArray = {
-                            AccountId: data.AccountId,
-                            ClientId: data.ClientId,
-                            CompanyName: data.CompanyName,
-                            RemittanceDate: data.transactiondate,
-                            Cycle: data.Cycle,
-                            UTRNo: data.UTRNo,
-                            RemittanceAmount: data.PaidAmount,
-                            EmailId: data.EmailId,
-                            filepath: data.filepath,
+                        if (data.filepath) {
+                            tempArray = {
+                                AccountId: data.AccountId,
+                                ClientId: data.ClientId,
+                                CompanyName: data.CompanyName,
+                                RemittanceDate: data.transactiondate,
+                                Cycle: (data.Cycle ? data.Cycle : ''),
+                                UTRNo: (data.UTRNo ? data.UTRNo : ''),
+                                RemittanceAmount: (data.PaidAmount ? data.PaidAmount : ''),
+                                EmailId: (data.EmailId ? data.EmailId : ''),
+                                filepath: (data.filepath ? data.filepath : ''),
+                            }
+                            this.newCheckRecord.push(tempArray);
                         }
-                        this.newCheckRecord.push(tempArray);
                     }
 
                     if ($("#ClientId" + data.clientremittedid).prop('checked') == false) {
@@ -209,19 +211,21 @@ export default {
 
             for (var i = 0; i < items.length; i++) {
                 if (items[i]['ClientId'] !== match) {
+                    if (items[i]['filepath']) {
+                        let tempArray = {
+                            AccountId: items[i]['AccountId'],
+                            ClientId: items[i]['ClientId'],
+                            CompanyName: items[i]['CompanyName'],
+                            RemittanceDate: items[i]['RemittanceDate'],
+                            Cycle: (items[i]['Cycle'] ? items[i]['Cycle'] : ''),
+                            UTRNo: (items[i]['UTRNo'] ? items[i]['UTRNo'] : ''),
+                            RemittanceAmount: (items[i]['RemittanceAmount'] ? items[i]['RemittanceAmount'] : ''),
+                            EmailId: (items[i]['EmailId'] ? items[i]['EmailId'] : ''),
+                            filepath: (items[i]['filepath'] ? items[i]['filepath'] : '')
+                        }
 
-                    let tempArray = {
-                        AccountId: items[i]['AccountId'],
-                        ClientId: items[i]['ClientId'],
-                        CompanyName: items[i]['CompanyName'],
-                        RemittanceDate: items[i]['RemittanceDate'],
-                        Cycle: items[i]['Cycle'],
-                        UTRNo: (items[i]['UTRNo'] ? items[i]['UTRNo'] : 0),
-                        RemittanceAmount: items[i]['RemittanceAmount'],
-                        EmailId: items[i]['EmailId'],
-                        filepath: items[i]['filepath']
+                        this.newCheckRecord.push(tempArray);
                     }
-                    this.newCheckRecord.push(tempArray);
                 }
             }
 
