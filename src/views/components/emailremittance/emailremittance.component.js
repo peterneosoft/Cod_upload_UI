@@ -184,6 +184,20 @@ export default {
                 }
                 this.disableButton = false;
 
+                let isSelected = [];
+
+                $("input.checkedChild").each(function(index, element) {
+                    if ($(this).is(":checked")) {
+                        isSelected.push("true");
+                    } else {
+                        isSelected.push("false");
+                    }
+                });
+
+                if ($.inArray("true", isSelected) < 0) {
+                    this.disableButton = true;
+                }
+
             } else {
                 this.newCheckRecord = [];
                 this.disableButton = true;
@@ -210,6 +224,7 @@ export default {
                     this.newCheckRecord.push(tempArray);
                 }
             }
+
             return 1;
         },
         getEmailRemittanceClients() {
