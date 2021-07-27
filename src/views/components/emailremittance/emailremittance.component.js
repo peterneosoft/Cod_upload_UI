@@ -214,12 +214,12 @@ export default {
                         AccountId: items[i]['AccountId'],
                         ClientId: items[i]['ClientId'],
                         CompanyName: items[i]['CompanyName'],
-                        RemittanceDate: items[i]['transactiondate'],
+                        RemittanceDate: items[i]['RemittanceDate'],
                         Cycle: items[i]['Cycle'],
-                        UTRNo: items[i]['UTRNo'],
-                        RemittanceAmount: items[i]['PaidAmount'],
+                        UTRNo: (items[i]['UTRNo'] ? items[i]['UTRNo'] : 0),
+                        RemittanceAmount: items[i]['RemittanceAmount'],
                         EmailId: items[i]['EmailId'],
-                        filepath: items[i]['filepath'],
+                        filepath: items[i]['filepath']
                     }
                     this.newCheckRecord.push(tempArray);
                 }
@@ -257,7 +257,7 @@ export default {
                 this.input.AccountId = accountData
             }
             this.input.offset = this.pageno;
-            this.input.limit = 500;
+            this.input.limit = 50;
 
             axios({
                     method: 'POST',
@@ -274,10 +274,10 @@ export default {
                         this.listEmailRemittanceData = result.data.data;
                         this.resultCount = result.data.count;
                         let totalRows = result.data.count;
-                        if (totalRows < 500) {
+                        if (totalRows < 50) {
                             this.pagecount = 1
                         } else {
-                            this.pagecount = Math.ceil(totalRows / 500)
+                            this.pagecount = Math.ceil(totalRows / 50)
                         }
                     } else {
                         this.listEmailRemittanceData = [];
