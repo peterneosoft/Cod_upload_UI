@@ -332,7 +332,7 @@ export default {
 
         //to get pagination
         getPaginationData(pageNum) {
-            this.pageno = (pageNum - 1) * 10;
+            this.pageno = (pageNum - 1) * 50;
             this.listEmailRemittanceData = [];
             this.ClientArr = [];
             this.checkAll = false;
