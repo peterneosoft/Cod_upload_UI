@@ -125,8 +125,9 @@ export default {
                     this.ClientArr.push(this.listEmailRemittanceData[i].clientremittedid);
 
                     let tempArray = {};
-                    if (this.listEmailRemittanceData[i].filepath) {
+                    if (this.listEmailRemittanceData[i].filepath && this.listEmailRemittanceData[i].EmailStatus == 'Pending') {
                         tempArray = {
+                            clientremittedid: this.listEmailRemittanceData[i].clientremittedid,
                             AccountId: this.listEmailRemittanceData[i].AccountId,
                             ClientId: this.listEmailRemittanceData[i].ClientId,
                             CompanyName: this.listEmailRemittanceData[i].CompanyName,
@@ -135,6 +136,7 @@ export default {
                             UTRNo: (this.listEmailRemittanceData[i].UTRNo ? this.listEmailRemittanceData[i].UTRNo : ''),
                             RemittanceAmount: (this.listEmailRemittanceData[i].PaidAmount ? this.listEmailRemittanceData[i].PaidAmount : ''),
                             EmailId: (this.listEmailRemittanceData[i].EmailId ? this.listEmailRemittanceData[i].EmailId : ''),
+                            EmailStatus: (this.listEmailRemittanceData[i].EmailStatus ? this.listEmailRemittanceData[i].EmailStatus : ''),
                             filepath: (this.listEmailRemittanceData[i].filepath ? this.listEmailRemittanceData[i].filepath : ''),
                         }
 
@@ -142,8 +144,10 @@ export default {
                     }
 
                 }
+                if (this.newCheckRecord.length > 0) {
+                    this.disableButton = false;
+                }
 
-                this.disableButton = false;
             } else {
                 this.checkAll = false;
                 this.newCheckRecord = [];
@@ -163,8 +167,9 @@ export default {
 
                 if (this.checkAll == false) {
                     if ($("#ClientId" + data.clientremittedid).prop('checked') == true) {
-                        if (data.filepath) {
+                        if (data.filepath && data.EmailStatus == 'Pending') {
                             tempArray = {
+                                clientremittedid: data.clientremittedid,
                                 AccountId: data.AccountId,
                                 ClientId: data.ClientId,
                                 CompanyName: data.CompanyName,
@@ -173,6 +178,7 @@ export default {
                                 UTRNo: (data.UTRNo ? data.UTRNo : ''),
                                 RemittanceAmount: (data.PaidAmount ? data.PaidAmount : ''),
                                 EmailId: (data.EmailId ? data.EmailId : ''),
+                                EmailStatus: (data.EmailStatus ? data.EmailStatus : ''),
                                 filepath: (data.filepath ? data.filepath : ''),
                             }
                             this.newCheckRecord.push(tempArray);
@@ -184,7 +190,9 @@ export default {
                     }
 
                 }
-                this.disableButton = false;
+                if (this.newCheckRecord.length > 0) {
+                    this.disableButton = false;
+                }
 
                 let isSelected = [];
 
@@ -210,9 +218,10 @@ export default {
             this.newCheckRecord = [];
 
             for (var i = 0; i < items.length; i++) {
-                if (items[i]['ClientId'] !== match) {
-                    if (items[i]['filepath']) {
+                if (items[i]['clientremittedid'] !== match) {
+                    if (items[i]['filepath'] && items[i]['EmailStatus'] == 'Pending') {
                         let tempArray = {
+                            clientremittedid: items[i]['clientremittedid'],
                             AccountId: items[i]['AccountId'],
                             ClientId: items[i]['ClientId'],
                             CompanyName: items[i]['CompanyName'],
@@ -221,10 +230,14 @@ export default {
                             UTRNo: (items[i]['UTRNo'] ? items[i]['UTRNo'] : ''),
                             RemittanceAmount: (items[i]['RemittanceAmount'] ? items[i]['RemittanceAmount'] : ''),
                             EmailId: (items[i]['EmailId'] ? items[i]['EmailId'] : ''),
+                            EmailStatus: (items[i]['EmailStatus'] ? items[i]['EmailStatus'] : ''),
                             filepath: (items[i]['filepath'] ? items[i]['filepath'] : '')
                         }
 
                         this.newCheckRecord.push(tempArray);
+                    }
+                    if (this.newCheckRecord.length > 0) {
+                        this.disableButton = false;
                     }
                 }
             }
@@ -299,8 +312,27 @@ export default {
         emailRemittance() {
             this.disableButton = true;
             this.isLoading = true;
+            let newCheckRecords = [];
+            if (this.newCheckRecord.length > 0) {
+                for (var i = 0; i < this.newCheckRecord.length; i++) {
+                    let tempArray = {
+                        AccountId: this.newCheckRecord[i].AccountId,
+                        ClientId: this.newCheckRecord[i].ClientId,
+                        CompanyName: this.newCheckRecord[i].CompanyName,
+                        RemittanceDate: this.newCheckRecord[i].RemittanceDate,
+                        Cycle: (this.newCheckRecord[i].Cycle ? this.newCheckRecord[i].Cycle : ''),
+                        UTRNo: (this.newCheckRecord[i].UTRNo ? this.newCheckRecord[i].UTRNo : ''),
+                        RemittanceAmount: (this.newCheckRecord[i].RemittanceAmount ? this.newCheckRecord[i].RemittanceAmount : ''),
+                        EmailId: (this.newCheckRecord[i].EmailId ? this.newCheckRecord[i].EmailId : ''),
+                        filepath: (this.newCheckRecord[i].filepath ? this.newCheckRecord[i].filepath : ''),
+                    }
+                    newCheckRecords.push(tempArray);
+                }
+            }
+
+
             this.input = ({
-                emailArray: this.newCheckRecord,
+                emailArray: newCheckRecords,
                 username: this.localuserid
             });
 
