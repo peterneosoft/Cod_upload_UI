@@ -36,6 +36,23 @@ export default {
             clientLoading: false,
             reportlink: '',
             ClientAccountList: [],
+            allclientwise: 1,
+            selected: 'allclient',
+            options: [{
+                    text: 'All Client',
+                    value: 'allclient'
+                },
+                {
+                    text: 'Client Wise',
+                    value: 'clientwise'
+                },
+                {
+                    text: 'Ganerate Report',
+                    value: 'paymentcsv'
+                }
+            ],
+            allclientdata: [],
+            message: '',
         }
     },
 
@@ -61,6 +78,22 @@ export default {
     },
 
     methods: {
+
+        changeRadio(ele) {
+
+            if (this.selected == 'allclient') {
+                $(".labelcls").html('Transaction From Date');
+                this.allclientwise = 1;
+                this.listCODPaymentData = [];
+            } else if (this.selected == 'clientwise') {
+                $(".labelcls").html('Transaction From Date');
+                this.allclientwise = 2;
+            } else if (this.selected == 'paymentcsv') {
+                $(".labelcls").html('Remittance Date');
+                this.allclientwise = 3;
+            }
+
+        },
         getCleintWithAccountName() {
             this.clientLoading = true;
             this.ClientAccountList = [];
@@ -129,65 +162,156 @@ export default {
         GetCODPaymentData(event) {
             $(".text-danger").html("");
             this.isLoading = true;
+            this.allclientdata = [];
+            this.listCODPaymentData = [];
 
-            axios({
-                    method: 'GET',
-                    'url': apiUrl.api_url + 'codpaymentdetailsmaster?ClientId=' + this.ClientId.ClientId + '&AccountId=' + this.ClientId.AccountId + '&Company=' + this.ClientId.AccountName + '&offset=' + this.pageno + '&limit=10&fromDate=' + this.fromDate + '&toDate=' + this.toDate + '&createdby=' + this.createdby,
-                    headers: {
-                        'Authorization': 'Bearer ' + this.myStr
-                    }
-                })
-                .then(result => {
-                    $(".text-danger").html("");
-                    if (result.data.code == 200) {
-                        this.listCODPaymentData = result.data.data;
-                        this.isLoading = false;
+            this.message = '';
+            if (this.selected == 'paymentcsv') {
 
-                        let totalRows = result.data.count;
-                        this.resultCount = result.data.count;
-                        if (totalRows < 10) {
-                            this.pagecount = 1
-                        } else {
-                            this.pagecount = Math.ceil(totalRows / 10)
+                this.input = ({
+                    username: this.createdby
+                });
+                if (this.fromDate) {
+                    this.input.RemittanceDate = this.fromDate;
+                }
+
+                axios({
+                        method: 'POST',
+                        'url': apiUrl.api_url + 'exportcodpaymentcsv',
+                        data: this.input,
+                        headers: {
+                            'Authorization': 'Bearer ' + this.myStr
                         }
-                        // this.exportCODPaymentData();
-                        this.exportf = true;
-                    } else {
-                        this.listCODPaymentData = [];
-                        this.resultCount = 0;
-                        this.isLoading = false;
-                    }
-                }, error => {
-                    console.error(error)
-                    this.$alertify.error('Error Occured');
-                })
+                    })
+                    .then(result => {
+                        $(".text-danger").html("");
+
+                        if (result.data.code == 200) {
+                            this.message = result.data.message;
+                            this.isLoading = false;
+
+                        } else {
+                            this.message = result.data.message;
+                            this.listCODPaymentData = [];
+                            this.resultCount = 0;
+                            this.isLoading = false;
+                        }
+
+                    }, error => {
+                        console.error(error)
+                        this.$alertify.error('Error Occured');
+                    });
+
+
+            } else if (this.selected == 'allclient') {
+
+                this.input = ({
+                    username: this.createdby
+                });
+                if (this.fromDate) {
+                    this.input.TranscationFromDate = this.fromDate;
+                }
+                if (this.toDate) {
+                    this.input.TranscationToDate = this.toDate;
+                }
+                this.input.offset = this.pageno;
+                this.input.limit = 10;
+
+                axios({
+                        method: 'POST',
+                        'url': apiUrl.api_url + 'getdailypaymentreport',
+                        data: this.input,
+                        headers: {
+                            'Authorization': 'Bearer ' + this.myStr
+                        }
+                    })
+                    .then(result => {
+                        $(".text-danger").html("");
+                        if (result.data.code == 200) {
+                            this.allclientdata = result.data.dailysummary;
+                            this.isLoading = false;
+
+                            let totalRows = result.data.dailysummary.length;
+                            this.resultCount = result.data.dailysummary.length;
+                            if (totalRows < 10) {
+                                this.pagecount = 1
+                            } else {
+                                this.pagecount = Math.ceil(totalRows / 10)
+                            }
+                            this.exportf = true;
+                        } else {
+                            this.listCODPaymentData = [];
+                            this.resultCount = 0;
+                            this.isLoading = false;
+                        }
+                    }, error => {
+                        console.error(error)
+                        this.$alertify.error('Error Occured');
+                    });
+
+            } else {
+                axios({
+                        method: 'GET',
+                        'url': apiUrl.api_url + 'codpaymentdetailsmaster?ClientId=' + this.ClientId.ClientId + '&AccountId=' + this.ClientId.AccountId + '&Company=' + this.ClientId.AccountName + '&offset=' + this.pageno + '&limit=10&fromDate=' + this.fromDate + '&toDate=' + this.toDate + '&createdby=' + this.createdby,
+                        headers: {
+                            'Authorization': 'Bearer ' + this.myStr
+                        }
+                    })
+                    .then(result => {
+                        $(".text-danger").html("");
+                        if (result.data.code == 200) {
+                            this.listCODPaymentData = result.data.data;
+                            this.isLoading = false;
+
+                            let totalRows = result.data.count;
+                            this.resultCount = result.data.count;
+                            if (totalRows < 10) {
+                                this.pagecount = 1
+                            } else {
+                                this.pagecount = Math.ceil(totalRows / 10)
+                            }
+                            // this.exportCODPaymentData();
+                            this.exportf = true;
+                        } else {
+                            this.listCODPaymentData = [];
+                            this.resultCount = 0;
+                            this.isLoading = false;
+                        }
+                    }, error => {
+                        console.error(error)
+                        this.$alertify.error('Error Occured');
+                    });
+            }
         },
 
         exportCODPaymentData() {
             this.reportlink = '';
+            if (this.selected == 'allclient') {
 
-            axios({
-                    method: 'GET',
-                    'url': apiUrl.api_url + 'exportcodpaymentreport?ClientId=' + this.ClientId.ClientId + '&AccountId=' + this.ClientId.AccountId + '&Company=' + this.ClientId.AccountName + '&fromDate=' + this.fromDate + '&toDate=' + this.toDate + '&createdby=' + this.createdby,
-                    headers: {
-                        'Authorization': 'Bearer ' + this.myStr
-                    }
-                })
-                .then(result => {
-                    if (result.data.code == 200) {
-                        // this.getDownloadCsvObject(result.data.data);
-                        this.exportf = true;
-                        this.reportlink = result.data.data;
-                        this.exportreport();
-                    } else {
+            } else {
+                axios({
+                        method: 'GET',
+                        'url': apiUrl.api_url + 'exportcodpaymentreport?ClientId=' + this.ClientId.ClientId + '&AccountId=' + this.ClientId.AccountId + '&Company=' + this.ClientId.AccountName + '&fromDate=' + this.fromDate + '&toDate=' + this.toDate + '&createdby=' + this.createdby,
+                        headers: {
+                            'Authorization': 'Bearer ' + this.myStr
+                        }
+                    })
+                    .then(result => {
+                        if (result.data.code == 200) {
+                            // this.getDownloadCsvObject(result.data.data);
+                            this.exportf = true;
+                            this.reportlink = result.data.data;
+                            this.exportreport();
+                        } else {
+                            this.exportf = false;
+                            this.reportlink = '';
+                        }
+                    }, error => {
                         this.exportf = false;
                         this.reportlink = '';
-                    }
-                }, error => {
-                    this.exportf = false;
-                    this.reportlink = '';
-                    console.error(error)
-                })
+                        console.error(error)
+                    });
+            }
         },
         exportreport() {
             $(".text-danger").html("");
@@ -262,10 +386,10 @@ export default {
                     this.pagecount = 1;
                     this.pageno = 0;
                     this.exportf = false;
-                    if (this.fromDate > this.toDate) {
+                    if (this.fromDate > this.toDate && this.selected !== 'paymentcsv') {
                         document.getElementById("fdate").innerHTML = "From date should not be greater than To date.";
                         return false;
-                    } else if (diffDays > 30) {
+                    } else if (diffDays > 30 && this.selected !== 'paymentcsv') {
                         document.getElementById("fdate").innerHTML = "Difference between From date & To date should not be greater than 30 days.";
                         return false;
                     } else {
@@ -281,12 +405,15 @@ export default {
             $(".text-danger").html("");
             this.ClientId = "";
             this.pagecount = 1;
+            this.allclientwise = 1;
+            this.selected = 'allclient';
             this.pageno = this.resultCount = 0;
             this.listCODPaymentData = [];
             this.fromDate = this.toDate = '';
             this.exportf = false;
             this.$validator.reset();
             this.errors.clear();
+
         },
     }
 }

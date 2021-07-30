@@ -361,6 +361,7 @@ export default {
                                             testTemp.CompanyName = item.CompanyName;
                                             testTemp.RemittanceType = item.RemittanceType;
                                             testTemp.Cycle = item.Cycle;
+                                            testTemp.transactiondate = this.format_date(item.transactiondate);
                                             testTemp.ShipmentCount = item.ShipmentCount;
                                             testTemp.CODAmount = item.CODAmount;
                                             testTemp.FreightAmount = item.FreightAmount;

@@ -1,104 +1,142 @@
 <section class="user">
-  <div class="col-md-12 mb-2">
-    <b-card>
-      <div slot="header">
-        <i class=" fa fa-filter filter"></i> COD Payment Report
-      </div>
-      <div class="card-body1">
-        <form v-on:submit.prevent="onSubmit">
-          <div class="form-group row">
-            <div class="col-md-4">
-              <label>Client / Company Name <font color="red">*</font></label>
-              <b-input-group left="<i class='fa fa-list'></i>">
-                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="clientLoading" />
-                <Multiselect :options="ClientAccountList" name="ClientId" id="ClientId" v-model="ClientId" placeholder="Select Client" label="AccountName" track-by="AccountId" :data-ClientId="ClientId" v-validate="{required: true}"
-                  v-bind:class="{'error': errors.has('ClientId') }" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
-                  <template slot="noResult">
-                    <p>No Record Found.</p>
-                  </template>
-                </Multiselect>
-              </b-input-group>
-              <span v-show="errors.has('ClientId')" class="text-danger">Client / Company name is required.</span>
+    <div class="col-md-12 mb-2">
+        <b-card>
+            <div slot="header">
+                <i class=" fa fa-filter filter"></i> COD Payment Report
             </div>
+            <div class="card-body1">
+                <form v-on:submit.prevent="onSubmit">
+                    <b-form-fieldset>
+                        <b-form-radio @input="changeRadio(selected)" name="searchview" id="searchview" :plain="true" :options="options" v-model="selected"></b-form-radio>
+                        <span id="opt" class="text-danger"></span>
+                        <hr style="margin-top: 0rem; margin-bottom: 0rem;">
+                    </b-form-fieldset>
 
-            <div class="col-md-3">
-              <label>Transaction From Date <font color="red">*</font></label>
-              <b-input-group left="<i class='fa fa-calendar'></i>">
-                <b-form-input id="fromDate" type="date" name="fromDate" v-model="fromDate" v-bind:class="{'form-control': true}" style="height: 42px;" v-validate="{required: true}"></b-form-input>
-              </b-input-group>
-              <span v-show="errors.has('fromDate')" class="text-danger">Transaction from date is required.</span>
-              <span id="fdate" class="text-danger"></span>
+                    <div class="form-group row">
+                        <div v-if="allclientwise==2" class="col-md-4">
+                            <label>Client / Company Name <font color="red">*</font></label>
+                            <b-input-group left="<i class='fa fa-list'></i>">
+                                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="clientLoading" />
+                                <Multiselect :options="ClientAccountList" name="ClientId" id="ClientId" v-model="ClientId" placeholder="Select Client" label="AccountName" track-by="AccountId" :data-ClientId="ClientId" v-validate="{required: true}" v-bind:class="{'error': errors.has('ClientId') }"
+                                    :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                                    <template slot="noResult">
+                                    <p>No Record Found.</p>
+                                  </template>
+                                </Multiselect>
+                            </b-input-group>
+                            <span v-show="errors.has('ClientId')" class="text-danger">Client / Company name is required.</span>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="labelcls">Transaction From Date <font color="red">*</font></label>
+                            <b-input-group left="<i class='fa fa-calendar'></i>">
+                                <b-form-input id="fromDate" type="date" name="fromDate" v-model="fromDate" v-bind:class="{'form-control': true}" style="height: 42px;" v-validate="{required: true}"></b-form-input>
+                            </b-input-group>
+                            <span v-if="allclientwise!=3" v-show="errors.has('fromDate')" class="text-danger">Transaction from date is required.</span>
+                            <span v-if="allclientwise==3" v-show="errors.has('fromDate')" class="text-danger">Remittance date is required.</span>
+                            <span id="fdate" class="text-danger"></span>
+                        </div>
+
+                        <div v-if="allclientwise!=3" class="col-md-3">
+                            <label>Transaction To Date <font color="red">*</font></label>
+                            <b-input-group left="<i class='fa fa-calendar'></i>">
+                                <b-form-input id="toDate" type="date" name="toDate" v-model="toDate" v-bind:class="{'form-control': true}" style="height: 42px;" v-validate="{required: true}"></b-form-input>
+                            </b-input-group>
+                            <span v-show="errors.has('toDate')" class="text-danger">Transaction to date is required.</span>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+                        <button class="btn btn-sm btn-danger" @click="resetForm()" type="button"><i class="fa fa-ban"></i> Clear</button>
+                    </div>
+                </form>
             </div>
+        </b-card>
+    </div>
 
-            <div class="col-md-3">
-              <label>Transaction To Date <font color="red">*</font></label>
-              <b-input-group left="<i class='fa fa-calendar'></i>">
-                <b-form-input id="toDate" type="date" name="toDate" v-model="toDate" v-bind:class="{'form-control': true}" style="height: 42px;" v-validate="{required: true}"></b-form-input>
-              </b-input-group>
-              <span v-show="errors.has('toDate')" class="text-danger">Transaction to date is required.</span>
-
-            </div>
-
-
-
-          </div>
-          <div>
-            <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
-            <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
-          </div>
-        </form>
-      </div>
-    </b-card>
-  </div>
-
-  <div class="col-md-12 mb-2">
-    <div class="card-headerfrm" style="margin-bottom: 15px;">
-      <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result
-        <span v-show="exportf" style="margin-left: 85%; cursor: pointer;" @click="exportCODPaymentData()">
-          <button class="btn btn-sm btn-success" type="button">
+    <div class="col-md-12 mb-2">
+        <div class="card-headerfrm" style="margin-bottom: 15px;">
+            <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result
+                <span v-show="exportf" style="margin-left: 85%; cursor: pointer;" @click="exportCODPaymentData()">
+          <button v-if="allclientwise==2" class="btn btn-sm btn-success" type="button">
             <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="excelLoading" />
             <i class="fa fa-download"></i> Export
           </button>
         </span>
-      </h4>
-      <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
-      <table class="table-bordered table-hover tbl datatables" style="width:100%;">
-        <thead>
-          <tr class="text-primary">
-            <th class="text-center tableheader"><b>#</b></th>
-            <th class="text-center tableheader"><b>Shipping Date</b></th>
-            <th class="text-center tableheader"><b>POID</b></th>
-            <th class="text-center tableheader"><b>Shipping Id</b></th>
-            <th class="text-center tableheader"><b>Company Name</b></th>
-            <th class="text-center tableheader"><b>Hub Name</b></th>
-            <th class="text-center tableheader"><b>Service Type</b></th>
-            <th class="text-center tableheader"><b>Shipment Status</b></th>
-            <th class="text-center tableheader"><b>Delivery Date</b></th>
-            <th class="text-center tableheader"><b>Net Payment ( <i class="fa fa-rupee"></i> )</b></th>
-            <th class="text-center tableheader"><b>Transaction Date</b></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-if="resultCount==0">
-            <td colspan="11" align="center">No record found</td>
-          </tr>
-          <tr v-for="(data,index) in listCODPaymentData">
-            <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
-            <td>{{data.ShippingDate}}</td>
-            <td>{{data.POID}}</td>
-            <td>{{data.ShippingID}}</td>
-            <td>{{data.CompanyName}}</td>
-            <td>{{data.HubName}}</td>
-            <td>COD</td>
-            <td>Delivered</td>
-            <td>{{data.DeliveryDate}}</td>
-            <td>{{data.NetPayment}}</td>
-            <td>{{data.RemittanceDate}}</td>
-          </tr>
-        </tbody>
-      </table><br>
-      <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
-      </paginate>
+            </h4>
+            <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="isLoading" />
+            <h6 v-if="allclientwise==3 && message" style="margin-left:40%;" class='btn-success btn'><i data-v-50b18f1b="" class="fa fa-check-circle"></i> {{message}}</h6>
+            <table v-if="allclientwise==2" class="table-bordered table-hover tbl datatables" style="width:100%;">
+                <thead>
+                    <tr class="text-primary">
+                        <th class="text-center tableheader"><b>#</b></th>
+                        <th class="text-center tableheader"><b>Shipping Date</b></th>
+                        <th class="text-center tableheader"><b>POID</b></th>
+                        <th class="text-center tableheader"><b>Shipping Id</b></th>
+                        <th class="text-center tableheader"><b>Company Name</b></th>
+                        <th class="text-center tableheader"><b>Hub Name</b></th>
+                        <th class="text-center tableheader"><b>Service Type</b></th>
+                        <th class="text-center tableheader"><b>Shipment Status</b></th>
+                        <th class="text-center tableheader"><b>Delivery Date</b></th>
+                        <th class="text-center tableheader"><b>Net Payment ( <i class="fa fa-rupee"></i> )</b></th>
+                        <th class="text-center tableheader"><b>Transaction Date</b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-if="resultCount==0">
+                        <td colspan="11" align="center">No record found</td>
+                    </tr>
+                    <tr v-for="(data,index) in listCODPaymentData">
+                        <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
+                        <td>{{data.ShippingDate}}</td>
+                        <td>{{data.POID}}</td>
+                        <td>{{data.ShippingID}}</td>
+                        <td>{{data.CompanyName}}</td>
+                        <td>{{data.HubName}}</td>
+                        <td>COD</td>
+                        <td>Delivered</td>
+                        <td>{{data.DeliveryDate}}</td>
+                        <td>{{data.NetPayment}}</td>
+                        <td>{{data.RemittanceDate}}</td>
+                    </tr>
+                </tbody>
+            </table><br v-if="allclientwise==2">
+            <paginate v-if="allclientwise==2 && resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+            </paginate>
+
+
+
+            <table v-if="allclientwise==1" class="table-bordered table-hover tbl datatables" style="width:100%;">
+                <thead>
+                    <tr class="text-primary">
+                        <th class="text-center tableheader"><b>#</b></th>
+                        <th class="text-center tableheader"><b>Transcation Date</b></th>
+                        <th class="text-center tableheader"><b>Total COD Shipments</b></th>
+                        <th class="text-center tableheader"><b>Total Shipments</b></th>
+                        <th class="text-center tableheader"><b>Total Exception Shipments</b></th>
+                        <th class="text-center tableheader"><b>Total Exception Amount</b></th>
+                        <th class="text-center tableheader"><b>Download Link </b></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-if="resultCount==0">
+                        <td colspan="10" align="center">No record found</td>
+                    </tr>
+                    <tr v-for="(data,index) in allclientdata">
+                        <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
+                        <td>{{data.transactiondate}}</td>
+                        <td>{{data.totalcod}}</td>
+                        <td>{{data.totalshipment}}</td>
+                        <td>{{data.totalexception}}</td>
+                        <td>{{data.totalexceptionamt}}</td>
+                        <td>
+                            <span v-if='data.filepath!=null'><a  v-bind:href='`${data.filepath}`'><i class="fa fa-download" aria-hidden="true" style="font-size:20px; color:#4b8cbb; margin: 10px 10px 1px 1px;"></i></a></span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table><br v-if="allclientwise==1">
+            <paginate v-if="allclientwise==1 && resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :click-handler="getPaginationData" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'">
+            </paginate>
+        </div>
     </div>
-  </div>
 </section>
