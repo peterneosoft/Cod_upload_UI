@@ -47,7 +47,7 @@ export default {
                     value: 'clientwise'
                 },
                 {
-                    text: 'Ganerate Report',
+                    text: 'Generate Report',
                     value: 'paymentcsv'
                 }
             ],
@@ -78,9 +78,12 @@ export default {
     },
 
     methods: {
-
         changeRadio(ele) {
-
+            this.listCODPaymentData = [];
+            this.resultCount = 0;
+            this.allclientdata = [];
+            this.exportf = false;
+            $(".labelcls").html('');
             if (this.selected == 'allclient') {
                 $(".labelcls").html('Transaction From Date');
                 this.allclientwise = 1;
@@ -92,7 +95,6 @@ export default {
                 $(".labelcls").html('Remittance Date');
                 this.allclientwise = 3;
             }
-
         },
         getCleintWithAccountName() {
             this.clientLoading = true;

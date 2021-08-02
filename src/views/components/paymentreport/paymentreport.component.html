@@ -111,15 +111,15 @@
                     <tr class="text-primary">
                         <th class="text-center tableheader"><b>#</b></th>
                         <th class="text-center tableheader"><b>Transcation Date</b></th>
-                        <th class="text-center tableheader"><b>Total COD Shipments</b></th>
                         <th class="text-center tableheader"><b>Total Shipments</b></th>
+                        <th class="text-center tableheader"><b>Total COD Shipments</b></th>
                         <th class="text-center tableheader"><b>Total Exception Shipments</b></th>
                         <th class="text-center tableheader"><b>Total Exception Amount</b></th>
                         <th class="text-center tableheader"><b>Download Link </b></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-if="resultCount==0">
+                    <tr v-if="allclientdata==0">
                         <td colspan="10" align="center">No record found</td>
                     </tr>
                     <tr v-for="(data,index) in allclientdata">
