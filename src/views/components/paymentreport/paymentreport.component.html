@@ -111,8 +111,8 @@
                     <tr class="text-primary">
                         <th class="text-center tableheader"><b>#</b></th>
                         <th class="text-center tableheader"><b>Transcation Date</b></th>
-                        <th class="text-center tableheader"><b>Total Shipments</b></th>
                         <th class="text-center tableheader"><b>Total COD Shipments</b></th>
+                        <th class="text-center tableheader"><b>Total COD Amount</b></th>
                         <th class="text-center tableheader"><b>Total Exception Shipments</b></th>
                         <th class="text-center tableheader"><b>Total Exception Amount</b></th>
                         <th class="text-center tableheader"><b>Download Link </b></th>
@@ -125,8 +125,8 @@
                     <tr v-for="(data,index) in allclientdata">
                         <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
                         <td>{{data.transactiondate}}</td>
-                        <td>{{data.totalcod}}</td>
                         <td>{{data.totalshipment}}</td>
+                        <td>{{data.totalcod}}</td>
                         <td>{{data.totalexception}}</td>
                         <td>{{data.totalexceptionamt}}</td>
                         <td>
