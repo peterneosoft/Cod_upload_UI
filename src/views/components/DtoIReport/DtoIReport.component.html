@@ -3,7 +3,7 @@
         <div class="col-md-12 mb-2">
             <div class="card">
                 <div class="card-header filter_main">
-                    <i class=" fa fa-filter filter"></i> Delivary In Scan Report
+                    <i class=" fa fa-filter filter"></i> Delivered To InScan Report
                 </div>
                 <div class="card-body">
                     <form v-on:submit.prevent="onSubmit">
@@ -52,12 +52,14 @@
                         <tr class="text-primary">
                             <th class="text-center tableheader"><b>#</b></th>
                             <th class="text-center tableheader"><b>Hub Name</b></th>
+                            <th class="text-center tableheader"><b>Shipping ID</b></th>
                             <th class=" tableheader"><b>Delivery Date</b></th>
+                            <th class="text-center tableheader"><b>Status</b></th>
                             <th class="text-center tableheader"><b>In Scan Date</b></th>
                             <th class="text-center tableheader"><b>Net Payment</b></th>
                             <th class="text-center tableheader"><b>Payment Mode</b></th>
-                            <th class="text-center tableheader"><b>Shipping ID</b></th>
-                            <th class="text-center tableheader"><b>Status</b></th>
+
+
                         </tr>
                     </thead>
                     <tbody>
@@ -67,12 +69,12 @@
                         <tr v-for="(data,index) in listCODRemitanceData">
                             <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
                             <td>{{data.HubName}}</td>
+                            <td class="text-center">{{data.ShippingID}}</td>
                             <td>{{data.DeliveryDate}}</td>
+                            <td class="text-center">{{data.Status}}</td>
                             <td class="text-center">{{data.InScanDate}}</td>
                             <td class="text-center">{{data.NetPayment}}</td>
                             <td class="text-center">{{data.PaymentMode}}</td>
-                            <td class="text-center">{{data.ShippingID}}</td>
-                            <td class="text-center">{{data.Status}}</td>
                         </tr>
                     </tbody>
                 </table><br v-if="resultCount>1">

@@ -738,7 +738,7 @@ const router = new Router({
                       link: '/dashboard'
                   },
                   {
-                      name: 'Delivary In Scan Report'
+                      name: 'Delivered To InScan Report'
                   }
               ]
             },

@@ -315,13 +315,13 @@ export default {
                                         let newResult = [];
                                         fetchResult.forEach((item, i) => {
                                             let testTemp = {};
-                                            testTemp.DeliveryDate = item.DeliveryDate;
                                             testTemp.HubName = item.HubName;
+                                            testTemp.ShippingID = item.ShippingID;
+                                            testTemp.DeliveryDate = item.DeliveryDate;
+                                            testTemp.Status = item.Status;
                                             testTemp.InScanDate = item.InScanDate;
                                             testTemp.NetPayment = item.NetPayment;
                                             testTemp.PaymentMode = item.PaymentMode;
-                                            testTemp.ShippingID = item.ShippingID;
-                                            testTemp.Status = item.Status;
                                             newResult.push(testTemp);
                                         });
                                         this.filename = 'DtoIReport';
