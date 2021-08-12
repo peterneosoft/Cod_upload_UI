@@ -47,6 +47,7 @@ import SRReset from '@/views/components/srreset'
 import maintenance from '@/views/components/maintenance'
 import bulkremittancequery from '@/views/components/bulkremittancequery'
 import delivaryStatusReport from '@/views/components/delivaryStatusReport'
+import DtoIReport from '@/views/components/DtoIReport'
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
@@ -725,6 +726,23 @@ const router = new Router({
            ]
          },
        },
+       {
+          path: 'DtoIReport',
+          name: 'DtoIReport',
+          component: DtoIReport,
+          meta: {
+              requiresAuth: true,
+              adminAuth: true,
+              breadcrumb: [{
+                      name: 'Home',
+                      link: '/dashboard'
+                  },
+                  {
+                      name: 'Delivary In Scan Report'
+                  }
+              ]
+            },
+          },
         {
           path: 'charts',
           name: 'Charts',
