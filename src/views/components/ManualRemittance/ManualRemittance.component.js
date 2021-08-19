@@ -46,6 +46,7 @@ export default {
             newformdate: '',
             newtodate: '',
             todatesChanged: '',
+            ShipmentCount: '',
             newdata: [],
             FCModal: false,
             total: 0,
@@ -394,13 +395,14 @@ export default {
                 this.closeModal();
                 this.recordType = this.selected;
                 this.todatesChanged = $(".scrolltb").find("[data-toids='toids" + data.AccountId + "']").attr('data-dates');
+                this.ShipmentCount = $(".scrolltb").find("[data-ship='ship" + data.AccountId + "']").text();
 
                 if (this.recordType == 'AdHoc') {
 
                     this.input = ({
                         FromDate: this.form.oldFromDate[data.AccountId],
                         ToDate: this.todatesChanged,
-                        ShipmentCount: data.ShipmentCount,
+                        ShipmentCount: this.ShipmentCount,
                         AccountId: data.AccountId,
                         ClientId: data.ClientId,
                         CompanyName: data.CompanyName,
@@ -442,7 +444,7 @@ export default {
                     this.input = ({
                         FromDate: this.form.oldFromDate[data.AccountId],
                         ToDate: this.todatesChanged,
-                        ShipmentCount: data.ShipmentCount,
+                        ShipmentCount: this.ShipmentCount,
                         CompanyName: data.CompanyName,
                         ClientId: data.ClientId,
                         AccountId: data.AccountId,
@@ -467,6 +469,7 @@ export default {
                             this.manualCODRemittance();
                             // this.insertEmailReittance();
                         } else {
+                            this.manualCODRemittance();
                             this.isLoading = false;
                             this.$alertify.error(result.data.message)
                         }
