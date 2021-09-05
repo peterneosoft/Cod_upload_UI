@@ -138,7 +138,7 @@ export default {
                                         testTemp.ShippingID = item.ShippingID;
                                         testTemp.CompanyName = item.CompanyName;
                                         testTemp.HubName = item.HubName;
-                                        testTemp.COD = 'COD';
+                                        testTemp.COD = item.OrderType;
                                         testTemp.Delivered = item.newStatus;
                                         testTemp.DeliveryDate = item.DeliveryDate;
                                         testTemp.NetPayment = item.NetPayment;
