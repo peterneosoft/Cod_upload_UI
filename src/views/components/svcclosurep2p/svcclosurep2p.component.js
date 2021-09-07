@@ -306,7 +306,7 @@ export default {
           this.pendingCODAmt = parseFloat(Math.round(result.data.rows[0].closingbalance));
           this.closingBalance = result.data.rows[0].closingbalance;
           this.financeclosingamt = result.data.rows[0].financeclosingamt;
-          this.financeoutstanding = result.data.rows[0].financeclosingamt;
+          this.financeoutstanding = parseInt(result.data.rows[0].financeclosingamt);
           if(result.data.rows[0].totalamtdeposit > result.data.rows[0].p2pamt){
             this.p2pAmount = 0;
           }
@@ -1239,7 +1239,7 @@ export default {
           if(result.data.code == 200){
             this.TolatCollection = this.pendingCODAmt = parseFloat(Math.round(result.data.data.closingbalance));
             this.BatchID         = (result.data.data.batchid != 0 && result.data.data.batchid != null) ? result.data.data.batchid : this.BatchID;
-            this.financeoutstanding = parseFloat(Math.round(result.data.data.financeclosingamt))
+            this.financeoutstanding = parseInt(Math.round(result.data.data.financeclosingamt))
           }
 
           this.penAmtLoading = false; this.disableButton = false;
