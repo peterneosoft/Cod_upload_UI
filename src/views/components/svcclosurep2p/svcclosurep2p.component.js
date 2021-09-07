@@ -38,6 +38,7 @@ export default {
       DenominationList: [],
       StatusID: 0,
       FinanceConfirmAmount: 0,
+      financeoutstanding:0,
       BatchID : '',
       DenominationArr: [],
       listSVCledgerData: [],
@@ -287,6 +288,7 @@ export default {
 
     GetPendingCODAmt() {
       this.financeclosingamt = 0;
+      this.financeoutstanding = 0;
       this.input = ({
           hubid: this.localhubid
       })
@@ -304,7 +306,7 @@ export default {
           this.pendingCODAmt = parseFloat(Math.round(result.data.rows[0].closingbalance));
           this.closingBalance = result.data.rows[0].closingbalance;
           this.financeclosingamt = result.data.rows[0].financeclosingamt;
-
+          this.financeoutstanding = result.data.rows[0].financeclosingamt;
           if(result.data.rows[0].totalamtdeposit > result.data.rows[0].p2pamt){
             this.p2pAmount = 0;
           }
@@ -1219,7 +1221,7 @@ export default {
 
         this.closingBalance = this.TolatCollection = this.pendingCODAmt = this.yesterdayCODAmt = this.exceptionAmount = 0;
         this.penAmtLoading = true; this.disableButton = true;
-
+        this.financeoutstanding = 0;
         this.input = ({
           EffectiveToDate: this.RSCOwner.EffectiveToDate,
           hubid: this.localhubid
@@ -1237,6 +1239,7 @@ export default {
           if(result.data.code == 200){
             this.TolatCollection = this.pendingCODAmt = parseFloat(Math.round(result.data.data.closingbalance));
             this.BatchID         = (result.data.data.batchid != 0 && result.data.data.batchid != null) ? result.data.data.batchid : this.BatchID;
+            this.financeoutstanding = parseFloat(Math.round(result.data.data.financeclosingamt))
           }
 
           this.penAmtLoading = false; this.disableButton = false;
