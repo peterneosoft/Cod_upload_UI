@@ -59,6 +59,7 @@ export default {
             updatedData: [],
             ClientAccountList: [],
             AccountId: '',
+            IsActive:true,
             data: [],
             form: {
                 toDate: [],
@@ -298,7 +299,7 @@ export default {
                                     $(".scrolltb").find("[data-toids='toids" + AccountId + "']").attr('data-dates', val.ToDate);
 
                                     $(".scrolltb").find("[data-remittbtn='remittbtn" + AccountId + "']").show();
-                                    if (val.PayableAmount <= 0) {
+                                    if (val.PayableAmount <= 0 || !val.IsActive) {
                                         $(".scrolltb").find("[data-remittbtn='remittbtn" + AccountId + "']").hide();
                                     }
 

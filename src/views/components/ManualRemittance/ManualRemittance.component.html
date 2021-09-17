@@ -121,8 +121,8 @@
                             </td>
                             <td :data-pay="'pay'+data.AccountId">{{data.PayableAmount}}</td>
                             <td>
-                                <button :data-remittbtn="'remittbtn'+data.AccountId" v-if="recordType=='tatoverdue' && data.PayableAmount>0" class="btn btn-sm btn-primary" @click="onRemittance(form.FromDate[data.AccountId], form.toDate[data.AccountId], data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button>
-                                <button :data-remittbtn="'remittbtn'+data.AccountId" v-if="recordType=='adhoc' && data.PayableAmount>0" class="btn btn-sm btn-primary" @click="onAdHoctance(form.FromDate[data.AccountId], form.toDate[data.AccountId], data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button>
+                                <button :data-remittbtn="'remittbtn'+data.AccountId" v-if="recordType=='tatoverdue' && data.PayableAmount>0 && data.IsActive" class="btn btn-sm btn-primary" @click="onRemittance(form.FromDate[data.AccountId], form.toDate[data.AccountId], data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button>
+                                <button :data-remittbtn="'remittbtn'+data.AccountId" v-if="recordType=='adhoc' && data.PayableAmount>0 && data.IsActive" class="btn btn-sm btn-primary" @click="onAdHoctance(form.FromDate[data.AccountId], form.toDate[data.AccountId], data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button>
                                 <button :data-remittbtn="'remittbtn'+data.AccountId" v-if="data.PayableAmount>0" @click="exportData(data.FromDate,data.ClientId,data.AccountId,data.CompanyName)" class="btn btn-sm btn-danger" title="Download Remittance Report" type="button" style="width: 50px;"><i class="fa fa-download"></i></button>
                             </td>
                         </tr>
