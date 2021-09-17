@@ -299,7 +299,7 @@ export default {
                                     $(".scrolltb").find("[data-toids='toids" + AccountId + "']").attr('data-dates', val.ToDate);
 
                                     $(".scrolltb").find("[data-remittbtn='remittbtn" + AccountId + "']").show();
-                                    if (val.PayableAmount <= 0 || !val.IsActive) {
+                                    if (val.PayableAmount <= 0) {
                                         $(".scrolltb").find("[data-remittbtn='remittbtn" + AccountId + "']").hide();
                                     }
 
