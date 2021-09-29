@@ -1012,6 +1012,7 @@ export default {
                                 'PayableAmount': result.data.remittanceObj.PayableAmount,
                                 'RemittanceType': result.data.remittanceObj.RemittanceType,
                                 'ShipmentCount': result.data.remittanceObj.ShipmentCount,
+                                'IsActive':result.data.remittanceObj.IsActive
                             }]
 
                             this.form.toDate[result.data.remittanceObj.AccountId] = result.data.remittanceObj.ToDate;
