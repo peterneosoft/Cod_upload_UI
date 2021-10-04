@@ -134,7 +134,7 @@ export default {
                                         let testTemp = {};
 
                                         testTemp.ShippingDate = item.ShippingDate;
-                                        testTemp.POID = item.POID;
+                                        testTemp.POID = item.POID.replace('#', '');
                                         testTemp.ShippingID = item.ShippingID;
                                         testTemp.CompanyName = item.CompanyName;
                                         testTemp.CurrentHubName = item.HubName;
