@@ -854,7 +854,7 @@
               <tr v-if="resultCount==0">
                 <td colspan="18" align="center">No record found</td>
               </tr>
-              <tr v-for="(data,index) in listSVCledgerData" v-bind:class="`${(data.createdby == 'schedular@xpressbees.com') || (data.deposittype == '' && ![366,367,168,169].includes(data.financereasonid)) ? 'scheduler' : '' || data.reasonid == 65 ? 'other' : '' || ([84,124,187,218,125].includes(data.financereasonid)) ? 'mismatched' : ([366,367,168,169].includes(data.financereasonid)) ? 'fnfrsc' : ''}`">
+              <tr v-for="(data,index) in listSVCledgerData" v-bind:class="`${(data.createdby == 'schedular@xpressbees.com') || (data.deposittype == '' && ![366,367,168,169].includes(data.financereasonid)) ? 'scheduler' : '' || data.reasonid == 65 ? 'other' : '' || ([84,124,187,218,125,374].includes(data.financereasonid)) ? 'mismatched' : ([366,367,168,169].includes(data.financereasonid)) ? 'fnfrsc' : ''}`">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
                 <td class="text-center">{{data.deliverydate}}</td>
                 <td class="text-center">{{data.bankdepositdate}}</td>
