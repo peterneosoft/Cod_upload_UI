@@ -376,7 +376,7 @@
               <tr v-if="resultCount==0">
                 <td colspan="19" align="center">No record found</td>
               </tr>
-              <tr v-for="(data,index) in listFinanceledgerData" v-bind:class="`${([84,124,187].includes(data.financereasonid)) ? 'mismatched' : (data.createdby == 'schedular@xpressbees.com') || (data.deposittype == '' && ![366,367,168,169].includes(data.financereasonid)) ? 'scheduler' : ''}`">
+              <tr v-for="(data,index) in listFinanceledgerData" v-bind:class="`${([84,124,187,374,175].includes(data.financereasonid)) ? 'mismatched' : (data.createdby == 'schedular@xpressbees.com') || (data.deposittype == '' && ![366,367,168,169].includes(data.financereasonid)) ? 'scheduler' : ''}`">
                 <td scope="row" class="text-center"><strong>{{pageno+index+1}}</strong></td>
                 <td class="text-center"><i @click.prevent="getSVCRowData(data)" class="fa fa-edit text-successedit fa-lg mt-2 ml-3" v-if="data.statusid==1" style="cursor: pointer;"></i></td>
                 <td class="text-center">{{data.hubname}}</td>
