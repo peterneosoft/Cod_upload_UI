@@ -743,6 +743,23 @@ const router = new Router({
               ]
             },
           },
+          {
+                   path: 'PaymentModeChange',
+                   name: 'Payment Mode Change',
+                   component: PaymentModeChange,
+                   meta: {
+                       requiresAuth: true,
+                       adminAuth: true,
+                       breadcrumb: [{
+                               name: 'Home',
+                               link: '/dashboard'
+                           },
+                           {
+                               name: 'Payment Mode Change Report'
+                           }
+                   ]
+               },
+          },
         {
           path: 'charts',
           name: 'Charts',
