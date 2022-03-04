@@ -48,6 +48,7 @@ import maintenance from '@/views/components/maintenance'
 import bulkremittancequery from '@/views/components/bulkremittancequery'
 import delivaryStatusReport from '@/views/components/delivaryStatusReport'
 import DtoIReport from '@/views/components/DtoIReport'
+import PaymentModeChange from '@/views/components/PaymentModeChange'
 // Views - Components
 import Buttons from '@/views/components/Buttons'
 import SocialButtons from '@/views/components/SocialButtons'
