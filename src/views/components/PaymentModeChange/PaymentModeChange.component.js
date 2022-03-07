@@ -320,6 +320,7 @@ export default {
                                             testTemp.DeliveryDate = item.DeliveryDate;
                                             testTemp.CashPayment = item.CashPayment;
                                             testTemp.DigitalPayment = item.DigitalPayment;
+                                            testTemp.NetPayment = item.NetPayment;
                                             testTemp.PaymentMode = item.PaymentMode;
                                             testTemp.PaymentModeChangeBy = item.PaymentModeChangeBy;
                                             testTemp.PaymentModeChangeDate = item.PaymentModeChangeDate;
