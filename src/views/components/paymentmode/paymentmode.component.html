@@ -1,24 +1,32 @@
 <section class="user">
-  <div class="animated fadeIn">
-    <div class="col-md-12 mb-2">
-        <div class="card">
-          <div class="card-header filter_main">
-            <i class=" fa fa-filter filter"></i> Change Shipment Payment Mode
-          </div>
-          <div class="card-body">
-            <form  v-on:submit.prevent="onSubmit">
-              <div class="form-group row">
-                <div class="col-md-4">
-                  <label>Shipment Id <font color="red">*</font></label>
-                  <b-input-group>
-                    <input class="form-control" id="shipmentid" type="text" v-on:change="getShipmentReport()" name="shipmentid" placeholder="Enter Shipping Id" v-validate="{required: true}" v-model="shipmentid" v-bind:class="{'form-control': true, 'error': errors.has('shipmentid') }">
-                  </b-input-group>
-                  <span v-show="errors.has('shipmentid')" class="text-danger">Shipment Id is required.</span>
+    <div class="animated fadeIn">
+        <div class="col-md-12 mb-2">
+            <div class="card">
+                <div class="card-header filter_main">
+                    <i class=" fa fa-filter filter"></i>
                 </div>
+                <div class="card-body">
+                    <form v-on:submit.prevent="onSubmit">
 
-                <div class="col-md-4">
-                  <label>Epayment Type <font color="red">*</font></label>
-                  <select class="form-control" id="epaymenttype" name="epaymenttype" v-on:change="GetEpaymentName" v-model="epaymenttype" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('epaymenttype') }">
+                        <b-form-fieldset>
+                            <b-form-radio @input="changeRadio(selected)" name="searchview" id="searchview" :plain="true" :options="options" v-model="selected"></b-form-radio>
+                            <span id="opt" class="text-danger"></span>
+                            <hr style="margin-top: 0rem; margin-bottom: 0rem;">
+                        </b-form-fieldset>
+
+
+                        <div v-if="allclientwise==1" class="form-group row">
+                            <div class="col-md-4">
+                                <label>Shipment Id <font color="red">*</font></label>
+                                <b-input-group>
+                                    <input class="form-control" id="shipmentid" type="text" v-on:change="getShipmentReport()" name="shipmentid" placeholder="Enter Shipping Id" v-validate="{required: true}" v-model="shipmentid" v-bind:class="{'form-control': true, 'error': errors.has('shipmentid') }">
+                                </b-input-group>
+                                <span v-show="errors.has('shipmentid')" class="text-danger">Shipment Id is required.</span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label>Epayment Type <font color="red">*</font></label>
+                                <select class="form-control" id="epaymenttype" name="epaymenttype" v-on:change="GetEpaymentName" v-model="epaymenttype" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('epaymenttype') }">
                     <option value="">--Select--</option>
                     <option value="cash">Cash</option>
                     <option value="wallet">Wallet</option>
@@ -27,123 +35,192 @@
                     <option value="razorpay">Razorpay</option>
                     <option value="hybrid">Hybrid</option>
                   </select>
-                  <span v-show="errors.has('epaymenttype')" class="text-danger">Epayment type is required.</span>
-                </div>
-                <div class="col-md-4">
-                  <label>Epayment Name <font color="red">*</font></label>
-                  <select v-if="epaymenttype=='hybrid'" class="form-control" id="epaymentname" v-model="epaymentname" name="epaymentname" v-validate="{required: true}"
-                  v-bind:class="{'form-control': true, 'error': errors.has('epaymentname') }" style="margin-right: -8px;">
+                                <span v-show="errors.has('epaymenttype')" class="text-danger">Epayment type is required.</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Epayment Name <font color="red">*</font></label>
+                                <select v-if="epaymenttype=='hybrid'" class="form-control" id="epaymentname" v-model="epaymentname" name="epaymentname" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('epaymentname') }" style="margin-right: -8px;">
                     <option v-for="Epayment_obj in EpaymentHybridList" v-bind:value="Epayment_obj.EpaymentType">{{Epayment_obj.EpaymentName}}</option>
                   </select>
 
-                  <select v-else disabled class="form-control" id="epaymentname" v-model="epaymentname" name="epaymentname" v-validate="{required: true}"
-                  v-bind:class="{'form-control': true, 'error': errors.has('epaymentname') }" style="margin-right: -8px;">
+                                <select v-else disabled class="form-control" id="epaymentname" v-model="epaymentname" name="epaymentname" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('epaymentname') }" style="margin-right: -8px;">
                     <option value="">--Select--</option>
                     <option v-for="Epayment_obj in EpaymentNameList" v-bind:value="Epayment_obj.EpaymentType" >{{Epayment_obj.EpaymentName}}</option>
                   </select>
-                  <span v-show="errors.has('epaymentname')" class="text-danger">Epayment name is required.</span>
-                </div>
-              </div>
+                                <span v-show="errors.has('epaymentname')" class="text-danger">Epayment name is required.</span>
+                            </div>
+                        </div>
 
-              <div class="form-group row" v-if="epaymenttype=='hybrid'">
-                <div class="col-md-3">
-                  <label>Cash Amount <font color="red">*</font></label>
-                  <b-input-group left="<i class='fa fa-rupee'></i>">
-                    <input class="form-control" id="cashAmt" type="text" name="cashAmt" placeholder="Enter Cash Amount" v-validate="{required: true}" v-model="cashAmt" v-bind:class="{'form-control': true, 'error': errors.has('cashAmt') }" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8">
-                  </b-input-group>
-                  <span v-show="errors.has('cashAmt')" class="text-danger">Cash Amount is required.</span>
-                </div>
+                        <div class="form-group row" v-if="epaymenttype=='hybrid' && allclientwise==1">
+                            <div class="col-md-3">
+                                <label>Cash Amount <font color="red">*</font></label>
+                                <b-input-group left="<i class='fa fa-rupee'></i>">
+                                    <input class="form-control" id="cashAmt" type="text" name="cashAmt" placeholder="Enter Cash Amount" v-validate="{required: true}" v-model="cashAmt" v-bind:class="{'form-control': true, 'error': errors.has('cashAmt') }" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8">
+                                </b-input-group>
+                                <span v-show="errors.has('cashAmt')" class="text-danger">Cash Amount is required.</span>
+                            </div>
 
-                <div class="col-md-3">
-                  <label>Digital Amount <font color="red">*</font></label>
-                  <b-input-group left="<i class='fa fa-rupee'></i>">
-                    <input class="form-control" id="digitalAmt" type="text" name="digitalAmt" placeholder="Enter Digital Amount" v-validate="{required: true}" v-model="digitalAmt" v-bind:class="{'form-control': true, 'error': errors.has('digitalAmt') }" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8">
-                  </b-input-group>
-                  <span v-show="errors.has('digitalAmt')" class="text-danger">Digital Amount is required.</span>
-                </div>
-              </div>
-              <div class="form-group row">
-              </div>
-              <div class="card-footer">
-                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="submitLoading" />
-                <button class="btn btn-sm btn-primary" title="Check Shipment Detail" @click="getShipmentReport()" type="button"><i class="fa fa-search"></i> Search</button>&nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;
-                <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> Update</button>
-                <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
-                <br>
-                <small class="text-muted"><font color="red">Note: * For search shipment detail, only fill  `Shipment Id` input field.</font></small>
-              </div>
-            </form>
-          </div>
-        </div>
+                            <div class="col-md-3">
+                                <label>Digital Amount <font color="red">*</font></label>
+                                <b-input-group left="<i class='fa fa-rupee'></i>">
+                                    <input class="form-control" id="digitalAmt" type="text" name="digitalAmt" placeholder="Enter Digital Amount" v-validate="{required: true}" v-model="digitalAmt" v-bind:class="{'form-control': true, 'error': errors.has('digitalAmt') }" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8">
+                                </b-input-group>
+                                <span v-show="errors.has('digitalAmt')" class="text-danger">Digital Amount is required.</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                        </div>
+                        <div v-if="allclientwise==1" class="card-footer">
+                            <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="submitLoading" />
+                            <button class="btn btn-sm btn-primary" title="Check Shipment Detail" @click="getShipmentReport()" type="button"><i class="fa fa-search"></i> Search</button>&nbsp;&nbsp;<b>|</b>&nbsp;&nbsp;
+                            <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> Update</button>
+                            <button class="btn btn-sm btn-danger" @click="resetForm()" type="reset"><i class="fa fa-ban"></i> Clear</button>
+                            <br>
+                            <small class="text-muted"><font color="red">Note: * For search shipment detail, only fill  `Shipment Id` input field.</font></small>
+                        </div>
 
-        <div class="row">
-          <div class="col-12">
-            <div class="card-headerfrm" style="margin-bottom: 15px;">
-              <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result</h4>
-              <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="shipmentLoading" />
-              <table class="table-bordered table-hover tbl datatables" style="width:100%;">
-                <thead>
-                  <tr class="text-primary">
-                    <th class="text-center tableheader"><b>#</b></th>
-                    <th class="text-center tableheader"><b>Shipment Id</b></th>
-                    <th class="text-center tableheader"><b>Status</b></th>
-                    <th class="text-center tableheader"><b>Shipment Status</b></th>
-                    <th class="text-center tableheader"><b>Epayment Type</b></th>
-                    <th class="text-center tableheader"><b>Epayment Name</b></th>
-                    <th class="text-center tableheader"><b>Cash ( <i class="fa fa-rupee"></i> )</b></th>
-                    <th class="text-center tableheader"><b>Digital ( <i class="fa fa-rupee"></i> )</b></th>
-                    <th class="text-center tableheader"><b>COD ( <i class="fa fa-rupee"></i> )</b></th>
-                    <th class="text-center tableheader"><b>Hub Name</b></th>
-                    <th class="text-center tableheader"><b>Last Modified By</b></th>
-                    <th class="text-center tableheader"><b>Last Modified Date</b></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-if="resultCount==0">
-                    <td colspan="12" align="center">No record found</td>
-                  </tr>
-                  <tr v-for="(shipmentobj,index) in shipmentList">
-                    <td class="text-center">{{pageno+index+1}}</td>
-                    <td class="text-center">{{shipmentobj.ShippingID}}</td>
-                    <td class="text-center">{{shipmentobj.Status}}</td>
-                    <td class="text-center">{{shipmentobj.ShipmentStatus}}</td>
-                    <td class="text-center">{{shipmentobj.EpaymentType}}</td>
-                    <td class="text-center">{{shipmentobj.EpaymentName}}</td>
-                    <td class="text-center">{{shipmentobj.CashPayment}}</td>
-                    <td class="text-center">{{shipmentobj.DigitalPayment}}</td>
-                    <td class="text-center">{{shipmentobj.NetPayment}}</td>
-                    <td class="text-center">{{shipmentobj.CurrentHubName}}</td>
-                    <td class="text-center">{{shipmentobj.LastModifiedBy}}</td>
-                    <td class="text-center">{{shipmentobj.LastModifiedDate}}</td>
-                  </tr>
-                </tbody>
-              </table><br>
-              <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'"></paginate>
+
+                        <!-- Start:: Bulk update -->
+
+                        <div v-if="allclientwise==2" class="form-group row">
+                            <div class="col-md-4">
+                                <label>Shipment Id <font color="red">*</font></label>
+                                <b-input-group>
+                                    <textarea rows="4" name="shipmentids" id="shipmentids" ref="textarea" v-model="shipmentids" v-validate="{required: true}" placeholder="Enter Shipment Ids..." v-bind:class="{'form-control': true, 'error': errors.has('shipmentids') }"></textarea>
+                                </b-input-group>
+                                <small class="text-muted">
+                                <font color="red">Note: * Only accept comma (,) separated shipment ids.</font>
+                              </small>
+                                <br>
+                                <span v-show="errors.has('shipmentids')" class="text-danger">Shipment Id is required.</span>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label>Epayment Type <font color="red">*</font></label>
+                                <select class="form-control" id="epaymenttypes" name="epaymenttypes" v-on:change="GetEpaymentNames" v-model="epaymenttypes" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('epaymenttypes') }">
+                                <option value="">--Select--</option>
+                                <option value="cash">Cash</option>
+                                <option value="wallet">Wallet</option>
+                                <option value="payphi">Payphi</option>
+                                <option value="card">Card</option>
+                                <option value="razorpay">Razorpay</option>
+                              </select>
+                                <span v-show="errors.has('epaymenttypes')" class="text-danger">Epayment type is required.</span>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Epayment Name <font color="red">*</font></label>
+                                <select v-if="epaymenttypes=='hybrid' && allclientwise==2" class="form-control" id="epaymentnames" v-model="epaymentnames" name="epaymentnames" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('epaymentnames') }"
+                                    style="margin-right: -8px;">
+                            <option v-for="Epayment_obj in EpaymentHybridList" v-bind:value="Epayment_obj.EpaymentTypes">{{Epayment_obj.EpaymentName}}</option>
+                          </select>
+
+                                <select v-else disabled class="form-control" id="epaymentnames" v-model="epaymentnames" name="epaymentnames" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('epaymentnames') }" style="margin-right: -8px;">
+                                <option value="">--Select--</option>
+                                <option v-for="Epayment_obj in EpaymentNameList" v-bind:value="Epayment_obj.EpaymentType" >{{Epayment_obj.EpaymentName}}</option>
+                              </select>
+                                <span v-show="errors.has('epaymentnames')" class="text-danger">Epayment name is required.</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" v-if="epaymenttypes=='hybrid' && allclientwise==2">
+                            <div class="col-md-3">
+                                <label>Cash Amount <font color="red">*</font></label>
+                                <b-input-group left="<i class='fa fa-rupee'></i>">
+                                    <input class="form-control" id="cashAmt" type="text" name="cashAmt" placeholder="Enter Cash Amount" v-validate="{required: true}" v-model="cashAmt" v-bind:class="{'form-control': true, 'error': errors.has('cashAmt') }" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8">
+                                </b-input-group>
+                                <span v-show="errors.has('cashAmt')" class="text-danger">Cash Amount is required.</span>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label>Digital Amount <font color="red">*</font></label>
+                                <b-input-group left="<i class='fa fa-rupee'></i>">
+                                    <input class="form-control" id="digitalAmts" type="text" name="digitalAmts" placeholder="Enter Digital Amount" v-validate="{required: true}" v-model="digitalAmts" v-bind:class="{'form-control': true, 'error': errors.has('digitalAmts') }" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8">
+                                </b-input-group>
+                                <span v-show="errors.has('digitalAmts')" class="text-danger">Digital Amount is required.</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                        </div>
+                        <div v-if="allclientwise==2" class="card-footer">
+                            <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="submitLoading" />
+                            <button class="btn btn-sm btn-success" type="submit"><i class="fa fa-dot-circle-o"></i> Update</button>
+                            <button class="btn btn-sm btn-danger" @click="resetFormbulk()" type="reset"><i class="fa fa-ban"></i> Clear</button>
+                            <br>
+                        </div>
+                        <!-- End :: Bulk update -->
+                    </form>
+                </div>
             </div>
-         </div>
-       </div>
 
-       <b-modal ref="myConfModalRef" v-model="confModalShow" id=#confirmationmodal title="Confirmation">
-         <div role="document">
-           <div class="modal-content">
-             <div class="modal-headerfrm">
-               <h5 class="modal-title" style="font-size: 1rem;">Confirmation</h5>
-               <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
+            <div class="row">
+                <div v-if="allclientwise==1" class="col-12">
+                    <div class="card-headerfrm" style="margin-bottom: 15px;">
+                        <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp; Result</h4>
+
+                        <vue-element-loading spinner="line-scale" color="#FF6700" :active.sync="shipmentLoading" />
+                        <table class="table-bordered table-hover tbl datatables" style="width:100%;">
+                            <thead>
+                                <tr class="text-primary">
+                                    <th class="text-center tableheader"><b>#</b></th>
+                                    <th class="text-center tableheader"><b>Shipment Id</b></th>
+                                    <th class="text-center tableheader"><b>Status</b></th>
+                                    <th class="text-center tableheader"><b>Shipment Status</b></th>
+                                    <th class="text-center tableheader"><b>Epayment Type</b></th>
+                                    <th class="text-center tableheader"><b>Epayment Name</b></th>
+                                    <th class="text-center tableheader"><b>Cash ( <i class="fa fa-rupee"></i> )</b></th>
+                                    <th class="text-center tableheader"><b>Digital ( <i class="fa fa-rupee"></i> )</b></th>
+                                    <th class="text-center tableheader"><b>COD ( <i class="fa fa-rupee"></i> )</b></th>
+                                    <th class="text-center tableheader"><b>Hub Name</b></th>
+                                    <th class="text-center tableheader"><b>Last Modified By</b></th>
+                                    <th class="text-center tableheader"><b>Last Modified Date</b></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-if="resultCount==0">
+                                    <td colspan="12" align="center">No record found</td>
+                                </tr>
+                                <tr v-for="(shipmentobj,index) in shipmentList">
+                                    <td class="text-center">{{pageno+index+1}}</td>
+                                    <td class="text-center">{{shipmentobj.ShippingID}}</td>
+                                    <td class="text-center">{{shipmentobj.Status}}</td>
+                                    <td class="text-center">{{shipmentobj.ShipmentStatus}}</td>
+                                    <td class="text-center">{{shipmentobj.EpaymentType}}</td>
+                                    <td class="text-center">{{shipmentobj.EpaymentName}}</td>
+                                    <td class="text-center">{{shipmentobj.CashPayment}}</td>
+                                    <td class="text-center">{{shipmentobj.DigitalPayment}}</td>
+                                    <td class="text-center">{{shipmentobj.NetPayment}}</td>
+                                    <td class="text-center">{{shipmentobj.CurrentHubName}}</td>
+                                    <td class="text-center">{{shipmentobj.LastModifiedBy}}</td>
+                                    <td class="text-center">{{shipmentobj.LastModifiedDate}}</td>
+                                </tr>
+                            </tbody>
+                        </table><br>
+                        <paginate v-if="resultCount>0" :page-count="pagecount" :page-range="2" :margin-pages="2" :prev-text="'«'" :next-text="'»'" :container-class="'pagination'"></paginate>
+                    </div>
+                </div>
+            </div>
+
+            <b-modal ref="myConfModalRef" v-model="confModalShow" id=#confirmationmodal title="Confirmation">
+                <div role="document">
+                    <div class="modal-content">
+                        <div class="modal-headerfrm">
+                            <h5 class="modal-title" style="font-size: 1rem;">Confirmation</h5>
+                            <button type="button" class="close" @click="closeStatusRoleModal" aria-label="Close">
                  <span aria-hidden="true">×</span>
                </button>
-             </div>
-             <div class="modal-bodyfrm">
-               <h5 style="font-size: 15px; padding: 10px; color:red;">Are you sure, you want to change shipment epayment type from `{{OEpayType}}` to `{{NEpayType}}`</h5>
-             </div>
-             <div class="modal-footerfrm">
-             <center>
-               <button type="button" @click = "hideConfModal('0')" class="btn btn-success" style="background-color: #20a8d8;">Ok</button>
-               <button type="button" @click = "hideConfModal('1')" class="btn btn-danger" style="background-color: #f86c6b;">Cancel</button>
-             </center>
-             </div>
-           </div>
-         </div>
-       </b-modal>
+                        </div>
+                        <div class="modal-bodyfrm">
+                            <h5 style="font-size: 15px; padding: 10px; color:red;">Are you sure, you want to change shipment epayment type from `{{OEpayType}}` to `{{NEpayType}}`</h5>
+                        </div>
+                        <div class="modal-footerfrm">
+                            <center>
+                                <button type="button" @click="hideConfModal('0')" class="btn btn-success" style="background-color: #20a8d8;">Ok</button>
+                                <button type="button" @click="hideConfModal('1')" class="btn btn-danger" style="background-color: #f86c6b;">Cancel</button>
+                            </center>
+                        </div>
+                    </div>
+                </div>
+            </b-modal>
+        </div>
     </div>
-  </div>
 </section>
