@@ -101,17 +101,20 @@ export default {
             this.allclientdata = [];
 
             $(".labelcls").html('');
+
             if (this.selected == 'changepaymode') {
-
-                $(".labelcls").html('Transaction From Date');
                 this.allclientwise = 1;
-                this.listCODPaymentData = [];
-
             } else if (this.selected == 'bulkupdate') {
-
-                $(".labelcls").html('Transaction From Date');
                 this.allclientwise = 2;
             }
+
+            this.shipmentList = [];
+            this.resultCount = 0;
+            this.shipmentid = '';
+            this.epaymenttype = '';
+            this.epaymentname = '';
+            this.epaymenttypes = '';
+            this.epaymentnames = '';
 
         },
 
@@ -230,8 +233,8 @@ export default {
                 ShippingIDArr: shipmentidsings,
                 lastmodifiedby: this.localuserid,
                 EPaymentTypeFrom: 'Cash',
-                EPaymentType: this.epaymenttypes,
-                EPaymentName: this.epaymentnames
+                EPaymentType: this.eptypes,
+                EPaymentName: this.epnames
             })
             axios({
                     method: 'POST',
@@ -284,8 +287,8 @@ export default {
                             this.shipmentid = this.shipmentid.toString();
                         }
                         this.NEpayType = this.epaymenttype.charAt(0).toUpperCase() + this.epaymenttype.slice(1);
-                        this.eptype = event.target[1].selectedOptions[0].text;
-                        this.epname = event.target[2].selectedOptions[0].text;
+                        this.eptype = event.target[3].selectedOptions[0].text;
+                        this.epname = event.target[4].selectedOptions[0].text;
 
                         if (this.epaymenttype == 'hybrid') {
                             if (parseFloat(Math.round(parseFloat(this.cashAmt) + parseFloat(this.digitalAmt))) != parseFloat(Math.round(this.NetPayment))) {
@@ -300,6 +303,9 @@ export default {
                         this.showConfirmationModal(event);
 
                     } else {
+
+                        this.eptypes = event.target[3].selectedOptions[0].text;
+                        this.epnames = event.target[4].selectedOptions[0].text;
 
                         this.bulkShipmentUpdate();
                     }

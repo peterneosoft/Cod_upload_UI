@@ -99,7 +99,6 @@
                                 <label>Epayment Type <font color="red">*</font></label>
                                 <select class="form-control" id="epaymenttypes" name="epaymenttypes" v-on:change="GetEpaymentNames" v-model="epaymenttypes" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('epaymenttypes') }">
                                 <option value="">--Select--</option>
-                                <option value="cash">Cash</option>
                                 <option value="wallet">Wallet</option>
                                 <option value="payphi">Payphi</option>
                                 <option value="card">Card</option>
