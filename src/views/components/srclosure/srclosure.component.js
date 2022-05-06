@@ -472,11 +472,11 @@ export default {
                this.deliveredCardArr    = result.data.CODDetailsArr[0].cardArr
                this.deliveredRazorpayArr= result.data.CODDetailsArr[0].razorpayArr
 
-               this.TodaysCash          = parseFloat(result.data.CODDetailsArr[0].cashAmt).toFixed(2) + parseFloat(result.data.CODDetailsArr[0].hybridCashAmt).toFixed(2)
-               this.TodaysPayphi        = parseFloat(result.data.CODDetailsArr[0].payphiAmt).toFixed(2) + parseFloat(result.data.CODDetailsArr[0].hybridPayphiAmt).toFixed(2)
-               this.TodaysWallet        = parseFloat(result.data.CODDetailsArr[0].walletAmt).toFixed(2) + parseFloat(result.data.CODDetailsArr[0].hybridWalletAmt).toFixed(2)
-               this.TodaysCard          = parseFloat(result.data.CODDetailsArr[0].cardAmt).toFixed(2) + parseFloat(result.data.CODDetailsArr[0].hybridCardAmt).toFixed(2)
-               this.TodaysRazorpay      = parseFloat(result.data.CODDetailsArr[0].razorpayAmt).toFixed(2) + parseFloat(result.data.CODDetailsArr[0].hybridRazorpayAmt).toFixed(2)
+               this.TodaysCash          = (parseFloat(result.data.CODDetailsArr[0].cashAmt) + parseFloat(result.data.CODDetailsArr[0].hybridCashAmt)).toFixed(2)
+               this.TodaysPayphi        = (parseFloat(result.data.CODDetailsArr[0].payphiAmt) + parseFloat(result.data.CODDetailsArr[0].hybridPayphiAmt)).toFixed(2)
+               this.TodaysWallet        = (parseFloat(result.data.CODDetailsArr[0].walletAmt) + parseFloat(result.data.CODDetailsArr[0].hybridWalletAmt)).toFixed(2)
+               this.TodaysCard          = (parseFloat(result.data.CODDetailsArr[0].cardAmt) + parseFloat(result.data.CODDetailsArr[0].hybridCardAmt)).toFixed(2)
+               this.TodaysRazorpay      = (parseFloat(result.data.CODDetailsArr[0].razorpayAmt) + parseFloat(result.data.CODDetailsArr[0].hybridRazorpayAmt)).toFixed(2)
 
                this.TodaysCashCount     = result.data.CODDetailsArr[0].cash
                this.TodaysPayphiCount   = result.data.CODDetailsArr[0].payphi
