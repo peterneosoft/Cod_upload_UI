@@ -23,9 +23,12 @@ export default {
             myStr: '',
             fromDate: '',
             toDate: '',
-            ClientId: '',
+            ClientId: [],
+            // ClientIdnew: '',
             ClientList: [],
             listCODPaymentData: [],
+            SearchClientIds: [],
+            SearchClientAccountIds : [],
             pageno: 0,
             pagecount: 0,
             isLoading: false,
@@ -36,6 +39,7 @@ export default {
             clientLoading: false,
             reportlink: '',
             ClientAccountList: [],
+            // ClientAccountListGenerateReport: [],
             allclientwise: 1,
             selected: 'allclient',
             options: [{
@@ -63,7 +67,7 @@ export default {
     mounted() {
         var date = new Date();
 
-
+        // this.getCleintWithAccountNameForGenerateReport();
         var userToken = window.localStorage.getItem('accessuserToken')
         this.myStr = userToken.replace(/"/g, '');
 
@@ -92,7 +96,7 @@ export default {
                 $(".labelcls").html('Transaction From Date');
                 this.allclientwise = 2;
             } else if (this.selected == 'paymentcsv') {
-                $(".labelcls").html('Remittance Date');
+                $(".labelcls").html('Remittance Date*');
                 this.allclientwise = 3;
             }
         },
@@ -138,6 +142,34 @@ export default {
                 console.error(error)
             })
         },
+
+        multiple() {
+            let key = this.ClientId.length - 1;
+
+            if (this.ClientId.length > 0 && this.ClientId[key].AccountId == 0) {
+
+                this.SearchClientIds = [];
+                this.SearchClientAccountIds = [];
+                this.ClientId = this.ClientId[key];
+
+                // for (let item of this.ClientAccountList) {
+
+                //     if (item.AccountId != 0) {
+                //         this.SearchClientAccountIds.push(item.AccountId);
+                //         this.SearchClientIds.push(item.ClientId);
+                //     }
+                // }
+
+            }
+
+            if (this.ClientId.AccountId == 0) {
+                return false;
+            } else {
+                this.SearchClientIds = [];
+                return true;
+            }
+        },
+
         GetClientData() {
             this.clientLoading = true;
             axios({
@@ -166,8 +198,30 @@ export default {
             this.isLoading = true;
             this.allclientdata = [];
             this.listCODPaymentData = [];
-
+            console.log("clientids",this.ClientId);
             this.message = '';
+
+            let cData = [];
+            let accountData = [];
+
+            if (this.SearchClientIds.length > 0) {
+                cData = this.SearchClientIds;
+                accountData = this.SearchClientAccountIds;
+            } else {
+
+                if (this.ClientId.AccountName !== "All Client") {
+
+                    if ($.isArray(this.ClientId) === false) {
+                        this.ClientId = new Array(this.ClientId);
+                    }
+                    this.ClientId.forEach(function(val) {
+                        accountData.push(val.AccountId);
+                        cData.push(val.ClientId);
+                    });
+                }
+
+            }
+            // console.log("")
             if (this.selected == 'paymentcsv') {
 
                 this.input = ({
@@ -175,6 +229,9 @@ export default {
                 });
                 if (this.fromDate) {
                     this.input.RemittanceDate = this.fromDate;
+                   
+                    this.input.excludeAccountIds = accountData;
+                    // this.input.excludeAccountIds = this.ClientAccountList.AccountId
                 }
 
                 axios({

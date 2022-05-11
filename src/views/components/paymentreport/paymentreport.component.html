@@ -44,16 +44,32 @@
                             </b-input-group>
                             <span v-show="errors.has('toDate')" class="text-danger">Transaction to date is required.</span>
                         </div>
+                        
+                        <div class="col-md-4">
+                            <div v-if="allclientwise==3" class="col-md-10">
+                            <label>Exclude Clients</label>
+                            <b-input-group left="<i class='fa fa-list'></i>">
+                                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="clientLoading" />
+                                <Multiselect :options="ClientAccountList" v-bind:multiple="multiple()" name="AccountId" id="AccountId" :data-ClientId="ClientId" v-model="ClientId" placeholder="Select Client" label="AccountName" track-by="AccountId"  v-bind:class="{'error': errors.has('AccountId') }"
+                                    :optionHeight="80" :hide-selected="true" style="border: 1px solid #c2cfd6;z-index:999">
+                                    <template slot="noResult">
+                  <p>No Record Found.</p>
+                </template>
+                                </Multiselect>
+                            </b-input-group>
+                            <span v-show="errors.has('AccountId')" class="text-danger">Client is required.</span>
+                        </div>
+                        </div>
                     </div>
                     <div>
-                        <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-search"></i> Search</button>
+                        <button class="btn btn-sm btn-primary"  type="submit"><i class="fa fa-search"></i> Search</button>
                         <button class="btn btn-sm btn-danger" @click="resetForm()" type="button"><i class="fa fa-ban"></i> Clear</button>
                     </div>
                 </form>
             </div>
         </b-card>
     </div>
-
+    <!-- :disabled="errors.any() || !fromDate" -->
     <div class="col-md-12 mb-2">
         <div class="card-headerfrm" style="margin-bottom: 15px;">
             <h4 class="header"><i class="fa fa-bars barcolor" aria-hidden="true"></i>&nbsp;Result
