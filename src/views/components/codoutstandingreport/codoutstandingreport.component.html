@@ -88,6 +88,8 @@
                     <th class="text-center tableheader"><b>{{ selected=='financeoutstanding' ? 'Bank Credit Date' : selected=='summary' ? 'Delivery Date' : selected=='rscoutstanding' ? 'Working Duration' : 'Till Date' }}</b></th>
                     <th class="text-center tableheader"><b>{{ selected=='financeoutstanding' ? 'Finance Outstanding' : selected=='summary' ? 'COD' : selected=='rscoutstanding' ? 'RSC Outstanding' : 'SVC Outstanding' }} Amount ( <i class="fa fa-rupee"></i> )</b></th>
                     <th class="text-center tableheader" v-if="selected=='svcoutstanding' || selected=='rscoutstanding'"><b>Pending Days</b></th>
+                    <th class="text-center tableheader"><b>Finance Outstanding( <i class="fa fa-rupee"></i> )</b></th>
+                    <th class="text-center tableheader"><b>Finance Aging</b></th>
                     <th class="text-center tableheader" v-if="selected=='rscoutstanding'"><b>Status</b></th>
                   </tr>
                 </thead>
@@ -103,6 +105,8 @@
                     <td class="text-center">{{selected=='rscoutstanding' ? CODOutstanding.period : CODOutstanding.deliverydate }}</td>
                     <td class="text-center">{{ selected=='financeoutstanding' ? CODOutstanding.financeoutstanding : selected=='summary' ? CODOutstanding.codamount : selected=='rscoutstanding' ? CODOutstanding.rscoutstanding : CODOutstanding.svcoutstanding }}</td>
                     <td class="text-center" v-if="selected=='svcoutstanding' || selected=='rscoutstanding'">{{CODOutstanding.pendingDays}}</td>
+                    <td class="text-center">{{CODOutstanding.financeoutstanding}}</td>
+                    <td class="text-center">{{CODOutstanding.financeAging}}</td>
                     <td class="text-center" v-if="selected=='rscoutstanding'" v-bind:class="`${(CODOutstanding.status == 'Active') ? 'rscAc' : 'rscIn'}`">{{CODOutstanding.status}}</td>
                   </tr>
                 </tbody>
