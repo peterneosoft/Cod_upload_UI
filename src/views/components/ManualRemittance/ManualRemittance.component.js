@@ -139,6 +139,48 @@ export default {
                 this.$refs.myConfModalRef.hide();
             }
         },
+        deleteRemittance(AccountId,ClientRemitedId,RemitanceDate,shipmentCount){
+          
+           try {
+            if (confirm('Are you sure you want to delete this slab?')) { //comfirmation to delete record
+                // Save it!
+                let authkey = apiUrl.stageauthkey;
+                this.input = {
+                    "RemittanceId" : ClientRemitedId,
+                    "AccountId":AccountId,    
+                    "RemittanceDate":RemitanceDate,  //transaction date
+                    "ShipmentCount":shipmentCount,
+                    "username":this.localuserid
+                }
+                // return false;
+                this.isLoading = true;
+                axios({
+                    method: 'POST',
+                    url: apiUrl.api_url + 'remittanceReset',
+                    'data': this.input,
+
+                    headers: {
+                        'Authorization': 'Bearer ' + this.myStr
+                    },
+                }).then(result => {
+                        this.isLoading = false;
+                        if (result.data.code == 200) {
+                            this.$alertify.success(result.data.msg);
+                            this.payApproved();
+                        }else{
+                            this.$alertify.error(result.data.msg);
+                        }
+                    },
+                    error => {
+                        this.isLoading = false;
+                        this.$alertify.error(error + " - Something went wrong!");
+                    })
+            }
+        } catch (error) {
+            this.isLoading = false;
+            this.$alertify.error(error + " - Something went wrong!");
+        }
+        },
         closeStatusRoleModal() {
             this.confModalShow = false
         },

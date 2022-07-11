@@ -148,6 +148,7 @@
                             <th class="text-center tableheader"><b>Paid Amount <br>( <i class="fa fa-rupee"></i> )</b></th>
                             <th class="text-center tableheader"><b>Transaction<br> Date</b></th>
                             <th class="text-center tableheader"><b>UTR #</b></th>
+                            <th class="text-center tableheader"><b>Action</b></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -177,6 +178,10 @@
                                   <i class="fa fa-plus-circle"></i>
                                 </label>
                             </td>
+                            <td><button class="btns" @click="deleteRemittance(data.AccountId,data.clientremittedid,data.transactiondate,data.ShipmentCount)" title="Delete"
+                                                        style="margin-left: 6px; background-color: rgb(248, 6, 6);"
+                                                        ><i
+                                                            class="fa fa-trash"></i></button></td>
                         </tr>
                     </tbody>
                 </table>

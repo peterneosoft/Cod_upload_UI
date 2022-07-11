@@ -17,6 +17,24 @@ td{
   // white-space: nowrap;
 }
 
+.btns {
+  display: inline-block;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.1rem 0.3rem !important;
+  font-size: 0.875rem;
+  line-height: 1.25;
+  transition: all 0.15s ease-in-out;
+  color:#f1f1f1;
+  border-radius: 8px !important;
+  
+}
+
+
 .show{
   display: block !important;
 }
