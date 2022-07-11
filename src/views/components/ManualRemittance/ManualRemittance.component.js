@@ -140,14 +140,14 @@ export default {
             }
         },
         deleteRemittance(AccountId,ClientRemitedId,RemitanceDate,shipmentCount){
-          
+
            try {
-            if (confirm('Are you sure you want to delete this slab?')) { //comfirmation to delete record
+            if (confirm('Are you sure you want to reset Remittance?')) { //comfirmation to delete record
                 // Save it!
                 let authkey = apiUrl.stageauthkey;
                 this.input = {
                     "RemittanceId" : ClientRemitedId,
-                    "AccountId":AccountId,    
+                    "AccountId":AccountId,
                     "RemittanceDate":RemitanceDate,  //transaction date
                     "ShipmentCount":shipmentCount,
                     "username":this.localuserid
@@ -165,10 +165,10 @@ export default {
                 }).then(result => {
                         this.isLoading = false;
                         if (result.data.code == 200) {
-                            this.$alertify.success(result.data.msg);
+                            this.$alertify.success(result.data.message);
                             this.payApproved();
                         }else{
-                            this.$alertify.error(result.data.msg);
+                            this.$alertify.error(result.data.message);
                         }
                     },
                     error => {
