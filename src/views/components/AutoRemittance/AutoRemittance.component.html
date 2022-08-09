@@ -17,7 +17,7 @@
               <div class="col-md-4">
                 <label>Send Remittance File <font color="red">*</font></label>
                 <b-input-group>
-                  <textarea rows="4" name="mailids" id="mailids" ref="textarea" v-model="mailids" v-validate="{required: true}" placeholder="Enter Mail ids..."
+                  <textarea rows="4" name="mailids" id="mailids" ref="textarea" v-model="mailids" placeholder="Enter Mail ids..."
                     v-bind:class="{'form-control': true, 'error': errors.has('mailids') }"></textarea>
                 </b-input-group>
                 <small class="text-muted">
@@ -67,8 +67,8 @@
               <button class="btn btn-sm btn-danger" type="reset" @click="resetData"><i class="fa fa-ban"></i> Clear</button>
             </div>
 
-           
-            
+
+
             </div>
           </form>
         </div>
