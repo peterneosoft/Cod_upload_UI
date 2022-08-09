@@ -15,6 +15,18 @@
               </b-form-fieldset>
 
               <div class="col-md-4">
+                <label>Send Remittance File <font color="red">*</font></label>
+                <b-input-group>
+                  <textarea rows="4" name="mailids" id="mailids" ref="textarea" v-model="mailids" v-validate="{required: true}" placeholder="Enter Mail ids..."
+                    v-bind:class="{'form-control': true, 'error': errors.has('mailids') }"></textarea>
+                </b-input-group>
+                <small class="text-muted">
+                  <font color="red">Note: * Only accept comma (,) separated mail id.</font>
+                </small>
+                <br>
+              </div>
+              <!--
+              <div class="col-md-4">
                 <label>Download Remittance File</label>
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="remLoading" />
                 <b-input-group style="height: 45px;" left="<i class='fa fa-file-text'></i>">
@@ -26,12 +38,12 @@
                 </b-input-group>
                 </a>
               </div>
-
+              -->
               <div class="col-md-1">&nbsp;</div>
 
               <div class="col-md-4" title="Upload downloaded COD Remittance file">
                 <label>Upload File</label>
-                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoading" />
+                <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="isLoadings" />
                 <b-input-group style="height: 45px;" left="<i class='fa fa-file-text'></i>">
                   <input type="file" @change="onUpload" placeholder="Upload File" name="paymentfile" id="paymentfile" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('paymentfile') }">
                 </b-input-group>
@@ -41,11 +53,22 @@
                 <label v-show="errors.has('paymentfile')" class="text-danger">Upload file is required.</label>
               </div>
             </div>
-            <div class="card-footer">
+            <div class="card-footer row">
+              <div class="col-md-5">
+                <label class="btn btn-sm btn-primary" @click="sendmail" type="button"><i class="fa fa-at"></i> Send Mail
+                  <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="Loading" />
+                </label>
+              </div>
+
+              <div class="col-md-6">
               <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-upload"></i> Upload
                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="Loading" />
               </button>
               <button class="btn btn-sm btn-danger" type="reset" @click="resetData"><i class="fa fa-ban"></i> Clear</button>
+            </div>
+
+           
+            
             </div>
           </form>
         </div>

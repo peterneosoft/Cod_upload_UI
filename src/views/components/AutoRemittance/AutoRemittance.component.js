@@ -30,6 +30,8 @@ export default {
       Loading: false,
       remLoading: false,
       selected: false,
+      isLoadings:false,
+      mailids: "",
       options: [{
           text: 'TAT Remittance',
           value: false
@@ -230,6 +232,49 @@ export default {
       }).catch(() => {
         console.log('errors exist', this.errors)
       });
+    },
+
+    sendmail()
+    {
+      
+      let mailds=this.mailids;
+
+      if(!mailds){
+        this.$alertify.error('* Enter mail id.');
+        return false;
+      }
+
+      let postData = ({
+        username: this.localuserid,
+        overdueremittance:this.selected,
+        emailidArr:mailds
+      });
+
+      axios({
+          method: 'POST',
+          'url': apiUrl.api_url + 'emailbulkremittancecsv',
+          'data': postData,
+          headers: {
+            'Authorization': 'Bearer ' + this.myStr
+          }
+        })
+        .then(result => {
+
+          if (result.data.code == 200) {
+            this.$alertify.success(result.data.message);
+            this.mailids='';
+          }
+
+          if (result.data.code == 204) {           
+            this.$alertify.success(result.data.message);
+            this.mailids='';
+          }
+
+        }, error => {
+          console.error(error)
+          this.$alertify.error('Error Occured');
+        })
+
     },
 
     insertEmailRemittance() {
