@@ -63,7 +63,7 @@
                             <div class="col-md-3">
                                 <label>Digital Amount <font color="red">*</font></label>
                                 <b-input-group left="<i class='fa fa-rupee'></i>">
-                                    <input class="form-control" id="digitalAmt" type="text" name="digitalAmt" placeholder="Enter Digital Amount" v-validate="{required: true}" v-model="digitalAmt" v-bind:class="{'form-control': true, 'error': errors.has('digitalAmt') }" onkeypress="return event.charCode >= 48 && event.charCode <= 57||event.keyCode == 8">
+                                    <input class="form-control" id="digitalAmt" type="text" name="digitalAmt" placeholder="Enter Digital Amount" v-validate="{required: true}" v-model="digitalAmt" v-bind:class="{'form-control': true, 'error': errors.has('digitalAmt') }" @keypress="isNumber($event)">
                                 </b-input-group>
                                 <span v-show="errors.has('digitalAmt')" class="text-danger">Digital Amount is required.</span>
                             </div>
