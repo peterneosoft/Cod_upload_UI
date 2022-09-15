@@ -96,7 +96,9 @@ export default {
         window.localStorage.setItem('accesshubdata', '');
         window.localStorage.setItem('accesszone', '');
 
-        if(response.data.token && response.data.token!=''){
+         if (response.data.code == 302) {
+            window.location.href= response.data.redirecturl;
+          } else if(response.data.token && response.data.token!=''){
 
           let permissionEncrypt = CryptoJS.AES.encrypt(JSON.stringify(response.data.urlDetails), "Key");
           let usersEncrupt      = CryptoJS.AES.encrypt(JSON.stringify(response.data.userinfo), "Key");
