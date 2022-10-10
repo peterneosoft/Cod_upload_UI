@@ -862,13 +862,20 @@ router.beforeEach((to, from, next) => {
     var plaintext = bytes.toString(CryptoJS.enc.Utf8);
     var userdetail = JSON.parse(plaintext);
 
-    axios.post(process.env.NODE_ENV == 'production' ? 'http://track.xbees.in/api/UserTracker' : 'http://stageautoallocation-app.xbees.in/api/UserTracker', {
-      projectname: "COD Management",
-      type: "web",
-      userid: userdetail.userid,
-      username: userdetail.username,
-      routeurl: to.path
-    });
+    // axios.post(process.env.NODE_ENV == 'production' ? 'http://track.xbees.in/api/UserTracker' : 'http://stageiptracking.xbees.in/api/UserTracker', {
+    //   projectname: "COD Management",
+    //   type: "web",
+    //   userid: parseInt(userdetail.userid),
+    //   username: userdetail.username,
+    //   routeurl: to.path,
+    //   meta:{
+    //     event:to.path,
+    //     data:{
+    //       req:'',
+    //       res:''
+    //     }
+    //   }
+    // });
 
     axios({
         method: 'POST',
