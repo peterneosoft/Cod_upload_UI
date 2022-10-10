@@ -3,6 +3,7 @@ import axios from 'axios';
 import CryptoJS from 'crypto-js';
 import VueElementLoading from 'vue-element-loading';
 import { Validator } from 'vee-validate'
+import iptrackerdetails from '../../../iptrackerdetails'
 
 export default {
   name: 'login',
@@ -65,7 +66,13 @@ export default {
             let permissiondata          = JSON.parse(permissiondataplaintext);
 
             if(response.data.code==200){
-                this.$router.push(permissiondata[0].url); location.reload(true);
+
+                this.$router.push(permissiondata[0].url); 
+                location.reload(true);
+
+            this.iptrackData = permissiondata;
+            iptrackerdetails.checkUserIP(this.iptrackData,'AdminDashboard','/login');
+
             }else{ this.$alertify.success("Logging Failed"); }
 
           }else{ this.$alertify.error("Centeral Login Failed"); }
@@ -118,7 +125,32 @@ export default {
           let permissiondata          = JSON.parse(permissiondataplaintext);
 
           if(response.data.code==200){
-            this.$router.push(permissiondata[0].url); location.reload(true)
+
+            var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
+            var bytes = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
+            var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+            var userdetail = JSON.parse(plaintext);
+              
+            var paylods={
+              projectname: "COD Management",
+              type: "web",
+              userid: parseInt(userdetail.userid),
+              username: userdetail.username,
+              routeurl: 'login',
+              meta:{
+                event:'loginAction',
+                data:{
+                  req:'',
+                  res:''
+                }
+              }
+            };
+
+            axios.post(process.env.NODE_ENV == 'production' ? 'http://track.xbees.in/api/UserTracker' : 'http://stageiptracking.xbees.in/api/UserTracker',paylods);
+
+            this.$router.push(permissiondata[0].url); 
+            
+            location.reload(true);
           }else{ this.$alertify.error(response.data.message); }
 
         }else{ this.$alertify.error(response.data.message); }

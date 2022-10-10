@@ -336,6 +336,31 @@ export default {
                 .then(response => {
                     this.subLoading = false;
                     if (response.data.code == 200) {
+
+                        var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
+                        var bytes = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
+                        var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+                        var userdetail = JSON.parse(plaintext);
+                          
+                        var paylods={
+                          projectname: "COD Management",
+                          type: "web",
+                          userid: parseInt(userdetail.userid),
+                          username: userdetail.username,
+                          routeurl: 'updateSVCLedger',
+                          meta:{
+                            event:'updateSVCLedger',
+                            data:{
+                              req:'',
+                              res:''
+                            }
+                          }
+                        };
+              
+                        axios.post(process.env.NODE_ENV == 'production' ? 'http://track.xbees.in/api/UserTracker' : 'http://stageiptracking.xbees.in/api/UserTracker',paylods);
+              
+
+
                         this.FCModal = false;
                         this.comment = "";
                         this.$refs.myClosureModalRef.hide();
@@ -467,6 +492,30 @@ export default {
                 .then(response => {
                     this.isLoading = false;
                     if (response.data.code == 200) {
+
+                        var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
+                        var bytes = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
+                        var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+                        var userdetail = JSON.parse(plaintext);
+                          
+                        var paylods={
+                          projectname: "COD Management",
+                          type: "web",
+                          userid: parseInt(userdetail.userid),
+                          username: userdetail.username,
+                          routeurl: 'updateFinanceClosing',
+                          meta:{
+                            event:'updateFinanceClosing',
+                            data:{
+                              req:'',
+                              res:''
+                            }
+                          }
+                        };
+              
+                        axios.post(process.env.NODE_ENV == 'production' ? 'http://track.xbees.in/api/UserTracker' : 'http://stageiptracking.xbees.in/api/UserTracker',paylods);
+
+                        
                         this.FCModal = false;
                         this.$refs.myClosureModalRef.hide();
                         this.$alertify.success(response.data.msg);
