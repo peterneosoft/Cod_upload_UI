@@ -164,7 +164,27 @@ export default {
           if (result.data.code == 200) {
             this.$alertify.success(result.data.message);
             this.filename = '';
+            var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
+            var bytes = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
+            var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+            var userdetail = JSON.parse(plaintext);
 
+            var paylods={
+              projectname: "COD Management",
+              type: "web",
+              userid: parseInt(userdetail.userid),
+              username: userdetail.username,
+              routeurl: 'remittanceAutoClosure',
+              meta:{
+                event:'remittanceAutoClosure',
+                data:{
+                  req:this.input,
+                  res:''
+                }
+              }
+            };
+
+            axios.post(apiUrl.iptracker_url,paylods);
             // this.insertEmailRemittance();
           }
 
@@ -236,7 +256,7 @@ export default {
 
     sendmail()
     {
-      
+
       let mailds=this.mailids;
 
       if(!mailds){
@@ -265,7 +285,7 @@ export default {
             this.mailids='';
           }
 
-          if (result.data.code == 204) {           
+          if (result.data.code == 204) {
             this.$alertify.success(result.data.message);
             this.mailids='';
           }

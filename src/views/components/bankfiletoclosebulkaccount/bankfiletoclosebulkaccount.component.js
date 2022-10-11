@@ -101,6 +101,27 @@ export default {
           if(result.data.code == 200){
             this.$alertify.success(result.data.message);
             this.filename = ""
+            var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
+            var bytes = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
+            var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+            var userdetail = JSON.parse(plaintext);
+
+            var paylods={
+              projectname: "COD Management",
+              type: "web",
+              userid: parseInt(userdetail.userid),
+              username: userdetail.username,
+              routeurl: 'financeBulkClosure',
+              meta:{
+                event:'financeBulkClosure',
+                data:{
+                  req:this.input,
+                  res:''
+                }
+              }
+            };
+
+            axios.post(apiUrl.iptracker_url,paylods);
           }
 
         }, error => {

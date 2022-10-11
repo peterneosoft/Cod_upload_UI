@@ -166,31 +166,29 @@ export default {
                         this.isLoading = false;
                         if (result.data.code == 200) {
 
-                            var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
-                        var bytes = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
-                        var plaintext = bytes.toString(CryptoJS.enc.Utf8);
-                        var userdetail = JSON.parse(plaintext);
-                          
-                        var paylods={
-                          projectname: "COD Management",
-                          type: "web",
-                          userid: parseInt(userdetail.userid),
-                          username: userdetail.username,
-                          routeurl: 'updateSVCLedger',
-                          meta:{
-                            event:'updateSVCLedger',
-                            data:{
-                              req:'',
-                              res:''
+                          var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
+                          var bytes = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
+                          var plaintext = bytes.toString(CryptoJS.enc.Utf8);
+                          var userdetail = JSON.parse(plaintext);
+
+                          var paylods={
+                            projectname: "COD Management",
+                            type: "web",
+                            userid: parseInt(userdetail.userid),
+                            username: userdetail.username,
+                            routeurl: 'remittanceReset',
+                            meta:{
+                              event:'remittanceReset',
+                              data:{
+                                req:this.input,
+                                res:''
+                              }
                             }
-                          }
-                        };
-              
-                        axios.post(process.env.NODE_ENV == 'production' ? 'http://track.xbees.in/api/UserTracker' : 'http://stageiptracking.xbees.in/api/UserTracker',paylods);
-              
-                        
-                            this.$alertify.success(result.data.message);
-                            this.payApproved();
+                          };
+
+                          axios.post(apiUrl.iptracker_url,paylods);
+                          this.$alertify.success(result.data.message);
+                          this.payApproved();
                         }else{
                             this.$alertify.error(result.data.message);
                         }

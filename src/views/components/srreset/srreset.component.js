@@ -358,7 +358,7 @@ export default {
           var bytes = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
           var plaintext = bytes.toString(CryptoJS.enc.Utf8);
           var userdetail = JSON.parse(plaintext);
-            
+
           var paylods={
             projectname: "COD Management",
             type: "web",
@@ -368,13 +368,13 @@ export default {
             meta:{
               event:'deleteSRLedgerEntry',
               data:{
-                req:'',
+                req:this.input,
                 res:''
               }
             }
           };
 
-          axios.post(process.env.NODE_ENV == 'production' ? 'http://track.xbees.in/api/UserTracker' : 'http://stageiptracking.xbees.in/api/UserTracker',paylods);
+          axios.post(apiUrl.iptracker_url,paylods);
 
 
           this.$alertify.success(response.data.msg);
@@ -417,7 +417,7 @@ export default {
                 var bytes = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
                 var plaintext = bytes.toString(CryptoJS.enc.Utf8);
                 var userdetail = JSON.parse(plaintext);
-                  
+
                 var paylods={
                   projectname: "COD Management",
                   type: "web",
@@ -427,15 +427,15 @@ export default {
                   meta:{
                     event:'updateSVCLedger',
                     data:{
-                      req:'',
+                      req:this.input,
                       res:''
                     }
                   }
                 };
 
-                axios.post(process.env.NODE_ENV == 'production' ? 'http://track.xbees.in/api/UserTracker' : 'http://stageiptracking.xbees.in/api/UserTracker',paylods);
+                axios.post(apiUrl.iptracker_url,paylods);
 
-              
+
           this.FCModal = false; this.$refs.myClosureModalRef.hide(); this.$alertify.success(response.data.msg);
           this.getMonthlySRLedgerDetails()
         } else {
