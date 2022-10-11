@@ -67,11 +67,25 @@ export default {
 
             if(response.data.code==200){
 
-                this.$router.push(permissiondata[0].url); 
+                this.$router.push(permissiondata[0].url);
                 location.reload(true);
 
-            this.iptrackData = permissiondata;
-            iptrackerdetails.checkUserIP(this.iptrackData,'AdminDashboard','/login');
+                var paylods={
+                  projectname: "COD Management",
+                  type: "web",
+                  userid: parseInt(permissiondata.userid),
+                  username: permissiondata.username,
+                  routeurl: 'login',
+                  meta:{
+                    event:'login',
+                    data:{
+                      req:'',
+                      res:''
+                    }
+                  }
+                };
+
+                axios.post(apiUrl.iptracker_url,paylods);
 
             }else{ this.$alertify.success("Logging Failed"); }
 
@@ -130,7 +144,7 @@ export default {
             var bytes = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
             var plaintext = bytes.toString(CryptoJS.enc.Utf8);
             var userdetail = JSON.parse(plaintext);
-              
+
             var paylods={
               projectname: "COD Management",
               type: "web",
@@ -148,8 +162,8 @@ export default {
 
             axios.post(process.env.NODE_ENV == 'production' ? 'http://track.xbees.in/api/UserTracker' : 'http://stageiptracking.xbees.in/api/UserTracker',paylods);
 
-            this.$router.push(permissiondata[0].url); 
-            
+            this.$router.push(permissiondata[0].url);
+
             location.reload(true);
           }else{ this.$alertify.error(response.data.message); }
 
