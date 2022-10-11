@@ -68,7 +68,6 @@ export default {
             if(response.data.code==200){
 
                 this.$router.push(permissiondata[0].url);
-                location.reload(true);
 
                 var paylods={
                   projectname: "COD Management",
@@ -86,7 +85,7 @@ export default {
                 };
 
                 axios.post(apiUrl.iptracker_url,paylods);
-
+                location.reload(true);
             }else{ this.$alertify.success("Logging Failed"); }
 
           }else{ this.$alertify.error("Centeral Login Failed"); }
@@ -160,7 +159,7 @@ export default {
               }
             };
 
-            axios.post(process.env.NODE_ENV == 'production' ? 'http://track.xbees.in/api/UserTracker' : 'http://stageiptracking.xbees.in/api/UserTracker',paylods);
+            axios.post(apiUrl.iptracker_url,paylods);
 
             this.$router.push(permissiondata[0].url);
 
