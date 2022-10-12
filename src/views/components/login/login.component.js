@@ -187,5 +187,8 @@ export default {
       this.username = this.password = ''; this.isLoading = false;
       this.$validator.reset(); this.errors.clear();
     },
+    forgotpwd() {
+      location.href = apiUrl.forgotpwd_url
+    }
   }
 }
