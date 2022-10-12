@@ -3,7 +3,6 @@ import axios from 'axios';
 import CryptoJS from 'crypto-js';
 import VueElementLoading from 'vue-element-loading';
 import { Validator } from 'vee-validate'
-import iptrackerdetails from '../../../iptrackerdetails'
 
 export default {
   name: 'login',
