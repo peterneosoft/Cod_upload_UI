@@ -79,6 +79,9 @@
 </style>
 <template>
 <header class="app-header navbar">
+  <meta http-equiv="Cache-Control" content="no-cache" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <b-link class="navbar-brand" to="dashboard"></b-link>
   <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" @click="sidebarToggle">&#9776;</button>
  <!--  <b-nav is-nav-bar class="d-md-down-none">
