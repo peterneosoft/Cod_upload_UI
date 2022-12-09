@@ -50,3 +50,13 @@
     font-weight: bold;
     font-size: 0.8rem;
 }
+
+.blink_me {
+  animation: blinker 5s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
