@@ -46,7 +46,7 @@ export default {
           window.localStorage.setItem('accesshubdata', '');
           window.localStorage.setItem('accesszone', '');
 
-          if(response.data.token!=''){
+          if(response.data.token && response.data.token!=''){
             let permissionEncrypt = CryptoJS.AES.encrypt(JSON.stringify(response.data.urlDetails), "Key");
             let usersEncrupt      = CryptoJS.AES.encrypt(JSON.stringify(response.data.userinfo), "Key");
             let hubEncrypt        = CryptoJS.AES.encrypt(JSON.stringify(response.data.hubData), "Key");
@@ -85,14 +85,14 @@ export default {
 
                 axios.post(apiUrl.iptracker_url,paylods);
                 location.reload(true);
-            }else{ this.$alertify.success("Logging Failed"); }
+            }else{ this.$alertify.error(response.data.message); }
 
-          }else{ this.$alertify.error("Centeral Login Failed"); }
+          }else{ this.$alertify.error(response.data.message); }
 
           this.isLoading = false;
         })
         .catch((httpException) => {
-          this.isLoading = false; this.$alertify.error("Centeral Login Failed"); console.error('exception is:::::::::', httpException);
+          this.isLoading = false; this.$alertify.error(response.data.message); console.error('exception is:::::::::', httpException);
         })
     },
 
