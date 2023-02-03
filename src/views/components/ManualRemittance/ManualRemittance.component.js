@@ -1,6 +1,7 @@
 import apiUrl from '../../../constants'
 import axios from 'axios'
 import CryptoJS from 'crypto-js';
+import Vue from 'vue';
 import {
     Validator
 } from 'vee-validate'
@@ -9,16 +10,29 @@ import VueElementLoading from 'vue-element-loading';
 import Multiselect from 'vue-multiselect'
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import moment from 'moment';
+// import DynamicMultiSelect from 'vue-dynamic-multiselect';
+ 
+// Vue.component(DynamicMultiSelect);
+// Vue.component('multiselect', Multiselect)
 export default {
     name: 'ManualRemittance',
     components: {
         Paginate,
         VueElementLoading,
+        // DynamicMultiSelect
         Multiselect,
     },
 
     data() {
         return {
+            isPopupLoad: false,
+            editAccountName: "",
+            editFromDate: "",
+            editToDate: "",
+            editAccid: "",
+            editClientId: "",
+            freightamnt: "",
+            enableResponse: false,
             localusername: 0,
             resultCount: 0,
             pagecount: 0,
@@ -907,6 +921,7 @@ export default {
                 this.clientLoading = false;
 
                 if (result.data.code == 200) {
+                    console.log('result', result);
                     let clientAccountList = result.data.clientArr;
 
                     let newTempArray = [];
@@ -929,7 +944,7 @@ export default {
                 console.error(error)
             })
         },
-
+      
         onClientSearch(AccountId, ClientId, CompanyName) {
             this.fromdates = "";
             this.AccountId = AccountId;
@@ -1146,10 +1161,57 @@ export default {
                         }
                     }, error => {
                         console.error(error)
-                        this.isLoading = false;
+                        this.isLoading = falstoDatee;
                         this.$alertify.error('Error Occured');
                     })
             }
+        },
+        editFreightAmount(from, to, cid, aid, aname){
+            
+            this.editFromDate = from;
+            this.editToDate = to;
+            this.editClientId = cid;
+            this.editAccid = aid;
+            this.editAccountName = aname;
+        },
+        resetFreight(){
+            this.freightamnt = "";
+        },
+        updateFreightAmount(){
+       
+            this.input = ({
+                fromDate: this.editFromDate,
+                toDate: this.editToDate,
+                ClientID: this.editClientId,
+                AccountId: this.editAccid,
+                FreightAmount: parseInt(this.freightamnt),
+                username: this.localuserid
+            })
+            this.isPopupLoad = true;
+            axios({
+                method: 'POST',
+                url: `${apiUrl.api_url}updateFreight`,
+                data: this.input,
+                headers: {
+                    'Authorization': 'Bearer ' + this.myStr
+                }
+                
+            }).then(result => {
+                this.isPopupLoad = false;
+                // console.log('resultupdate', result);
+
+                if (result.data.code == 200) {
+                    this.$alertify.success(result.data.message);
+                    this.onClientSearch(this.editAccid, this.editClientId, this.editAccountName);
+                    this.enableResponse = false;
+                } else {
+                    this.$alertify.error(result.data.message);
+                    console.log(result);
+                }
+            }, error => {
+                this.isPopupLoad = false;
+                console.error(error)
+            })
         },
 
         onSearch() {
