@@ -22,11 +22,17 @@
                             <label>Client Name <font color="red">*</font></label>
                             <b-input-group left="<i class='fa fa-list'></i>">
                                 <vue-element-loading spinner="mini-spinner" color="#FF6700" :active.sync="clientLoading" />
-                                <Multiselect :options="ClientAccountList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="AccountName" track-by="AccountId" :data-ClientId="ClientId" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;">
+                                <multiselect :options="ClientAccountList" name="Client" id="Client" v-model="Client" placeholder="Select Client" label="AccountName" track-by="AccountId" :data-ClientId="ClientId" :optionHeight="100" :hide-selected="true" style="border: 1px solid #c2cfd6;">
                                     <template slot="noResult">
                                     <p>No Record Found.</p>
                                 </template>
-                                </Multiselect>
+                                </multiselect>
+                                <!-- <dynamic-multi-select 
+                                :options="ClientAccountList"
+                                option-value="AccountId"
+                                option-text="AccountName"
+                                placeholder="type to search"
+                                v-model="Client" /> -->
                             </b-input-group>
                             <span id="clienterr" class="text-danger"></span>
                         </div>
@@ -114,8 +120,8 @@
                             <td :data-remi="'remi'+data.AccountId">{{data.RemittanceType}}</td>
                             <td :data-ship="'ship'+data.AccountId">{{data.ShipmentCount}}</td>
                             <td :data-cod="'cod'+data.AccountId">{{data.CODAmount}}</td>
-                            <td :data-foregi="'foregi'+data.AccountId">{{data.FreightAmount}}</td>
-                            <td class="text-center">
+                            <td :data-foregi="'foregi'+data.AccountId">{{data.FreightAmount}} <i class="fa fa-pencil ml-3" title="Edit" v-if="data.RemittanceType == 'Hybrid' && selected == 'AdHoc'" @click="enableResponse=true;editFreightAmount(data.FromDate, data.ToDate, data.ClientId, data.AccountId, data.CompanyName);" style="cursor: pointer;"></i></td>
+                            
                                 <span :data-excep="'excep'+data.AccountId" @click="showReasonAWBNo(data.ExceptionAWB)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.ExceptionAWB.length>0">{{data.ExceptionAmount}}</span>
                                 <span v-if="data.ExceptionAWB.length<=0">{{data.ExceptionAmount}}</span>
                             </td>
@@ -190,6 +196,27 @@
                 </paginate>
             </div>
         </div>
+        <b-modal size="vsm" id="bv-modal-example" v-model="enableResponse" style="border-radius: 5px;"
+    :no-enforce-focus="true">
+    <div class="col-lg-12" id="printPoContent" v-show="enableResponse">
+        <div class="row">
+            <div class="col-xs-12 col-lg-12">
+                <div id="app" style="margin-top: 50px;">
+      <label>Freight Amount</label>
+      <b-input-group>
+        <input type="number" id="freightamnt" name="freightamnt" v-model="freightamnt" placeholder="Enter Freight Amount" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('freightamnt') }">
+    </b-input-group>
+    <button type="button" aria-label="Close" @click="updateFreightAmount();" class="btn btn-success btn-sm mt-4"
+    >Update</button>
+    <button type="button" aria-label="Close" @click="resetFreight();"  class="btn btn-danger btn-sm mt-4"
+    >Reset</button>
+    </div>
+    <button type="button" aria-label="Close" @click="enableResponse = false" style="margin-left: 200px;" class="btn btn-danger btn-sm mt-4"
+    >Close</button>
+    </div>
+    </div>
+    </div>
+    </b-modal>
         <b-modal v-model="FCModal" @ok="FCModal = false" ref="myClosureModalRef">
             <div role="document">
                 <div class="modal-content">
