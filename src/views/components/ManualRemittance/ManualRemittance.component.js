@@ -110,6 +110,11 @@ export default {
     },
 
     mounted() {
+        
+        // $('#closePop').on('click', function () {
+        //     $('input[name=freightamnt]').val("");
+        // });
+
         var userdetailEncrypt = window.localStorage.getItem('accessuserdata')
         var bytes = CryptoJS.AES.decrypt(userdetailEncrypt.toString(), 'Key');
         var plaintext = bytes.toString(CryptoJS.enc.Utf8);
@@ -131,6 +136,9 @@ export default {
         });
     },
     methods: {
+        // closePop(){
+        //     window.location.reload();
+        // },
         format_date(value) {
             if (value) {
                 return moment(String(value)).format('DD/MM/YYYY')
@@ -977,6 +985,7 @@ export default {
                         .then(result => {
                             this.isLoading = false;
                             if (result.data.code == 200) {
+                                // this.Client = "";
                                 // this.adhocDate(result.data.remittanceObj.FromDate, result.data.remittanceObj.ToDate, ClientId);
                                 let newRemittedArrays = [];
                                 this.recordType = 'adhoc';
@@ -1167,7 +1176,7 @@ export default {
             }
         },
         editFreightAmount(from, to, cid, aid, aname){
-            
+            this.freightamnt = "";
             this.editFromDate = from;
             this.editToDate = to;
             this.editClientId = cid;
@@ -1175,6 +1184,11 @@ export default {
             this.editAccountName = aname;
         },
         resetFreight(){
+            this.freightamnt = "";
+            // this.enableResponse =false;
+            // return false;
+        },
+        enabRsp(){
             this.freightamnt = "";
         },
         updateFreightAmount(){
@@ -1201,6 +1215,7 @@ export default {
                 // console.log('resultupdate', result);
 
                 if (result.data.code == 200) {
+                    // this.Client = [];
                     this.$alertify.success(result.data.message);
                     this.onClientSearch(this.editAccid, this.editClientId, this.editAccountName);
                     this.enableResponse = false;

@@ -121,13 +121,12 @@
                             <td :data-ship="'ship'+data.AccountId">{{data.ShipmentCount}}</td>
                             <td :data-cod="'cod'+data.AccountId">{{data.CODAmount}}</td>
                             <td :data-foregi="'foregi'+data.AccountId">{{data.FreightAmount}} </td>
-                            
-                                <span :data-excep="'excep'+data.AccountId" @click="showReasonAWBNo(data.ExceptionAWB)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.ExceptionAWB.length>0">{{data.ExceptionAmount}}</span>
+                            <td><span :data-excep="'excep'+data.AccountId" @click="showReasonAWBNo(data.ExceptionAWB)" style="cursor:pointer; color: rgb(25,25,112); text-decoration: underline;" v-if="data.ExceptionAWB.length>0">{{data.ExceptionAmount}}</span>
                                 <span v-if="data.ExceptionAWB.length<=0">{{data.ExceptionAmount}}</span>
                             </td>
                             <td :data-pay="'pay'+data.AccountId">{{data.PayableAmount}}</td>
                             <td>
-                                <button class="btn btn-success" title="Edit" v-if="data.RemittanceType == 'Hybrid' && selected == 'AdHoc'" @click="enableResponse=true;editFreightAmount(data.FromDate, data.ToDate, data.ClientId, data.AccountId, data.CompanyName);" style="cursor: pointer;"><i class="fa fa-pencil ml-3" ></i></button>
+                                <button class="btn btn-sm btn-success" title="Edit" v-if="data.RemittanceType == 'Hybrid' && selected == 'AdHoc'" @click="enableResponse=true;editFreightAmount(data.FromDate, data.ToDate, data.ClientId, data.AccountId, data.CompanyName);" ><i class="fa fa-pencil" ></i> Edit</button>
                                 <button :data-remittbtn="'remittbtn'+data.AccountId" v-if="recordType=='tatoverdue' && data.PayableAmount>0 && data.IsActive" class="btn btn-sm btn-primary" @click="onRemittance(form.FromDate[data.AccountId], form.toDate[data.AccountId], data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button>
                                 <button :data-remittbtn="'remittbtn'+data.AccountId" v-if="recordType=='adhoc' && data.PayableAmount>0 && data.IsActive" class="btn btn-sm btn-primary" @click="onAdHoctance(form.FromDate[data.AccountId], form.toDate[data.AccountId], data)" title="Remit Client"><i class="fa fa-dot-circle-o"></i> Remit</button>
                                 <button :data-remittbtn="'remittbtn'+data.AccountId" v-if="data.PayableAmount>0" @click="exportData(data.FromDate,data.ClientId,data.AccountId,data.CompanyName)" class="btn btn-sm btn-danger" title="Download Remittance Report" type="button" style="width: 50px;"><i class="fa fa-download"></i></button>
@@ -212,7 +211,7 @@
     <button type="button" aria-label="Close" @click="resetFreight();"  class="btn btn-danger btn-sm mt-4"
     >Reset</button>
     </div>
-    <button type="button" aria-label="Close" @click="enableResponse = false" style="margin-left: 200px;" class="btn btn-danger btn-sm mt-4"
+    <button type="button" aria-label="Close" id="closePop" @click="enableResponse=false;" style="margin-left: 200px;" class="btn btn-danger btn-sm mt-4"
     >Close</button>
     </div>
     </div>
