@@ -7,10 +7,10 @@ import {
 } from 'vee-validate'
 import Paginate from 'vuejs-paginate'
 import VueElementLoading from 'vue-element-loading';
-// import Multiselect from 'vue-multiselect'
+import Multiselect from 'vue-multiselect'
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import moment from 'moment';
-import DynamicMultiSelect from 'vue-dynamic-multiselect';
+// import DynamicMultiSelect from 'vue-dynamic-multiselect';
  
 // Vue.component(DynamicMultiSelect);
 // Vue.component('multiselect', Multiselect)
@@ -19,8 +19,8 @@ export default {
     components: {
         Paginate,
         VueElementLoading,
-        DynamicMultiSelect
-        // Multiselect,
+        // DynamicMultiSelect
+        Multiselect,
     },
 
     data() {
