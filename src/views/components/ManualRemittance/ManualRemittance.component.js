@@ -139,6 +139,7 @@ export default {
         // closePop(){
         //     window.location.reload();
         // },
+       
         format_date(value) {
             if (value) {
                 return moment(String(value)).format('DD/MM/YYYY')
@@ -1192,7 +1193,10 @@ export default {
             this.freightamnt = "";
         },
         updateFreightAmount(){
-       
+            if(this.freightamnt < 0){
+                this.$alertify.error("Negative numbers not allowed!"); 
+                return false;               
+            }
             this.input = ({
                 fromDate: this.editFromDate,
                 toDate: this.editToDate,
