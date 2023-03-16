@@ -11,7 +11,7 @@ import Multiselect from 'vue-multiselect'
 import 'vue-multiselect/dist/vue-multiselect.min.css';
 import moment from 'moment';
 // import DynamicMultiSelect from 'vue-dynamic-multiselect';
- 
+
 // Vue.component(DynamicMultiSelect);
 // Vue.component('multiselect', Multiselect)
 export default {
@@ -110,7 +110,7 @@ export default {
     },
 
     mounted() {
-        
+
         // $('#closePop').on('click', function () {
         //     $('input[name=freightamnt]').val("");
         // });
@@ -139,7 +139,7 @@ export default {
         // closePop(){
         //     window.location.reload();
         // },
-       
+
         format_date(value) {
             if (value) {
                 return moment(String(value)).format('DD/MM/YYYY')
@@ -953,7 +953,7 @@ export default {
                 console.error(error)
             })
         },
-      
+
         onClientSearch(AccountId, ClientId, CompanyName) {
             this.fromdates = "";
             this.AccountId = AccountId;
@@ -1171,7 +1171,7 @@ export default {
                         }
                     }, error => {
                         console.error(error)
-                        this.isLoading = falstoDatee;
+                        this.isLoading = false;
                         this.$alertify.error('Error Occured');
                     })
             }
@@ -1194,8 +1194,8 @@ export default {
         },
         updateFreightAmount(){
             if(this.freightamnt < 0){
-                this.$alertify.error("Negative numbers not allowed!"); 
-                return false;               
+                this.$alertify.error("Negative numbers not allowed!");
+                return false;
             }
             this.input = ({
                 fromDate: this.editFromDate,
@@ -1213,7 +1213,7 @@ export default {
                 headers: {
                     'Authorization': 'Bearer ' + this.myStr
                 }
-                
+
             }).then(result => {
                 this.isPopupLoad = false;
                 // console.log('resultupdate', result);
