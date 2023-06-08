@@ -221,7 +221,7 @@
             <div role="document">
                 <div class="modal-content">
                     <div class="modal-bodyfrm">
-                        <form id="FCform" v-on:submit.prevent="onUpdate()">
+                        <form id="FCform" v-on:submit.prevent="onUpdate('abc')">
                             <div class="form-group">
                                 <b-card>
                                     <div slot="header">
@@ -233,9 +233,9 @@
                                             <div class="col-lg-12">
                                                 <b-form-fieldset>
                                                     <b-input-group>
-                                                        <input type="text" id="utrno" name="utrno" v-model="utrno" placeholder="Enter UTR Number" v-validate="{required: true}" v-bind:class="{'form-control': true, 'error': errors.has('utrno') }">
+                                                        <input type="text" id="utrno" name="utrno" v-model="utrno" placeholder="Enter UTR Number" v-validate="{required: true}" v-bind:class="{'form-control': true } " >
                                                     </b-input-group>
-                                                    <span id="utrnoerr" style="display: none;" class="text-danger">UTR number is required. </span>
+                                                    <span id="utrnoerr" class="text-danger" style="display:none;">UTR number is required. </span>
                                                 </b-form-fieldset>
                                             </div>
                                         </div>
