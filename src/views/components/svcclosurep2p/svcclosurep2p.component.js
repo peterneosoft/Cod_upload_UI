@@ -91,6 +91,8 @@ export default {
       closingBalance: 0,
       yestClosingbalance: 0,
       yesterdayCODAmt: 0,
+      twokdenominationscount:0,
+      twokfreeze:false,
       TolatCollection: 0,
       p2pAmount: 0,
       myStr: '',
@@ -273,6 +275,9 @@ export default {
             var data = []; let yDayCODAmt = 0;
             if(result.data.code==200){
               this.yesterdayCODAmt = (result.data.shipmentupdate) ? parseFloat(Math.round(result.data.shipmentupdate)) : 0;
+              this.twokdenominationscount = parseInt(result.data.twokdenominationscount)
+              this.twokfreeze = result.data.twokfreeze
+              this.notesCountFreeze()
             }
             this.GetPendingCODAmt();
 
@@ -492,7 +497,32 @@ export default {
         if(!this.isFnF) this.Deposit_Amount = this.tot_amt;
       }
     },
+    notesCountFreeze(){
+      if(this.twokfreeze){
+        let Denomination = 2000;
+        let NoteCount = this.twokdenominationscount;       
 
+        document.getElementById(Denomination).value = NoteCount;
+        document.getElementById(Denomination).disabled = true;
+        document.getElementById("mo"+Denomination).value = Denomination * NoteCount;
+        var arr = document.getElementsByName('note_amt');
+        this.tot_amt=0;
+
+        for(var i=0;i<arr.length;i++){
+
+          if(this.DenominationArr.indexOf(Denomination) === -1) {
+            this.DenominationArr.push(Denomination);
+          }
+
+          if(parseInt(arr[i].value)){
+            this.tot_amt += parseInt(arr[i].value);
+          }
+        }
+        document.getElementById('tot_amt').value = this.tot_amt;
+
+        if(!this.isFnF) this.Deposit_Amount = this.tot_amt;
+      }
+    },
     cardawbno(event){
       let awbArr = []; this.DisputeArr = []; this.CardAmount = 0; this.subLoading = this.disableButton = true;
 

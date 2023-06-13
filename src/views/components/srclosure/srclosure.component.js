@@ -22,6 +22,8 @@ export default {
       PendingCOD:0,
       TotalAmount:0,
       TodaysCOD:0,
+      twokdenominationscount:0,
+      twokfreeze:false,
       TodaysShipmentCount: 0,
       deliveredCODArr: [],
       DeliveryDate: '',
@@ -421,8 +423,9 @@ export default {
       this.DenominationList.map(data=>{
         let countVal = document.getElementById(data.Denomination);
         let amountVal = document.getElementById("mo"+data.Denomination);
-        countVal.value=""; amountVal.value=0;
+        countVal.value=""; amountVal.value=0;        
       });
+      document.getElementById(2000).disabled = false;
       //this.GetDeliveryAgentData();
       this.Regionshow = this.RightSRLedger = this.SRLedgerDetails = false;
       this.assign = this.card = this.cash = this.cod = this.ndr = this.prepaid = this.wallet = this.payphi = 0;
@@ -464,7 +467,9 @@ export default {
              this.TotalAmount         = result.data.TotalAmount
              this.TodaysShipmentCount = result.data.TodaysShipmentCount
              this.deliveredCODArr     = result.data.TodaysShippingId
-
+             this.twokdenominationscount = parseInt(result.data.twokdenominationscount)
+             this.twokfreeze = result.data.twokfreeze
+             this.notesCountFreeze();
              if(result.data.CODDetailsArr.length>0){
                this.deliveredCashArr    = result.data.CODDetailsArr[0].cashArr
                this.deliveredPayphiArr  = result.data.CODDetailsArr[0].payphiArr
@@ -534,7 +539,7 @@ export default {
            }
          })
          .then(async result => {
-
+          
            await this.getRightSRLedgerDetails();
            await this.GetSRLedgerDetails();
 
@@ -728,6 +733,7 @@ export default {
 
     //function is used for calculate notes amount
     notesCount(event){
+
       if(event.target.id){
         let Denomination = event.target.id;
         let NoteCount = event.target.value;
@@ -738,6 +744,7 @@ export default {
 
         for(var i=0;i<arr.length;i++){
           if(this.DenominationArr.indexOf(Denomination) === -1) {
+            console.log(Denomination)
             this.DenominationArr.push(Denomination);
           }
 
@@ -747,6 +754,31 @@ export default {
         this.Deposit_Amount = "";
         this.Deposit_Amount = this.tot_amt;
       }
+    },
+    notesCountFreeze(){
+      if(this.twokfreeze){
+        let Denomination = 2000;
+        let NoteCount = this.twokdenominationscount;
+        //console.log("Note Count:",NoteCount)
+        document.getElementById(Denomination).value = NoteCount;
+        document.getElementById(Denomination).disabled = true;
+        document.getElementById("mo"+Denomination).value = Denomination * NoteCount;
+        var arr = document.getElementsByName('note_amt');
+        this.tot_amt=0;
+
+        for(var i=0;i<arr.length;i++){
+          if(this.DenominationArr.indexOf(Denomination) === -1) {
+            //console.log(Denomination)
+            this.DenominationArr.push(Denomination);
+          }
+
+          if(parseInt(arr[i].value)) this.tot_amt += parseInt(arr[i].value);
+        }
+        document.getElementById('tot_amt').value = this.tot_amt;
+        this.Deposit_Amount = "";
+        this.Deposit_Amount = this.tot_amt;      
+      }
+        
     },
 
     srStatus() {
