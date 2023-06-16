@@ -423,7 +423,7 @@ export default {
       this.DenominationList.map(data=>{
         let countVal = document.getElementById(data.Denomination);
         let amountVal = document.getElementById("mo"+data.Denomination);
-        countVal.value=""; amountVal.value=0;        
+        countVal.value=""; amountVal.value=0;
       });
       document.getElementById(2000).disabled = false;
       //this.GetDeliveryAgentData();
@@ -520,6 +520,7 @@ export default {
        this.SR_Name = event.target.value
        this.RightSRLedger = true;
        this.SRLedgerDetails = true;
+       this.notesCountUnFreeze();
        if(!this.SR_Name){
          this.resetData(event); return false;
        }
@@ -539,7 +540,7 @@ export default {
            }
          })
          .then(async result => {
-          
+
            await this.getRightSRLedgerDetails();
            await this.GetSRLedgerDetails();
 
@@ -776,11 +777,23 @@ export default {
         }
         document.getElementById('tot_amt').value = this.tot_amt;
         this.Deposit_Amount = "";
-        this.Deposit_Amount = this.tot_amt;      
+        this.Deposit_Amount = this.tot_amt;
       }
-        
-    },
 
+    },
+    notesCountUnFreeze(){
+        this.twokfreeze = false
+        this.twokdenominationscount = 0
+        this.DenominationArr.forEach(function (denomi) {
+          //console.log(denomi)
+          document.getElementById(denomi).value = '';
+          document.getElementById(denomi).disabled = false;
+          document.getElementById("mo"+denomi).value = 0;
+        });        //console.log("Note Count:",NoteCount)
+        document.getElementById('tot_amt').value = 0
+        this.Deposit_Amount = "";
+        this.tot_amt = 0
+    },
     srStatus() {
       this.srLoading = true;
       this.input = ({
