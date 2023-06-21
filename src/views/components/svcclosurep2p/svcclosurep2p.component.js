@@ -500,10 +500,10 @@ export default {
     notesCountFreeze(){
       if(this.twokfreeze){
         let Denomination = 2000;
-        let NoteCount = this.twokdenominationscount;       
+        let NoteCount = this.twokdenominationscount;
 
         document.getElementById(Denomination).value = NoteCount;
-        document.getElementById(Denomination).disabled = true;
+        //document.getElementById(Denomination).disabled = true;
         document.getElementById("mo"+Denomination).value = Denomination * NoteCount;
         var arr = document.getElementsByName('note_amt');
         this.tot_amt=0;

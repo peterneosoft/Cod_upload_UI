@@ -762,7 +762,7 @@ export default {
         let NoteCount = this.twokdenominationscount;
         //console.log("Note Count:",NoteCount)
         document.getElementById(Denomination).value = NoteCount;
-        document.getElementById(Denomination).disabled = true;
+        //document.getElementById(Denomination).disabled = true;
         document.getElementById("mo"+Denomination).value = Denomination * NoteCount;
         var arr = document.getElementsByName('note_amt');
         this.tot_amt=0;
