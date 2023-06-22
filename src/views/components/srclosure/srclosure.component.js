@@ -377,7 +377,8 @@ export default {
            NoteCount: NoteCountArr,
            DenominationID: DenominationIDArr,
            AWBNo: (this.DisputeArr)?this.DisputeArr:new Array(),
-           disputeAmt: (this.CardAmount)?this.CardAmount:0
+           disputeAmt: (this.CardAmount)?this.CardAmount:0,
+           twokdenominationscount:this.twokdenominationscount
            })
            axios({
              method: 'POST',
@@ -425,7 +426,7 @@ export default {
         let amountVal = document.getElementById("mo"+data.Denomination);
         countVal.value=""; amountVal.value=0;
       });
-      document.getElementById(2000).disabled = false;
+      document.getElementById("2000").disabled = false;
       //this.GetDeliveryAgentData();
       this.Regionshow = this.RightSRLedger = this.SRLedgerDetails = false;
       this.assign = this.card = this.cash = this.cod = this.ndr = this.prepaid = this.wallet = this.payphi = 0;
@@ -758,7 +759,7 @@ export default {
     },
     notesCountFreeze(){
       if(this.twokfreeze){
-        let Denomination = 2000;
+        let Denomination = "2000";
         let NoteCount = this.twokdenominationscount;
         //console.log("Note Count:",NoteCount)
         document.getElementById(Denomination).value = NoteCount;

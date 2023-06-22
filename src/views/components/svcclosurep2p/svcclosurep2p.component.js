@@ -499,7 +499,7 @@ export default {
     },
     notesCountFreeze(){
       if(this.twokfreeze){
-        let Denomination = 2000;
+        let Denomination = "2000";
         let NoteCount = this.twokdenominationscount;
 
         document.getElementById(Denomination).value = NoteCount;
@@ -757,7 +757,8 @@ export default {
                 exceptionId: this.exceptionArr,
                 exceptionAmount: this.exceptionAmount,
                 hubIsRSC: this.localhubIsRSC,
-                financeclosingamt: parseInt(this.financeclosingamt)
+                financeclosingamt: parseInt(this.financeclosingamt),
+                twokdenominationscount:this.twokdenominationscount
             })
 
             axios({
