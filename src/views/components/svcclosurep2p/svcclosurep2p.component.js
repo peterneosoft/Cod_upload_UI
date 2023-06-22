@@ -274,10 +274,16 @@ export default {
           }).then(result => {
             var data = []; let yDayCODAmt = 0;
             if(result.data.code==200){
+
               this.yesterdayCODAmt = (result.data.shipmentupdate) ? parseFloat(Math.round(result.data.shipmentupdate)) : 0;
-              this.twokdenominationscount = parseInt(result.data.twokdenominationscount)
-              this.twokfreeze = result.data.twokfreeze
-              this.notesCountFreeze()
+
+              if(this.twokdenominationscount <=0){
+                this.twokdenominationscount = parseInt(result.data.twokdenominationscount)
+                //console.log(this.twokdenominationscount)
+                this.twokfreeze = result.data.twokfreeze
+                this.notesCountFreeze()
+              }
+
             }
             this.GetPendingCODAmt();
 
@@ -501,7 +507,7 @@ export default {
       if(this.twokfreeze){
         let Denomination = "2000";
         let NoteCount = this.twokdenominationscount;
-
+        console.log("NoteCount ",NoteCount);
         document.getElementById(Denomination).value = NoteCount;
         //document.getElementById(Denomination).disabled = true;
         document.getElementById("mo"+Denomination).value = Denomination * NoteCount;
@@ -771,6 +777,7 @@ export default {
             })
             .then((response) => {
               this.hideCM = 1;
+
               if (response.data.errorCode == 0) {
                 this.$alertify.success(response.data.msg);
                 this.disableButton = false; this.subLoading = false;
@@ -979,6 +986,8 @@ export default {
     },
 
     resetForm() {
+      this.twokdenominationscount=0;
+      this.twokfreeze = false;
       this.DepositLoading = false; this.ReasonLoading = false; this.disableButton = false; this.subLoading = false;
       this.BatchID = this.localhubid+''+Math.floor(Math.random() * (Math.pow(10,5)));
       this.pageno = this.tot_amt = this.unmatchedAmt = this.CardAmount = 0;
