@@ -164,6 +164,7 @@
                 &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Payphi Count:&nbsp;&nbsp;{{allSUList.SUpayphiCnt}},
                 &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Wallet Count:&nbsp;&nbsp;{{allSUList.SUwalletCnt}},
                 &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Razorpay Count:&nbsp;&nbsp;{{allSUList.SUrazorpayCnt}}
+                &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;HDFC Count:&nbsp;&nbsp;{{allSUList.SUHDFCCnt}}
               </td>
             </tr>
             <tr v-if="allDBList">
@@ -174,6 +175,7 @@
                 &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Payphi Count:&nbsp;&nbsp;{{allDBList.DBCODpayphiCnt}},
                 &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Wallet Count:&nbsp;&nbsp;{{allDBList.DBCODwalletCnt}},
                 &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;Razorpay Count:&nbsp;&nbsp;{{allDBList.DBCODrazorpayCnt}}
+                &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;&nbsp;&nbsp;HDFC Count:&nbsp;&nbsp;{{allDBList.DBCODHDFCCnt}}
               </td>
             </tr>
           </tbody>
@@ -227,6 +229,7 @@
                   &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;Payphi Count:&nbsp;&nbsp;{{SUList.CODpayphiCnt}},&nbsp;&nbsp;Payphi Amount:&nbsp;&nbsp;{{SUList.CODpayphiAmt}},
                   &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;Wallet Count:&nbsp;&nbsp;{{SUList.CODwalletCnt}},&nbsp;&nbsp;Wallet Amount:&nbsp;&nbsp;{{SUList.CODwalletAmt}},
                   &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;Razorpay Count:&nbsp;&nbsp;{{SUList.CODrazorpayCnt}},&nbsp;&nbsp;Razorpay Amount:&nbsp;&nbsp;{{SUList.CODrazorpayAmt}},
+                  &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;HDFC Count:&nbsp;&nbsp;{{SUList.CODHDFCCnt}},&nbsp;&nbsp;HDFC Amount:&nbsp;&nbsp;{{SUList.CODHDFCAmt}},
                   &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;Prepaid Count:&nbsp;&nbsp;{{SUList.CODprepaidCnt}}
                 </td>
               </tr>
@@ -238,6 +241,7 @@
                   &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;Payphi Count:&nbsp;&nbsp;{{DBList.DBCODpayphiCnt}},&nbsp;&nbsp;Payphi Amount:&nbsp;&nbsp;{{DBList.DBCODpayphiAmt}},
                   &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;Wallet Count:&nbsp;&nbsp;{{DBList.DBCODwalletCnt}},&nbsp;&nbsp;Wallet Amount:&nbsp;&nbsp;{{DBList.DBCODwalletAmt}},
                   &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;Razorpay Count:&nbsp;&nbsp;{{DBList.DBCODrazorpayCnt}},&nbsp;&nbsp;Razorpay Amount:&nbsp;&nbsp;{{DBList.DBCODrazorpayAmt}},
+                  &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;HDFC Count:&nbsp;&nbsp;{{DBList.DBCODHDFCCnt}},&nbsp;&nbsp;HDFC Amount:&nbsp;&nbsp;{{DBList.DBCODHDFCAmt}},
                   &nbsp;&nbsp;<b style="font-size: large;">||</b>&nbsp;&nbsp;Prepaid Count:&nbsp;&nbsp;{{DBList.DBCODprepaidCnt}}
                 </td>
               </tr>
@@ -281,6 +285,10 @@
                 <td class="text-center"><strong>Razorpay</strong></td>
                 <td class="text-center">{{SUList.razorpayArr}}</td>
               </tr>
+              <tr v-if="SUList.CODHDFCCnt>0">
+                <td class="text-center"><strong>HDFC</strong></td>
+                <td class="text-center">{{SUList.HDFCArr}}</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -321,6 +329,10 @@
                  <td class="text-center"><strong>Razorpay</strong></td>
                  <td class="text-center">{{DBList.DBrazorpayArr}}</td>
                </tr>
+               <tr v-if="DBList.DBCODHDFCCnt>0">
+                <td class="text-center"><strong>HDFC</strong></td>
+                <td class="text-center">{{DBList.DBHDFCArr}}</td>
+              </tr>
              </tbody>
            </table>
          </div>
