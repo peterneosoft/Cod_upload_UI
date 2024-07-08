@@ -55,7 +55,7 @@
               <tbody>
                 <tr>
                   <td><center><h6>{{success}}</h6></center></td>
-                  <td><center><b-link v-bind:href='`${s3link}`'><h6>{{failed}}</h6></b-link></center></td>
+                  <td><center><h6 @click="failureClick" style="color: blue; text-decoration: underline;">{{failed}}</h6></center></td>
                 </tr>
               </tbody>
 

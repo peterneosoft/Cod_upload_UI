@@ -25,7 +25,8 @@ export default {
       Loading: false,
       downLoading:false,
       disbutton:false,
-      myStr:""
+      myStr:"",
+      datacsv : [],
     }
   },
 
@@ -97,6 +98,7 @@ export default {
           this.failed = result.data.failed;
           this.success = result.data.success;
           this.s3link = result.data.s3link;
+          this.datacsv = result.data.s3link;
 
           if(result.data.code == 200){
             this.$alertify.success(result.data.message);
@@ -131,6 +133,42 @@ export default {
         })
     },
 
+    failureClick(){
+      this.isLoading = this.disbutton = true;
+      const filename = 'failure_data.csv'
+      this.downloadCSV(filename);
+      this.isLoading = this.disbutton = false;
+    },
+
+    downloadCSV(filename) {
+      if (this.datacsv.length === 0) {
+        console.error('No data available to download');
+        return;
+      }
+
+      const csvContent = this.generateCSV(this.datacsv);
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+
+    generateCSV(data) {
+      const headers = Object.keys(data[0]);
+      const csvRows = [headers.join(',')];
+
+      data.forEach((row) => {
+        const values = headers.map(header => row[header]);
+        csvRows.push(values.join(','));
+      });
+
+      return csvRows.join('\n');
+    },
+  
     downloadsamplecsv(){
       this.downLoading = true;
       axios({
