@@ -370,13 +370,31 @@ export default {
           }
         })
         .then(result => {
-          this.RSCLoading = false; this.RSCName = []; this.RSCList = [];
+           this.RSCName = []; this.RSCList = [];
           if(result.data.rsc.code == 200){
             this.RSCList = [{HubID:'0', HubName:'All RSC', HubCode:'All RSC'}].concat(result.data.rsc.data);
           }
         }, error => {
           this.RSCLoading = false; console.error(error)
         })
+
+        axios({
+          method: 'POST',
+          url: apiUrl.api_url + 'external/getzonersctosvc',
+          'data': this.input,
+          headers: {
+            'Authorization': 'Bearer '+this.myStr
+          }
+        })
+        .then(result => {
+          this.RSCLoading = false; this.RSCName = []; 
+          if(result.data.rsctosvc.code == 200){
+            this.RSCList = this.RSCList.concat(result.data.rsctosvc.data);
+          }
+        }, error => {
+          this.RSCLoading = false; console.error(error)
+        })
+        this.RSCLoading = false;
     },
 
     onSubmit: function(event) {
