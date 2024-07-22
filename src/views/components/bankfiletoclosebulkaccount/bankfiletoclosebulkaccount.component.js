@@ -51,44 +51,27 @@ export default {
     onUpload(event){
       this.selectedFile = event.target.files[0];
       if ( /\.(csv)$/i.test(this.selectedFile.name) ){
-        var name = event.target.name + "." +this.selectedFile.name.split(".").pop();
-
-        const fd = new FormData();
-        fd.append('file', this.selectedFile, name);
-        this.isLoading = this.disbutton = true;
-        axios.post(apiUrl.api_url + 'uploadFile', fd,
-        {
-          headers: {
-            'Authorization': 'Bearer ' + this.myStr
-          }
-        })
-        .then(res => {
-          this.isLoading = this.disbutton = false;
-          if(res.data.errorCode == 0){
-             this.filename = res.data.filename
-           }else{
-             this.$alertify.error(".csv File Upload Error");
-           }
-        }, error => {
-          console.error(error)
-          this.isLoading = this.disbutton = false;
-          this.$alertify.error('Error Occured');
-        });
+        // after csv upload code
       }else{
+        this.selectedFile = ''
         this.isLoading = this.disbutton = false;
         this.$alertify.error(event.target.placeholder + " Failed! Please Upload Only Valid Format: .csv");
       }
     },
     uploadFile(){
-      this.input = ({
-          filename: this.filename,
-          username: this.localusername,
-      })
+
+      var name = this.selectedFile.name + "." +this.selectedFile.name.split(".").pop();
+
+      const fd = new FormData();
+      fd.append('file', this.selectedFile, name);
+      fd.append('username', this.localusername);
+
       this.isLoading = this.disbutton = true;
+
       axios({
           method: 'POST',
           url: apiUrl.api_url + 'financeBulkClosure',
-          data: this.input,
+          data: fd,
           headers: {
             'Authorization': 'Bearer '+this.myStr
           }
